@@ -1,0 +1,47 @@
+project_id = "echo-voice-notes"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 17
+
+[storage]
+enabled = true
+file_size_limit = "100MiB"
+
+[auth]
+enabled = true
+site_url = "echo://"
+additional_redirect_urls = ["echo://redirect"]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+refresh_token_reuse_interval = 10
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+# Echo signs in with a six-digit code rather than a magic link, so the address
+# is proven by the code itself and a second confirmation step adds nothing.
+double_confirm_changes = true
+enable_confirmations = false
+otp_length = 6
+otp_expiry = 3600
+
+[edge_runtime]
+enabled = true
+policy = "oneshot"
+
+# Both functions authenticate the caller themselves (see _shared/http.ts) and
+# must reject anonymous traffic, so the gateway's JWT check stays on.
+[functions.enrich-note]
+verify_jwt = true
+
+[functions.transcribe-audio]
+verify_jwt = true

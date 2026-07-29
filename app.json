@@ -1,0 +1,68 @@
+{
+  "expo": {
+    "name": "Echo",
+    "slug": "echo-voice-notes",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "echo",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.echo.voicenotes",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Echo uses the microphone to record your voice notes.",
+        "NSSpeechRecognitionUsageDescription": "Echo transcribes your voice notes to text so you can search and act on them.",
+        "UIBackgroundModes": ["audio"],
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.echo.voicenotes",
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.INTERNET",
+        "android.permission.VIBRATE"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      "expo-secure-store",
+      "expo-web-browser",
+      "expo-sharing",
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Echo uses the microphone to record your voice notes."
+        }
+      ],
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "Echo uses the microphone to record your voice notes.",
+          "speechRecognitionPermission": "Echo transcribes your voice notes to text so you can search and act on them.",
+          "androidSpeechServicePackages": ["com.google.android.googlequicksearchbox"]
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#12110E",
+          "imageWidth": 180,
+          "dark": { "backgroundColor": "#12110E" }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

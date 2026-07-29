@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# A newer push to the same branch makes the in-flight run irrelevant.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Typecheck, lint, bundle
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # `--legacy-peer-deps` is required: a transitive react-dom in the Expo
+      # toolchain peers on a newer React than the SDK pins. Harmless, but strict
+      # peer resolution refuses to install without it.
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npx eslint .
+
+      # The most valuable check of the three: it is the only one that catches a
+      # module that type-checks but cannot actually be resolved by Metro.
+      - name: Bundle for Android
+        run: npx expo export --platform android --output-dir /tmp/echo-export-android
+
+      - name: Bundle for iOS
+        run: npx expo export --platform ios --output-dir /tmp/echo-export-ios
