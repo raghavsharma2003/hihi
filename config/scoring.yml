@@ -1,0 +1,36 @@
+# Score weights per the ICP brief. Total = 100 for each ICP.
+
+commercial:
+  corridor_pincode: 25
+  category_priority:        # rank 1..6 -> points
+    1: 25   # hospitals / nursing homes / diagnostics
+    2: 22   # car & two-wheeler dealerships
+    3: 19   # banquet halls / marriage gardens
+    4: 16   # hotels 20-80 rooms
+    5: 13   # private schools / coaching
+    6: 10   # anchor retail / restaurants
+  size_in_band: 20
+  outage_keywords_min3: 15
+  owner_operated: 15
+  tiers: {A: 70, B: 50}     # A >= 70, B 50-69, C < 50
+
+society:
+  flats_200_plus: 25        # 150-199 caps the row at Tier B
+  possession_2008_2019: 20
+  corridor: 20
+  full_power_backup: 15
+  dg_complaint_keywords_min3: 15
+  maintenance_2_5_plus: 5
+  tiers: {A: 70, B: 50}
+
+outage_keywords:
+  - "power cut"
+  - "light chali"
+  - "generator"
+  - "backup"
+  - "bijli"
+  - "inverter"
+  - "ac off"
+  - "dg charges"
+  - "power backup charges"
+  - "diesel"
