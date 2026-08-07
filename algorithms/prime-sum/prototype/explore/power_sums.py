@@ -237,9 +237,10 @@ def zero_integrals(x, g_np, g_mp, eps, m):
                 sml = mag64 <= MP_THRESH
                 if np.any(sml):
                     g = g64[sml]
-                    mag = mag64[sml]
+                    ampl = mag64[sml] * g  # mag64 = |amplitude|/gamma; the
+                    # /rho happens in the division below, so multiply back
                     ph = g * L + g * re64 * eps * eps
-                    num = mag * (np.cos(ph) + 1j * np.sin(ph))
+                    num = ampl * (np.cos(ph) + 1j * np.sin(ph))
                     den = re64 + 1j * g
                     tot_small += float(w_node) * 2 * float(
                         np.sum((num / den).real))
@@ -428,13 +429,14 @@ def brute_T(x, eps, m):
 
 def psim_brute(x, eps, m, sigmas, g_mp):
     """Brute-force psim(sigma) = sum Lambda(n) n^(m-sigma) c(n) for several
-    sigma.  Bulk (c=1) in mpmath dps 25 with cached ln p; window band and
-    prime powers via cutoff_mp."""
+    sigma.  Bulk (c=1) in mpmath with cached ln p; window band and prime
+    powers via cutoff_mp.  dps grows with m: bulk terms are ~x^m ln x and
+    their coherent rounding must stay below the zero-truncation floor."""
     hi = int(x * math.exp(KCUT * eps)) + 1
     lo_c1 = x * math.exp(-KCUT * eps)
     ps = sieve_np(hi)
     out = []
-    with mp.workdps(25):
+    with mp.workdps(25 + 5 * max(0, m - 2)):
         plist = [int(p) for p in ps]
         lnp = [mp.log(p) for p in plist]
         cwin = {}
