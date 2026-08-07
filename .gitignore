@@ -36,3 +36,7 @@ yarn-debug.*
 yarn-error.*
 *.log
 __pycache__/
+algorithms/prime-sum/fenwick
+algorithms/prime-sum/lucy
+algorithms/prime-sum/sieve
+algorithms/prime-sum/original
