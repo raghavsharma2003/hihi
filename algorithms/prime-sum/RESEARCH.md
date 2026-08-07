@@ -73,6 +73,59 @@ respectable, but reads as engineering, not number theory.
    record that you do this work carefully, which matters when the real paper
    goes out.
 
+## Step 2 executed: prototype results (see `prototype/`)
+
+Both prototypes are implemented and run against the exact values from
+`fenwick.c` (August 2026, this repo).
+
+**Derived formulas** (non-rigorous constants, RH assumed in the zero range —
+true for all zeros used):
+
+- Sharp: `T(x) = sum_{p^k<=x} p^k/k = li(x^2) - sum_rho li(x^(rho+1)) + O(1)`,
+  and `S(x) = T(x) - (exact prime-power correction)`. The li-terms are
+  `Ei((rho+1) ln x)`, computed by the asymptotic series; the ±iπ branch
+  constants cancel over conjugate zero pairs.
+- Smoothed: for the log-Gaussian cutoff `c(t) = erfc(ln(t/x)/(sqrt(2)eps))/2`
+  the Mellin transform is exactly `x^s/s * exp(s^2 eps^2/2)`, so
+  `sum_n Lambda(n) n c(n) = (x^2/2)e^(2eps^2) - sum_rho x^(rho+1)/(rho+1) *
+  exp((rho+1)^2 eps^2/2) - (tiny)`, and each zero term carries the damping
+  `e^(-gamma^2 eps^2/2)`.
+
+**Measured** (`proto_sharp.py`, Odlyzko's first 100k zeros, 9 decimals):
+the sharp formula converges — relative error ~1e-5 at x=1e6 down to ~1e-7 at
+x=1e10 with 1e5 zeros — but slowly and oscillating, exactly the classical
+sharp-truncation behavior that motivates smoothing.
+
+**Measured** (`proto_smooth.py`, x=1e8, target `sum Lambda(n) n c(n)` ≈ 5e15):
+
+| zeros | precision | abs err | rel err |
+|---|---|---|---|
+| 100k (Odlyzko) | 3e-9 | ~934 | 1.9e-13 |
+| 2k (Odlyzko) | 3e-9 | ~1237 | 2.5e-13 |
+| 2k (mpmath, 25 digits) | 1e-24 | ~15 | 3.1e-15 |
+
+Three things this establishes: (1) the smoothed formula beats the sharp one
+by ~5 orders of magnitude at equal zero count; (2) with 9-digit zeros the
+error sits exactly at the predicted zero-precision floor, independent of N —
+truncation tail is ~1e-4, i.e. negligible; (3) swapping in 25-digit zeros
+collapses the error another ~80x to the prototype's own float128 noise.
+The accuracy chain behaves exactly as the theory predicts, which is the
+evidence a proposal needs that a rigorous Platt-style computation of
+S(x) = sum of primes would work.
+
+**What remains for a paper** (in rough order): strip the log-weight
+analytically (the T-route: smoothed li-type transforms, or quadrature over
+the smoothed psi1), rigorous truncation/window error bounds replacing the
+heuristic `12 eps` cutoffs, interval arithmetic end to end, a high-precision
+zero database at scale (LMFDB, or computed as Platt did), and a record-scale
+target x with independent combinatorial verification (primesum). None of
+this is conceptually blocked; all of it is careful work.
+
+Reproduce: `zeros1` from
+https://www-users.cse.umn.edu/~odlyzko/zeta_tables/zeros1 (first 100k zeros);
+high-precision zeros via mpmath `zetazero` (script header documents usage);
+exact values from `../fenwick`.
+
 ## What not to do
 
 Do not submit any variant of the current combinatorial pipeline as new. A
