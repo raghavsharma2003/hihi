@@ -13,390 +13,390 @@
 \newcommand{\erfc}{\operatorname{erfc}}
 \newcommand{\eps}{\varepsilon}
 
-\title{An analytic algorithm for the sum of primes below $x$}
+\title{Computing weighted prime sums from zeros of $\zeta$ and Dirichlet
+$L$-functions}
 \author{Raghav Sharma\thanks{Manuscript prepared with substantial AI assistance
 (Anthropic Claude); all derivations and computations were machine-verified as
-described in Section~\ref{sec:results}. \textbf{Draft — not yet submitted;
-rigorous error bounds (Section~\ref{sec:rigor}) remain to be completed.}}}
+described in Sections~\ref{sec:results} and \ref{sec:cautions}.
+\textbf{Draft --- not yet submitted; the rigorous error bounds of
+Section~\ref{sec:rigor} remain to be completed, and expert review is sought
+before submission.}}}
 \date{August 2026}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-We describe an algorithm that computes $S(x)=\sum_{p\le x}p$, the sum of all
-primes up to $x$, from the nontrivial zeros of the Riemann zeta function.
-The method combines three ingredients: a logarithmic-Gaussian smoothing whose
-Mellin transform is exactly Gaussian, so that each zero's contribution is
-damped by $e^{-\gamma^2\eps^2/2}$; an integral representation
-$1/\log n=\int_0^A n^{-\sigma}\,d\sigma + n^{-A}/\log n$ that removes the
-logarithmic weight from the smoothed Chebyshev-type sum, with a prime-zeta
-remainder; and exact sieve corrections confined to a narrow window around $x$
-and to prime powers. A floating-point implementation recovers the exact
-integer value of $S(x)$ for $x$ up to $10^9$ using only the first $2{,}000$
-zeros of $\zeta$, e.g.\ $S(10^9)=24{,}739{,}512{,}092{,}254{,}535$ with
-residual $6\times10^{-3}$. The structure parallels the Lagarias--Odlyzko
-analytic method for $\pi(x)$ as implemented rigorously by Platt; to the best
-of our knowledge no analytic computation of \emph{prime sums} has been
-published. We state heuristic error bounds, report a cautionary numerical
-phenomenon (coherent double-precision rounding in windowed corrections that
-masquerades as genuine zero-frequency oscillation), and outline the path to a
-rigorous interval-arithmetic version.
+We describe a single algorithmic framework that computes weighted prime sums
+$S_m(x)=\sum_{p\le x}p^{\,m}$ from nontrivial zeros of $\zeta(s)$, uniformly
+in the weight $m$, and its extension to arithmetic progressions using zeros
+of Dirichlet $L$-functions. A floating-point implementation recovers, from
+only the first $2{,}000$ zeta zeros: the exact integers $S_1(x)$ up to
+$x=10^9$ (e.g.\ $S_1(10^9)=24{,}739{,}512{,}092{,}254{,}535$), exact
+$\pi(x)=S_0(x)$ up to $10^8$, exact $S_2(x)$ and $S_3(x)$ up to $10^7$, and
+$S_{-1}(x)=\sum_{p\le x}1/p$ to $17$ significant digits; and, from $511$
+zeros of $L(s,\chi_4)$ computed as part of the pipeline, the exact sums of
+primes in both progressions mod $4$ up to $10^7$. The framework combines a
+logarithmic-Gaussian smoothing whose Mellin transform is exactly Gaussian
+with an integral representation
+$1/\log n=\int_0^A n^{-\sigma}d\sigma+n^{-A}/\log n$ that removes the
+logarithmic weight; the resulting integrands are elementary ($\erfc$ and
+exponentials only), every pole collision resolves by one cancellation
+pattern, and no logarithmic-integral functions or branch tracking appear
+anywhere. The formulation is equivalent, after an interchange of integrals,
+to the classical $\log\zeta$ representation of Lagarias--Odlyzko and Platt;
+its value is operational and its uniformity in $m$ and in the $L$-function
+aspect. To our knowledge, no implementation recovering exact prime sums ---
+in any weight, or in progressions --- has been published. We report measured
+error phenomena of independent practical interest, including a coherent
+double-precision rounding bias that oscillates at zeta-zero frequencies, and
+a zero-ordinate precision floor scaling like $x^{m+1/2}\delta_\gamma\log x$.
+All bounds in this draft are heuristic and numerically validated; the path
+to a rigorous interval-arithmetic version is laid out.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
 
-Computing $\pi(x)$, the number of primes up to $x$, without enumerating
-primes is a classical subject: the combinatorial line runs from Legendre and
-Meissel through Lehmer to Lagarias--Miller--Odlyzko and
-Del\'eglise--Rivat~\cite{DR96}, with record computations by Gourdon, Oliveira
-e Silva, Staple~\cite{Staple15}, and Walisch's \texttt{primecount}. The
-analytic line, proposed by Lagarias and Odlyzko~\cite{LO87}, evaluates
-$\pi(x)$ from the zeros of $\zeta(s)$ in $O(x^{1/2+\eps})$ time; Platt's
-rigorous implementation~\cite{Platt15} computed $\pi(10^{24})$
-unconditionally.
+Computing $\pi(x)$ without enumerating primes has two classical lines. The
+combinatorial line (Legendre, Meissel, Lehmer,
+Lagarias--Miller--Odlyzko, Del\'eglise--Rivat~\cite{DR96}, Staple's
+space-efficient variant~\cite{Staple15}, Walisch's \texttt{primecount})
+holds the records unconditionally. The analytic line evaluates $\pi(x)$ from
+zeros of $\zeta(s)$: proposed by Lagarias--Odlyzko~\cite{LO87}, first
+seriously engineered in Galway's thesis~\cite{Galway04}, made rigorous and
+unconditional by Platt~\cite{Platt15} ($\pi(10^{24})$), and made practical
+at record scale by Franke--Kleinjung--B\"uthe--Jost~\cite{FKBJ17}
+($\pi(10^{24})$ under RH) and B\"uthe~\cite{Buthe14} ($\pi(10^{25})$), the
+latter two working on the Weil--Barner ($\zeta'/\zeta$) side of the explicit
+formula. Numerical evaluation of the classical Riemann decomposition with
+$\li(x^{\rho})$ terms goes back to Riesel--G\"ohl~\cite{RG70}.
 
-For the \emph{sum} of primes $S(x)=\sum_{p\le x}p$ the combinatorial theory
-transfers: the $O(x^{3/4})$ dynamic-programming method was posted by the
-Project Euler user Lucy\_Hedgehog in 2013~\cite{Lucy13}, Fenwick-tree
-variants reach $\tilde O(x^{2/3})$~\cite{Broxey23}, and Walisch's
-\texttt{primesum}~\cite{Walisch} adapts Del\'eglise--Rivat to sums with
-record values past $10^{20}$. The analytic line, however, appears never to
-have been carried out for prime sums: we are not aware of any published
-explicit-formula computation of $S(x)$. This paper fills that gap at the
-level of a working algorithm and verified implementation.
+For the \emph{sum} of primes $S_1(x)=\sum_{p\le x}p$, the combinatorial
+theory transfers (Lucy\_Hedgehog's $O(x^{3/4})$ method~\cite{Lucy13},
+Fenwick-tree variants~\cite{Broxey23}, Walisch's
+\texttt{primesum}~\cite{Walisch} with records past $10^{20}$). The analytic
+line, however, appears never to have been \emph{carried out} for prime sums:
+the underlying explicit formula --- the first Riesz mean
+$\sum_{n\le x}(x-n)\Lambda(n)$ and its siblings --- is textbook material
+\cite{MV}, and explicit asymptotic bounds for $S_1(x)$ exist
+\cite{Axler14}, but we are aware of no published implementation recovering
+exact values of $S_1(x)$, of $S_m(x)$ for any other weight, or of prime
+sums in arithmetic progressions. (A recent preprint~\cite{TG25} claims exact
+$\pi(x)$ from a truncated-Gaussian kernel with remarkably few zeros and no
+sieve correction; its error analysis appears to us incompatible with the
+uncertainty principle constraints discussed in
+Section~\ref{sec:complexity}, and our method is unrelated.) This paper
+fills the computational gap, at working-algorithm level, uniformly in the
+weight and in the $L$-function aspect.
 
 \subsection*{Contributions}
 \begin{enumerate}
-  \item An explicit formula for Gaussian-smoothed, polynomially weighted
-    Chebyshev sums $\sum_n\Lambda(n)\,n^{1-\sigma}c(n)$
-    (Proposition~\ref{prop:explicit}), in a form whose zero terms are damped
-    by $e^{-\gamma^2\eps^2/2}$ with all transforms in closed form.
-  \item A mechanism for removing the $1/\log$ weight
-    (Proposition~\ref{prop:logstrip}): integrating the formula over the
-    weight exponent $\sigma\in[0,A]$, with the $\zeta'/\zeta$ pole at
-    $\sigma=2$ cancelling the main term's pole exactly, and a rapidly
-    convergent prime-zeta remainder closing the truncation. This is the
-    step with no direct analogue in the $\pi(x)$ literature, where
-    Riemann-style $\li$ terms are used instead.
-  \item An assembled algorithm (Section~\ref{sec:algorithm}) computing
-    $S(x)$ exactly: analytic main computation plus exact sieve corrections
-    over a window of relative width $O(\eps)$, with an explicit error
-    budget; heuristic cost $O(x^{1/2+\eps})$ when the number of zeros is
-    chosen as $N\sim x^{1/2}$ (Section~\ref{sec:complexity}).
-  \item A verified implementation: exact integer recovery of $S(x)$ for
-    $x=10^6,\dots,10^9$ from $2{,}000$ zeros
-    (Table~\ref{tab:results}), cross-checked against independent
-    combinatorial computations.
-  \item A numerical-analysis caveat of independent interest
-    (Section~\ref{sec:rounding}): windowed corrections evaluated in IEEE
-    double precision develop a \emph{coherent} rounding bias of size
-    $\approx x^2\cdot2^{-52}$ that oscillates at the frequencies of the
-    zeta zeros --- indistinguishable in signature from a missing term of the
-    explicit formula. We document the effect and its remedy.
+  \item \textbf{First implementation of analytic prime sums.} An algorithm
+    computing $S_m(x)$ from zeta zeros with exact integer recovery,
+    validated for $m=1$ to $x=10^9$, $m=0$ (i.e.\ $\pi(x)$) to $10^8$,
+    $m\in\{2,3\}$ to $10^7$, and $m=-1$ (Mertens sums, non-integer target)
+    to $17$ digits (Table~\ref{tab:results}). The underlying identities are
+    classical; the contribution is the uniform algorithm, its error
+    budget, and the verified implementation.
+  \item \textbf{An operationally simple formulation.} All computations run
+    through one device: a log-Gaussian cutoff with exactly Gaussian Mellin
+    transform, and the representation
+    $1/\log n=\int_0^A n^{-\sigma}d\sigma+n^{-A}/\log n$ integrated against
+    a family of smoothed Chebyshev-type formulas
+    (Section~\ref{sec:logstrip}). This is equivalent, after interchanging
+    the $\sigma$-integral with the contour integral, to the classical
+    $\log\zeta$ representation~\cite{LO87,Platt15}; what the
+    reparametrization buys is that every integrand is elementary
+    ($\erfc$, $\exp$, $\zeta'/\zeta$ on the real axis), every singularity
+    is a removable pair-cancellation handled by one lemma, no
+    $\li(x^{\rho})$, kernel special functions~\cite{FKBJ17,Buthe14}, or
+    branch tracking~\cite{Platt15} occur, and the same code path serves
+    every weight $m$ and every Dirichlet character.
+  \item \textbf{Arithmetic progressions, exactly.} Using $511$ zeros of
+    $L(s,\chi_4)$ computed within the pipeline (Hardy $Z$-scan with derived
+    phase, Illinois refinement), the twisted formula --- which has no main
+    term --- recovers the exact sums of primes in both progressions mod
+    $4$ at $x=10^5,10^6,10^7$. Prior computations from Dirichlet zeros
+    (Bays--Hudson~\cite{BH00}, at much larger $x$) were approximate
+    studies of prime-race irregularities; exact integer recovery appears
+    to be new. We present this as an engineering result: given
+    Contribution 2, the extension is natural, and that naturalness is the
+    point.
+  \item \textbf{Measured numerical phenomena} that any implementation of
+    windowed analytic prime computation will face
+    (Section~\ref{sec:cautions}): a coherent double-precision rounding
+    bias of size $\approx x^{m+1}2^{-52}$ oscillating at zeta-zero
+    frequencies (perfectly impersonating a missing explicit-formula term),
+    and a zero-ordinate precision floor $\sim x^{m+1/2}\delta_\gamma\log x$
+    that already forces $40$-digit ordinates at $m=3$, $x=10^7$.
 \end{enumerate}
 
 \section{Setup}\label{sec:setup}
 
-Throughout, $x\ge2$ is the (integer) target, $\eps>0$ a smoothing parameter,
-$L=\log x$, and $\rho=\beta+i\gamma$ runs over nontrivial zeros of $\zeta$;
-for the zeros we use ($\gamma\le2515.3$) the Riemann hypothesis is verified,
-so $\rho=\tfrac12+i\gamma$, but the formulas hold with $\beta$ in place of
-$\tfrac12$. Define the logarithmic-Gaussian cutoff
+$x\ge2$ is the integer target, $\eps>0$ the smoothing width, $L=\log x$,
+$\rho=\beta+i\gamma$ runs over nontrivial zeros of $\zeta$ (RH holds in the
+verified ranges used; formulas are stated with general $\beta$). The
+logarithmic-Gaussian cutoff is
 \begin{equation}\label{eq:cutoff}
-  c(t)\;=\;\tfrac12\,\erfc\!\Bigl(\frac{\log(t/x)}{\sqrt2\,\eps}\Bigr),
-  \qquad t>0,
+  c(t)=\tfrac12\,\erfc\!\Bigl(\frac{\log(t/x)}{\sqrt2\,\eps}\Bigr).
 \end{equation}
-which decreases from $1$ to $0$ across a window of relative width
-$O(\eps)$ centred at $x$.
 
 \begin{lemma}[Mellin transform]\label{lem:mellin}
 For $\operatorname{Re}s>0$,
-\[
-  M(s)\;:=\;\int_0^\infty c(t)\,t^{s-1}\,dt\;=\;\frac{x^s}{s}\,
-  e^{s^2\eps^2/2},
-\]
-and the right-hand side continues $M$ meromorphically to $\mathbb C$ with a
-single simple pole at $s=0$ of residue $1$.
+$M(s):=\int_0^\infty c(t)t^{s-1}dt=\dfrac{x^s}{s}e^{s^2\eps^2/2}$,
+which continues meromorphically with a single simple pole at $s=0$ of
+residue~$1$.
 \end{lemma}
-
-\begin{proof}
-Substitute $t=xe^u$, integrate by parts, and use the Gaussian moment
-generating function:
-$\int_{\mathbb R}\tfrac12\erfc(u/\sqrt2\eps)\,e^{su}\,du
- =\tfrac1s\int_{\mathbb R}\frac{e^{-u^2/2\eps^2}}{\sqrt{2\pi}\,\eps}e^{su}du
- =\tfrac1s e^{s^2\eps^2/2}$;
-the boundary terms vanish for $\operatorname{Re}s>0$.
-\end{proof}
 
 \begin{lemma}[Smoothed Perron]\label{lem:perron}
-For any $c_0>0$ and integer $n\ge1$,
-\[
-  \frac1{2\pi i}\int_{(c_0)} M(s)\,n^{-s}\,ds\;=\;c(n).
-\]
+For $c_0>0$ and $n\ge1$:
+$\frac1{2\pi i}\int_{(c_0)}M(s)n^{-s}ds=c(n)$.
 \end{lemma}
 
-\begin{proof}
-With $\alpha=\log(x/n)$ the integral is
-$F(\alpha)=\frac1{2\pi i}\int_{(c_0)}e^{s\alpha+s^2\eps^2/2}\,\frac{ds}{s}$.
-Differentiating under the integral and completing the square gives
-$F'(\alpha)=\frac{1}{\sqrt{2\pi}\,\eps}e^{-\alpha^2/2\eps^2}$, independent of
-$c_0$; and $F(-\infty)=0$ by closing the contour to the right. Hence $F$ is
-the Gaussian distribution function, $F(\alpha)=\Phi(\alpha/\eps)=c(n)$.
-\end{proof}
+Proofs are elementary (substitution $t=xe^u$, integration by parts,
+Gaussian moment generating function; completing the square). Both are in
+the source files accompanying this draft.
 
-\section{A smoothed explicit formula for weighted sums}\label{sec:explicit}
+\section{The smoothed explicit formula, uniformly in the weight}
+\label{sec:explicit}
 
-For $\sigma\ge0$ define
-\[
-  \widetilde\psi_1(\sigma)\;=\;\sum_{n\ge2}\Lambda(n)\,n^{1-\sigma}c(n),
-\]
-an absolutely convergent sum since $c$ has compact effective support.
-
-\begin{proposition}\label{prop:explicit}
-For $\sigma\ge0$, $\sigma\neq2$,
+For $m\in\mathbb Z$ and $\sigma\ge0$ set
+$\widetilde\psi_m(\sigma)=\sum_{n\ge2}\Lambda(n)\,n^{m-\sigma}c(n)$.
+Perron with $A(s)=-\frac{\zeta'}{\zeta}(s+\sigma-m)$ and
+Lemma~\ref{lem:perron}, then a contour shift, give
 \begin{equation}\label{eq:explicit}
-  \widetilde\psi_1(\sigma)\;=\;M(2-\sigma)\;-\;\sum_{\rho}M(\rho+1-\sigma)
-  \;-\;\frac{\zeta'}{\zeta}(\sigma-1)\;-\;\sum_{k\ge1}M(1-2k-\sigma),
+  \widetilde\psi_m(\sigma)=M(m+1-\sigma)-\sum_{\rho}M(\rho+m-\sigma)
+  -\frac{\zeta'}{\zeta}(\sigma-m)-\sum_{k\ge1}M(m-2k-\sigma),
 \end{equation}
-the sum over $\rho$ (with multiplicity, over all $\gamma\in\mathbb R$)
-converging absolutely at Gaussian speed
-$|M(\rho+1-\sigma)|\ll x^{\beta+1-\sigma}e^{-\gamma^2\eps^2/2}/|\gamma|$.
-\end{proposition}
+with the zero sum absolutely convergent at Gaussian speed
+$|M(\rho+m-\sigma)|\ll x^{\beta+m-\sigma}e^{-\gamma^2\eps^2/2}/|\gamma|$.
+For the twisted case, $\chi$ a primitive odd character mod $q$,
+\begin{equation}\label{eq:explicitchi}
+  \widetilde\psi_{1,\chi}(\sigma)=\sum_n\Lambda(n)\chi(n)n^{1-\sigma}c(n)
+  =-\sum_{\rho_\chi}M(\rho_\chi+1-\sigma)-\frac{L'}{L}(\sigma-1,\chi)
+  -\sum_{k\ge0}M(-2k-\sigma),
+\end{equation}
+with \emph{no main term} ($L$ entire).
 
-\begin{proof}[Proof sketch]
-By Lemma~\ref{lem:perron} and absolute convergence,
-$\widetilde\psi_1(\sigma)
- =\frac1{2\pi i}\int_{(c_0)}\bigl[-\tfrac{\zeta'}{\zeta}(s+\sigma-1)\bigr]
- M(s)\,ds$ with $c_0>2-\sigma$. Shift the contour to
-$\operatorname{Re}s=-\Omega$. The integrand's poles are: $s=2-\sigma$ (pole
-of $\zeta$; residue $M(2-\sigma)$), $s=\rho+1-\sigma$ (residue
-$-M(\rho+1-\sigma)$), $s=1-2k-\sigma$ (trivial zeros), and $s=0$ (pole of
-$M$; residue $-\tfrac{\zeta'}{\zeta}(\sigma-1)$, using
-Lemma~\ref{lem:mellin}). Horizontal segments at height $\pm T$ vanish as
-$T\to\infty$ because $M$ decays like $e^{-T^2\eps^2/2}$ against the
-polylogarithmic growth of $\zeta'/\zeta$; the left vertical integral tends
-to $0$ for $\Omega\to\infty$ chosen along, e.g., $\Omega_j=2j+\tfrac12$,
-since $|x^{-\Omega}e^{\Omega^2\eps^2/2}|$ is minimized far beyond all scales
-used ($\Omega\ll L/\eps^2$). A rigorous version requires the standard
-quantitative forms of these estimates; see Section~\ref{sec:rigor}.
-\end{proof}
+\subsection*{Pole collisions and the one cancellation pattern}
+Along the $\sigma$-integration of Section~\ref{sec:logstrip} the terms of
+\eqref{eq:explicit}--\eqref{eq:explicitchi} individually blow up at
+isolated real points, always in cancelling pairs, always resolved by the
+expansion $M(w)=\frac1w+\log x+O(w)$ near $w=0$ against a logarithmic
+derivative's pole:
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+crossing & colliding pair & finite limit \\
+\midrule
+$\sigma=m+1$ (any $m$) & $M(m+1-\sigma)$ vs.\ pole of $\zeta$ at $1$ &
+$\log x-\gamma_E+O(\eps^2)$ \\
+$\sigma=0$, $m=-1$ & $M(-\sigma)$ vs.\ pole of $\zeta'/\zeta$ at $1$ &
+$\log x-\gamma_E+O(\eps^2)$ \\
+$\sigma=0$, $m=2$ & $M(-\sigma)$ (triv.\ $k=1$) vs.\ trivial zero at $-2$ &
+$-\log x-\tfrac{\zeta''(-2)}{2\zeta'(-2)}+O(\eps^2)$ \\
+$\sigma=0$, odd $\chi$ & $M(-\sigma)$ (triv.\ $k=0$) vs.\ trivial zero at
+$-1$ & $-\log x-\tfrac{L''(-1)}{2L'(-1)}+O(\eps^2)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+Each limit was verified numerically to the working precision before use
+(linear residual in $\sigma$, correct constant), and each formula
+\eqref{eq:explicit}/\eqref{eq:explicitchi} was validated \emph{pointwise}
+against brute-force evaluation of its defining sum at several $\sigma$
+before any integration --- a protocol we found indispensable
+(Section~\ref{sec:cautions}).
 
 \section{Removing the logarithmic weight}\label{sec:logstrip}
 
-The object we can assemble $S(x)$ from is
-\[
-  \widetilde T\;=\;\sum_{p^k}\frac{p^k}{k}\,c(p^k)
-  \;=\;\sum_{n\ge2}\frac{\Lambda(n)}{\log n}\,n\,c(n).
-\]
-
-\begin{proposition}\label{prop:logstrip}
-Fix $A>1$ (we use $A=4$). Then
+With $\widetilde T_m=\sum_{p^k}\frac{p^{km}}{k}c(p^k)
+=\sum_n\frac{\Lambda(n)}{\log n}n^{m}c(n)$ and any $A>m+1$:
 \begin{equation}\label{eq:logstrip}
-  \widetilde T\;=\;\int_0^A\widetilde\psi_1(\sigma)\,d\sigma\;+\;R_A,
-  \qquad
-  R_A=\sum_{p^k}\frac1k\,p^{-(A-1)k}\,c(p^k),
+  \widetilde T_m=\int_0^A\widetilde\psi_m(\sigma)\,d\sigma+R_A,\qquad
+  R_A=\sum_{p^k}\frac1k\,p^{-(A-m)k}c(p^k),
 \end{equation}
-and, inserting \eqref{eq:explicit} and integrating term by term
-(justified for the zero and trivial sums by uniform Gaussian domination on
-$[0,A]$),
-\begin{equation}\label{eq:Tfinal}
-  \widetilde T=\int_0^A\Bigl[M(2-\sigma)-\frac{\zeta'}{\zeta}(\sigma-1)\Bigr]
-  d\sigma
-  \;-\;\sum_\rho\int_0^A M(\rho+1-\sigma)\,d\sigma
-  \;-\;\sum_{k\ge1}\int_0^A M(1-2k-\sigma)\,d\sigma
-  \;+\;R_A .
-\end{equation}
-The first integrand extends continuously across $\sigma=2$ with value
-$\log x-\gamma_E+O(\eps^2)$ there: the simple pole of
-$-\zeta'/\zeta(\sigma-1)$ cancels the pole of $M(2-\sigma)$ exactly.
-\end{proposition}
+by $1/\log n=\int_0^A n^{-\sigma}d\sigma+n^{-A}/\log n$ under the
+absolutely convergent sum. We use $A=m+3$, so $R_A$ converges like a prime
+zeta series ($p^{-3k}$ weights; truncation at $p\le10^6$ costs
+$<10^{-13}$). Term-by-term $\sigma$-integration of \eqref{eq:explicit} is
+justified on $[0,A]$ by uniform Gaussian domination of the zero sum.
 
-\begin{proof}
-Equation~\eqref{eq:logstrip} is the identity
-$\frac1{\log n}=\int_0^A n^{-\sigma}\,d\sigma+\frac{n^{-A}}{\log n}$
-applied under the (absolutely convergent) sum; note
-$\Lambda(p^k)/\log p^k=1/k$. For the cancellation at $\sigma=2$, write
-$w=2-\sigma$: $M(w)=\frac1w+\log x+O(w)$ (using
-Lemma~\ref{lem:mellin}) while
-$\frac{\zeta'}{\zeta}(1-w)=\frac1w+\gamma_E+O(w)$.
-\end{proof}
-
-\begin{remark}
-$R_A$ converges like a prime zeta series: for $A=4$ its $k=1$ part is
-$\sum_p p^{-3}c(p)$, and truncating at $p\le10^6$ leaves a tail below
-$4\times10^{-14}$. This is what keeps the truncation at finite $A$ cheap:
-no enumeration anywhere near $x$ is required.
+\begin{remark}[Equivalence with the $\log\zeta$ representation]
+Since $\int_0^A-\frac{\zeta'}{\zeta}(s+\sigma-m)\,d\sigma
+=\log\zeta(s-m)-\log\zeta(s+A-m)$, interchanging the $\sigma$-integral
+with the Perron integral shows \eqref{eq:logstrip} is the classical
+$\log\zeta$ formulation of~\cite{LO87,Platt15}, with $R_A$ playing the
+role of the discarded $\log\zeta(s+A-m)$ piece and the pair cancellations
+of Section~\ref{sec:explicit} the $\sigma$-side shadow of the integrable
+logarithmic singularity of $\log\zeta$. We therefore claim no new analytic
+mechanism --- only a parametrization in which every integrand is
+elementary and real-axis, and which the computations of
+Section~\ref{sec:results} suggest is a good one to compute with.
 \end{remark}
 
-\section{The algorithm}\label{sec:algorithm}
+\section{Assembly, error budget, and cost}\label{sec:algorithm}
 
-From $\widetilde T$ to $S(x)$:
 \begin{equation}\label{eq:assembly}
-  S(x)\;=\;\widetilde T
-  \;-\;\underbrace{\sum_{k\ge2}\frac1k\,p^k c(p^k)}_{\text{prime powers, }
-    p\le(xe^{K\eps})^{1/2}}
-  \;-\;\underbrace{\sum_{p}\,p\,\bigl(c(p)-[p\le x]\bigr)}_{\text{window
-    } |\log(p/x)|\le K\eps}
-  \;\;(+\,\text{error}),
+  S_m(x)=\widetilde T_m
+  -\!\!\sum_{k\ge2,\;p^k}\!\!\frac{p^{km}}k c(p^k)
+  -\sum_{p}p^{m}\bigl(c(p)-[p\le x]\bigr)\;(+\,\text{error}),
 \end{equation}
-then round to the nearest integer. We take $K=12$
-($\tfrac12\erfc(12/\sqrt2)<10^{-32}$, so truncating $c$ outside the window
-is negligible against all other budget lines).
+rounded to the nearest integer for $m\ge0$ (for $m=-1$ the output is a
+high-precision value). The corrections are exact sieves: prime powers up
+to $(xe^{K\eps})^{1/2}$ and a window $|\log(p/x)|\le K\eps$, $K=12$. For
+progressions mod $4$: $\sum_{p\equiv a}p\,c(p)=\tfrac12[S_{\mathrm{odd}}
+\pm S_\chi]$ with $S_\chi$ from \eqref{eq:explicitchi}, window-corrected
+per progression.
 
-\begin{algorithm}
-\caption{Analytic $S(x)$}
-\begin{algorithmic}[1]
-\State choose $\eps$ so that the zero-tail bound
-  $2\sum_{\gamma>\gamma_N}x^{3/2}e^{(9/4-\gamma^2)\eps^2/2}/\gamma$
-  (zeros beyond the table estimated by the Riemann--von Mangoldt density)
-  is below the budget; with $N=2000$ zeros, $\eps\approx8/\gamma_N$
-\State $I_{\text{main}}\gets\int_0^A[M(2-\sigma)-\tfrac{\zeta'}{\zeta}
-  (\sigma-1)]\,d\sigma$ \Comment{adaptive quadrature, high precision}
-\State $I_{\text{zeros}}\gets\sum_{j\le N}2\operatorname{Re}
-  \int_0^A M(\rho_j+1-\sigma)\,d\sigma$ \Comment{Gauss--Legendre in
-  $u=\sigma L$; integrand smooth, $e^{-u}$-scaled}
-\State $I_{\text{triv}}$, $R_A$ \Comment{closed quadratures; sieve to $10^6$}
-\State $\widetilde T\gets I_{\text{main}}-I_{\text{zeros}}-I_{\text{triv}}
-  +R_A$
-\State subtract prime-power and window corrections
-  \Comment{sieves to $\sqrt{xe^{K\eps}}$ and over
-  $[xe^{-K\eps},xe^{K\eps}]$; \emph{high-precision} $c$, see
-  Sec.~\ref{sec:rounding}}
-\State \Return nearest integer
-\end{algorithmic}
-\end{algorithm}
+Error budget (all lines measured to behave as predicted): zero tail
+$O\!\bigl(x^{m+1/2}e^{-(\gamma_N\eps)^2/2}/(\gamma_N^2\eps^2)\bigr)$;
+zero-ordinate noise $O(x^{m+1/2}L\,\delta_\gamma\sqrt N)$ --- the
+\emph{precision floor} that forced $40$-digit ordinates at $m=3$,
+$x=10^7$; quadrature/floating-point noise; truncation constants
+($R_A$ tail, $K\eps$ cutoffs, trivial-zero tails) below $10^{-13}$.
 
-\subsection{Error budget}
-With $N$ zeros, table precision $\delta_\gamma$, and working precision
-$\delta_f$, the deviation of the computed value from $S(x)$ is bounded
-heuristically by the sum of: (i) the zero tail
-$O(x^{3/2}e^{-(\gamma_N\eps)^2/2}/(\gamma_N^2\eps^2))$;
-(ii) zero-precision noise
-$O(x^{3/2}L\,\delta_\gamma\sqrt N)$;
-(iii) quadrature and floating-point noise $O(x^{3/2}\delta_f\cdot\text{polylog})$;
-(iv) truncation constants below $10^{-13}$ ($R_A$ tail, $K\eps$ cutoffs,
-trivial zeros $k\ge3$). All are measured to behave as predicted in
-Section~\ref{sec:results}; making (i)--(iii) rigorous is the program of
-Section~\ref{sec:rigor}.
+\subsection{Cost}\label{sec:complexity}
+Analytic part $O(N)$ node-evaluations (times precision polylogs); window
+sieve $O(x\eps\log x)=O((x/\gamma_N)\,\mathrm{polylog})$. Balancing gives
+$N\asymp x^{1/2}\,\mathrm{polylog}$ and total $O(x^{1/2+\eps})$ --- the
+Lagarias--Odlyzko exponent~\cite{LO87}; the window is also the reason few
+zeros suffice: the $\Theta(x\eps/\log x)$ sieved primes carry the
+information the truncated zero sum cannot, which is why we regard
+sieve-free exactness claims with very few zeros~\cite{TG25} as
+incompatible with this tradeoff.
 
-\subsection{Complexity (heuristic)}\label{sec:complexity}
-The analytic part costs $O(N)$ quadrature-node evaluations (times
-$\text{polylog}$ precision factors); the window sieve costs
-$O(x\eps\log x)=O((x/\gamma_N)\,\text{polylog})$ since $\eps\asymp
-(\log x)^{1/2}/\gamma_N$, and $\gamma_N\sim2\pi N/\log N$. Balancing
-$N\asymp x/\gamma_N$ gives $N\asymp x^{1/2}\,\text{polylog}$ and total cost
-$O(x^{1/2+\eps})$, the same exponent as Lagarias--Odlyzko for $\pi(x)$
-\cite{LO87,Platt15}. Our implementation fixes $N=2000$ and is therefore
-window-sieve dominated beyond $x\approx10^8$; scaling $N$ requires only a
-larger high-precision zero table (e.g.\ from LMFDB or computed as in
-\cite{Platt15}).
+\section{Results}\label{sec:results}
 
-\section{Implementation and results}\label{sec:results}
-
-The implementation (\texttt{prototype/analytic\_sum.py} in the accompanying
-repository) uses: the first $2{,}000$ zeros computed to 25 significant
-digits with mpmath's \texttt{zetazero}; 80-bit extended precision for the
-vectorized zero quadrature; mpmath (50 digits) for $I_{\text{main}}$,
-assembly, and all window-adjacent cutoff evaluations. Reference values come
-from two independent combinatorial implementations (Lucy--Hedgehog
-$O(x^{3/4})$ and a Fenwick-hybrid $\tilde O(x^{2/3})$), themselves
-cross-checked against OEIS~A046731.
+Implementation: Python (mpmath, numpy float128); zeros of $\zeta$: first
+$2{,}000$ at $25$ digits (mpmath \texttt{zetazero}; leading $550$
+Newton-refined to $40$ digits for $m=3$); zeros of $L(s,\chi_4)$: $511$
+computed by Hardy-$Z$ scan with $|{\rm Im}\,Z|/|Z|\le4\cdot10^{-28}$ and a
+zero-count band check. Reference values: independent combinatorial
+programs (Lucy--Hedgehog $O(x^{3/4})$ and a Fenwick $\tilde O(x^{2/3})$
+hybrid, cross-checked to OEIS A046731) and direct sieves computed inside
+each script.
 
 \begin{table}[h]\centering
-\begin{tabular}{lllll}
+\small
+\begin{tabular}{llll}
 \toprule
-$x$ & $S(x)$ & residual & window primes & zeros \\
+quantity & largest verified $x$ & value at that $x$ & residual \\
 \midrule
-$10^6$ & $37{,}550{,}402{,}023$ & $+2.8\times10^{-6}$ & $4{,}838$ & 2000 \\
-$10^7$ & $3{,}203{,}324{,}994{,}356$ & $-2.0\times10^{-5}$ & $44{,}290$ & 2000 \\
-$10^8$ & $279{,}209{,}790{,}387{,}276$ & $+6.0\times10^{-4}$ & $414{,}505$ & 2000 \\
-$10^9$ & $24{,}739{,}512{,}092{,}254{,}535$ & $+6.0\times10^{-3}$ &
-  $3{,}799{,}674$ & 2000 \\
+$S_1(x)$ & $10^9$ & $24{,}739{,}512{,}092{,}254{,}535$ & $+6.0\times10^{-3}$ \\
+$\pi(x)$ & $10^8$ & $5{,}761{,}455$ & $+6.0\times10^{-12}$ \\
+$S_2(x)$ & $10^7$ & $21{,}113{,}978{,}675{,}102{,}768{,}574$ & $-6.8\times10^{-6}$ \\
+$S_3(x)$ & $10^7$ & $157{,}468{,}033{,}886{,}449{,}157{,}634{,}628{,}898$ & $+2.3\times10^{-3}$ \\
+$\sum_{p\le x}1/p$ & $10^7$ & $3.0414493812797104945$ ($17$ digits) & $-3\times10^{-18}$ \\
+$S_1(x;4,1)$ & $10^7$ & $1{,}601{,}423{,}376{,}628$ & $-6.0\times10^{-6}$ \\
+$S_1(x;4,3)$ & $10^7$ & $1{,}601{,}901{,}617{,}726$ & $-6.2\times10^{-6}$ \\
 \bottomrule
 \end{tabular}
-\caption{Exact integer recovery of $S(x)$ from $2{,}000$ zeta zeros.
-``Residual'' is the computed value minus the true integer before rounding.
-Single-threaded runtimes range from seconds ($10^6$) to $8$ minutes
-($10^9$), dominated by high-precision window evaluation.}
+\caption{Exact recoveries (residual = computed $-$ true before rounding).
+Every quantity also verified at all smaller powers of $10$ down to $10^5$
+or $10^6$; every result independently re-run. $2{,}000$ $\zeta$-zeros
+throughout; $511$ $L$-zeros for the progressions.}
 \label{tab:results}
 \end{table}
 
-The residual grows by roughly one decade per decade of $x$, consistent with
-budget line (iii); at fixed working precision the method as configured
-would fail to round correctly near $x\approx10^{11}$, and either more
-precision, more zeros (shrinking the window), or both restore the margin.
+\section{Numerical cautions}\label{sec:cautions}
 
-\subsection{A cautionary phenomenon: coherent rounding masquerading as
-mathematics}\label{sec:rounding}
+\subsection{Coherent rounding at zero frequencies}
+Evaluating the window correction $\sum_p p^m(c(p)-[p\le x])$ in IEEE double
+produced a discrepancy against the explicit formula that was independent of
+$\eps$, grew like $x^{m+1}$, and \emph{oscillated in $\log x$ at the
+frequencies of the first zeta zeros} --- the exact signature of a missing
+zero term, which the contour analysis excludes. Cause: catastrophic
+cancellation in $\log p-\log x$ for window primes makes deterministic
+$\delta c\sim10^{-13}$ errors that are weighted by $p^m\approx x^m$ and
+inherit the window population's zero-frequency fluctuations. Diagnosis: one
+full recomputation in $40$-digit arithmetic collapsed the ``missing term''
+from $-1.2\times10^{-6}$ to $-3.4\times10^{-10}$ (the true tail) at
+$x=6\times10^4$. Remedy (cheap): $u=\operatorname{log1p}((p-x)/x)$ from
+exact integers, $\erfc$ beyond double, throughout the window. We flag this
+because the symptom is maximally misleading and any windowed analytic prime
+computation faces it.
 
-An earlier version evaluated the window correction
-$\sum_p p\,(c(p)-[p\le x])$ in IEEE double precision. The resulting values
-disagreed with the explicit formula by a discrepancy that (a) was
-independent of $\eps$, (b) grew like $x^2$, and (c) \emph{oscillated in
-$\log x$ at the frequencies of the first zeta zeros} --- precisely the
-signature of a missing zero term, which cannot exist for this contour. The
-cause: $\log p-\log x$ cancels catastrophically for $p$ in the window, and
-the resulting deterministic $\delta c\sim10^{-13}$ errors are weighted by
-$p\approx x$ and summed over the $\Theta(x\eps/\log x)$ window primes.
-Because the window population itself fluctuates at zero frequencies, the
-bias inherits them: an entirely numerical artifact wearing the explicit
-formula's clothes. (Verified by recomputing one case wholly in 40-digit
-arithmetic: the ``missing term'' collapsed from $-1.2\times10^{-6}$ at
-$x=6\times10^4$ to $-3.4\times10^{-10}$, the genuine tail level.) The
-remedy costs little: compute $u=\log(p/x)$ as
-$\operatorname{log1p}((p-x)/x)$ from exact integers and evaluate $\erfc$
-beyond double precision throughout the window. We flag this because any
-implementation of windowed analytic prime computations faces it, and the
-symptom is maximally misleading.
+\subsection{Zero-ordinate precision floor; quadrature nodes}
+Per-zero phase error $\delta_\gamma L$ enters at amplitude
+$\approx2x^{m+1/2}e^{-\gamma^2\eps^2/2}/(\gamma L)$: at $m=3$, $x=10^7$,
+$25$-digit ordinates miss the integer by $-16.9$; Newton-refining the
+leading $550$ zeros to $40$ digits (two steps of $s-\zeta/\zeta'$, seconds)
+restores $10^{-3}$ residuals. The same estimate reproduces observed
+residuals at every $(m,x)$. Separately, Gauss--Legendre nodes taken from
+double-precision tables inject $\sim1$ absolute error at $x^{5/2}$ scale
+--- nodes must be computed at working precision. A validation protocol of
+(i) pointwise formula-vs-brute checks before integration and (ii) an
+independent brute check of $\widetilde T_m$ caught one genuine
+implementation bug (a doubly-applied $1/|\rho|$ factor) that would have
+scaled silently from $-0.12$ at $10^5$ to $\sim\times300$ at $10^7$.
 
-\section{Toward a rigorous version and records}\label{sec:rigor}
+\section{Toward rigor and records}\label{sec:rigor}
 
-Nothing in the pipeline resists rigor in principle; the required
-components exist in the $\pi(x)$ literature. Concretely:
-(1) explicit truncation lemmas for Proposition~\ref{prop:explicit}
-(quantitative horizontal/vertical contour bounds, as in \cite{Platt15});
-(2) an interval-arithmetic implementation with directed rounding through
-the quadratures and sieves; (3) a zero database with certified enclosures
-(LMFDB provides $10^{11}$ zeros; Platt's methods generate them to any
-precision); (4) targets beyond the combinatorial records
-($S(x)$ for $x>10^{20}$, cf.~\texttt{primesum}~\cite{Walisch}) require
-$N\sim x^{1/2}$ zeros and a parallel window sieve --- the same regime in
-which analytic $\pi(x)$ became competitive~\cite{Platt15}. A rigorous
-analytic computation of, e.g., $S(10^{22})$, cross-checked against an
-independent combinatorial run, would constitute both a new record and an
-independent verification methodology, which is where we see the natural
-continuation of this work.
+The pipeline resists rigor nowhere in principle; the components exist in
+the $\pi(x)$ literature~\cite{Platt15,FKBJ17,Buthe14}: quantitative
+contour lemmas, interval arithmetic with directed rounding, certified zero
+enclosures (LMFDB, or computed as in~\cite{Platt15}), and explicit tail
+bounds via Riemann--von Mangoldt counts with explicit constants. For
+Mertens sums our floating-point $17$-digit agreement should become a
+certified enclosure, the natural comparison being
+B\"uthe's~\cite{Buthe15} zero-based control of Mertens-theorem error terms
+(the closest published antecedent to our $m=-1$ instance) and
+Brent--Platt--Trudgian~\cite{BPT20} for rigorous zero-sum evaluation.
+Records ($S_1(x)$ beyond \texttt{primesum}'s combinatorial range, or exact
+AP sums at Bays--Hudson scales~\cite{BH00}) need $N\sim x^{1/2}$ certified
+zeros and a parallel window sieve --- the regime where analytic $\pi(x)$
+became competitive. A rigorous $S_1(10^{22})$ cross-checked against an
+independent combinatorial run is the natural flagship target.
 
 \section*{Acknowledgments}
-This manuscript, the derivations, and the implementation were produced
-with substantial assistance from an AI system (Anthropic's Claude);
-the author reviewed and takes responsibility for the content. The zero
-table derives from mpmath and cross-checks against Odlyzko's published
-tables. All code and data needed to reproduce Table~\ref{tab:results} are
-in the accompanying repository.
+This manuscript, the derivations, and the implementations were produced
+with substantial assistance from an AI system (Anthropic's Claude),
+including automated exploration of the extensions in
+Sections~\ref{sec:explicit}--\ref{sec:results}; the author reviewed and
+takes responsibility for the content. Zeta zeros derive from mpmath with
+cross-checks against Odlyzko's tables~\cite{Odlyzko}. All code and data
+reproducing Table~\ref{tab:results} accompany this draft.
 
-\begin{thebibliography}{9}
-\bibitem{LO87} J.~C. Lagarias and A.~M. Odlyzko, \emph{Computing $\pi(x)$:
-an analytic method}, J. Algorithms \textbf{8} (1987), 173--191.
+\begin{thebibliography}{99}
+\bibitem{LO87} J.~C. Lagarias, A.~M. Odlyzko, \emph{Computing $\pi(x)$: an
+analytic method}, J. Algorithms \textbf{8} (1987), 173--191.
+\bibitem{Galway04} W.~F. Galway, \emph{Analytic computation of the
+prime-counting function}, Ph.D. thesis, UIUC, 2004.
 \bibitem{Platt15} D.~J. Platt, \emph{Computing $\pi(x)$ analytically},
 Math. Comp. \textbf{84} (2015), 1521--1535. arXiv:1203.5712.
-\bibitem{DR96} M. Del\'eglise and J. Rivat, \emph{Computing $\pi(x)$: the
-Meissel, Lehmer, Lagarias, Miller, Odlyzko method}, Math. Comp.
-\textbf{65} (1996), 235--245.
+\bibitem{FKBJ17} J. Franke, T. Kleinjung, J. B\"uthe, A. Jost, \emph{A
+practical analytic method for calculating $\pi(x)$}, Math. Comp.
+\textbf{86} (2017), 2889--2909.
+\bibitem{Buthe14} J. B\"uthe, \emph{An improved analytic method for
+calculating $\pi(x)$}, arXiv:1410.7008; see also arXiv:1410.7015.
+\bibitem{Buthe15} J. B\"uthe, \emph{On the first sign change in Mertens'
+theorem}, Acta Arith. \textbf{171} (2015). arXiv:1503.01277.
+\bibitem{RG70} H. Riesel, G. G\"ohl, \emph{Some calculations related to
+Riemann's prime number formula}, Math. Comp. \textbf{24} (1970), 969--983.
+\bibitem{DR96} M. Del\'eglise, J. Rivat, \emph{Computing $\pi(x)$},
+Math. Comp. \textbf{65} (1996), 235--245.
 \bibitem{Staple15} D.~B. Staple, \emph{The combinatorial algorithm for
-computing $\pi(x)$}, arXiv:1503.01839 (2015).
-\bibitem{Lucy13} Lucy\_Hedgehog, post in Project Euler Problem 10 forum
-thread (2013).
+computing $\pi(x)$}, arXiv:1503.01839.
+\bibitem{BH00} C. Bays, R.~H. Hudson, \emph{Zeroes of Dirichlet
+$L$-functions and irregularities in the distribution of primes}, Math.
+Comp. \textbf{69} (2000), 861--866.
+\bibitem{BPT20} R.~P. Brent, D.~J. Platt, T.~S. Trudgian, \emph{Accurate
+estimation of sums over zeros of the Riemann zeta-function},
+arXiv:2009.13791.
+\bibitem{MV} H.~L. Montgomery, R.~C. Vaughan, \emph{Multiplicative Number
+Theory I}, ch.\ on explicit formulae (first Riesz means).
+\bibitem{Axler14} C. Axler, \emph{On the sum of the first $n$ prime
+numbers}, arXiv:1409.1777.
+\bibitem{TG25} F. Alpay, B. Kilictas, \emph{A rigorous error bound for the
+TG kernel in prime counting}, arXiv:2506.22634 (preprint; see
+Section~\ref{sec:complexity} for why we distinguish it).
+\bibitem{Lucy13} Lucy\_Hedgehog, Project Euler Problem 10 forum (2013).
 \bibitem{Broxey23} G. Broxey, \emph{Lucy's algorithm + Fenwick trees},
-blog post (2023),
-\url{https://gbroxey.github.io/blog/2023/04/09/lucy-fenwick.html}.
-\bibitem{Walisch} K. Walisch, \emph{primesum: sum of the primes below x},
+blog (2023).
+\bibitem{Walisch} K. Walisch, \texttt{primesum},
 \url{https://github.com/kimwalisch/primesum}.
 \bibitem{Odlyzko} A.~M. Odlyzko, \emph{Tables of zeros of the Riemann zeta
 function}, \url{https://www-users.cse.umn.edu/~odlyzko/zeta_tables/}.
-\bibitem{OEIS} OEIS Foundation, sequence A046731 (sum of primes
-$<10^n$), \url{https://oeis.org/A046731}.
 \end{thebibliography}
 
 \end{document}

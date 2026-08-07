@@ -60,6 +60,21 @@ PRECISION NOTES specific to m>=2 (targets: exact integers at x=1e6, 1e7):
   * Window correction weight is p^m ~ x^m: high-precision path is
     MANDATORY, exactly as documented in the reference — u = ln(p/x) via
     log1p on exact integers, erfc in mpmath (workdps 30 here).
+  * ZERO-PRECISION FLOOR (measured, m=3, x=1e7): 25-significant-digit
+    ordinates give phase errors dgamma*ln x that enter each conjugate-pair
+    integral |I_n| ~ 2 x^(m+1/2) e^(-gamma^2 eps^2/2)/(gamma ln x); at
+    x^3.5 ~ 3e24 that is O(1) per leading zero and the run missed by -16.9
+    before refinement.  main() estimates the floor and Newton-refines the
+    leading zeros to 40 digits (2 steps of s - zeta/zeta', cached) until
+    the floor drops below 0.02.  The same estimate correctly reproduces
+    the observed residuals at every other (m, x) tried.
+
+VERIFIED (this prototype, 2000 zeros):
+    m=2: x=1e5 (+8.6e-6), 1e6 (+2.7e-6), 1e7 (-6.8e-6)   all exact ints
+    m=3: x=1e5 (+1.9e-3), 1e6 (+1.1e-3), 1e7 (+2.3e-3)   all exact ints
+    psim(sigma) pointwise vs brute force at x=1e6: m=2 worst 3.8e-5
+    (rel ~1e-22, incl. sigma=0,1e-6,1e-3), m=3 worst 1.1e-2 = the
+    zero-truncation tail, decaying exactly like x^(3.5-sigma).
 
 Non-rigorous in the same ways as the reference (floating point, heuristic
 truncation bounds); the structure is what a rigorous version would bound.
@@ -487,6 +502,44 @@ def psim_formula(x, eps, m, sigmas, g_mp, fbracket):
     return out
 
 
+# --------------------------------------------------- zero precision floor ---
+
+def zero_precision_floor(x, eps, m, g64, rel_dg):
+    """Estimated absolute error in T_m from zero ordinates known only to
+    relative precision rel_dg[i]: each conjugate-pair sigma-integral has
+    magnitude |I_n| ~ 2 x^(m+1/2) e^(-gamma^2 eps^2/2)/(gamma L) and a
+    phase error dgamma*L, combined incoherently.  This floor is what made
+    25-digit zeros insufficient for m=3 at x=1e7 (x^3.5 ~ 3e24)."""
+    L = math.log(x)
+    In = 2 * x ** (m + 0.5) * np.exp(-(g64 * eps) ** 2 / 2) / (g64 * L)
+    return float(np.sqrt(np.sum((In * (rel_dg * g64) * L) ** 2)))
+
+
+def refine_zeros(g_mp, need, dps=45):
+    """Newton-refine the first `need` zeros to `dps` digits (2 steps of
+    s -> s - zeta(s)/zeta'(s) from the 25-digit seeds; quadratic
+    convergence makes this exact to ~1e-40).  Cached in SCRATCH."""
+    cache = os.path.join(SCRATCH, f"hpzeros_refined{dps}.txt")
+    lines = []
+    if os.path.exists(cache):
+        with open(cache) as fh:
+            lines = [l.strip() for l in fh if l.strip()]
+    if len(lines) < need:
+        with mp.workdps(dps):
+            for i in range(len(lines), need):
+                s = mp.mpc(mp.mpf('0.5'), g_mp[i])
+                for _ in range(2):
+                    s = s - mp.zeta(s) / mp.zeta(s, derivative=1)
+                assert abs(s.imag - g_mp[i]) < mp.mpf('1e-18'), i
+                lines.append(mp.nstr(s.imag, dps - 5))
+        with open(cache, "w") as fh:
+            fh.write("\n".join(lines) + "\n")
+    with mp.workdps(dps):
+        for i in range(need):
+            g_mp[i] = mp.mpf(lines[i])
+    return g_mp
+
+
 # --------------------------------------------------------------- driver ----
 
 def load_zeros(zf):
@@ -506,6 +559,23 @@ def main():
     eps, tailb = choose_eps(x, g_np, m)
     print(f"m={m}  x={x:.0e}  N={len(g_np)} zeros  A={A}  eps={eps:.3e}  "
           f"window=±{KCUT*eps*100:.2f}%  tail_bound={tailb:.2e}")
+
+    # 25-significant-digit zeros are not enough once x^(m+1/2) ~ 1e24+:
+    # refine the leading zeros (cached) until the phase-error floor is small.
+    g64 = g_np.astype(np.float64)
+    rel_dg = np.full(len(g64), 1e-24)
+    floor0 = zero_precision_floor(x, eps, m, g64, rel_dg)
+    if floor0 > 0.05:
+        nref = len(g64)
+        for N in range(50, len(g64), 25):
+            rd = rel_dg.copy()
+            rd[:N] = 1e-40
+            if zero_precision_floor(x, eps, m, g64, rd) < 0.02:
+                nref = N
+                break
+        print(f"zero-precision floor {floor0:.2f} > 0.05: refining first "
+              f"{nref} zeros to 40 digits (cached) ...")
+        g_mp = refine_zeros(g_mp, nref)
 
     if "--psim-check" in sys.argv:
         splits = {m + 1} | {m - 2 * k for k in range(1, m // 2 + 1)
