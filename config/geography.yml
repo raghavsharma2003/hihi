@@ -1,0 +1,190 @@
+# Geography whitelist — high-outage corridors only.
+# pincodes are SEED values (verify in field / with Places API results); corridor
+# matching in ncr_leads/geography.py works on locality-name match first,
+# pincode second, bounding box third.
+# EXCLUDE everywhere: Lutyens/NDMC Delhi, Cyber City / DLF corporate towers,
+# dual-feed premium enclaves.
+
+corridors:
+  noida:
+    label: "Noida"
+    localities:
+      - "Sector 62"
+      - "Sector 63"
+      - "Sector 70"
+      - "Sector 71"
+      - "Sector 72"
+      - "Sector 73"
+      - "Sector 74"
+      - "Sector 75"
+      - "Sector 76"
+      - "Sector 77"
+      - "Sector 78"
+      - "Sector 79"
+      - "Sector 104"
+      - "Sector 105"
+      - "Sector 106"
+      - "Sector 107"
+      - "Sector 108"
+      - "Sector 109"
+      - "Sector 110"
+      - "Sector 115"
+      - "Sector 116"
+      - "Sector 117"
+      - "Sector 118"
+      - "Sector 119"
+      - "Sector 120"
+      - "Sector 121"
+      - "Sector 128"
+      - "Sector 129"
+      - "Sector 130"
+      - "Sector 131"
+      - "Sector 132"
+      - "Sector 133"
+      - "Sector 134"
+      - "Sector 135"
+      - "Sector 136"
+      - "Sector 137"
+      - "Sector 143"
+      - "Sector 144"
+      - "Sector 145"
+      - "Sector 146"
+      - "Sector 147"
+      - "Sector 148"
+      - "Sector 149"
+      - "Sector 150"
+      - "Sector 151"
+    city_hint: "Noida"
+    city_hint_not: ["Greater Noida", "Noida Extension"]
+    pincodes_seed: ["201301", "201303", "201304", "201305", "201307", "201309", "201310", "201313"]
+    bbox: [28.46, 77.30, 28.64, 77.45]   # south, west, north, east (approx)
+
+  gn_west:
+    label: "Greater Noida West / Noida Extension"
+    localities:
+      - "Gaur City"
+      - "Gaur Chowk"
+      - "Ek Murti"
+      - "Techzone IV"
+      - "Techzone 4"
+      - "Noida Extension"
+      - "Greater Noida West"
+      - "Sector 16C"
+      - "Sector 16B"
+      - "Sector 1 Greater Noida"
+      - "Sector 4 Greater Noida"
+    city_hint: "Greater Noida|Noida Extension|Gaur City"
+    pincodes_seed: ["201306", "201308", "201318"]
+    bbox: [28.56, 77.40, 28.64, 77.47]
+
+  ghaziabad:
+    label: "Ghaziabad"
+    localities:
+      - "Indirapuram"
+      - "Ahinsa Khand"
+      - "Niti Khand"
+      - "Abhay Khand"
+      - "Shakti Khand"
+      - "Vaishali"
+      - "Vasundhara"
+      - "Raj Nagar Extension"
+      - "Crossings Republik"
+    city_hint: "Ghaziabad"
+    pincodes_seed: ["201010", "201012", "201014", "201016", "201017"]
+    bbox: [28.60, 77.32, 28.72, 77.46]
+
+  gurgaon:
+    label: "Gurgaon"
+    localities:
+      - "Sector 45"
+      - "Sector 46"
+      - "Sector 47"
+      - "Sector 48"
+      - "Sector 49"
+      - "Sector 50"
+      - "Sector 51"
+      - "Sector 52"
+      - "Sector 53"
+      - "Sector 54"
+      - "Sector 55"
+      - "Sector 56"
+      - "Sector 57"
+      - "Sohna Road"
+      - "New Gurgaon"
+      # Sectors 65-93
+      - "Sector 65"
+      - "Sector 66"
+      - "Sector 67"
+      - "Sector 68"
+      - "Sector 69"
+      - "Sector 70"
+      - "Sector 70A"
+      - "Sector 71"
+      - "Sector 72"
+      - "Sector 73"
+      - "Sector 74"
+      - "Sector 75"
+      - "Sector 76"
+      - "Sector 77"
+      - "Sector 78"
+      - "Sector 79"
+      - "Sector 80"
+      - "Sector 81"
+      - "Sector 82"
+      - "Sector 83"
+      - "Sector 84"
+      - "Sector 85"
+      - "Sector 86"
+      - "Sector 87"
+      - "Sector 88"
+      - "Sector 89"
+      - "Sector 90"
+      - "Sector 91"
+      - "Sector 92"
+      - "Sector 93"
+    city_hint: "Gurugram|Gurgaon"
+    pincodes_seed: ["122001", "122002", "122003", "122004", "122018", "122022", "122051", "122052", "122101", "122102"]
+    bbox: [28.35, 76.90, 28.47, 77.08]
+    exclusions:
+      - "Cyber City"
+      - "DLF Cyber"
+      - "Golf Course Road"
+
+  faridabad:
+    label: "Faridabad"
+    localities:
+      - "Sector 14"
+      - "Sector 15"
+      - "Sector 16"
+      - "Sector 17"
+      - "Sector 18"
+      - "Sector 19"
+      - "Sector 20"
+      - "Sector 21"
+      - "Sector 75"
+      - "Sector 76"
+      - "Sector 77"
+      - "Sector 78"
+      - "Sector 79"
+      - "Sector 80"
+      - "Sector 81"
+      - "Sector 82"
+      - "Sector 83"
+      - "Sector 84"
+      - "Sector 85"
+      - "Sector 86"
+      - "Sector 87"
+      - "Sector 88"
+      - "Sector 89"
+      - "Neharpar"
+      - "Greater Faridabad"
+    city_hint: "Faridabad"
+    pincodes_seed: ["121001", "121002", "121003", "121004", "121005", "121006", "121007", "121101"]
+    bbox: [28.32, 77.28, 28.45, 77.38]
+
+global_exclusions:
+  - "Lutyens"
+  - "NDMC"
+  - "Cyber City"
+  - "DLF Cyber"
+  - "Connaught Place"
