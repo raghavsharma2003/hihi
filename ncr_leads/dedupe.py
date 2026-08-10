@@ -45,11 +45,23 @@ def _merge(keep: dict, other: dict) -> None:
 def dedupe(rows: list[dict]) -> list[dict]:
     out: list[dict] = []
     by_key: dict[tuple, dict] = {}
+    by_name_corridor: dict[tuple, dict] = {}
     for row in rows:
-        key = (_norm_name(row.get("name", "")), str(row.get("pincode", "")).strip())
+        pin = str(row.get("pincode", "")).strip()
+        key = (_norm_name(row.get("name", "")), pin)
         if key[0] and key in by_key:
             _merge(by_key[key], row)
             continue
+        # Same name in the same corridor merges when either side lacks a
+        # pincode (e.g. an enrichment row that discovered the pincode).
+        nc = (key[0], str(row.get("corridor", "")).strip())
+        if key[0] and nc in by_name_corridor:
+            kept = by_name_corridor[nc]
+            kept_pin = str(kept.get("pincode", "")).strip()
+            if not kept_pin or not pin or kept_pin == pin:
+                _merge(kept, row)
+                by_key[(key[0], str(kept.get("pincode", "")).strip())] = kept
+                continue
         c = _coords(row)
         dup = None
         if c:
@@ -63,5 +75,7 @@ def dedupe(rows: list[dict]) -> list[dict]:
             _merge(dup, row)
             continue
         by_key[key] = row
+        if key[0]:
+            by_name_corridor.setdefault((key[0], str(row.get("corridor", "")).strip()), row)
         out.append(row)
     return out
