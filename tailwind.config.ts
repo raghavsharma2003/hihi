@@ -30,6 +30,7 @@ const config: Config = {
       current: "#1847C9",
       sky: "#E4EDFB",
       sunsave: "#EFA00B",
+      sunink: "#B36D00",
       dieselclay: "#B3402F",
       line: "#DFE5EE",
     },

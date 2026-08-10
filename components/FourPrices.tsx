@@ -14,7 +14,7 @@ const TONE_FILL: Record<string, string> = {
 const TONE_TEXT: Record<string, string> = {
   current: "text-current",
   midnight: "text-midnight",
-  sunsave: "text-sunsave",
+  sunsave: "text-sunink",
   dieselclay: "text-dieselclay",
 };
 

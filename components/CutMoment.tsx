@@ -155,7 +155,7 @@ function Half({
             rateTone === "dieselclay"
               ? "text-dieselclay"
               : rateTone === "sunsave"
-                ? "text-sunsave"
+                ? "text-sunink"
                 : "text-midnight"
           }`}
         >

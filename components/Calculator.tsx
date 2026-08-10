@@ -206,7 +206,7 @@ export default function Calculator() {
                 <p className="text-16 font-semibold text-midnight/70">
                   You&apos;d save
                 </p>
-                <p className="mt-1 font-display font-bold tracking-tight text-sunsave">
+                <p className="mt-1 font-display font-bold tracking-tight text-sunink">
                   <Odometer
                     value={range}
                     className="text-28 sm:text-40 md:text-40 lg:text-56"
@@ -293,7 +293,7 @@ export default function Calculator() {
           {result.viable ? (
             <p className="font-mono text-14">
               saves{" "}
-              <span className="tabular font-medium text-sunsave">{range}</span>
+              <span className="tabular font-medium text-sunink">{range}</span>
               /mo
             </p>
           ) : (
@@ -354,7 +354,7 @@ function Stat({
       </dt>
       <dd
         className={`tabular mt-1 font-mono text-18 font-medium ${
-          tone === "sunsave" ? "text-sunsave" : "text-midnight"
+          tone === "sunsave" ? "text-sunink" : "text-midnight"
         }`}
       >
         {value}

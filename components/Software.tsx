@@ -10,9 +10,9 @@ export default function Software() {
     <section
       id="software"
       aria-labelledby="software-heading"
-      className="bg-sky/40 py-16 md:py-24"
+      className="scroll-mt-24 bg-sky/40 py-16 md:py-24"
     >
-      <div className="mx-auto max-w-page scroll-mt-24 px-4 md:px-6">
+      <div className="mx-auto max-w-page px-4 md:px-6">
         <Eyebrow>05 / The software</Eyebrow>
         <h2
           id="software-heading"

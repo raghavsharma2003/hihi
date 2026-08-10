@@ -56,10 +56,10 @@ const PHASE_COPY: Record<Phase, { text: string; tone: string }> = {
   charging: { text: "charging at ₹6.4 — the cheap band", tone: "text-current" },
   cut: {
     text: "surprise cut = our best-paid hour (₹21/unit vs ₹1)",
-    tone: "text-sunsave",
+    tone: "text-sunink",
   },
   shoulder: { text: "topped up, waiting for peak", tone: "text-midnight/60" },
-  peak: { text: "serving at peak, not buying it", tone: "text-sunsave" },
+  peak: { text: "serving at peak, not buying it", tone: "text-sunink" },
 };
 
 export default function DayTimeline() {

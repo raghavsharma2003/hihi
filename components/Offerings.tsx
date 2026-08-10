@@ -49,7 +49,7 @@ export default function Offerings() {
               {c.title}
             </h3>
             <p className="mt-3 text-16 text-midnight/75">{c.line}</p>
-            <p className="tabular mt-6 font-mono text-28 font-medium text-sunsave">
+            <p className="tabular mt-6 font-mono text-28 font-medium text-sunink">
               {c.stat}
             </p>
             <p className="font-mono text-12 uppercase tracking-[0.08em] text-midnight/55">
