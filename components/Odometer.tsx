@@ -1,0 +1,100 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+
+const DIGITS = "0123456789";
+
+/** Strong ease-out — entrances and the digit roll both land, never drift. */
+const EASE_OUT = "ease-[cubic-bezier(0.23,1,0.32,1)]";
+
+/**
+ * Rolls each digit vertically over 250ms when the value changes.
+ * Non-digit characters (₹ , . – L k) render static. Reduced motion: no roll.
+ *
+ * Characters are keyed by position, so when the string reshapes
+ * (₹9,500 → ₹1.2L) the cells whose kind changed remount and fade+rise in
+ * over 150ms instead of popping.
+ */
+export default function Odometer({
+  value,
+  className = "",
+}: {
+  value: string;
+  className?: string;
+}) {
+  const [reduced, setReduced] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduced(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setReduced(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  if (reduced) {
+    return <span className={`tabular ${className}`}>{value}</span>;
+  }
+
+  return (
+    <span className={`tabular inline-flex ${className}`} aria-hidden="false">
+      {value.split("").map((ch, i) =>
+        DIGITS.includes(ch) ? (
+          <Cell key={`${i}-d`}>
+            <Digit digit={Number(ch)} />
+          </Cell>
+        ) : (
+          <Cell key={`${i}-s`}>{ch}</Cell>
+        ),
+      )}
+    </span>
+  );
+}
+
+/** Fade + 4px rise on mount. Only fires for cells the value change added. */
+function Cell({ children }: { children: React.ReactNode }) {
+  const [entered, setEntered] = useState(false);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setEntered(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  return (
+    <span
+      className={`inline-block transition-[opacity,transform] duration-150 ${EASE_OUT} ${
+        entered ? "translate-y-0 opacity-100" : "translate-y-[4px] opacity-0"
+      }`}
+    >
+      {children}
+    </span>
+  );
+}
+
+function Digit({ digit }: { digit: number }) {
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (el) el.style.transform = `translateY(${-digit}em)`;
+  }, [digit]);
+
+  return (
+    <span
+      className="inline-block overflow-hidden align-baseline"
+      style={{ height: "1em", lineHeight: 1 }}
+    >
+      <span
+        ref={ref}
+        className={`inline-flex flex-col transition-transform duration-[250ms] ${EASE_OUT}`}
+        style={{ transform: `translateY(${-digit}em)` }}
+      >
+        {DIGITS.split("").map((d) => (
+          <span key={d} style={{ height: "1em", lineHeight: 1 }}>
+            {d}
+          </span>
+        ))}
+      </span>
+    </span>
+  );
+}

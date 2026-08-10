@@ -1,0 +1,260 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --daylight: #f6f8fb;
+  --surface: #ffffff;
+  --midnight: #0a1b2e;
+  --current: #1847c9;
+  --sky: #e4edfb;
+  --sunsave: #efa00b;
+  --dieselclay: #b3402f;
+  --line: #dfe5ee;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background-color: var(--daylight);
+  color: var(--midnight);
+  font-family: var(--font-body), sans-serif;
+  /* 16px at 360 → 18px from ~1210 up, no breakpoint step */
+  font-size: clamp(1rem, 0.93rem + 0.31vw, 1.125rem);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  font-optical-sizing: auto;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Wrapping quality: headings balance across lines, paragraphs avoid orphans.
+   Progressive enhancement — ignored where unsupported. */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p,
+li {
+  text-wrap: pretty;
+}
+
+/* Browser surfaces carry the design too */
+::selection {
+  background: var(--current);
+  color: var(--surface);
+}
+
+.bg-midnight ::selection,
+.dark-band ::selection {
+  background: var(--sunsave);
+  color: var(--midnight);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+
+input,
+textarea {
+  caret-color: var(--current);
+}
+
+/* Visible focus: 2px current, offset 2px, everywhere */
+:focus-visible {
+  outline: 2px solid var(--current);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.dark-band :focus-visible {
+  outline-color: var(--sky);
+}
+
+/* Range inputs: themed track + thumb, keyboard operable */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 24px;
+  background: transparent;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to right,
+    var(--current) 0%,
+    var(--current) var(--fill, 50%),
+    var(--line) var(--fill, 50%),
+    var(--line) 100%
+  );
+}
+input[type="range"]::-moz-range-track {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--line);
+}
+input[type="range"]::-moz-range-progress {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--current);
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--current);
+  box-shadow: 0 8px 24px rgba(10, 27, 46, 0.07);
+  transition: transform 150ms var(--ease-out);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--current);
+  box-shadow: 0 8px 24px rgba(10, 27, 46, 0.07);
+  transition: transform 150ms var(--ease-out);
+}
+input[type="range"]:active::-webkit-slider-thumb,
+input[type="range"]:hover::-webkit-slider-thumb {
+  transform: scale(1.15);
+}
+
+/* Number inputs: hide spinners, mono digits */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+  font-variant-numeric: tabular-nums;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Hero entrance: words rise 12px + fade, one orchestrated moment then still */
+.hero-word,
+.hero-rise {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: heroRise 500ms var(--ease-out) forwards;
+}
+
+/* Word gap set optically, not with a space glyph — the display face is tightly
+   tracked at hero size, so the normal word space reads too wide. */
+.hero-word {
+  display: inline-block;
+  margin-right: 0.22em;
+}
+
+@keyframes heroRise {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-word,
+  .hero-rise {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
+
+/* S3: genset rumble while running */
+@keyframes gensetShake {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(0.6px, -0.4px); }
+  50% { transform: translate(-0.5px, 0.5px); }
+  75% { transform: translate(0.4px, 0.3px); }
+}
+
+/* Final CTA: the current line becomes the button border and pulses once */
+.cta-terminal::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border: 2px solid var(--current);
+  border-radius: 9999px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cta-pulse::after {
+  animation: ctaPulse 900ms var(--ease-out) forwards;
+}
+
+@keyframes ctaPulse {
+  0% { opacity: 0; transform: scale(1); }
+  30% { opacity: 1; transform: scale(1); }
+  60% { opacity: 0.35; transform: scale(1.12); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-terminal::after {
+    opacity: 1;
+    animation: none;
+  }
+}
+
+/* Scroll-reveal primitives: fire once, transform+opacity only */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 600ms var(--ease-out),
+    transform 600ms var(--ease-out);
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* S7 product frames: tilt 2° then straighten on enter */
+.soft-frame.reveal {
+  transform: rotate(2deg) translateY(16px);
+}
+.soft-frame.reveal.is-in {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
