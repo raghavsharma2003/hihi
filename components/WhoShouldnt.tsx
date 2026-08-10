@@ -27,7 +27,7 @@ export default function WhoShouldnt() {
         </h2>
         <ul className="mt-10 grid gap-6 md:max-w-[70ch]">
           {TURNAWAYS.map((t, i) => (
-            <Reveal as="li" key={i} delay={i * 120} className="flex gap-4 border-b border-surface/15 pb-6 text-18 leading-relaxed text-surface/90 md:text-22">
+            <Reveal as="li" key={i} delay={i * 80} className="flex gap-4 border-b border-surface/15 pb-6 text-18 leading-relaxed text-surface/90 md:text-22">
               <svg aria-hidden="true" viewBox="0 0 12 12" className="mt-2 h-3 w-3 shrink-0 md:mt-2.5">
                 <path d="M1 1 L11 11 M11 1 L1 11" stroke="#E4EDFB" strokeWidth="2" strokeLinecap="round" opacity="0.7" />
               </svg>

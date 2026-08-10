@@ -22,13 +22,13 @@ export default function Software() {
         </h2>
 
         <div className="mt-10 grid gap-6 md:grid-cols-3">
-          <Frame title="Live dispatch" caption="grid, battery and genset flows — every minute, every site">
+          <Frame delay={0} title="Live dispatch" caption="grid, battery and genset flows — every minute, every site">
             <DispatchMock />
           </Frame>
-          <Frame title="Savings ledger" caption="verified ₹, month by month — the number our fee is judged against">
+          <Frame delay={70} title="Savings ledger" caption="verified ₹, month by month — the number our fee is judged against">
             <LedgerMock />
           </Frame>
-          <Frame title="Cut-risk forecast" caption="the locked reserve, re-sized by hour from your cut history">
+          <Frame delay={140} title="Cut-risk forecast" caption="the locked reserve, re-sized by hour from your cut history">
             <ForecastMock />
           </Frame>
         </div>
@@ -44,14 +44,17 @@ export default function Software() {
 function Frame({
   title,
   caption,
+  delay = 0,
   children,
 }: {
   title: string;
   caption: string;
+  /** 70ms steps: enough to read as a sequence, short enough to feel like one move. */
+  delay?: number;
   children: React.ReactNode;
 }) {
   return (
-    <Reveal as="figure" className="soft-frame">
+    <Reveal as="figure" delay={delay} className="soft-frame">
       <div className="overflow-hidden rounded-card border border-line bg-surface shadow-card">
         <div className="flex items-center gap-1.5 border-b border-line bg-daylight px-4 py-2.5">
           <span className="h-2 w-2 rounded-full bg-line" />

@@ -28,15 +28,26 @@ body {
   background-color: var(--daylight);
   color: var(--midnight);
   font-family: var(--font-body), sans-serif;
-  font-size: 16px;
+  /* 16px at 360 → 18px from ~1210 up, no breakpoint step */
+  font-size: clamp(1rem, 0.93rem + 0.31vw, 1.125rem);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  font-optical-sizing: auto;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
-@media (min-width: 768px) {
-  body {
-    font-size: 18px;
-  }
+/* Wrapping quality: headings balance across lines, paragraphs avoid orphans.
+   Progressive enhancement — ignored where unsupported. */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p,
+li {
+  text-wrap: pretty;
 }
 
 /* Browser surfaces carry the design too */
@@ -152,9 +163,11 @@ input[type="number"] {
   animation: heroRise 500ms var(--ease-out) forwards;
 }
 
+/* Word gap set optically, not with a space glyph — the display face is tightly
+   tracked at hero size, so the normal word space reads too wide. */
 .hero-word {
   display: inline-block;
-  margin-right: 0.24em;
+  margin-right: 0.22em;
 }
 
 @keyframes heroRise {

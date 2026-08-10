@@ -10,12 +10,14 @@ import Hero from "@/components/Hero";
 import HowItStarts from "@/components/HowItStarts";
 import Nav from "@/components/Nav";
 import Offerings from "@/components/Offerings";
+import SmoothScroll from "@/components/SmoothScroll";
 import Software from "@/components/Software";
 import WhoShouldnt from "@/components/WhoShouldnt";
 
 export default function Home() {
   return (
     <>
+      <SmoothScroll />
       <Nav />
       <main className="relative overflow-x-clip">
         <CurrentLine />

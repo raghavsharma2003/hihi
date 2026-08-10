@@ -2,9 +2,20 @@
 
 import { useEffect, useRef } from "react";
 
+/** A stagger step longer than this reads as the page loading, not as rhythm. */
+const MAX_DELAY = 240;
+
 /**
  * Scroll reveal that fires once and never re-animates.
  * CSS in globals.css handles motion; reduced-motion renders final state.
+ *
+ * Firing rule: threshold 0 with a -10% bottom root margin. A percentage
+ * threshold never resolves for an element taller than the viewport (a phone
+ * reading a full-height section would wait forever); the root margin gives the
+ * "slightly inside the fold" feel without that failure mode.
+ *
+ * Stagger: pass `delay` as `index * 60..80`. It is capped at 240ms so a long
+ * list's tail never sits blank.
  */
 export default function Reveal({
   children,
@@ -18,6 +29,7 @@ export default function Reveal({
   as?: "div" | "section" | "li" | "figure" | "p";
 }) {
   const ref = useRef<HTMLElement | null>(null);
+  const staggerDelay = Math.max(0, Math.min(delay, MAX_DELAY));
 
   useEffect(() => {
     const el = ref.current;
@@ -31,7 +43,7 @@ export default function Reveal({
           }
         }
       },
-      { threshold: 0.15 },
+      { threshold: 0, rootMargin: "0px 0px -10% 0px" },
     );
     io.observe(el);
     return () => io.disconnect();
@@ -41,7 +53,7 @@ export default function Reveal({
     <Tag
       ref={ref as React.RefObject<never>}
       className={`reveal ${className}`}
-      style={delay ? { transitionDelay: `${delay}ms` } : undefined}
+      style={staggerDelay ? { transitionDelay: `${staggerDelay}ms` } : undefined}
     >
       {children}
     </Tag>

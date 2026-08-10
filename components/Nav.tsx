@@ -22,12 +22,15 @@ export default function Nav() {
 
   return (
     <header
-      className="fixed inset-x-0 top-0 z-50 border-b border-line/70 bg-daylight/80 backdrop-blur-md transition-[padding] duration-300 ease-out"
-      style={{ paddingBlock: shrunk ? "8px" : "16px" }}
+      // Translucent layer, content scrolls under it. The only animated
+      // property is padding on this fixed element — nothing below it moves,
+      // and the row's own children never change size, so no reflow jitter.
+      className="fixed inset-x-0 top-0 z-50 border-b border-line/70 bg-daylight/85 backdrop-blur-md transition-[padding] duration-200 ease-out"
+      style={{ paddingBlock: shrunk ? "0.5rem" : "1rem" }}
     >
       <nav
         aria-label="Main"
-        className="mx-auto flex max-w-page items-center justify-between gap-4 px-4 md:px-6"
+        className="mx-auto flex max-w-page items-center justify-between gap-3 px-4 md:gap-6 md:px-6"
       >
         <a
           href="#top"
@@ -35,12 +38,12 @@ export default function Nav() {
         >
           {BRAND.name}
         </a>
-        <div className="hidden items-center gap-8 md:flex">
+        <div className="hidden items-center gap-6 md:flex lg:gap-8">
           {LINKS.map((l) => (
             <a
               key={l.href}
               href={l.href}
-              className="text-14 font-semibold text-midnight/80 transition-colors duration-150 hover:text-current"
+              className="whitespace-nowrap text-14 font-semibold text-midnight/80 transition-colors duration-150 hover:text-current"
             >
               {l.label}
             </a>
@@ -48,7 +51,7 @@ export default function Nav() {
         </div>
         <a
           href="#calculator"
-          className="rounded-full bg-current px-4 py-2 text-14 font-semibold text-surface transition-transform duration-150 ease-out hover:scale-[1.03] active:scale-[0.98] md:px-5"
+          className="whitespace-nowrap rounded-full bg-current px-4 py-2.5 text-14 font-semibold text-surface transition-transform duration-150 ease-out hover:scale-[1.03] active:scale-[0.98] md:px-5"
         >
           Book a free audit
         </a>

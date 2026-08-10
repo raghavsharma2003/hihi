@@ -9,6 +9,9 @@ import LeadForm from "./LeadForm";
 import Odometer from "./Odometer";
 import RangeField from "./RangeField";
 
+/** Strong ease-out, the one curve every entrance and settle here uses. */
+const EASE_OUT = "ease-[cubic-bezier(0.23,1,0.32,1)]";
+
 export default function Calculator() {
   const [mode, setMode] = useState<Mode>("commercial");
 
@@ -79,20 +82,30 @@ export default function Calculator() {
       <div className="mt-6 grid gap-6 rounded-card border border-line bg-surface p-4 shadow-card md:mt-10 md:grid-cols-2 md:gap-10 md:p-10">
         {/* Inputs */}
         <div className="min-w-0">
+          {/* Two equal columns, so the selection is one pill sliding between
+              them rather than two backgrounds crossfading. */}
           <div
             role="tablist"
             aria-label="Site type"
-            className="inline-flex rounded-full border border-line bg-daylight p-1"
+            className="relative inline-grid grid-cols-2 rounded-full border border-line bg-daylight p-1"
           >
+            <span
+              aria-hidden="true"
+              style={{
+                transform:
+                  mode === "society" ? "translateX(100%)" : "translateX(0)",
+              }}
+              className={`pointer-events-none absolute inset-y-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-current transition-transform duration-200 ${EASE_OUT}`}
+            />
             {(["commercial", "society"] as const).map((m) => (
               <button
                 key={m}
                 role="tab"
                 aria-selected={mode === m}
                 onClick={() => setMode(m)}
-                className={`rounded-full px-4 py-2 text-14 font-semibold transition-colors duration-150 ${
+                className={`relative rounded-full px-4 py-2 text-14 font-semibold transition-[color,transform] duration-200 ${EASE_OUT} active:scale-[0.97] active:duration-100 ${
                   mode === m
-                    ? "bg-current text-surface"
+                    ? "text-surface"
                     : "text-midnight/70 hover:text-midnight"
                 }`}
               >
@@ -184,68 +197,73 @@ export default function Calculator() {
           aria-live="polite"
           className="min-w-0 rounded-card bg-sky/60 p-4 md:p-8"
         >
-          {result.viable ? (
-            <>
-              <p className="text-16 font-semibold text-midnight/70">
-                You&apos;d save
-              </p>
-              <p className="mt-1 font-display font-bold tracking-tight text-sunsave">
-                <Odometer
-                  value={range}
-                  className="text-28 sm:text-40 md:text-40 lg:text-56"
-                />
-              </p>
-              <p className="text-16 font-semibold text-midnight/70">
-                per month
-              </p>
+          {/* Keyed on the verdict: the honest-fail copy and the savings
+              readout are different answers, so one fades out of the way of
+              the other instead of hard-cutting. */}
+          <StateFade key={result.viable ? "viable" : "not-yet"}>
+            {result.viable ? (
+              <>
+                <p className="text-16 font-semibold text-midnight/70">
+                  You&apos;d save
+                </p>
+                <p className="mt-1 font-display font-bold tracking-tight text-sunsave">
+                  <Odometer
+                    value={range}
+                    className="text-28 sm:text-40 md:text-40 lg:text-56"
+                  />
+                </p>
+                <p className="text-16 font-semibold text-midnight/70">
+                  per month
+                </p>
 
-              <dl className="mt-6 grid grid-cols-2 gap-x-4 gap-y-5">
-                <Stat
-                  label="Yearly savings"
-                  value={`${formatINR(result.yearlySavingLow)}–${formatINR(result.yearlySavingHigh)}`}
-                  tone="sunsave"
-                />
-                <Stat
-                  label="Diesel avoided / yr"
-                  value={formatLitres(result.litresPerYear)}
-                />
-                <Stat
-                  label="Payback on your system"
-                  value={`${formatYears(result.paybackLowYears)}–${formatYears(result.paybackHighYears)} yrs`}
-                />
-                <Stat
-                  label="Your system size"
-                  value={`~${formatKwh(result.battKwh)}`}
-                />
-              </dl>
+                <dl className="mt-6 grid grid-cols-2 gap-x-4 gap-y-5">
+                  <Stat
+                    label="Yearly savings"
+                    value={`${formatINR(result.yearlySavingLow)}–${formatINR(result.yearlySavingHigh)}`}
+                    tone="sunsave"
+                  />
+                  <Stat
+                    label="Diesel avoided / yr"
+                    value={formatLitres(result.litresPerYear)}
+                  />
+                  <Stat
+                    label="Payback on your system"
+                    value={`${formatYears(result.paybackLowYears)}–${formatYears(result.paybackHighYears)} yrs`}
+                  />
+                  <Stat
+                    label="Your system size"
+                    value={`~${formatKwh(result.battKwh)}`}
+                  />
+                </dl>
 
-              <p className="mt-6 text-14 text-midnight/60">
-                Same formulas we use in paid audits. Ranges, not promises —
-                your real cut-log sharpens them.
-              </p>
-            </>
-          ) : (
-            <>
-              <p className="font-display text-28 font-bold tracking-tight">
-                A battery may not pay for you yet — and we&apos;d tell you that
-                in person too.
-              </p>
-              <p className="mt-4 text-16 text-midnight/80">
-                {mode === "commercial"
-                  ? `Below ₹${(CALC.MIN_COMMERCIAL_DIESEL / 1000).toFixed(0)}k a month of diesel, the maths rarely clears. `
-                  : "With under an hour of cuts a day, the maths rarely clears. "}
-                If you already own a lithium inverter, our{" "}
-                {OFFERINGS.autopilotPrice} Autopilot software is your product —
-                it earns its fee on tariff timing alone.
-              </p>
-              <a
-                href="#software"
-                className="mt-6 inline-block rounded-full border border-current px-5 py-2.5 text-16 font-semibold text-current transition-colors duration-150 hover:bg-surface"
-              >
-                See Autopilot
-              </a>
-            </>
-          )}
+                <p className="mt-6 text-14 text-midnight/60">
+                  Same formulas we use in paid audits. Ranges, not promises —
+                  your real cut-log sharpens them.
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="font-display text-28 font-bold tracking-tight">
+                  A battery may not pay for you yet — and we&apos;d tell you that
+                  in person too.
+                </p>
+                <p className="mt-4 text-16 text-midnight/80">
+                  {mode === "commercial"
+                    ? `Below ₹${(CALC.MIN_COMMERCIAL_DIESEL / 1000).toFixed(0)}k a month of diesel, the maths rarely clears. `
+                    : "With under an hour of cuts a day, the maths rarely clears. "}
+                  If you already own a lithium inverter, our{" "}
+                  {OFFERINGS.autopilotPrice} Autopilot software is your product —
+                  it earns its fee on tariff timing alone.
+                </p>
+                <a
+                  href="#software"
+                  className={`mt-6 inline-block rounded-full border border-current px-5 py-2.5 text-16 font-semibold text-current transition-[background-color,transform] duration-150 ${EASE_OUT} hover:bg-surface active:scale-[0.97] active:duration-100`}
+                >
+                  See Autopilot
+                </a>
+              </>
+            )}
+          </StateFade>
 
           {result.viable && (
             <div className="mt-6 border-t border-line pt-6">
@@ -254,7 +272,7 @@ export default function Calculator() {
               ) : (
                 <button
                   onClick={() => setFormOpen(true)}
-                  className="w-full rounded-full bg-current px-6 py-3 text-16 font-semibold text-surface transition-transform duration-150 ease-out hover:scale-[1.02] active:scale-[0.98]"
+                  className={`w-full rounded-full bg-current px-6 py-3 text-16 font-semibold text-surface transition-transform duration-150 ${EASE_OUT} [@media(hover:hover)_and_(pointer:fine)]:hover:scale-[1.02] active:scale-[0.98] active:duration-100`}
                 >
                   Get this verified free — book the audit
                 </button>
@@ -267,7 +285,7 @@ export default function Calculator() {
       {/* Mobile sticky live-result bar */}
       <div
         aria-hidden={!barVisible}
-        className={`fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 px-4 py-3 shadow-card backdrop-blur-md transition-transform duration-300 ease-out md:hidden ${
+        className={`fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 px-4 py-3 shadow-card backdrop-blur-md transition-transform duration-[250ms] ${EASE_OUT} md:hidden ${
           barVisible ? "translate-y-0" : "translate-y-full"
         }`}
       >
@@ -286,13 +304,37 @@ export default function Calculator() {
           <a
             href="#calculator"
             onClick={() => setFormOpen(true)}
-            className="shrink-0 rounded-full bg-current px-4 py-2 text-14 font-semibold text-surface"
+            className={`shrink-0 rounded-full bg-current px-4 py-2 text-14 font-semibold text-surface transition-transform duration-150 ${EASE_OUT} active:scale-[0.97] active:duration-100`}
           >
             Free audit
           </a>
         </div>
       </div>
     </section>
+  );
+}
+
+/**
+ * Fades its subtree in on mount. Used with a key so the two verdict states
+ * hand over instead of teleporting. Opacity only — the panel is a block of
+ * numbers being read, so it must not slide.
+ */
+function StateFade({ children }: { children: React.ReactNode }) {
+  const [entered, setEntered] = useState(false);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setEntered(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  return (
+    <div
+      className={`transition-opacity duration-200 ${EASE_OUT} ${
+        entered ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      {children}
+    </div>
   );
 }
 

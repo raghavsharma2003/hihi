@@ -31,6 +31,9 @@ const ITEMS = [
   },
 ];
 
+/** Strong ease-out — the row, the icon and the copy all land on one curve. */
+const EASE_OUT = "ease-[cubic-bezier(0.23,1,0.32,1)]";
+
 export default function Faq() {
   const [open, setOpen] = useState<number>(0);
 
@@ -57,24 +60,31 @@ export default function Faq() {
                 onClick={() => setOpen(isOpen ? -1 : i)}
                 aria-expanded={isOpen}
                 aria-controls={`faq-a-${i}`}
-                className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left text-16 font-semibold transition-colors duration-150 hover:text-current md:px-6 md:py-5 md:text-18"
+                className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left text-16 font-semibold transition-colors duration-150 ease-[ease] hover:text-current active:text-current md:px-6 md:py-5 md:text-18"
               >
                 {item.q}
                 <svg
                   viewBox="0 0 16 16"
                   aria-hidden="true"
-                  className={`h-4 w-4 shrink-0 transition-transform duration-[250ms] ease-out ${isOpen ? "rotate-45" : ""}`}
+                  className={`h-4 w-4 shrink-0 transition-transform duration-[250ms] ${EASE_OUT} ${isOpen ? "rotate-45" : ""}`}
                 >
                   <path d="M8 2 v12 M2 8 h12" stroke="#1847C9" strokeWidth="2" strokeLinecap="round" />
                 </svg>
               </button>
+              {/* grid-template-rows 0fr→1fr: the one height-ish transition
+                  worth its layout cost, and it retargets mid-flight when the
+                  row is toggled twice quickly. */}
               <div
                 id={`faq-a-${i}`}
                 role="region"
-                className="grid transition-[grid-template-rows] duration-[250ms] ease-out"
+                className={`grid transition-[grid-template-rows] duration-[250ms] ${EASE_OUT}`}
                 style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
               >
-                <div className="overflow-hidden">
+                <div
+                  className={`overflow-hidden transition-opacity duration-[200ms] ${EASE_OUT} ${
+                    isOpen ? "opacity-100" : "opacity-0"
+                  }`}
+                >
                   <p className="px-5 pb-5 text-16 text-midnight/75 md:px-6 md:pb-6">
                     {item.a}
                   </p>

@@ -48,7 +48,7 @@ export default function FourPrices() {
     <section
       ref={ref}
       aria-labelledby="prices-heading"
-      className="mx-auto max-w-page px-4 py-16 md:px-6 md:py-24"
+      className="mx-auto max-w-page px-4 py-section md:px-6"
     >
       <Eyebrow>01 / The problem</Eyebrow>
       <h2
@@ -58,18 +58,32 @@ export default function FourPrices() {
         One unit of electricity, four different prices.
       </h2>
 
-      <div className="mt-10 flex h-[280px] items-end gap-3 md:h-[360px] md:gap-8">
+      {/* One shared 3-row grid — ₹ labels / plot / names — rather than four
+          independent columns. The label row is reserved, so the tallest bar
+          (diesel, 100%) can never shove its ₹28–32 out of the chart and into
+          the heading; and because the rows are shared, a name that wraps to
+          three lines can't shorten its own bar off the common baseline. */}
+      <div
+        className="mt-8 grid h-chart grid-rows-[auto_minmax(0,1fr)_auto] gap-x-2 sm:gap-x-4 md:mt-12 md:gap-x-6 lg:gap-x-8"
+        style={{
+          gridTemplateColumns: `repeat(${PRICES_LADDER.length}, minmax(0, 1fr))`,
+        }}
+      >
+        {PRICES_LADDER.map((p, i) => (
+          <p
+            key={`v-${p.label}`}
+            className={`tabular mb-2 self-end whitespace-nowrap text-center font-mono text-12 font-medium sm:text-14 md:text-22 ${TONE_TEXT[p.tone]} ${grown ? "opacity-100" : "opacity-0"}`}
+            style={{ transition: `opacity 400ms cubic-bezier(0.22,1,0.36,1) ${i * 120 + 300}ms` }}
+          >
+            {p.range}
+          </p>
+        ))}
+
         {PRICES_LADDER.map((p, i) => {
           const h = (p.value / max) * 100;
           const isDiesel = p.tone === "dieselclay";
           return (
-            <div key={p.label} className="flex flex-1 flex-col justify-end self-stretch">
-              <p
-                className={`tabular mb-2 text-center font-mono text-14 font-medium md:text-22 ${TONE_TEXT[p.tone]} ${grown ? "opacity-100" : "opacity-0"}`}
-                style={{ transition: `opacity 400ms cubic-bezier(0.22,1,0.36,1) ${i * 120 + 300}ms` }}
-              >
-                {p.range}
-              </p>
+            <div key={`b-${p.label}`} className="flex min-h-0 items-end">
               <div
                 id={isDiesel ? "diesel-bar" : undefined}
                 className={`w-full origin-bottom rounded-t-card ${TONE_FILL[p.tone]}`}
@@ -83,15 +97,21 @@ export default function FourPrices() {
                   } ${i * 120}ms`,
                 }}
               />
-              <p className="mt-3 text-center text-12 font-semibold text-midnight/70 md:text-14">
-                {p.label}
-              </p>
             </div>
           );
         })}
+
+        {PRICES_LADDER.map((p) => (
+          <p
+            key={`l-${p.label}`}
+            className="mt-3 text-balance text-center text-12 font-semibold leading-snug text-midnight/70 md:text-14"
+          >
+            {p.label}
+          </p>
+        ))}
       </div>
 
-      <p className="mx-auto mt-10 max-w-[52ch] text-center text-16 text-midnight/70 md:text-18">
+      <p className="mx-auto mt-8 max-w-[52ch] text-center text-16 text-midnight/70 md:mt-12 md:text-18">
         Every genset hour is bought at the top of this ladder. Our whole
         business is moving you down it.
       </p>

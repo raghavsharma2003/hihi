@@ -42,7 +42,7 @@ export default function Offerings() {
         {CARDS.map((c, i) => (
           <Reveal
             key={c.title}
-            delay={i * 120}
+            delay={i * 70}
             className="rounded-card border border-line bg-surface p-6 shadow-card"
           >
             <h3 className="font-display text-22 font-bold tracking-tight">

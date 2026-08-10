@@ -2,38 +2,62 @@
 
 import { useEffect, useRef, useState } from "react";
 import { BRAND } from "@/config/business";
-import { getGsap, prefersReducedMotion } from "@/lib/gsap";
+import { getGsap, MQ } from "@/lib/gsap";
 import Eyebrow from "./Eyebrow";
 
 /**
  * S3 — the moment the power cuts. Scroll-pinned briefly; scrub progress
  * drives both halves: without us the windows die and the genset coughs on,
  * with us the battery bridges in ≤20ms and the lifts don't notice.
+ *
+ * Desktop pins at "top top" — the section reserves NAV_HEIGHT of top padding
+ * (md:pt-[72px]) so the fixed nav never covers the copy, and centres what's
+ * left. Mobile never pins: same scrub, generous range. Reduced motion jumps
+ * to the finished state with no trigger at all.
  */
 export default function CutMoment() {
   const sectionRef = useRef<HTMLElement>(null);
   const [p, setP] = useState(0); // 0..1 scrub progress
+  // Set from matchMedia in the effect — never during render, or SSR and the
+  // client disagree about the markup.
   const [staticMode, setStaticMode] = useState(false);
 
   useEffect(() => {
-    if (prefersReducedMotion()) {
-      setStaticMode(true);
-      setP(1);
-      return;
-    }
-    const { ScrollTrigger } = getGsap();
+    const { gsap, ScrollTrigger } = getGsap();
     const el = sectionRef.current;
     if (!el) return;
-    const pinned = window.innerWidth >= 768;
-    const st = ScrollTrigger.create({
-      trigger: el,
-      start: pinned ? "top top" : "top 75%",
-      end: pinned ? "+=120%" : "bottom 55%",
-      pin: pinned,
-      scrub: 0.4,
-      onUpdate: (self) => setP(self.progress),
+
+    const mm = gsap.matchMedia();
+    mm.add(MQ, (context) => {
+      const reduced = Boolean(context.conditions?.reduced);
+      const desktop = Boolean(context.conditions?.desktop);
+
+      setStaticMode(reduced);
+      if (reduced) {
+        setP(1);
+        return;
+      }
+
+      ScrollTrigger.create({
+        trigger: el,
+        start: desktop ? "top top" : "top 80%",
+        // Desktop: ~1.1 viewport-heights of scrub — long enough to read the
+        // beat, short enough that the pin never feels like a trap.
+        end: desktop
+          ? () => `+=${Math.round(window.innerHeight * 1.1)}`
+          : "bottom 40%",
+        pin: desktop,
+        anticipatePin: 1,
+        // Lenis already smooths the scroll position; a big scrub on top of it
+        // double-smooths and reads as lag.
+        scrub: 0.5,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => setP(self.progress),
+        onRefresh: (self) => setP(self.progress),
+      });
     });
-    return () => st.kill();
+
+    return () => mm.revert();
   }, []);
 
   // phase timings along the pin
@@ -51,9 +75,9 @@ export default function CutMoment() {
     <section
       ref={sectionRef}
       aria-labelledby="cut-heading"
-      className="bg-sky/40 py-16 md:py-0 md:min-h-screen md:flex md:flex-col md:justify-center"
+      className="bg-sky/40 py-16 md:flex md:min-h-screen md:flex-col md:justify-center md:pb-8 md:pt-[72px]"
     >
-      <div className="mx-auto w-full max-w-page px-4 md:px-6 md:pt-20">
+      <div className="mx-auto w-full max-w-page px-4 md:px-6">
         <Eyebrow>02 / The moment the power cuts</Eyebrow>
         <h2
           id="cut-heading"
@@ -62,7 +86,7 @@ export default function CutMoment() {
           Same street. Same cut. Two very different minutes.
         </h2>
 
-        <div className="mt-8 grid gap-4 md:mt-12 md:grid-cols-2 md:gap-8">
+        <div className="mt-8 grid gap-4 md:grid-cols-2 md:gap-8">
           <Half
             title={`Without`}
             cut={cut}
@@ -85,7 +109,7 @@ export default function CutMoment() {
           />
         </div>
 
-        <p className="mt-6 max-w-[64ch] text-14 text-midnight/60 md:text-16">
+        <p className="mt-6 max-w-[64ch] text-14 text-midnight/60 md:mt-5 md:text-16">
           Long cut? The genset auto-starts as reserve. It stays. We just make
           sure it rarely runs.
         </p>
@@ -139,6 +163,9 @@ function Half({
         </span>
       </figcaption>
 
+      {/* Height-capped at md so the pinned section still fits a short viewport
+          (1024x768) without clipping — the art scales down and stays centred
+          via preserveAspectRatio; it never overflows the pin. */}
       <svg
         viewBox="0 0 320 200"
         role="img"
@@ -147,7 +174,7 @@ function Half({
             ? "Building with battery: the grid line snaps but every window stays lit"
             : "Building without battery: the grid line snaps, windows go dark, then a diesel genset starts with smoke"
         }
-        className="mt-4 w-full"
+        className="mt-4 w-full md:mt-3 md:max-h-[26vh]"
       >
         {/* grid line in from the left; snaps on cut */}
         {cut ? (
@@ -221,7 +248,7 @@ function Half({
         )}
       </svg>
 
-      <div className="mt-3 flex min-h-[3.5rem] items-center">
+      <div className="mt-3 flex min-h-[3.5rem] items-center md:min-h-[3rem]">
         {isUs ? (
           <p className="font-mono text-14 md:text-16">
             <span className="font-medium text-current">≤20 ms.</span>{" "}

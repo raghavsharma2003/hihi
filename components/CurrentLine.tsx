@@ -3,6 +3,8 @@
 import { useEffect, useRef } from "react";
 import { getGsap, prefersReducedMotion } from "@/lib/gsap";
 
+type Anchor = { x: number; top: number; bottom: number };
+
 /**
  * THE signature element: one continuous 2px path of electricity running the
  * whole page, drawn by scroll (stroke-dashoffset scrub). It enters from a
@@ -10,6 +12,14 @@ import { getGsap, prefersReducedMotion } from "@/lib/gsap";
  * the diesel bar (turns clay, dead-ends with a burn mark), and terminates at
  * the final CTA button, whose border pulses once. Reduced motion: fully
  * drawn, static.
+ *
+ * Measurement is the fragile part: the path can only be traced once pins have
+ * inserted their spacers and web fonts have settled, otherwise every station
+ * is off by tens of pixels. So geometry is rebuilt on ScrollTrigger's own
+ * "refresh" event (which also covers window resize) plus one build after
+ * document.fonts.ready — no timers, no separate resize listener. The scroll
+ * triggers themselves are created exactly once and reused across rebuilds,
+ * so a rebuild can never leave a duplicate behind.
  */
 export default function CurrentLine() {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -27,9 +37,71 @@ export default function CurrentLine() {
 
     const reduced = prefersReducedMotion();
     const { ScrollTrigger } = getGsap();
-    let triggers: { kill: () => void }[] = [];
+    type Trigger = ReturnType<typeof ScrollTrigger.create>;
+
+    let mainTrigger: Trigger | null = null;
+    let forkTrigger: Trigger | null = null;
+    let mainLen = 0;
+    let forkLen = 0;
+    let rafId = 0;
+    let disposed = false;
+
+    /** Paint the rail at a given scroll progress. */
+    const drawMain = (progress: number) => {
+      // stay a beat ahead of the viewport so the head is visible
+      const p = Math.min(1, progress * 1.08);
+      main.style.strokeDashoffset = String(mainLen * (1 - p));
+    };
+
+    /** Paint the diesel branch + its burn mark. */
+    const drawFork = (progress: number) => {
+      fork.style.strokeDashoffset = String(forkLen * (1 - progress));
+      burn.style.opacity = progress > 0.95 ? "1" : "0";
+    };
+
+    const killTriggers = () => {
+      mainTrigger?.kill();
+      forkTrigger?.kill();
+      mainTrigger = null;
+      forkTrigger = null;
+    };
+
+    /**
+     * Create the two scroll triggers, once. Both use function-based ends and
+     * invalidateOnRefresh, so ScrollTrigger re-measures their ranges itself —
+     * a rebuild only has to refresh the path geometry, never the triggers.
+     */
+    const ensureTriggers = () => {
+      if (disposed || reduced) return;
+
+      if (!mainTrigger) {
+        mainTrigger = ScrollTrigger.create({
+          // the whole document is the range: 0 → max scroll
+          start: 0,
+          end: () => Math.max(1, ScrollTrigger.maxScroll(window)),
+          // Lenis smooths the scroll position upstream, so the line tracks it
+          // 1:1 and never feels like it is trailing behind the page.
+          scrub: 0.5,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => drawMain(self.progress),
+        });
+      }
+
+      const dieselEl = document.getElementById("diesel-bar");
+      if (!forkTrigger && dieselEl) {
+        forkTrigger = ScrollTrigger.create({
+          trigger: dieselEl,
+          start: "top 85%",
+          end: "top 35%",
+          scrub: 0.5,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => drawFork(self.progress),
+        });
+      }
+    };
 
     const build = () => {
+      if (disposed) return;
       const docH = document.documentElement.scrollHeight;
       const vw = document.documentElement.clientWidth;
       svg.setAttribute("viewBox", `0 0 ${vw} ${docH}`);
@@ -40,7 +112,7 @@ export default function CurrentLine() {
       const railX = wide ? (vw - 1200) / 2 - 44 : vw >= 768 ? 14 : 7;
       const swayA = wide ? 22 : 5;
       const swayB = wide ? -10 : -3;
-      const at = (el: Element | null) => {
+      const at = (el: Element | null): Anchor | null => {
         if (!el) return null;
         const r = el.getBoundingClientRect();
         return {
@@ -50,9 +122,10 @@ export default function CurrentLine() {
         };
       };
 
-      const stations = Array.from(
-        document.querySelectorAll("[data-station]"),
-      ).map((el) => at(el)!.top);
+      const stations = Array.from(document.querySelectorAll("[data-station]"))
+        .map(at)
+        .filter((a): a is Anchor => a !== null)
+        .map((a) => a.top);
       const cta = at(document.getElementById("final-cta-button"));
       const diesel = at(document.getElementById("diesel-bar"));
 
@@ -107,14 +180,11 @@ export default function CurrentLine() {
         burn.style.visibility = "hidden";
       }
 
-      // draw-by-scroll
-      const mainLen = main.getTotalLength();
-      const forkLen = fork.getTotalLength();
+      // draw-by-scroll: geometry changed, so the dash metrics have to follow
+      mainLen = main.getTotalLength();
+      forkLen = fork.getTotalLength();
       main.style.strokeDasharray = String(mainLen);
       fork.style.strokeDasharray = String(forkLen);
-
-      triggers.forEach((t) => t.kill());
-      triggers = [];
 
       if (reduced) {
         main.style.strokeDashoffset = "0";
@@ -123,46 +193,33 @@ export default function CurrentLine() {
         return;
       }
 
-      main.style.strokeDashoffset = String(mainLen);
-      fork.style.strokeDashoffset = String(forkLen);
-      burn.style.opacity = "0";
-
-      triggers.push(
-        ScrollTrigger.create({
-          start: 0,
-          end: () => docH - window.innerHeight,
-          scrub: 0.6,
-          onUpdate: (self) => {
-            // stay a beat ahead of the viewport so the head is visible
-            const p = Math.min(1, self.progress * 1.08);
-            main.style.strokeDashoffset = String(mainLen * (1 - p));
-          },
-        }),
-      );
-
-      const priceSection = document.getElementById("diesel-bar");
-      if (priceSection) {
-        triggers.push(
-          ScrollTrigger.create({
-            trigger: priceSection,
-            start: "top 85%",
-            end: "top 35%",
-            scrub: 0.6,
-            onUpdate: (self) => {
-              fork.style.strokeDashoffset = String(forkLen * (1 - self.progress));
-              burn.style.opacity = self.progress > 0.95 ? "1" : "0";
-            },
-          }),
-        );
-      }
+      ensureTriggers();
+      // repaint at wherever the page currently is, not from zero
+      drawMain(mainTrigger ? mainTrigger.progress : 0);
+      drawFork(forkTrigger ? forkTrigger.progress : 0);
     };
 
-    // build after layout settles (fonts, pin-spacers), rebuild on refresh/resize
-    const rebuild = () => requestAnimationFrame(build);
-    const t = setTimeout(rebuild, 100);
-    ScrollTrigger.addEventListener("refreshInit", () => {});
-    ScrollTrigger.addEventListener("refresh", rebuild);
-    window.addEventListener("resize", rebuild);
+    /**
+     * Coalesce every rebuild request into one per frame — ScrollTrigger can
+     * fire "refresh" several times in a burst (fonts, resize, pin init).
+     */
+    const queueBuild = () => {
+      if (disposed) return;
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        rafId = 0;
+        build();
+      });
+    };
+
+    // First pass now (so the rail exists immediately), then again once the
+    // web fonts have settled and every measurement is final. Resize needs no
+    // listener of its own: it makes ScrollTrigger refresh, and we hook that.
+    queueBuild();
+    document.fonts.ready.then(queueBuild).catch(() => {
+      /* fonts are best-effort; the refresh hook still rebuilds */
+    });
+    ScrollTrigger.addEventListener("refresh", queueBuild);
 
     // CTA pulse, once, when the terminal arrives
     const ctaBtn = document.getElementById("final-cta-button");
@@ -181,10 +238,10 @@ export default function CurrentLine() {
     }
 
     return () => {
-      clearTimeout(t);
-      triggers.forEach((tr) => tr.kill());
-      ScrollTrigger.removeEventListener("refresh", rebuild);
-      window.removeEventListener("resize", rebuild);
+      disposed = true;
+      if (rafId) cancelAnimationFrame(rafId);
+      ScrollTrigger.removeEventListener("refresh", queueBuild);
+      killTriggers();
       io?.disconnect();
     };
   }, []);

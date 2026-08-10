@@ -1,14 +1,18 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { getGsap, prefersReducedMotion } from "@/lib/gsap";
+import { getGsap, MQ } from "@/lib/gsap";
 import Eyebrow from "./Eyebrow";
 
 /**
- * S4 — a day at your site. Desktop: pinned for ~1.5 viewport-heights, the
+ * S4 — a day at your site. Desktop: pinned for ~1.4 viewport-heights, the
  * sun/moon scrubs across a 24h timeline as the battery charges cheap and
  * serves peak. Mobile: same timeline, tap-to-step. Reduced motion: static
  * evening state with every annotation visible.
+ *
+ * The pin starts at "top top" and the section reserves NAV_HEIGHT of top
+ * padding (md:pt-[72px]) so the fixed nav never covers the clock; the timeline
+ * art is height-capped so the whole scene fits a 768px-tall viewport.
  */
 
 const CUT_HOUR = 13.5;
@@ -67,26 +71,42 @@ export default function DayTimeline() {
   const hourProxy = useRef({ h: 6 });
 
   useEffect(() => {
-    const mobile = window.innerWidth < 768;
-    setIsMobile(mobile);
-    if (prefersReducedMotion()) {
-      setStaticMode(true);
-      setHour(20);
-      return;
-    }
-    if (mobile) return;
-    const { ScrollTrigger } = getGsap();
+    const { gsap, ScrollTrigger } = getGsap();
     const el = sectionRef.current;
     if (!el) return;
-    const st = ScrollTrigger.create({
-      trigger: el,
-      start: "top top",
-      end: "+=150%",
-      pin: true,
-      scrub: 0.4,
-      onUpdate: (self) => setHour(self.progress * 24),
+
+    const mm = gsap.matchMedia();
+    mm.add(MQ, (context) => {
+      const reduced = Boolean(context.conditions?.reduced);
+      const desktop = Boolean(context.conditions?.desktop);
+
+      setStaticMode(reduced);
+      setIsMobile(!reduced && !desktop);
+
+      if (reduced) {
+        setHour(20);
+        return;
+      }
+      // Mobile keeps the tap-to-step buttons instead of a scrub.
+      if (!desktop) return;
+
+      ScrollTrigger.create({
+        trigger: el,
+        start: "top top",
+        // ~1.4 viewport-heights for a full 24h sweep.
+        end: () => `+=${Math.round(window.innerHeight * 1.4)}`,
+        pin: true,
+        anticipatePin: 1,
+        // Lenis smooths the scroll itself — keep the scrub short or the sun
+        // lags visibly behind the pointer.
+        scrub: 0.5,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => setHour(self.progress * 24),
+        onRefresh: (self) => setHour(self.progress * 24),
+      });
     });
-    return () => st.kill();
+
+    return () => mm.revert();
   }, []);
 
   const goToStep = (i: number) => {
@@ -115,9 +135,9 @@ export default function DayTimeline() {
       ref={sectionRef}
       id="how-it-works"
       aria-labelledby="day-heading"
-      className="scroll-mt-16 py-16 md:flex md:min-h-screen md:flex-col md:justify-center md:py-0"
+      className="scroll-mt-24 py-16 md:flex md:min-h-screen md:flex-col md:justify-center md:pb-8 md:pt-[72px]"
     >
-      <div className="mx-auto w-full max-w-page px-4 md:px-6 md:pt-20">
+      <div className="mx-auto w-full max-w-page px-4 md:px-6">
         <Eyebrow>03 / How it works</Eyebrow>
         <div className="mt-2 flex flex-wrap items-end justify-between gap-4">
           <h2
@@ -163,7 +183,7 @@ export default function DayTimeline() {
           </div>
         )}
 
-        <p className="mt-6 max-w-[62ch] text-14 text-midnight/60 md:text-16">
+        <p className="mt-6 max-w-[62ch] text-14 text-midnight/60 md:mt-4 md:text-16">
           The hatched floor of the battery never drains — always reserved for
           cuts, sized from your site&apos;s own 30-day cut log.
         </p>
@@ -204,7 +224,7 @@ function TimelineSvg({
       viewBox="0 0 800 320"
       role="img"
       aria-label="24-hour timeline: the battery charges from the grid in the cheap daytime band, then serves the building through the evening peak; a hatched reserve at the bottom of the battery never drains"
-      className="mt-6 w-full"
+      className="mt-6 w-full md:mt-4 md:max-h-[42vh]"
     >
       <defs>
         <pattern id="lockhatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">

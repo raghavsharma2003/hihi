@@ -32,7 +32,7 @@ export default function HowItStarts() {
 
       <ol className="mt-10 grid gap-4 md:grid-cols-3 md:gap-6">
         {STEPS.map((s, i) => (
-          <Reveal as="li" key={s.title} delay={i * 120} className="relative rounded-card border border-line bg-surface p-6 shadow-card">
+          <Reveal as="li" key={s.title} delay={i * 70} className="relative rounded-card border border-line bg-surface p-6 shadow-card">
             <span className="tabular font-mono text-14 font-medium text-current">
               step {i + 1} / 3
             </span>

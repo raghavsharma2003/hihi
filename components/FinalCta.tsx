@@ -29,12 +29,15 @@ export default function FinalCta() {
         <a
           id="final-cta-button"
           href="#calculator"
-          className="cta-terminal relative rounded-full bg-current px-10 py-4 text-18 font-semibold text-surface transition-transform duration-150 ease-out hover:scale-[1.03] active:scale-[0.98]"
+          className="cta-terminal relative rounded-full bg-current px-10 py-4 text-18 font-semibold text-surface transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] [@media(hover:hover)_and_(pointer:fine)]:hover:scale-[1.03] active:scale-[0.98] active:duration-100"
         >
           Book the free audit
         </a>
         <div className="flex flex-wrap items-center justify-center gap-4 font-mono text-14 text-midnight/70">
-          <a href={`tel:${BRAND.phone.replace(/ /g, "")}`} className="hover:text-current">
+          <a
+            href={`tel:${BRAND.phone.replace(/ /g, "")}`}
+            className="transition-colors duration-150 ease-[ease] hover:text-current"
+          >
             {BRAND.phone}
           </a>
           <span aria-hidden="true" className="text-line">·</span>
@@ -42,7 +45,7 @@ export default function FinalCta() {
             href={whatsappHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-current"
+            className="transition-colors duration-150 ease-[ease] hover:text-current"
           >
             WhatsApp us
           </a>

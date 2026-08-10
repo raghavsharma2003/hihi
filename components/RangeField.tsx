@@ -1,10 +1,13 @@
 "use client";
 
-import { useId } from "react";
+import { useEffect, useId, useState } from "react";
 
 /**
  * Slider + synced number field. Keyboard operable via both controls;
  * the slider fill is painted through the --fill custom property.
+ *
+ * While the thumb is held, the mono readout takes the interactive blue —
+ * colour only, no movement, so the number stays readable as it ticks.
  */
 export default function RangeField({
   label,
@@ -27,6 +30,20 @@ export default function RangeField({
 }) {
   const id = useId();
   const fill = ((value - min) / (max - min)) * 100;
+  const [dragging, setDragging] = useState(false);
+
+  // Release can land outside the input (or the pointer can be cancelled),
+  // so the end of the drag is watched on the window.
+  useEffect(() => {
+    if (!dragging) return;
+    const end = () => setDragging(false);
+    window.addEventListener("pointerup", end);
+    window.addEventListener("pointercancel", end);
+    return () => {
+      window.removeEventListener("pointerup", end);
+      window.removeEventListener("pointercancel", end);
+    };
+  }, [dragging]);
 
   const clamp = (v: number) => Math.min(max, Math.max(min, v));
 
@@ -38,7 +55,9 @@ export default function RangeField({
         </label>
         <output
           htmlFor={id}
-          className="tabular font-mono text-14 font-medium text-midnight"
+          className={`tabular font-mono text-14 font-medium transition-colors duration-150 ease-[ease] ${
+            dragging ? "text-current" : "text-midnight"
+          }`}
         >
           {format(value)}
         </output>
@@ -53,6 +72,7 @@ export default function RangeField({
         disabled={disabled}
         aria-label={label}
         onChange={(e) => onChange(clamp(Number(e.target.value)))}
+        onPointerDown={() => !disabled && setDragging(true)}
         style={{ "--fill": `${fill}%` } as React.CSSProperties}
         className="mt-2"
       />

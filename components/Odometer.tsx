@@ -4,9 +4,16 @@ import { useEffect, useRef, useState } from "react";
 
 const DIGITS = "0123456789";
 
+/** Strong ease-out — entrances and the digit roll both land, never drift. */
+const EASE_OUT = "ease-[cubic-bezier(0.23,1,0.32,1)]";
+
 /**
  * Rolls each digit vertically over 250ms when the value changes.
  * Non-digit characters (₹ , . – L k) render static. Reduced motion: no roll.
+ *
+ * Characters are keyed by position, so when the string reshapes
+ * (₹9,500 → ₹1.2L) the cells whose kind changed remount and fade+rise in
+ * over 150ms instead of popping.
  */
 export default function Odometer({
   value,
@@ -33,11 +40,33 @@ export default function Odometer({
     <span className={`tabular inline-flex ${className}`} aria-hidden="false">
       {value.split("").map((ch, i) =>
         DIGITS.includes(ch) ? (
-          <Digit key={`${i}-d`} digit={Number(ch)} />
+          <Cell key={`${i}-d`}>
+            <Digit digit={Number(ch)} />
+          </Cell>
         ) : (
-          <span key={`${i}-s`}>{ch}</span>
+          <Cell key={`${i}-s`}>{ch}</Cell>
         ),
       )}
+    </span>
+  );
+}
+
+/** Fade + 4px rise on mount. Only fires for cells the value change added. */
+function Cell({ children }: { children: React.ReactNode }) {
+  const [entered, setEntered] = useState(false);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setEntered(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  return (
+    <span
+      className={`inline-block transition-[opacity,transform] duration-150 ${EASE_OUT} ${
+        entered ? "translate-y-0 opacity-100" : "translate-y-[4px] opacity-0"
+      }`}
+    >
+      {children}
     </span>
   );
 }
@@ -57,7 +86,7 @@ function Digit({ digit }: { digit: number }) {
     >
       <span
         ref={ref}
-        className="inline-flex flex-col transition-transform duration-[250ms] ease-out"
+        className={`inline-flex flex-col transition-transform duration-[250ms] ${EASE_OUT}`}
         style={{ transform: `translateY(${-digit}em)` }}
       >
         {DIGITS.split("").map((d) => (
