@@ -3,30 +3,30 @@
 - rows dropped (missing name/source): 0
 - rows dropped (outside corridor whitelist): 18
 
-## Commercial (574 rows)
+## Commercial (641 rows)
 
-- tiers: A=110 B=296 C=168
-- phone coverage: 64/574 (11%)
-- email coverage: 16/574 (2%)
-- pincode coverage: 117/574 (20%)
-- google_rating coverage: 46/574 (8%)
-- size_proxy coverage: 96/574 (16%)
-- outage_quotes coverage: 32/574 (5%)
-- owner_or_chain coverage: 400/574 (69%)
-- amenity_power_backup coverage: 1/574 (0%)
-- rera_id coverage: 0/574 (0%)
+- tiers: A=119 B=348 C=174
+- phone coverage: 71/641 (11%)
+- email coverage: 19/641 (2%)
+- pincode coverage: 133/641 (20%)
+- google_rating coverage: 46/641 (7%)
+- size_proxy coverage: 110/641 (17%)
+- outage_quotes coverage: 42/641 (6%)
+- owner_or_chain coverage: 482/641 (75%)
+- amenity_power_backup coverage: 1/641 (0%)
+- rera_id coverage: 0/641 (0%)
 
-## Society (276 rows)
+## Society (308 rows)
 
-- tiers: A=1 B=19 C=256
-- phone coverage: 0/276 (0%)
-- email coverage: 1/276 (0%)
-- pincode coverage: 4/276 (1%)
-- google_rating coverage: 1/276 (0%)
-- size_proxy coverage: 89/276 (32%)
-- outage_quotes coverage: 131/276 (47%)
-- owner_or_chain coverage: 171/276 (61%)
-- amenity_power_backup coverage: 15/276 (5%)
-- rera_id coverage: 29/276 (10%)
+- tiers: A=2 B=28 C=278
+- phone coverage: 0/308 (0%)
+- email coverage: 1/308 (0%)
+- pincode coverage: 5/308 (1%)
+- google_rating coverage: 3/308 (0%)
+- size_proxy coverage: 121/308 (39%)
+- outage_quotes coverage: 145/308 (47%)
+- owner_or_chain coverage: 199/308 (64%)
+- amenity_power_backup coverage: 25/308 (8%)
+- rera_id coverage: 38/308 (12%)
 
 Fields left for field visits (per brief): DG kVA, diesel spend, sanctioned load, decision-maker, retrofit status.
