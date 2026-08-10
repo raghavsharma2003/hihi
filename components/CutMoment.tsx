@@ -163,9 +163,10 @@ function Half({
         </span>
       </figcaption>
 
-      {/* Height-capped at md so the pinned section still fits a short viewport
-          (1024x768) without clipping — the art scales down and stays centred
-          via preserveAspectRatio; it never overflows the pin. */}
+      {/* Height-capped at md so the pinned section fits a short viewport
+          (1280x800, 1024x768) instead of running off the bottom of the pin.
+          The cap is generous — at 900px+ it barely bites; below that the art
+          scales down inside the card via preserveAspectRatio. */}
       <svg
         viewBox="0 0 320 200"
         role="img"
@@ -174,7 +175,7 @@ function Half({
             ? "Building with battery: the grid line snaps but every window stays lit"
             : "Building without battery: the grid line snaps, windows go dark, then a diesel genset starts with smoke"
         }
-        className="mt-4 w-full md:mt-3 md:max-h-[26vh]"
+        className="mt-4 w-full md:mt-3 md:max-h-[34vh]"
       >
         {/* grid line in from the left; snaps on cut */}
         {cut ? (

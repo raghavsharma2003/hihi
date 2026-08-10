@@ -224,7 +224,7 @@ function TimelineSvg({
       viewBox="0 0 800 320"
       role="img"
       aria-label="24-hour timeline: the battery charges from the grid in the cheap daytime band, then serves the building through the evening peak; a hatched reserve at the bottom of the battery never drains"
-      className="mt-6 w-full md:mt-4 md:max-h-[42vh]"
+      className="mt-6 w-full md:mt-4 md:max-h-[52vh]"
     >
       <defs>
         <pattern id="lockhatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">

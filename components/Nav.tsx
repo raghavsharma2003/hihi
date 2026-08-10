@@ -20,11 +20,11 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Translucent layer, content scrolls under it. The only animated property is
+  // padding on this fixed element — nothing below it moves, and the row's own
+  // children never change size, so the shrink can't shift the layout.
   return (
     <header
-      // Translucent layer, content scrolls under it. The only animated
-      // property is padding on this fixed element — nothing below it moves,
-      // and the row's own children never change size, so no reflow jitter.
       className="fixed inset-x-0 top-0 z-50 border-b border-line/70 bg-daylight/85 backdrop-blur-md transition-[padding] duration-200 ease-out"
       style={{ paddingBlock: shrunk ? "0.5rem" : "1rem" }}
     >
