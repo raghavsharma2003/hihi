@@ -121,7 +121,7 @@ def _quality_report(commercial, society, no_source, no_corridor) -> None:
         lines += ["", f"## {label} ({len(rows)} rows)", ""]
         tiers = {t: sum(1 for r in rows if r["tier"] == t) for t in "ABC"}
         lines.append(f"- tiers: A={tiers['A']} B={tiers['B']} C={tiers['C']}")
-        for f in ("phone", "pincode", "google_rating", "size_proxy",
+        for f in ("phone", "email", "pincode", "google_rating", "size_proxy",
                   "outage_quotes", "owner_or_chain", "amenity_power_backup", "rera_id"):
             lines.append(f"- {f} coverage: {_coverage(rows, f)}")
     lines += ["", "Fields left for field visits (per brief): DG kVA, diesel spend, "

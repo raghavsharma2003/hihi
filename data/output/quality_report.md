@@ -7,6 +7,7 @@
 
 - tiers: A=55 B=232 C=163
 - phone coverage: 43/450 (9%)
+- email coverage: 0/450 (0%)
 - pincode coverage: 93/450 (20%)
 - google_rating coverage: 42/450 (9%)
 - size_proxy coverage: 83/450 (18%)
@@ -19,6 +20,7 @@
 
 - tiers: A=1 B=13 C=199
 - phone coverage: 0/213 (0%)
+- email coverage: 0/213 (0%)
 - pincode coverage: 1/213 (0%)
 - google_rating coverage: 1/213 (0%)
 - size_proxy coverage: 50/213 (23%)

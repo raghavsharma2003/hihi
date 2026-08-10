@@ -9,6 +9,7 @@ FIELDS = [
     "lat",
     "lng",
     "phone",
+    "email",
     "website",
     "google_rating",
     "review_count",
