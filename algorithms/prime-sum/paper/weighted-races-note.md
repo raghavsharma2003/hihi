@@ -44,8 +44,11 @@ the difference is OEIS A086239, the constants A368645/A368646). Our claims are t
 
 2. **The growing-weight regime m > 0**: first flip at p = 5 for every
    m ≥ 1 (vs Leech's 26,861 for counting); lead changes to 10¹⁰:
-   3,082 (m=0) → 125,624 → 159,942 → 199,540. No prior work treats
-   races with growing weights.
+   3,082 (m=0) → 125,624 → 159,942 → 199,540. We are not aware of prior
+   Rubinstein–Sarnak density computations or weight-aspect density
+   asymptotics for growing weights p^m, m > 0 (decaying-weight races:
+   Aymone, Yamamuro; prime-ideal weighted races: Hayani 2026 — all
+   cited and distinguished in the paper's related-work paragraph).
 
 3. **The dissolution law — now a theorem.** δ_q(m) − ½ =
    (2π·σ²_m)^(−1/2)·(1 + O(1/(M log M))), M = m+½, proved via the Bessel
@@ -62,12 +65,13 @@ the difference is OEIS A086239, the constants A368645/A368646). Our claims are t
    Humphries δ_α → 1 phenomena.
 
 4. **An interpolation theorem (GRH + LI), doubly red-teamed.** For
-   m ∈ (−1/2, 0]: the limiting logarithmic distribution of the normalized
+   m ∈ (−1/2, ∞) (extended to the full range in v3): the limiting logarithmic distribution of the normalized
    race exists (Akbary–Ng–Shahabi framework, Cor 1.3(a)+Thm 1.9, applied
    to the shifted explicit formula); δ(m) ∈ (1/2, 1); m ↦ δ(m) is
    **continuous** (Lévy continuity + arcsine absolute continuity ⇒ no atom
    at 0); and 1 − δ(m) ≤ min{C(2m+1)², exp(−1/(2C(2m+1)²))} with
-   C = Σ_γ 2/γ² = 0.156033 — so δ(m) → 1 as m → −1/2⁺, matching the
+   C = Σ_γ 2/γ² = 0.1560296… (certified in closed form in v3) — so
+   δ(m) → 1 as m → −1/2⁺, matching the
    Aoki–Koyama/Sheth/Hayani single-sign regime at m = −1/2. Stated for
    the θ-form race; a proposition transfers everything verbatim to the
    unlogged race D_m. NEW: the prime-race statement, the continuity in
@@ -86,7 +90,7 @@ the difference is OEIS A086239, the constants A368645/A368646). Our claims are t
    = −0.07153, hits the exact sieve value at 10¹⁰ within 0.63σ
    (measured 1.50775 vs predicted 1.4968 ± 0.0172), with the refinement
    that the log-stripped fluctuation *decays* like √Σ/log x
-   (Σ = Σ_γ 2/γ² = 0.156033) — visible decade-by-decade in the data.
+   (Σ = Σ_γ 2/γ² = 0.1560296…) — visible decade-by-decade in the data.
    Neither race with m ∈ {−1/2, −3/4, −1} flips even once on [3, 10¹⁰]:
    the 3-side leads from the first odd prime; minimum margin
    1/√3−1/√5 ≈ 0.13014 at p = 5 (attained by the m=−½ race; the m=−1
