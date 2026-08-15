@@ -47,4 +47,5 @@ collaborator.
 Thank you for your time,
 
 Raghav Sharma
-[link to repository]
+raghavsharma1729@gmail.com
+[Zenodo DOI link] · [GitHub repository link]

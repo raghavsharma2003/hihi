@@ -5,16 +5,43 @@ email, and the email before the social posts.
 
 ---
 
-## STEP 0 — Make the repository public (10 min)
+## YOUR IDENTITY — use this everywhere, consistently
 
-1. GitHub → your `hihi` repo → Settings → General → Danger Zone →
-   "Change visibility" → Public.
-   - OPTIONAL but better: create a fresh public repo named something like
-     `weighted-prime-races` and copy only `algorithms/prime-sum/` into it
-     (the hihi repo contains an unrelated app). Cleaner first impression.
-2. Add a LICENSE file (MIT for code is standard; takes 1 min via GitHub's
-   "Add file → Create new file → type LICENSE → choose template").
-3. Copy the final repo URL — you'll paste it in three places below.
+One public research identity, across every platform below:
+- Name: **Raghav Sharma**
+- Email: **raghavsharma1729@gmail.com** (never any other address)
+- LinkedIn: https://www.linkedin.com/in/raghav-sharma-a66023179/
+- New GitHub account (Step 0), ORCID, Zenodo, Overleaf, arXiv, Medium:
+  ALL registered with raghavsharma1729@gmail.com. Consistency is what lets
+  professors, arXiv endorsement, and citations connect back to one person.
+
+## STEP 0 — A separate GitHub account for research (recommended; ~15 min)
+
+Since your existing GitHub account carries your startup and other projects,
+a dedicated research account is the right call — it is common practice and
+keeps the two identities cleanly apart.
+
+1. Log out of GitHub (or use a private browser window).
+2. github.com → Sign up → email raghavsharma1729@gmail.com → username
+   suggestion: `raghavsharma-math` (or similar — professional and clearly
+   research-flavoured).
+3. On the new account: New repository → name `weighted-prime-races` →
+   **Public** → leave ALL checkboxes unchecked → Create repository.
+4. Upload the prepared content — no git required:
+   - Unzip `weighted-prime-races-upload.zip` (Claude prepared it: clean
+     code + papers + MIT LICENSE + landing README, wrong-email-free).
+   - On the empty repo page click "uploading an existing file".
+   - Drag ALL unzipped files/folders into the upload box, commit message
+     "Weighted prime races and analytic prime sums", click Commit.
+5. Your public research repo now exists under the research account with a
+   commit authored by it. Copy its URL for the steps below.
+
+Note on Claude access: this session's GitHub connection is bound to your
+original account, so Claude cannot push to the new account from here. If
+you want Claude working on the new account in future sessions, connect it
+at claude.ai → Settings → integrations (install the GitHub app while logged
+into the NEW account). Not needed for launch — the drag-and-drop above
+covers everything.
 
 ## STEP 1 — Compile the paper to PDF (10 min)
 
@@ -34,8 +61,8 @@ this is your priority protection.
 4. Fill the form:
    - Resource type: **Preprint**
    - Title: `Rubinstein–Sarnak densities for weighted prime number races`
-   - Creators: your full name (add ORCID if you have one; if not, make one
-     free at orcid.org first — 5 min, worth it, journals want it)
+   - Creators: Raghav Sharma (make a free ORCID at orcid.org first with
+     raghavsharma1729@gmail.com — 5 min; journals and arXiv want it)
    - Description: paste the paper's abstract, then add one line:
      "All code and data included. Work produced with substantial AI
      assistance (Anthropic's Claude); every result independently verified —
@@ -80,13 +107,15 @@ publication. Would you have 20 minutes to advise me, or could you point me
 to a colleague or graduate student who might?
 
 Thank you for your time,
-[NAME]
+Raghav Sharma
+raghavsharma1729@gmail.com
 
 ## STEP 4 — LinkedIn + Medium (same day or day after the email)
 
 1. Publish the Medium article (`medium-article.md`) — replace both link
    placeholders first.
-2. Post the LinkedIn post (`linkedin-post.md`) — follow its tagging rules:
+2. Post the LinkedIn post (`linkedin-post.md`) from your profile
+   (linkedin.com/in/raghav-sharma-a66023179) — follow its tagging rules:
    no tagging researchers you haven't interacted with.
 3. Optionally link the Medium article as a comment under your LinkedIn post
    (LinkedIn suppresses posts with external links in the body).
@@ -94,7 +123,7 @@ Thank you for your time,
 ## STEP 5 — arXiv (when endorsement arrives)
 
 1. arxiv.org → create account with a real email.
-2. Submit to **math.NT** (Number Theory). First-time submitters need an
+2. Register with raghavsharma1729@gmail.com. Submit to **math.NT**. First-time submitters need an
    endorsement: the submission page gives you an endorsement code to send to
    an endorser (this is the ask already added to the Martin email).
 3. Upload the .tex source (arXiv compiles it), abstract, and in Comments:
