@@ -19,10 +19,8 @@
 In 2017 I was 14, in 9th grade, and I genuinely believed I could beat a
 2,300-year-old algorithm.
 
-I was a kid. Nobody had told me the problem was hard, so I didn't know. I
-had fallen in love with prime numbers — their randomness, their mystery —
-and I spent months of school evenings filling a notebook, chasing a
-pattern in them.
+I was a kid. Nobody had told me the problem was hard, so I didn't know. I was in love with prime numbers — their randomness, their mystery — and
+spent months of school evenings filling a notebook, chasing a pattern.
 
 And I actually built something: a little algorithm that could add up all
 the primes below a number without finding a single prime. My dream was to
@@ -46,32 +44,28 @@ has: the exact sum of every prime below a billion, from 2,000 zeta zeros
 plus one thin, exactly-sieved window.
 
 Then the real discovery. Chebyshev's bias is a 170-year-old curiosity:
-primes of the form 4n+3 outnumber primes of the form 4n+1 about 99.6% of
-the time. We asked something that appears in no paper: what if bigger
+primes of the form 4n+3 outnumber primes of the form 4n+1 99.6% of the
+time. We asked a question no paper asks: what if bigger
 primes count for more? The bias dissolves — 99.6% → 79.8% → 69.5% → 64.6%
-as the weight grows — following a law we derived, then checked against
-every prime up to ten billion. Those numbers bear directly on an open
-problem posed in 2024 (Problem 12 of the Comparative Prime Number Theory
-problem list): the first computational evidence connecting the two
-definitions it asks about. And in the last push it became a theorem —
+as the weight grows — a law we derived, then checked against every prime
+up to ten billion. Those numbers bear directly on an open problem —
+Problem 12 of the 2024 Comparative Prime Number Theory problem list — the
+first computational evidence connecting the two definitions it asks about. In the last push it became a theorem —
 under the field's standard hypotheses, the two competing definitions of
 the bias are the two ends of one continuous curve, with an explicit bound
 on how fast the bias becomes total. New for prime races, built on known
 methods. The problem stays open; this is a bridge, not the answer.
 
-Full transparency, because it's the best part: the AI didn't just help. It
-derived, coded, and then attacked its own work. Twice its adversarial
+The best part: the AI didn't just help. It derived, coded, and then attacked its own work. Twice its adversarial
 literature reviews proved our "discoveries" already existed — we demoted
 them and cited the real discoverers. A final hostile audit recomputed
 every number and caught a real error before anyone outside saw it.
-Everything that survived is verified two independent ways, and every
+Everything that survived is verified two independent ways; every
 limitation is stated in the paper.
 
-The preprint, all code, and all data are public — link in the first
-comment.
+Preprint, code, and data are public — link in the first comment.
 
-I'm a learner, not an expert. People who know this field will find things
-to correct, and that's exactly why it's public. If you know someone in
+I'm a learner, not an expert. Experts will find things to correct — that's exactly why it's public. If you know someone in
 analytic number theory, I'd be grateful for an introduction.
 
 To the 14-year-old with the drawer: it was worth keeping.
