@@ -137,7 +137,7 @@ all of this on page one.
 
 ## What happens next
 
-The preprint, code, and data are public: https://doi.org/10.5281/zenodo.21947102 and
+The preprint, code, and data are public: https://doi.org/10.5281/zenodo.21947101 and
 https://github.com/raghavs1729/weighted-prime-races. I've written to the authors of the problem list. The
 results are conditional on the standard conjectures of this field (GRH and
 linear independence — the same assumptions the classical 99.59% rests on),
