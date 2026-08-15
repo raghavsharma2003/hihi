@@ -28,16 +28,18 @@ the difference is OEIS A086239, the constants A368645/A368646). Our claims are t
 1. **First numerical Rubinstein–Sarnak densities for a weighted race**
    (GRH + LI, as throughout this literature), kernel derived from our
    uniform explicit-formula framework: a_γ(m) = (2m+1)/√((m+½)²+γ²),
-   bias normalized to 1, 511 self-computed zeros of L(s,χ₄), Monte Carlo
-   with zero-density tail. Calibration anchor: δ(0) = 0.99593 ± 0.00003,
-   matching Rubinstein–Sarnak's 0.9959.
+   bias normalized to 1, 511 self-computed zeros of L(s,χ₄),
+   deterministic Gil–Pelaez Fourier inversion with zero-density tail
+   (race_density_exact.py; independent Monte Carlo cross-check to
+   ≤10⁻⁴). Calibration anchor: δ(0) = 0.995928, matching
+   Rubinstein–Sarnak/Fiorilli–Martin to six decimals.
 
    | m | δ(m) | exact log-measure at 10¹⁰ (sieve) |
    |---|---|---|
-   | 0 | 0.99593 | (converges too slowly at 10¹⁰ — classical) |
-   | 1 | 0.79731 | 0.79380 |
-   | 2 | 0.69468 | 0.69275 |
-   | 3 | 0.64577 | 0.64900 |
+   | 0 | 0.995928 | (converges too slowly at 10¹⁰ — classical) |
+   | 1 | 0.797628 | 0.79380 |
+   | 2 | 0.694520 | 0.69275 |
+   | 3 | 0.645850 | 0.64900 |
 
 2. **The growing-weight regime m > 0**: first flip at p = 5 for every
    m ≥ 1 (vs Leech's 26,861 for counting); lead changes to 10¹⁰:
@@ -127,11 +129,12 @@ will not stay unclaimed long.
 
 The structure is not a mod-4 accident. With 537 self-computed zeros of
 L(s,χ₃) (phase derived from τ(χ₃)=i√3; Z real to 4×10⁻²⁷; RvM count
-535.9 vs 537 found; anchor δ₃(0) = 0.99904 vs classical 0.9990):
+535.9 vs 537 found; anchor δ₃(0) = 0.999063 vs classical 0.9990,
+six decimals):
 
 | m | 0 | 1 | 2 | 3 | 8 | 20 | 60 |
 |---|---|---|---|---|---|---|---|
-| δ₃(m) | 0.99904 | 0.83679 | 0.72361 | 0.66695 | 0.57879 | 0.54094 | 0.51917 |
+| δ₃(m) | 0.999063 | 0.836877 | 0.723470 | 0.666552 | 0.578534 | 0.540767 | 0.519716 |
 
 The dissolution law generalizes with the modulus entering through the
 zero density: **Var_q(m) ~ 2(m+½)·log(q(m+½)/2π)** (reduces to the mod-4
