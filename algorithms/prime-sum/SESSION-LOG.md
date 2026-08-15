@@ -33,12 +33,11 @@
 ## Claims calibration (from prior-art sweep)
 Novel-as-computation: analytic prime sums any weight + AP exact recovery + δ(m) family. NOT novel: underlying formulas (classical), li-free π(x) (FKBJ/Büthe). σ-device = Fubini-equiv of log ζ (operational framing only). Must-cite: FKBJ, Büthe×3, Galway, Riesel–Göhl, Bays–Hudson, Devin (analytic L Chebyshev bias), Zhang race, Ford–Sneed/Meng.
 
-## In flight (parallel agents launched 2026-08-15)
-A: frozen-regime constants (m=−1,−0.75) via log L + sieve verify + last flip
-B: critical case m=−½ derivation + measurement
-C: modulus universality: χ₃ zeros + mod-3 races + law constant test
-D: literature check on dissolution law + phase diagram
-Then: update weighted-races-note.md w/ phase diagram, explainer race section, push all.
+## Phase-diagram program COMPLETE (all 4 agents verified 2026-08-15)
+A frozen: D_-1(inf)=0.334981325299993... = M(4,3)-M(4,1) (matches Languasco-Zaccagnini/OEIS A368645/A086239 to 1e-10); D_-0.75(inf)=0.546437908...; ZERO flips ever on [3,1e9]; min 2/15 at p=5; convergence exponents fit GRH (-0.519 vs -0.5).
+B critical m=-1/2: D = (1/2)loglog x + C*, C*=-0.07153 (M, log2, K3, log L(1/2,chi4)); fluctuation DECAYS ~ sqrt(0.156033)/log x; zero-free-param test at 1e10: pred 1.4968+-0.0172 vs measured 1.50775 (+0.63sigma); never flips; indep verified at 1e7 (1.31670 exact match).
+C mod-3 universality: 537 chi3 zeros (gamma1=8.039737, RvM 535.9 ✓); anchor delta3(0)=0.99904 vs classical 0.9990 ✓; delta3(1)=0.83679 (indep re-MC 0.83696 ✓), delta3(2)=0.72361, delta3(3)=0.66695, delta3(60)=0.51917; LAW GENERALIZES: Var_q(m) ~ 2(m+1/2)log(q(m+1/2)/2pi) (agent corrected my drafted constant; 0.26% at m=60); ordering delta3>delta4 all m ✓; weighted flips p=13/p=7 hand-verified; caveat: m=2 finite-x gap 0.023 unresolved.
+D literature: CRITICAL RECALIBRATION. m<=0 half is occupied: Aoki-Koyama 2023 proved the m=-1/2 (1/2)loglog x theorem (DRH), Sheth 2024 (GRH); Shimada-Koyama Aug 2025 has the w=1/2 threshold; Humphries 2013 has the full template for Liouville; frozen constants = Meissel-Mertens AP constants (L-Z 2010, OEIS). OURS: first RS densities for any weighted race; m>0 regime untouched; dissolution law novel (Fiorilli-Martin paradigm in weight aspect); ANSWERS PROBLEM 12 of arXiv:2407.03530 (Koyama). URGENT: Koyama group actively publishing on this seam (Aug 2025, Jul 2026) - write up fast. All framing recalibrated in paper/weighted-races-note.md.
 
 ## PR
 raghavsharma2003/hihi #2, branch claude/prime-sum-algo-optimization-lkry0q, base claude/voice-notes-app-calendar-f0d541. PR monitoring/check-ins STOPPED at user request — do not re-arm.

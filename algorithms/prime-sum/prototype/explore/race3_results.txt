@@ -1,0 +1,44 @@
+# race_scan3 exact scans (mod 3; 2-side = non-residue class, biased side)
+# and delta_3(m) Monte Carlo (race_mod3.py density, 537 chi3 zeros, 4e6 samples)
+# Generated 2026-08-15.
+
+== race_scan3 1e9 ==
+X = 1000000000
+m=0: D_m(X)=2107  first 1-side lead at p=0  lead-changes=0
+      2-side leads: natural measure 1.000000   log measure 1.000000
+m=1: D_m(X)=881800790926  first 1-side lead at p=13  lead-changes=45184
+      2-side leads: natural measure 0.873232   log measure 0.837867
+m=2: D_m(X)=632241801822961570558  first 1-side lead at p=7  lead-changes=64868
+      2-side leads: natural measure 0.743439   log measure 0.699756
+m=3: D_m(X)=512137923415168331776797133732  first 1-side lead at p=7  lead-changes=70318
+      2-side leads: natural measure 0.676583   log measure 0.659589
+
+== race_scan3 1e10 ==
+X = 10000000000
+m=0: D_m(X)=6264  first 1-side lead at p=0  lead-changes=0
+      2-side leads: natural measure 1.000000   log measure 1.000000
+m=1: D_m(X)=27948685258617  first 1-side lead at p=13  lead-changes=139456
+      2-side leads: natural measure 0.828933   log measure 0.837707
+m=2: D_m(X)=203579148270657671346363  first 1-side lead at p=7  lead-changes=186856
+      2-side leads: natural measure 0.723169   log measure 0.700397
+m=3: D_m(X)=1638151792392635080844084225520255  first 1-side lead at p=7  lead-changes=185902
+      2-side leads: natural measure 0.676068   log measure 0.657977
+
+(m=0 no-flip up to 1e10 is the expected check: classical mod-3 first
+1-side lead is at x = 608,981,813,029, Bays-Hudson — beyond both scans.)
+
+== delta_3(m) Monte Carlo (race_mod3.py density 4000000) ==
+537 chi3 zeros (gamma_max=699.8), 4000000 samples per m
+  m  delta3_MC      +/-  sigma_MC  Phi(1/s)   Var_MC  Var_law law delta
+  0    0.99904  0.00002    0.3365   0.99852     0.11      nan       nan
+  1    0.83679  0.00018    1.0035   0.84050     1.01      nan       nan
+  2    0.72361  0.00022    1.6538   0.72731     2.73     0.89   0.92404
+  3    0.66695  0.00024    2.2795   0.66956     5.20     3.59   0.71042
+  8    0.57879  0.00025    4.9867   0.57947    24.87    23.81   0.58175
+ 20    0.54094  0.00025    9.7230   0.54096    94.54    93.53   0.54125
+ 60    0.51917  0.00025   20.1994   0.51974   408.02   406.97   0.51978
+# Anchor: delta_3(0) = 0.99904(2) vs classical Rubinstein-Sarnak 0.9990 — MATCH.
+# Independent-seed re-check (seed 987654321, 2e6 samples):
+#   m=0: 0.99908 +/- 0.00002    m=60: 0.52009 +/- 0.00035
+# Law (derived, general q): Var_q(m) ~ 2(m+1/2) log(q(m+1/2)/(2 pi));
+# q=4 reduces to the established 2(m+1/2) log(2(m+1/2)/pi).
