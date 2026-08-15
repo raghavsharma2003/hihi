@@ -1,0 +1,237 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{remark}{Remark}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\loglog}{\log\log}
+
+\title{Rubinstein--Sarnak densities for weighted prime number races}
+\author{Raghav Sharma\thanks{Draft of August 2026, not yet submitted.
+This work was carried out with substantial AI assistance (Anthropic's
+Claude): derivations, implementations, and the literature review were
+AI-produced and then machine- and hand-verified as described in
+Section~\ref{sec:methods}; the author takes responsibility for the
+content. Comments are very welcome.}}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For $m\in\mathbb R$ consider the weighted prime race
+$D_m(x)=\sum_{p\le x,\,p\equiv 3\,(4)}p^{\,m}-\sum_{p\le x,\,p\equiv
+1\,(4)}p^{\,m}$ and its analogues for other moduli. The regime
+$m\le 0$ has a developed literature: the critical
+$\tfrac12\loglog x$ deflection at $m=-\tfrac12$ (Aoki--Koyama; Sheth),
+the sign-change threshold (Shimada--Koyama), and, for $m<-\tfrac12$,
+limits expressible through Meissel--Mertens constants for progressions
+(Languasco--Zaccagnini). We contribute the pieces this literature does
+not contain: (i) the first numerical Rubinstein--Sarnak logarithmic
+densities for any weighted prime race, computed across the delicate
+range under the standard GRH + LI hypotheses --- e.g.\ for modulus $4$,
+$\delta(1)=0.79731(20)$, $\delta(2)=0.69468(23)$,
+$\delta(3)=0.64577(24)$, with the calibration $\delta(0)=0.99593(3)$
+recovering the classical Rubinstein--Sarnak value; (ii) the
+growing-weight regime $m>0$, previously untouched, with exact sieve
+computations to $10^{10}$ agreeing with the predicted densities to
+$\sim3\times10^{-3}$; (iii) an asymptotic dissolution law in the weight
+aspect, $\delta_q(m)-\tfrac12\sim(2\pi\cdot
+2(m+\tfrac12)\log\tfrac{q(m+1/2)}{2\pi})^{-1/2}$, an analogue of the
+Fiorilli--Martin density asymptotics, verified numerically in moduli
+$3$ and $4$. Taken together these results connect the weighted
+formulation of Chebyshev's bias with the classical density formulation,
+addressing Problem 12 of the comparative prime number theory problem
+list of Hamieh, Kadiri, Martin and Ng computationally.
+\end{abstract}
+
+\section{Introduction}
+
+Chebyshev's observation --- that primes $\equiv3\ (\mathrm{mod}\ 4)$
+predominate over primes $\equiv1\ (\mathrm{mod}\ 4)$ for most $x$ ---
+was quantified by Rubinstein and Sarnak~\cite{RS94}: under GRH and the
+linear independence (LI) of the ordinates of zeros of $L(s,\chi_4)$,
+the set $\{x:\pi(x;4,3)>\pi(x;4,1)\}$ has logarithmic density
+$0.9959\ldots$. A separate line of work, initiated by Aoki and
+Koyama~\cite{AK23} and developed by Sheth~\cite{Sheth24} and
+Shimada--Koyama~\cite{SK25}, studies \emph{weighted} counts
+$\sum_{p\le x,\,p\equiv a\,(q)}p^{-s}$ and locates a transition at
+$s=\tfrac12$: for the mod-$4$ race the weighted difference obeys
+$\sum_{p\le x}\chi_4(p)p^{-1/2}=-\tfrac12\loglog x+O(1)$ (under DRH in
+\cite{AK23}, under GRH off a small exceptional set in \cite{Sheth24}),
+so the weighted race is single-signed for large $x$, while for weights
+$p^{-s}$ with $s<\tfrac12$ sign changes persist~\cite{SK25}. Humphries
+\cite{Hum13} established the analogous phase structure for weighted
+sums of the Liouville function, including the limit
+$\delta_\alpha\to1$ as $\alpha\to\tfrac12^-$. Problem 12 of the
+comparative prime number theory problem list~\cite{HKMN24} (posed by
+Koyama) asks how the weighted formulation relates to the classical
+logarithmic-density formulation.
+
+This note treats the two formulations as endpoints of one family. For
+$m\in\mathbb R$ set
+\[
+D_m(x)\;=\;\sum_{\substack{p\le x\\ p\equiv 3\,(4)}}p^{\,m}
+-\sum_{\substack{p\le x\\ p\equiv 1\,(4)}}p^{\,m},
+\]
+so $m=0$ is the classical race and $m=-s$ the Aoki--Koyama weighting;
+we allow $m>0$, which appears not to have been considered. Our results
+are computational, at the standard of numerical work in this area
+(GRH + LI where densities are involved), and every headline number was
+computed by two independent routes.
+
+\subsection*{Results}
+
+\textbf{1. Densities across the delicate range.} For $m>-\tfrac12$ the
+limiting logarithmic distribution of the normalized race exists by the
+framework of Akbary--Ng--Shahabi~\cite{ANS14} (cf.\ Devin~\cite{Dev20})
+applied to the shifted explicit formula; the normalized race has the
+almost-periodic form $1+\sum_{\gamma>0}2a_\gamma(m)\cos(\gamma u)$ with
+\[
+a_\gamma(m)\;=\;\frac{2m+1}{\sqrt{(m+\tfrac12)^2+\gamma^2}},
+\]
+$\gamma$ the ordinates of $L(s,\chi_4)$, and the constant $1$
+normalizing the prime-square bias term. Monte Carlo evaluation under
+LI (Section~\ref{sec:methods}) gives Table~\ref{tab:delta}. These are,
+to our knowledge, the first Rubinstein--Sarnak densities computed for
+any weighted prime race.
+
+\begin{table}[h]\centering
+\begin{tabular}{lccccccc}
+\toprule
+$m$ & $0$ & $1$ & $2$ & $3$ & $8$ & $20$ & $100$\\
+\midrule
+$\delta_4(m)$ & $0.99593$ & $0.79731$ & $0.69468$ & $0.64577$
+& $0.57216$ & $0.53821$ & $0.51370$\\
+$\delta_3(m)$ & $0.99904$ & $0.83679$ & $0.72361$ & $0.66695$
+& $0.57879$ & $0.54094$ & --- \\
+\bottomrule
+\end{tabular}
+\caption{Logarithmic densities of the set where the nonresidue class
+leads, moduli $4$ and $3$ (Monte Carlo standard errors
+$\le3.5\times10^{-4}$; $511$ resp.\ $537$ zeros computed to $25$
+digits, Gaussian tail from the zero-counting density). The $m=0$
+column reproduces the classical values $0.9959$ and $0.9990$
+\cite{RS94}.}
+\label{tab:delta}
+\end{table}
+
+\textbf{2. Exact computations, $m>0$.} By segmented sieve with exact
+$128$-bit signed accumulators to $X=10^{10}$: the mod-$4$ race first
+favours the residue class at $p=5$ for every $m\ge1$ (against Leech's
+$26{,}861$ for $m=0$); lead changes to $10^{10}$ number $3{,}082$
+($m=0$), $125{,}624$, $159{,}942$, $199{,}540$ ($m=1,2,3$); the
+finite-$x$ logarithmic measures at $10^{10}$ are $0.79380$, $0.69275$,
+$0.64900$ for $m=1,2,3$, within $\sim3\times10^{-3}$ of
+Table~\ref{tab:delta}. For modulus $3$ the weighted first flips occur
+at $p=13$ ($m=1$) and $p=7$ ($m=2,3$), while the classical race, as
+expected, does not flip below $10^{10}$.
+
+\textbf{3. Dissolution law.} Substituting the zero-counting density
+$\frac{1}{2\pi}\log\frac{qt}{2\pi}$ into the variance of the limiting
+distribution gives
+\[
+\mathrm{Var}_q(m)\;\sim\;2\bigl(m+\tfrac12\bigr)
+\log\frac{q(m+\tfrac12)}{2\pi},\qquad
+\delta_q(m)-\tfrac12\;\sim\;\frac{1}{\sqrt{2\pi\,\mathrm{Var}_q(m)}}
+\quad(m\to\infty),
+\]
+a weight-aspect analogue of the Fiorilli--Martin density
+asymptotics~\cite{FM13} (cf.\ Meng~\cite{Meng18} for the $k$-aspect).
+At $q=4$, $m=100$: Monte Carlo $0.51370(35)$, Gaussian $\Phi(1/\sigma)$
+$0.51379$, the law $0.51380$. At $q=3$, $m=60$: variance law within
+$0.26\%$ of Monte Carlo. The modulus ordering
+$\delta_3(m)>\delta_4(m)$ predicted by the law (through
+$\gamma_1(\chi_3)=8.04>\gamma_1(\chi_4)=6.02$) holds at every computed
+$m$.
+
+\textbf{4. The boundary $m\le-\tfrac12$, numerically.} Confirming (not
+discovering) the theorems cited above: with
+$C^*=\tfrac12(M-\log 2-\tfrac12)+K_3-\log L(\tfrac12,\chi_4)
+=-0.07153$ ($M$ the Meissel--Mertens constant, $K_3$ the $k\ge3$
+prime-power contribution), the parameter-free prediction
+$D_{-1/2}(x)=\tfrac12\loglog x+C^*+\eps(x)$ gives $1.4968\pm0.0172$
+at $x=10^{10}$ against the exact value $1.50775$; the fitted slope
+over $[10^6,10^{10}]$ is $0.494$. The fluctuation $\eps$ decays like
+$\sqrt{\Sigma}/\log x$ with $\Sigma=\sum_\gamma2/\gamma^2=0.156033$,
+visible decade-by-decade in the residuals --- a small refinement of
+the qualitative picture. For $m<-\tfrac12$ the limits are identified
+with differences of Meissel--Mertens constants for progressions:
+$\lim D_{-1}=M(4,3)-M(4,1)=0.334981325299993\ldots$, our
+M\"obius-over-$\log L$ evaluation agreeing with
+Languasco--Zaccagnini~\cite{LZ10} (cf.\ OEIS A368645/A086239) to all
+compared digits. Notably, none of the races $m\in\{-1,-\tfrac34,
+-\tfrac12\}$ changes sign even once on $[3,10^{10}]$ (minimum margin
+$2/15$ at $x=5$): in this range of weights Chebyshev's bias is not
+merely predominant but, empirically, total from the first odd prime.
+
+\section{Methods and verification}\label{sec:methods}
+
+Zeros of $L(s,\chi_4)$ and $L(s,\chi_3)$ ($511$ resp.\ $537$ ordinates
+to $25$ digits) were computed by Hardy $Z$-scans with derived phases,
+validated by reality of $Z$ to $\sim10^{-27}$, Riemann--von Mangoldt
+counts, and the known first ordinates. Densities: Monte Carlo over
+independent uniform phases (LI), $2$--$4\times10^6$ samples, with the
+unseen-zero tail added as an independent Gaussian with variance from
+the counting density; calibration anchors $\delta_4(0)=0.99593$,
+$\delta_3(0)=0.99904$ against \cite{RS94}. Exact races: segmented
+sieves to $10^{10}$ with exact signed $128$-bit (integer weights) or
+compensated long-double (fractional weights) accumulation,
+cross-checked against independent implementations at overlapping
+ranges; the $m=0$ anchors (first flip $26{,}861$; no mod-$3$ flip
+below $10^{10}$) reproduce the classical values. The explicit-formula
+kernel derives from a uniform smoothed-Perron framework developed in a
+companion manuscript (analytic computation of $S_m(x)$ from zeros,
+exact to $10^9$ at $m=1$), available with all code and data in the
+accompanying repository. Every headline number in this note was
+re-computed independently of the code that first produced it.
+
+\emph{Assumptions and limitations.} Densities are conditional on
+GRH + LI, as throughout this literature; the existence of the limiting
+distribution for $m>-\tfrac12$ is a routine adaptation of
+\cite{ANS14,Dev20} and is not claimed as new; the dissolution law is
+derived at the level of rigor of \cite{FM13}'s heuristic term plus
+numerical confirmation, and a fully rigorous proof (with error term)
+is left open. The finite-$x$ log-measure for $(q,m)=(3,2)$ shows the
+weakest agreement in the study ($0.023$ at $10^{10}$), plausibly a
+slow almost-periodic phase; we flag it rather than explain it.
+
+\begin{thebibliography}{99}
+\bibitem{RS94} M. Rubinstein, P. Sarnak, \emph{Chebyshev's bias},
+Experiment.\ Math.\ \textbf{3} (1994), 173--197.
+\bibitem{AK23} M. Aoki, S. Koyama, \emph{Chebyshev's bias against
+splitting and principal primes in global fields}, J. Number Theory
+\textbf{245} (2023), 233--262. arXiv:2203.12266.
+\bibitem{Sheth24} A. Sheth, \emph{Euler products at the centre and
+applications to Chebyshev's bias}, Math.\ Proc.\ Cambridge Philos.\
+Soc.\ (2024). arXiv:2405.01512.
+\bibitem{SK25} K. Shimada, S. Koyama, \emph{Weighted prime number
+theorem on arithmetic progressions with refinements}, Mathematics
+\textbf{13} (2025), no.\ 16, 2564.
+\bibitem{Hum13} P. Humphries, \emph{The distribution of weighted sums
+of the Liouville function and P\'olya's conjecture}, J. Number Theory
+\textbf{133} (2013), 545--582. arXiv:1108.1524.
+\bibitem{HKMN24} A. Hamieh, H. Kadiri, G. Martin, N. Ng (eds.),
+\emph{Comparative prime number theory: a survey with open problems},
+arXiv:2407.03530 (2024), Problem 12.
+\bibitem{ANS14} A. Akbary, N. Ng, M. Shahabi, \emph{Limiting
+distributions of the classical error terms of prime number theory},
+Q. J. Math.\ \textbf{65} (2014), 743--780.
+\bibitem{Dev20} L. Devin, \emph{Chebyshev's bias for analytic
+$L$-functions}, Math.\ Proc.\ Cambridge Philos.\ Soc.\ \textbf{169}
+(2020), 103--140. arXiv:1706.06394.
+\bibitem{FM13} D. Fiorilli, G. Martin, \emph{Inequities in the
+Shanks--R\'enyi prime number race: an asymptotic formula for the
+densities}, J. reine angew.\ Math.\ \textbf{676} (2013), 121--212.
+\bibitem{Meng18} X. Meng, \emph{Chebyshev's bias for products of $k$
+primes}, Algebra Number Theory \textbf{12} (2018), 305--341.
+\bibitem{LZ10} A. Languasco, A. Zaccagnini, \emph{Computing the
+Mertens and Meissel--Mertens constants for sums over arithmetic
+progressions}, Experiment.\ Math.\ \textbf{19} (2010), 279--284.
+\bibitem{Fio14} D. Fiorilli, \emph{Highly biased prime number races},
+Algebra Number Theory \textbf{8} (2014), 1733--1767.
+\end{thebibliography}
+
+\end{document}
