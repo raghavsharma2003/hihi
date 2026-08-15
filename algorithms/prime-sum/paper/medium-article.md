@@ -1,31 +1,39 @@
 # Medium article — FINAL (links live; ready to publish)
 
-Suggested title: **I Started With a School Algorithm. I Ended Up Answering an Open Problem About Prime Numbers.**
-Subtitle: How a wrong C program, an AI collaborator, and the zeros of the Riemann zeta function led to the first "weighted density" computations for Chebyshev's famous prime race.
+Suggested title: **At 14 I Tried to Beat a 2,300-Year-Old Algorithm. At 23, With an AI, I Answered an Open Problem About Primes.**
+Subtitle: A nine-year story about a drawer, a heartbreak, the zeros of the Riemann zeta function, and Chebyshev's dissolving bias.
 
 ---
 
-In school I wrote a small C program to add up prime numbers without listing them
-all. It had a clever recursive idea, a 32-bit overflow bug, and no idea what it
-was about to start.
+In 2017 I was fourteen, in 9th grade, and prime numbers had gotten into my
+head the way songs do. Their randomness looked like a lie to me — surely
+something so important couldn't just be *noise*. I spent months of evenings
+being gloriously naive about it, filling pages, writing C programs, chasing a
+pattern.
 
-This month, that idea grew into something I never expected: a computational
-answer to a formally posed open problem in number theory — Problem 12 of the
-2024 Comparative Prime Number Theory problem list — with every number verified
-twice, a preprint, and open-source code. This is the story, including the parts
-where we were wrong.
+And I actually built something: an algorithm that added up all the primes
+below a number without ever finding a single prime. My dream was concrete
+and absurd — beat the Sieve of Eratosthenes, the 2,300-year-old champion.
+I never told anyone. The algorithm went into a drawer, and I went back to
+being a teenager.
 
-## Part 1: My algorithm already existed
+## Part 1: The heartbreak
 
-When I dusted off my school program this year, the first discovery was
-humbling: fixed and optimized, my recursion turned out to be a method posted on
-the Project Euler forums in 2013, known to competitive programmers as
-Lucy_Hedgehog's algorithm. The mathematics behind it goes back to Legendre in
-1808.
+In my third year of college I finally decided to write it up properly. A few
+searches in, I found a 2013 post on the Project Euler forums by a user called
+Lucy_Hedgehog. It was my algorithm — cleaner, earlier, already beloved by
+competitive programmers. The mathematics underneath it, I learned, went back
+to Legendre in 1808.
 
-That could have been the end. Instead it became the entry fee. Working with an
-AI collaborator (Anthropic's Claude — more on that honestly below), I asked:
-what would it take to compute prime sums in a way *nobody* has?
+Four years before my drawer, and two centuries before that. I abandoned the
+whole thing. Honestly, it hurt in a way I didn't have words for at the time:
+the discovery was real, but it wasn't *mine*.
+
+This year, when AI models became seriously capable at mathematics, the old
+love won. I handed my teenage algorithm to Claude (Anthropic's AI — the
+honest details of that collaboration are below) and asked the only question
+left: what's *beyond* this? What would it take to compute prime sums in a
+way nobody ever has?
 
 ## Part 2: Hearing the primes instead of counting them
 
