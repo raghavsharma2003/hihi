@@ -1,0 +1,197 @@
+% Interpolation theorem for weighted Chebyshev races — DRAFT FOR RED TEAM
+% To be merged into weighted-races.tex as a new section once verified.
+% Compile standalone with the weighted-races.tex preamble if needed.
+%
+% STATUS: draft; every step marked [ANS], [RS], [Hum], [Dev] leans on the
+% cited work — the red team must check each borrowed hypothesis against
+% the actual papers.
+
+\section{An interpolation theorem}\label{sec:theorem}
+
+Throughout this section $\chi=\chi_4$, $\rho=\tfrac12+i\gamma$ runs over
+the nontrivial zeros of $L(s,\chi)$ with $\gamma>0$, GRH$(\chi)$ denotes
+the Riemann hypothesis for $L(s,\chi)$, and LI$(\chi)$ the linear
+independence over $\mathbb Q$ of the positive ordinates $\gamma$. For
+$m\in(-\tfrac12,0]$ define the ($\theta$-form) weighted race
+\[
+R_m(x)\;=\;\sum_{\substack{p\le x\\ p\equiv3\,(4)}}p^m\log p
+\;-\;\sum_{\substack{p\le x\\ p\equiv1\,(4)}}p^m\log p
+\;=\;-\sum_{p\le x}\chi(p)\,p^m\log p ,
+\]
+and its normalization
+\[
+E_m(x)\;=\;(2m+1)\,x^{-(m+1/2)}\,R_m(x).
+\]
+Write $a_\gamma(m)=(2m+1)\bigl((m+\tfrac12)^2+\gamma^2\bigr)^{-1/2}$ and
+\[
+X_m\;=\;1+\sum_{\gamma>0}2a_\gamma(m)\cos\theta_\gamma ,
+\qquad \theta_\gamma\ \text{i.i.d.\ uniform on }[0,2\pi),
+\]
+the series converging a.s.\ and in $L^2$ since
+$\sum_\gamma a_\gamma(m)^2<\infty$ (zero-counting density
+$\ll\log\gamma$). Set $C:=\sum_{\gamma>0}2\gamma^{-2}$
+($=0.156033\ldots$ numerically).
+
+\begin{theorem}\label{thm:interp}
+Assume GRH$(\chi_4)$.
+\begin{enumerate}
+\item[(i)] For each $m\in(-\tfrac12,0]$ the function
+$u\mapsto E_m(e^u)$ possesses a limiting logarithmic distribution
+$\nu_m$: for every bounded Lipschitz $f$,
+$\lim_{Y\to\infty}\frac1Y\int_0^Y f(E_m(e^u))\,du
+=\int_{\mathbb R}f\,d\nu_m$. Under LI$(\chi_4)$, $\nu_m$ is the law of
+$X_m$.
+\item[(ii)] Under LI$(\chi_4)$ the density
+$\delta(m):=\nu_m\bigl((0,\infty)\bigr)$ satisfies
+$\tfrac12<\delta(m)<1$ for every $m\in(-\tfrac12,0]$, and
+$m\mapsto\delta(m)$ is continuous on $(-\tfrac12,0]$.
+\item[(iii)] Under LI$(\chi_4)$, for all $m\in(-\tfrac12,0]$,
+\[
+1-\delta(m)\;\le\;C\,(2m+1)^2 ,
+\qquad\text{and in fact}\qquad
+1-\delta(m)\;\le\;\exp\!\Bigl(-\frac{1}{8C\,(2m+1)^2}\Bigr)
+\ \text{for }(2m+1)^2\le(8C)^{-1}.
+\]
+In particular $\delta(m)\to1$ as $m\to-\tfrac12^+$.
+\item[(iv)] Consequently the classical density formulation of
+Chebyshev's bias ($m=0$: $\delta(0)=0.995928\ldots$
+\emph{[RS]}) and the weighted formulation at the threshold
+($m=-\tfrac12$: $R_{-1/2}$ of one sign for large $x$ with
+$\tfrac12\log\log x$ drift \emph{[Aoki--Koyama; Sheth]}) are endpoints
+of the single continuous family $\delta(m)$, with maximal bias
+$\delta\to1$ attained exactly in the limit toward the weighted
+threshold.
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}
+Part (iii) is the arithmetic-progression analogue of Humphries's
+$\lim_{\alpha\to1/2^-}\delta(P_\alpha)=1$ for weighted sums of the
+Liouville function \emph{[Hum, Thm.~1.5]}; the proof strategy
+(variance collapse against a fixed bias) is the same, and we claim
+novelty only for the statement in the prime-race setting together with
+the explicit constant. Part (i) does not require LI; this follows the
+framework of Akbary--Ng--Shahabi \emph{[ANS]} (cf.\ Devin \emph{[Dev]}).
+\end{remark}
+
+\begin{proof}[Proof of (i)]
+Under GRH$(\chi)$ the explicit formula for
+$\psi_m(x):=\sum_{n\le x}\Lambda(n)\chi(n)n^m$ gives, for
+$2\le T\le x$,
+\begin{equation}\label{eq:trunc}
+\psi_m(x)\;=\;-\sum_{|\gamma|\le T}\frac{x^{\rho+m}}{\rho+m}
+\;+\;O\!\Bigl(\frac{x^{m+1}\log^2(xT)}{T}+x^{m}\log x\Bigr),
+\end{equation}
+obtained from the classical truncated formula for $\psi(x,\chi)$
+by partial summation ($\psi_m(x)=x^m\psi(x,\chi)-m\int_2^x
+t^{m-1}\psi(t,\chi)\,dt$) and the corresponding truncated expansion of
+$\psi(t,\chi)$ inserted in the integral; the shift replaces each
+$x^\rho/\rho$ by $x^{\rho+m}/(\rho+m)$ since
+$x^m\frac{x^\rho}{\rho}-m\int_2^x t^{m-1}\frac{t^\rho}{\rho}dt
+=\frac{x^{\rho+m}}{\rho+m}+O_\gamma(1)$.
+Separating prime powers,
+\[
+-R_m(x)=\psi_m(x)-\sum_{p\le\sqrt x}p^{2m}\log p+O\!\bigl(x^{(2m+1)/3}\log x\bigr),
+\]
+and $\sum_{p\le\sqrt x}p^{2m}\log p=\frac{x^{m+1/2}}{2m+1}
++O\bigl(x^{m+1/2}e^{-c\sqrt{\log x}}\bigr)$ by the prime number theorem
+with classical error term and partial summation. Note
+$(2m+1)/3<m+\tfrac12$ exactly when $m>-\tfrac12$, so both error terms
+are $o(x^{m+1/2})$ for fixed $m\in(-\tfrac12,0]$. Hence with $x=e^u$,
+\[
+E_m(e^u)\;=\;1+\mathrm{Re}\sum_{0<\gamma\le T} r_\gamma(m)\,e^{i\gamma u}
++\;\mathcal E(u,T),\qquad
+r_\gamma(m)=\frac{2(2m+1)}{m+\tfrac12+i\gamma},
+\]
+where, by \eqref{eq:trunc} with $T=e^{u/2}$ (say) and the mean-square
+bound of \emph{[ANS, \S2--4]} for the tail of the zero sum,
+$\limsup_{Y\to\infty}\frac1Y\int_0^Y|\mathcal E(u,T)|^2du\to0$ as
+$T\to\infty$. Since $\sum_\gamma|r_\gamma(m)|^2<\infty$, the hypotheses
+of the limiting-distribution theorem of \emph{[ANS, Thm.~1.2]} hold for
+the shifted amplitudes exactly as in their unshifted applications
+($\mathrm{Re}(\rho+m)=m+\tfrac12$ is constant along the zeros, playing
+the role their $\tfrac12$ plays), and (i) follows; the identification
+of $\nu_m$ as the law of $X_m$ under LI is \emph{[ANS, \S3]} (or
+\emph{[RS, \S2]}) verbatim.
+\end{proof}
+
+\begin{proof}[Proof of (ii)]
+Fix $m\in(-\tfrac12,0]$. The random variable $X_m-1$ is a sum of
+independent symmetric variables $2a_\gamma\cos\theta_\gamma$ with
+arcsine (hence absolutely continuous) laws; the sum of an absolutely
+continuous independent component with anything is absolutely
+continuous, so $X_m$ has a density and in particular no atom at $0$.
+Since $\sum_\gamma a_\gamma(m)=\infty$ (by the zero-counting theorem
+$N(T,\chi)\asymp T\log T$, $\sum_\gamma\gamma^{-1}$ diverges), the
+support of $X_m$ is all of $\mathbb R$ \emph{[RS, proof of positivity
+of all densities]}; combined with symmetry of $X_m-1$ about $0$ and
+$\mathbb P(X_m>0)\ge\mathbb P(X_m-1>0)=\tfrac12$ plus full support,
+$\tfrac12<\delta(m)<1$.
+
+For continuity: the characteristic function of $X_m-1$ is
+$\Phi_m(t)=\prod_{\gamma}J_0\bigl(2a_\gamma(m)t\bigr)$. On a compact
+$K\subset(-\tfrac12,0]$ and compact $t$-sets, $\log J_0(2a_\gamma t)
+=-a_\gamma^2t^2+O(a_\gamma^4t^4)$ uniformly for $\gamma$ large, and
+$\sum_\gamma a_\gamma(m)^2$ is continuous in $m$ on $K$ (dominated
+convergence against $\sum(2m+1)^2/\gamma^2$); hence
+$\Phi_{m'}\to\Phi_m$ pointwise as $m'\to m$, so
+$X_{m'}\Rightarrow X_m$ weakly (L\'evy). Since $X_m$ has no atom at
+$0$, $\delta(m')=\mathbb P(X_{m'}>0)\to\mathbb P(X_m>0)=\delta(m)$.
+\end{proof}
+
+\begin{proof}[Proof of (iii)]
+Let $V_m=X_m-1$, $\mathbb E V_m=0$,
+$\mathrm{Var}(V_m)=\sum_\gamma 2a_\gamma(m)^2
+\le(2m+1)^2\sum_\gamma\frac{2}{\gamma^2}=C(2m+1)^2$.
+By Chebyshev, $1-\delta(m)\le\mathbb P(V_m\le-1)\le C(2m+1)^2$.
+For the exponential form: the summands $2a_\gamma\cos\theta_\gamma$
+are independent, mean zero, and bounded by $b_\gamma=2a_\gamma$ with
+$\sum_\gamma b_\gamma^2=4\sum a_\gamma^2\le 2C(2m+1)^2\cdot 2
+=4C(2m+1)^2$; wait --- $\sum b_\gamma^2 = 4\sum a_\gamma^2
+\le 4\cdot\tfrac{C}{2}(2m+1)^2\cdot ?$. We record it cleanly:
+$\sum_\gamma a_\gamma^2\le\tfrac{C}{2}(2m+1)^2$ (since
+$\sum 2a_\gamma^2\le C(2m+1)^2$), so $\sum b_\gamma^2\le2C(2m+1)^2$.
+Hoeffding's inequality for sums of bounded independent variables gives
+\[
+\mathbb P(V_m\le-1)\;\le\;\exp\!\Bigl(-\frac{2\cdot 1^2}{4\sum_\gamma
+a_\gamma^2\cdot ?}\Bigr)
+\]
+--- \textbf{[RED TEAM: fix the Hoeffding constant.]} With the standard
+form $\mathbb P(S\le-t)\le\exp(-t^2/(2\sum c_\gamma^2))$ for summands
+in $[-c_\gamma,c_\gamma]$... the summand $2a_\gamma\cos\theta$ lies in
+$[-2a_\gamma,2a_\gamma]$, i.e.\ range $4a_\gamma$; Hoeffding
+(range form) gives $\mathbb P(S\le -t)\le\exp\bigl(-2t^2/\sum(\text{range})^2\bigr)
+=\exp\bigl(-2/(16\sum a_\gamma^2)\bigr)
+=\exp\bigl(-1/(8\sum a_\gamma^2)\bigr)
+\ge\exp\bigl(-1/(4C(2m+1)^2)\bigr)$ --- so
+$1-\delta(m)\le\exp\bigl(-1/(4C(2m+1)^2)\bigr)$,
+valid for all $m$, which is stronger than stated in the theorem;
+\textbf{the red team should fix the final constant and adjust the
+theorem statement to whatever is correct.}
+Both bounds give $\delta(m)\to1$ as $m\to-\tfrac12^+$.
+\end{proof}
+
+\begin{proof}[Proof of (iv)]
+Immediate from (i)--(iii), \emph{[RS]} for $\delta(0)$, and
+\emph{[Aoki--Koyama; Sheth]} for the $m=-\tfrac12$ endpoint (whose
+statement requires no LI; under DRH resp.\ GRH off a set of finite
+logarithmic measure).
+\end{proof}
+
+\begin{remark}[The unlogged race]
+The same statements hold for the unlogged races
+$D_m(x)=\sum_{p\equiv3}p^m-\sum_{p\equiv1}p^m$ normalized by
+$(2m+1)(m+\tfrac12)^{-1}\cdots$ --- more precisely, partial summation
+$D_m(x)=R_m(x)/\log x+\int_2^x R_m(t)\,dt/(t\log^2t)$ multiplies every
+term of the expansion (bias and each zero term) by the same factor
+$(\log x)^{-1}(1+O(1/\log x))$ up to $o(x^{m+1/2}/\log x)$, so the
+normalized limiting distribution is unchanged. \textbf{[RED TEAM:
+verify this lemma's error bookkeeping --- it was checked numerically
+(corrections 0.70\% vs 0.70\% predicted at $x=10^{10}$) but the
+$o(\cdot)$ claim needs the same mean-square treatment as (i).]}
+\end{remark}
+
+% Bibliography keys to merge: [ANS]=Akbary-Ng-Shahabi QJM 65 (2014);
+% [RS]=Rubinstein-Sarnak 1994; [Hum]=Humphries JNT 133 (2013);
+% [Dev]=Devin MPCPS 169 (2020); [Aoki-Koyama]=JNT 245 (2023);
+% [Sheth]=MPCPS 179 (2025).
