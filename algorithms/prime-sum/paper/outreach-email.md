@@ -1,4 +1,8 @@
-# Outreach email — FINAL, SEND-READY (audits passed; links live)
+# Outreach email — v2 (post-red-team). NOTE: v1 was already sent to
+# Prof. Martin with the earlier subject. Use THIS version for all FUTURE
+# sends (Koyama, Template B). If Prof. Martin replies, mention: "a
+# deterministic recomputation has since refined the density table
+# (delta(1)=0.79763); the updated preprint is at the same DOI." 
 
 **To:** gerg@math.ubc.ca (Prof. Greg Martin, University of British Columbia)
 **Secondary option:** Prof. Shin-ya Koyama (Toyo University) — via the contact
@@ -7,8 +11,8 @@ form at researchmap.jp/koyama (no public email found)
 
 ---
 
-**Subject:** A computational answer to Problem 12 of the comparative prime
-number theory list
+**Subject:** Computational results connecting the two formulations of
+Chebyshev's bias (Problem 12 of the comparative prime number theory list)
 
 Dear Professor Martin,
 
@@ -22,8 +26,9 @@ formulation.
 
 For the races D_m(x) = Σ_{p≤x, p≡3(4)} p^m − Σ_{p≡1(4)} p^m we computed
 what appear to be the first Rubinstein–Sarnak densities for any weighted
-prime race: δ(1) = 0.79731, δ(2) = 0.69468, δ(3) = 0.64577, with
-δ(0) = 0.99593 reproducing the classical value as calibration — under the
+prime race: δ(1) = 0.79763, δ(2) = 0.69452, δ(3) = 0.64585, with
+δ(0) = 0.995928 reproducing the classical value to six decimals as
+calibration (deterministic Fourier inversion, Monte Carlo cross-checked) — under the
 usual GRH + LI hypotheses, from 511 zeros of L(s,χ₄) computed for the
 purpose, and likewise for modulus 3. Exact segmented-sieve computations to
 10^10 agree with the densities to about 3×10⁻³. We also derive, and confirm

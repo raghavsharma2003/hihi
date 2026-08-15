@@ -1,4 +1,4 @@
-# LinkedIn post — STORY VERSION (hold until the final red-team check clears)
+# LinkedIn post — FINAL (red-team cleared; all corrections applied)
 
 ## Tagging rules (unchanged — read before posting)
 - DO NOT tag Prof. Martin, Prof. Koyama, or any researcher you haven't
@@ -35,16 +35,17 @@ of the "hidden frequencies" of the primes — the zeros of the Riemann zeta
 function — and found that while *counting* primes from those frequencies
 was famous, nobody had ever used them to compute prime *sums* exactly. So
 we built the first program that does: the exact sum of every prime below a
-billion, computed without touching a single prime.
+billion, from 2,000 zeta zeros plus one thin, exactly-sieved window.
 
 Then came the real discovery. There's a 170-year-old curiosity called
 Chebyshev's bias: primes of the form 4n+3 outnumber primes of form 4n+1
 about 99.6% of the time. We asked a question that appears in no paper:
 what if bigger primes count for more? The famous bias dissolves — 99.6% →
-79.7% → 69.5% → 64.6% as the weight grows — following a law we derived and
-then confirmed against every single prime up to ten billion. It turned out
-we were computationally answering an open problem posed by researchers in
-2024 (Problem 12 of the Comparative Prime Number Theory problem list).
+79.8% → 69.5% → 64.6% as the weight grows — following a law we derived and
+then confirmed against every single prime up to ten billion. It turned out our
+numbers bear directly on an open problem posed by researchers in 2024
+(Problem 12 of the Comparative Prime Number Theory problem list) — the
+first computational evidence connecting the two definitions it asks about.
 
 Full transparency, because it's the most interesting part: the AI didn't
 just help — it derived, coded, and then *attacked its own work*. Twice its

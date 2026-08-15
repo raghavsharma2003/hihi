@@ -32,21 +32,25 @@ the sign-change threshold (Shimada--Koyama), and, for $m<-\tfrac12$,
 limits expressible through Meissel--Mertens constants for progressions
 (Languasco--Zaccagnini). We contribute the pieces this literature does
 not contain: (i) the first numerical Rubinstein--Sarnak logarithmic
-densities for any weighted prime race, computed across the delicate
-range under the standard GRH + LI hypotheses --- e.g.\ for modulus $4$,
-$\delta(1)=0.79731(20)$, $\delta(2)=0.69468(23)$,
-$\delta(3)=0.64577(24)$, with the calibration $\delta(0)=0.99593(3)$
-recovering the classical Rubinstein--Sarnak value; (ii) the
+densities for a weighted race between primes in arithmetic progressions
+(for weighted prime-sum races against main terms, cf.\ Lamzouri's
+Mertens-race density~\cite{Lam16}), computed across the delicate
+range under the standard GRH + LI hypotheses by deterministic Fourier
+inversion --- e.g.\ for modulus $4$, $\delta(1)=0.79763$,
+$\delta(2)=0.69452$, $\delta(3)=0.64585$, with the calibration
+$\delta(0)=0.995928$ recovering the classical Rubinstein--Sarnak value
+to six decimals; (ii) the
 growing-weight regime $m>0$, previously untouched, with exact sieve
 computations to $10^{10}$ agreeing with the predicted densities to
-$\sim3\times10^{-3}$ for modulus $4$; (iii) an asymptotic dissolution law in the weight
+$\lesssim4\times10^{-3}$ for modulus $4$; (iii) an asymptotic dissolution law in the weight
 aspect, $\delta_q(m)-\tfrac12\sim(2\pi\cdot
 2(m+\tfrac12)\log\tfrac{q(m+1/2)}{2\pi})^{-1/2}$, an analogue of the
 Fiorilli--Martin density asymptotics, verified numerically in moduli
 $3$ and $4$. Taken together these results connect the weighted
 formulation of Chebyshev's bias with the classical density formulation,
-addressing Problem 12 of the comparative prime number theory problem
-list of Hamieh, Kadiri, Martin and Ng computationally.
+contributing computational evidence toward Problem 12 of the comparative
+prime number theory problem list of Hamieh, Kadiri, Martin and Ng (the
+logical relation the problem asks for remains a theoretical question).
 \end{abstract}
 
 \section{Introduction}
@@ -64,7 +68,9 @@ $s=\tfrac12$: for the mod-$4$ race the weighted difference obeys
 $\sum_{p\le x}\chi_4(p)p^{-1/2}=-\tfrac12\loglog x+O(1)$ (under DRH in
 \cite{AK23}, under GRH off a small exceptional set in \cite{Sheth24}),
 so the weighted race is single-signed for large $x$, while for weights
-$p^{-s}$ with $s<\tfrac12$ sign changes persist~\cite{SK25}. Humphries
+$p^{-s}$ with $s<\tfrac12$ sign changes persist~\cite{SK25}; Hayani
+\cite{Hay25} has recently obtained the density-one statement at
+$s=\tfrac12$ under GRH alone, without linear independence. Humphries
 \cite{Hum13} established the analogous phase structure for weighted
 sums of the Liouville function, including the limit
 $\delta_\alpha\to1$ as $\alpha\to\tfrac12^-$. Problem 12 of the
@@ -97,26 +103,30 @@ a_\gamma(m)\;=\;\frac{2m+1}{\sqrt{(m+\tfrac12)^2+\gamma^2}},
 $\gamma$ the ordinates of $L(s,\chi_4)$, and the constant $1$
 normalizing the prime-square bias term. Monte Carlo evaluation under
 LI (Section~\ref{sec:methods}) gives Table~\ref{tab:delta}. These are,
-to our knowledge, the first Rubinstein--Sarnak densities computed for
-any weighted prime race.
+to our knowledge, the first Rubinstein--Sarnak densities computed for a
+weighted race between primes in arithmetic progressions (for weighted
+prime sums against main terms, densities exist in the Mertens-race
+literature~\cite{Lam16}; for analytic explicit-formula control of the
+log-weighted sum $\theta(x)$, cf.\ Platt--Trudgian~\cite{PT14}).
 
 \begin{table}[h]\centering
 \begin{tabular}{lccccccc}
 \toprule
 $m$ & $0$ & $1$ & $2$ & $3$ & $8$ & $20$ & $100$\\
 \midrule
-$\delta_4(m)$ & $0.99593$ & $0.79731$ & $0.69468$ & $0.64577$
-& $0.57216$ & $0.53821$ & $0.51370$\\
-$\delta_3(m)$ & $0.99904$ & $0.83679$ & $0.72361$ & $0.66695$
-& $0.57879$ & $0.54094$ & --- \\
+$\delta_4(m)$ & $0.995928$ & $0.797628$ & $0.694520$ & $0.645850$
+& $0.571869$ & $0.538455$ & $0.513778$\\
+$\delta_3(m)$ & $0.999063$ & $0.836877$ & $0.723470$ & $0.666552$
+& $0.578534$ & $0.540767$ & --- \\
 \bottomrule
 \end{tabular}
 \caption{Logarithmic densities of the set where the nonresidue class
-leads, moduli $4$ and $3$ (Monte Carlo standard errors
-$\le3.6\times10^{-4}$; $511$ resp.\ $537$ zeros computed to $25$
-digits, Gaussian tail from the zero-counting density). The $m=0$
-column reproduces the classical values $0.9959$ and $0.9990$
-\cite{RS94}.}
+leads, moduli $4$ and $3$: deterministic Gil--Pelaez Fourier inversion
+of the limiting distribution ($511$ resp.\ $537$ zeros computed to $25$
+digits, Gaussian tail from the zero-counting density), cross-checked by
+independent $2\times10^7$-sample Monte Carlo to $\le10^{-4}$. The $m=0$
+column reproduces the classical values $0.995928$ and $0.999063$
+(cf.\ \cite{RS94,FM13}) to all six decimals.}
 \label{tab:delta}
 \end{table}
 
@@ -126,7 +136,7 @@ favours the residue class at $p=5$ for every $m\ge1$ (against Leech's
 $26{,}861$ for $m=0$); lead changes to $10^{10}$ number $3{,}082$
 ($m=0$), $125{,}624$, $159{,}942$, $199{,}540$ ($m=1,2,3$); the
 finite-$x$ logarithmic measures at $10^{10}$ are $0.79380$, $0.69275$,
-$0.64900$ for $m=1,2,3$, within $\sim3\times10^{-3}$ of
+$0.64900$ for $m=1,2,3$, within $\lesssim4\times10^{-3}$ of
 Table~\ref{tab:delta}. For modulus $3$ the weighted first flips occur
 at $p=13$ ($m=1$) and $p=7$ ($m=2,3$), while the classical race, as
 expected, does not flip below $10^{10}$.
@@ -142,9 +152,9 @@ distribution gives
 \]
 a weight-aspect analogue of the Fiorilli--Martin density
 asymptotics~\cite{FM13} (cf.\ Meng~\cite{Meng18} for the $k$-aspect).
-At $q=4$, $m=100$: Monte Carlo $0.51370(35)$, Gaussian $\Phi(1/\sigma)$
-$0.51379$, the law $0.51380$. At $q=3$, $m=60$: variance law within
-$0.26\%$ of Monte Carlo. The modulus ordering
+At $q=4$, $m=100$: deterministic $0.513778$, Gaussian $\Phi(1/\sigma)$
+$0.51379$, the law $0.51380$. At $q=3$, $m=60$: deterministic $0.519716$
+against the law's $0.51978$ --- agreement to $6\times10^{-5}$. The modulus ordering
 $\delta_3(m)>\delta_4(m)$ predicted by the law (through
 $\gamma_1(\chi_3)=8.04>\gamma_1(\chi_4)=6.02$) holds at every computed
 $m$.
@@ -241,6 +251,13 @@ Mertens and Meissel--Mertens constants for sums over arithmetic
 progressions}, Experiment.\ Math.\ \textbf{19} (2010), 279--284.
 \bibitem{Fio14} D. Fiorilli, \emph{Highly biased prime number races},
 Algebra Number Theory \textbf{8} (2014), 1733--1767.
+\bibitem{Lam16} Y. Lamzouri, \emph{A bias in Mertens' product formula},
+Int.\ J. Number Theory \textbf{12} (2016), 97--109. arXiv:1410.3777.
+\bibitem{Hay25} M. Hayani, \emph{Chebyshev's bias without linear
+independence}, arXiv:2512.23302 (2025).
+\bibitem{PT14} D.~J. Platt, T.~S. Trudgian, \emph{On the first sign
+change of $\theta(x)-x$}, Math.\ Comp.\ \textbf{85} (2016), 1539--1547.
+arXiv:1407.1914.
 \end{thebibliography}
 
 \end{document}

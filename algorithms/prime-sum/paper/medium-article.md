@@ -1,6 +1,6 @@
-# Medium article — FINAL (links live; ready to publish)
+# Medium article — FINAL (red-team cleared; all corrections applied)
 
-Suggested title: **At 14 I Tried to Beat a 2,300-Year-Old Algorithm. At 23, With an AI, I Answered an Open Problem About Primes.**
+Suggested title: **At 14 I Tried to Beat a 2,300-Year-Old Algorithm. This Year, With an AI, I Watched a 170-Year-Old Prime Mystery Dissolve.**
 Subtitle: A nine-year story about a drawer, a heartbreak, the zeros of the Riemann zeta function, and Chebyshev's dissolving bias.
 
 ---
@@ -75,14 +75,14 @@ It dissolves — and we computed exactly how fast:
 | weight per prime | how often team 3 leads |
 |---|---|
 | 1 (classical) | 99.59% |
-| p | 79.73% |
-| p² | 69.47% |
-| p³ | 64.58% |
-| p^100 | 51.37% |
+| p | 79.76% |
+| p² | 69.45% |
+| p³ | 64.59% |
+| p^100 | 51.38% |
 
 The first number is the known classical value — our calibration. The rest are,
 to our knowledge, the first Rubinstein–Sarnak densities ever computed for a
-weighted prime race. We verified them against reality by exactly racing every
+weighted race between prime families. We verified them against reality by exactly racing every
 prime up to ten billion (the measured values agree to about 3 parts in 1,000),
 and we derived a closed-form law for how the bias decays to a coin flip as the
 weight grows — confirmed in two different moduli.
@@ -107,8 +107,10 @@ existence machinery for limiting distributions (Akbary–Ng–Shahabi, Devin).
 computations themselves; the weighted-race densities δ(m); the entire
 growing-weight regime; and the dissolution law. Together they connect the
 "weighted" school of Chebyshev's bias with the classical "density" school —
-which is precisely what Problem 12 of the comparative prime number theory
-problem list (Hamieh–Kadiri–Martin–Ng, 2024) asks for.
+the two definitions whose relationship Problem 12 of the comparative prime
+number theory problem list (Hamieh–Kadiri–Martin–Ng, 2024) asks about. Our
+contribution is computational evidence; the logical relation the problem
+demands remains for the theorists.
 
 ## Part 5: About the AI
 
