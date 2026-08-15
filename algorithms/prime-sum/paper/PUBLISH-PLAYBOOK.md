@@ -1,5 +1,11 @@
 # The complete publishing playbook — step by step, in order
 
+> **STATUS (Aug 15, 2026): Steps 0–2 DONE.**
+> Repo: https://github.com/raghavs1729/weighted-prime-races (live)
+> DOI: https://doi.org/10.5281/zenodo.21947102 (live, CC-BY-4.0, both files up)
+> Remaining: recompile PDF with DOI footnote -> Zenodo "New version" ->
+> send the email (Step 3) -> posts (Step 4) -> arXiv (Step 5).
+
 Everything below is sequenced. Don't reorder: the DOI must exist before the
 email, and the email before the social posts.
 

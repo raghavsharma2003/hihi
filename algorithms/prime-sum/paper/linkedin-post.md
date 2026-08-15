@@ -1,4 +1,4 @@
-# LinkedIn post — DRAFT (publish AFTER Zenodo DOI exists; same day as Medium is fine)
+# LinkedIn post — FINAL (link live; post after the email is sent)
 
 ## Tagging rules (read before posting)
 - DO NOT tag Prof. Martin, Prof. Koyama, or any researcher you haven't
@@ -41,7 +41,7 @@ re-computed every number in the paper, catching one real error before anyone
 else could. Every claim is verified twice and every limitation is stated in
 the paper.
 
-Preprint + all code and data: [ZENODO DOI LINK]
+Preprint + all code and data: https://doi.org/10.5281/zenodo.21947102
 
 I'm a student, this field's experts will find things to correct, and that's
 exactly why it's public. If you know someone in analytic number theory, I'd
@@ -50,6 +50,5 @@ be grateful for the connection.
 #NumberTheory #Mathematics #RiemannHypothesis #AIforScience #OpenScience
 
 ---
-END OF DRAFT. Before posting: replace the DOI placeholder, decide on tagging
-per the rules above, attach ONE image (suggestion: screenshot of the δ(m)
+END — ready. Decide on tagging per the rules above, attach ONE image (suggestion: screenshot of the δ(m)
 table from the paper, or the race chart from explainer.html).

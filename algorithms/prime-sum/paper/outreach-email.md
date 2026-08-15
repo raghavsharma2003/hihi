@@ -1,10 +1,9 @@
-# Outreach email — DRAFT (do not send until the audit agents clear it)
+# Outreach email — FINAL, SEND-READY (audits passed; links live)
 
 **To:** gerg@math.ubc.ca (Prof. Greg Martin, University of British Columbia)
 **Secondary option:** Prof. Shin-ya Koyama (Toyo University) — via the contact
 form at researchmap.jp/koyama (no public email found)
-**Attachments:** weighted-races.pdf (compile weighted-races.tex on Overleaf),
-plus the repo link or the code bundle (prime-sum-research.tar.gz)
+**Attachment:** weighted-races.pdf (the recompiled version with the DOI in the footnote)
 
 ---
 
@@ -32,12 +31,17 @@ numerically in both moduli, a dissolution law
 δ_q(m) − 1/2 ~ (2π·2(m+½)·log(q(m+½)/2π))^(−1/2) as m → ∞ — an analogue in
 the weight aspect of the Fiorilli–Martin density asymptotics.
 
-A short note is attached, with full attribution to the existing literature
+The preprint is archived at https://doi.org/10.5281/zenodo.21947102 with all code and
+data (https://github.com/raghavs1729/weighted-prime-races); a PDF is attached for
+convenience. It carries full attribution to the existing literature
 (Aoki–Koyama, Sheth, Shimada–Koyama, Humphries, Devin, Akbary–Ng–Shahabi,
 Languasco–Zaccagnini) and an explicit statement of what is and is not new.
 I want to be fully transparent that the derivations and code were
 AI-produced; every headline number was then verified by two independent
 routes, and the draft discloses all of this.
+
+If you find the note credible, I would also be grateful for an arXiv
+endorsement for math.NT, so it can reach the community properly.
 
 May I ask for your opinion: is this worth writing up properly, and might
 you or a student be interested in taking a look? I am aware the existence
@@ -48,4 +52,5 @@ Thank you for your time,
 
 Raghav Sharma
 raghavsharma1729@gmail.com
-[Zenodo DOI link] · [GitHub repository link]
+Preprint: https://doi.org/10.5281/zenodo.21947102
+Code and data: https://github.com/raghavs1729/weighted-prime-races

@@ -1,4 +1,4 @@
-# Medium article — DRAFT (publish AFTER the Zenodo DOI exists; paste the DOI where marked)
+# Medium article — FINAL (links live; ready to publish)
 
 Suggested title: **I Started With a School Algorithm. I Ended Up Answering an Open Problem About Prime Numbers.**
 Subtitle: How a wrong C program, an AI collaborator, and the zeros of the Riemann zeta function led to the first "weighted density" computations for Chebyshev's famous prime race.
@@ -120,8 +120,8 @@ all of this on page one.
 
 ## What happens next
 
-The preprint, code, and data are public: [ZENODO DOI LINK] and
-[GITHUB REPO LINK]. I've written to the authors of the problem list. The
+The preprint, code, and data are public: https://doi.org/10.5281/zenodo.21947102 and
+https://github.com/raghavs1729/weighted-prime-races. I've written to the authors of the problem list. The
 results are conditional on the standard conjectures of this field (GRH and
 linear independence — the same assumptions the classical 99.59% rests on),
 and turning the demonstrated error bounds into formally proven ones is the
@@ -133,6 +133,4 @@ worth pushing further — my inbox is open. That's what the preprint is for.
 *The primes were never random. We just needed to learn to listen.*
 
 ---
-END OF DRAFT — before publishing: (1) replace both link placeholders,
-(2) read it once aloud and delete anything that feels like bragging,
-(3) publication order: Zenodo first, email second, this article third.
+END — ready to publish. Read once aloud first; publish after the email to Prof. Martin is sent.
