@@ -17,8 +17,8 @@ critical (1/2)·log log x deflection at m = −1/2 under DRH; Sheth (2024)
 under GRH; Shimada–Koyama (Aug 2025) frame m = −1/2 as the sign-change
 threshold; Humphries (JNT 2013) established the same phase structure for
 the weighted Liouville function; the frozen limits for m < −1/2 are
-differences of Meissel–Mertens AP constants (Languasco–Zaccagnini 2010,
-OEIS A368645/A086239). Our claims are the pieces none of these contain.
+differences of Meissel–Mertens AP constants (Languasco–Zaccagnini 2010;
+the difference is OEIS A086239, the constants A368645/A368646). Our claims are the pieces none of these contain.
 
 ## What is new here
 
