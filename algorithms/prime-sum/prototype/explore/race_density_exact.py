@@ -25,6 +25,9 @@ def tail_var(m, gN, q):
         tot += f(g+step/2)*step
         g += step
         if g > 2e4: step = 100.0
+    # closed-form remainder beyond the integration cutoff G:
+    # int_G^inf (2m+1)^2/g^2 * log(qg/2pi)/(2pi) * 2 dg  (kernel ~ (2m+1)^2/g^2)
+    tot += ((2*m+1)**2/math.pi)*(math.log(q*g/(2*math.pi))+1.0)/g
     return tot
 
 def delta(m, gammas, q):

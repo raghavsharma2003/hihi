@@ -10,9 +10,10 @@ for the first time for any weighted prime race, the Rubinstein–Sarnak
 densities δ(m) across the whole delicate range, extending the race to
 growing weights m > 0 (untouched in the literature), deriving the
 density's asymptotic dissolution law in the weight aspect, and — since
-the final version — proving an interpolation theorem (existence,
-continuity in the weight, and an explicit rate for δ(m) → 1 on
-(−1/2, 0], under GRH + LI; see item 4 below).
+the final version — proving an interpolation theorem on the FULL range
+(−1/2, ∞), an exact closed form for the variance, a certified constant
+C = 0.15602964988964488, rigorous density enclosures (width ≤ 6×10⁻⁷),
+and the dissolution law as a THEOREM with error term (see items 3–4).
 
 **The object.** D_m(x) = Σ_{p≤x, p≡3(4)} p^m − Σ_{p≡1(4)} p^m. The m ≤ 0
 structure has an established literature: Aoki–Koyama (JNT 2023) proved the
@@ -46,10 +47,12 @@ the difference is OEIS A086239, the constants A368645/A368646). Our claims are t
    3,082 (m=0) → 125,624 → 159,942 → 199,540. No prior work treats
    races with growing weights.
 
-3. **The dissolution law** (weight-aspect analogue of the Fiorilli–Martin
-   density asymptotic; cf. Meng's k-aspect dissolution): with
-   Var(m) ~ 2(m+½)·log(2(m+½)/π) from the χ₄ zero density,
-   δ(m) − ½ ~ 1/√(2π·Var(m)) as m → ∞.
+3. **The dissolution law — now a theorem.** δ_q(m) − ½ =
+   (2π·σ²_m)^(−1/2)·(1 + O(1/(M log M))), M = m+½, proved via the Bessel
+   characteristic function (with a second-order refinement −1/(6σ²) −
+   3S₄/(64σ⁴)); LI is NOT needed for the distributional statement. The
+   variance is exact: σ²_m = 4M·(log Λ)'(m+1) = 2M·log(qM/2π) + c₀ + O(1/M)
+   (Hadamard product of the completed L-function).
    Three-way confirmation at m = 100: Monte Carlo 0.51370 ± 0.00035,
    Gaussian Φ(1/σ) 0.51379, closed-form law 0.51380. (The law is
    genuinely asymptotic: its log is negative below m ≈ 1.07.)

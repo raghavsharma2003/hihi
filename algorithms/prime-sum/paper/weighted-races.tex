@@ -9,6 +9,7 @@
 \newtheorem{lemma}{Lemma}
 \newtheorem{corollary}{Corollary}
 \newtheorem{remark}{Remark}
+\newtheorem{conjecture}{Conjecture}
 \newcommand{\eps}{\varepsilon}
 \newcommand{\loglog}{\log\log}
 
@@ -44,21 +45,26 @@ inversion --- e.g.\ for modulus $4$, $\delta(1)=0.79763$,
 $\delta(2)=0.69452$, $\delta(3)=0.64585$, with the calibration
 $\delta(0)=0.995928$ recovering the classical Rubinstein--Sarnak value
 to six decimals; (ii) the
-growing-weight regime $m>0$, previously untouched, with exact sieve
+growing-weight regime $m>0$ (we are not aware of prior
+Rubinstein--Sarnak density computations or weight-aspect density
+asymptotics for growing weights $p^{\,m}$, $m>0$), with exact sieve
 computations to $10^{10}$ agreeing with the predicted densities to
 $\lesssim4\times10^{-3}$ for modulus $4$; (iii) an asymptotic dissolution law in the weight
 aspect, $\delta_q(m)-\tfrac12\sim(2\pi\cdot
 2(m+\tfrac12)\log\tfrac{q(m+1/2)}{2\pi})^{-1/2}$, an analogue of the
-Fiorilli--Martin density asymptotics, verified numerically in moduli
-$3$ and $4$. We complement the computations with an interpolation
+Fiorilli--Martin density asymptotics, proved here with an error term
+for the density of the limiting distribution of any real primitive
+character under GRH and $L(\tfrac12,\chi)\neq0$ --- under LI it applies
+to the logarithmic density of the mod-$4$ race itself --- and verified
+numerically in moduli $3$ and $4$. We complement the computations with an interpolation
 theorem, proved by the framework of Akbary--Ng--Shahabi and the method
 of Humphries: under GRH and LI for $L(s,\chi_4)$, for every
-$m\in(-\tfrac12,0\,]$ the logarithmic density $\delta(m)$ of the set of
-$x$ where the class $3\ (\mathrm{mod}\ 4)$ leads exists and lies in
+$m\in(-\tfrac12,\infty)$ the logarithmic density $\delta(m)$ of the set
+of $x$ where the class $3\ (\mathrm{mod}\ 4)$ leads exists and lies in
 $(\tfrac12,1)$, the map $m\mapsto\delta(m)$ is continuous, and
 $1-\delta(m)\le\exp\bigl(-1/(2C(2m+1)^2)\bigr)$ with
-$C=\sum_{\gamma>0}2\gamma^{-2}=0.156\ldots$, so $\delta(m)\to1$ as
-$m\to-\tfrac12^{\,+}$. This exhibits the classical density formulation
+$C=\sum_{\gamma>0}2\gamma^{-2}=0.1560296\ldots$ (evaluated in closed
+form), so $\delta(m)\to1$ as $m\to-\tfrac12^{\,+}$. This exhibits the classical density formulation
 ($m=0$) and the weighted formulation of Aoki--Koyama ($m=-\tfrac12$) as
 the two ends of one continuous, quantitatively controlled family --- a
 conditional structural connection between, though not a logical
@@ -92,6 +98,42 @@ comparative prime number theory problem list~\cite{HKMN24} (posed by
 Koyama) asks how the weighted formulation relates to the classical
 logarithmic-density formulation.
 
+\medskip\noindent\textbf{Related work.} The weighted-race literature
+just cited concerns constant or decaying weights, and recent activity
+stays on that side of the boundary. In the absolutely convergent regime
+(weights $p^{-\sigma}$, $\sigma>1$; $m=-\sigma<-1$ in our
+normalization) Yamamuro~\cite{Yam25}, following Aymone~\cite{Aym22},
+proves unconditional two-sided bounds on the tails
+$\sum_{n>x}\Lambda(n)\chi(n)n^{-\sigma}/\log n$ through infinitely
+divisible distributions of Riemann-zeta type --- no GRH, no LI, and no
+logarithmic densities enter. Hayani~\cite{Hay26} generalizes the
+Aoki--Koyama threshold $\tfrac12$ to higher roots in prime
+\emph{ideal} races, for weights $(\mathrm N\mathfrak p)^{-\alpha}$
+with $\alpha\ge0$, under GRH and partly unconditionally --- asymptotic
+and sign statements, not Rubinstein--Sarnak densities, and only
+nonincreasing weights. For unweighted races, Bailleul, Hayani and
+Untrau~\cite{BHU26} prove a quantitative Kronecker--Weyl theorem in
+the $1$-Wasserstein metric under GRH and an effective
+linear-independence hypothesis, with rates of convergence to the
+limiting distributions and conditional bounds for generalized Skewes
+numbers; an effective, Wasserstein-quantified version of the
+interpolation theorem below is a natural question we do not pursue.
+Martin and Ng~\cite{MN20} obtain inclusivity of classical races under
+GRH plus the existence of sufficiently many self-sufficient zeros, a
+hypothesis substantially weaker than full LI; it is plausible that the
+qualitative parts of Theorem~\ref{thm:interp} (existence of the
+limiting distribution and $\tfrac12<\delta(m)<1$) survive a weakening
+of LI in their direction, but we do not prove this. Finally,
+Leung~\cite{Leung24} proves, under RH and a quantitative form of LI,
+multivariate Gaussian limit laws with weak negative correlations for
+smoothed counts of primes in multiple short intervals, with
+short-interval race applications; the weights there are smoothings in
+the interval aspect, not powers $p^m$, and the contact point with this
+note is the outlook at the end of Section~\ref{sec:methods}. In all of
+this literature the weight is constant or decaying; we are not aware
+of prior Rubinstein--Sarnak density computations, or weight-aspect
+density asymptotics, for growing weights $p^{\,m}$, $m>0$.
+
 This note treats the two formulations as endpoints of one family ---
 a viewpoint anticipated in the $s$-parametrized theorems of
 Shimada--Koyama~\cite{SK25} and in Aymone's races with a general weight
@@ -101,11 +143,17 @@ D_m(x)\;=\;\sum_{\substack{p\le x\\ p\equiv 3\,(4)}}p^{\,m}
 -\sum_{\substack{p\le x\\ p\equiv 1\,(4)}}p^{\,m},
 \]
 so $m=0$ is the classical race and $m=-s$ the Aoki--Koyama weighting;
-we allow $m>0$, which appears not to have been considered. Apart from
+we allow $m>0$; the related work reviewed above contains, to our
+knowledge, no prior treatment of the race with growing weights. Apart from
 the interpolation theorem of Section~\ref{sec:theorem}, our results are
 computational, at the standard of numerical work in this area
-(GRH + LI where densities are involved), and every headline number was
-computed by two independent routes.
+(GRH + LI where densities are involved). Every headline number was
+computed twice: the sieve counts by fully independent implementations,
+the densities by deterministic inversion against Monte Carlo --- two
+evaluations that share the same zero data and tail model and are
+independent only in the evaluation step; the shared tail model is
+bounded rigorously by the certified enclosures of
+Section~\ref{sec:methods} (Table~\ref{tab:enclose}).
 
 \subsection*{Results}
 
@@ -141,7 +189,12 @@ $\delta_3(m)$ & $0.999063$ & $0.836877$ & $0.723470$ & $0.666552$
 leads, moduli $4$ and $3$: deterministic Gil--Pelaez Fourier inversion
 of the limiting distribution ($511$ resp.\ $537$ zeros computed to $25$
 digits, Gaussian tail from the zero-counting density), cross-checked by
-independent $2\times10^7$-sample Monte Carlo to $\le10^{-4}$. The $m=0$
+independent Monte Carlo with $2$--$4\times10^6$ samples per entry
+(binomial standard error $\le3.6\times10^{-4}$; largest deviation
+$2.2$ standard errors over the $14$ entries, consistent with binomial
+sampling), and at $(q,m)=(4,1)$ by a single
+$2\times10^7$-sample run, $0.797599\pm0.000090$, consistent with the
+deterministic entry ($0.3$ standard errors). The $m=0$
 column reproduces the classical values $0.995928$ and $0.999063$
 (cf.\ \cite{RS94,FM13}) to all six decimals.}
 \label{tab:delta}
@@ -152,9 +205,14 @@ $128$-bit signed accumulators to $X=10^{10}$: the mod-$4$ race first
 favours the residue class at $p=5$ for every $m\ge1$ (against Leech's
 $26{,}861$ for $m=0$); lead changes to $10^{10}$ number $3{,}082$
 ($m=0$), $125{,}624$, $159{,}942$, $199{,}540$ ($m=1,2,3$); the
-finite-$x$ logarithmic measures at $10^{10}$ are $0.79380$, $0.69275$,
-$0.64900$ for $m=1,2,3$, within $\lesssim4\times10^{-3}$ of
-Table~\ref{tab:delta}. For modulus $3$ the weighted first flips occur
+finite-$x$ logarithmic measures at $X=10^{10}$ --- here and throughout,
+the finite-$x$ logarithmic measure of the leading set is
+$(\log(X/3))^{-1}\int_3^X\mathbf 1[D_m(t)>0]\,\frac{dt}{t}$ for modulus
+$4$ and $(\log(X/2))^{-1}\int_2^X\mathbf 1[D_m(t)>0]\,\frac{dt}{t}$ for
+modulus $3$, the race being tracked from its first participating prime
+($3$, resp.\ $2$; conventions in Section~\ref{sec:methods}) --- are
+$0.79380$, $0.69275$, $0.64900$ for $m=1,2,3$, within
+$\lesssim4\times10^{-3}$ of Table~\ref{tab:delta}. For modulus $3$ the weighted first flips occur
 at $p=13$ ($m=1$) and $p=7$ ($m=2,3$), while the classical race, as
 expected, does not flip below $10^{10}$.
 
@@ -168,13 +226,26 @@ distribution gives
 \quad(m\to\infty),
 \]
 a weight-aspect analogue of the Fiorilli--Martin density
-asymptotics~\cite{FM13} (cf.\ Meng~\cite{Meng18} for the $k$-aspect).
+asymptotics~\cite{FM13} (cf.\ Meng~\cite{Meng18} for the $k$-aspect),
+now a theorem: Section~\ref{sec:dissolution} proves it with error term
+$O(1/(M\log M))$ and a second-order refinement for the density of the
+limiting variable of any real primitive character under GRH and
+$L(\tfrac12,\chi)\ne0$, and under LI$(\chi_4)$ for the logarithmic
+density of the mod-$4$ race itself
+(Corollary~\ref{cor:dissolution-race}).
 At $q=4$, $m=100$: deterministic $0.513778$, Gaussian $\Phi(1/\sigma)$
 $0.51379$, the law $0.51380$. At $q=3$, $m=60$: deterministic $0.519716$
 against the law's $0.51978$ --- agreement to $6\times10^{-5}$. The modulus ordering
-$\delta_3(m)>\delta_4(m)$ predicted by the law (through
-$\gamma_1(\chi_3)=8.04>\gamma_1(\chi_4)=6.02$) holds at every computed
-$m$.
+$\delta_3(m)>\delta_4(m)$ holds at every computed $m$. In the law it is
+a conductor effect: $\mathrm{Var}_4(m)-\mathrm{Var}_3(m)\sim
+2(m+\tfrac12)\log\tfrac43$, and from the zero data this conductor term
+accounts for the entire variance gap at $m=8,20,60$
+($100$--$101\%$). The larger first zero
+$\gamma_1(\chi_3)=8.04>\gamma_1(\chi_4)=6.02$ pushes in the same
+direction but is not the mechanism of the law: it contributes $23\%$ of
+the gap at $m=8$ and $0.2\%$ at $m=60$; only at small $m$ ($0\le m\le3$,
+where the first zero carries $24$--$36\%$ of the total variance) is it
+a comparable driver of the ordering.
 
 \textbf{4. The boundary $m\le-\tfrac12$, numerically.} Confirming (not
 discovering) the theorems cited above: with
@@ -184,7 +255,7 @@ prime-power contribution), the parameter-free prediction
 $D_{-1/2}(x)=\tfrac12\loglog x+C^*+\eps(x)$ gives $1.4968\pm0.0172$
 at $x=10^{10}$ against the exact value $1.50775$; the fitted slope
 over $[10^6,10^{10}]$ is $0.494$. The fluctuation $\eps$ decays like
-$\sqrt{\Sigma}/\log x$ with $\Sigma=\sum_\gamma2/\gamma^2=0.156033$,
+$\sqrt{\Sigma}/\log x$ with $\Sigma=\sum_\gamma2/\gamma^2=0.1560296$,
 visible decade-by-decade in the residuals --- a small refinement of
 the qualitative picture. For $m<-\tfrac12$ the limits are identified
 with differences of Meissel--Mertens constants for progressions:
@@ -200,14 +271,14 @@ merely predominant but, empirically, total from the first odd prime.
 
 \textbf{5. An interpolation theorem.} Section~\ref{sec:theorem}
 (Theorem~\ref{thm:interp}) proves: under GRH and LI for $L(s,\chi_4)$,
-for every $m\in(-\tfrac12,0\,]$ the
+for every $m\in(-\tfrac12,\infty)$ the
 normalized race has a limiting logarithmic distribution, the density
 $\delta(m)$ exists and lies in $(\tfrac12,1)$, the map
 $m\mapsto\delta(m)$ is continuous, and
 \[
 1-\delta(m)\;\le\;\min\Bigl\{C\,(2m+1)^2,\;
 e^{-1/(2C(2m+1)^2)}\Bigr\},\qquad
-C=\sum_{\gamma>0}\frac{2}{\gamma^2}=0.156033\ldots,
+C=\sum_{\gamma>0}\frac{2}{\gamma^2}=0.1560296\ldots,
 \]
 so $\delta(m)\to1$ as $m\to-\tfrac12^{\,+}$ --- a weight-aspect
 instance of the highly biased phenomenon of Fiorilli~\cite{Fio14} ---
@@ -234,7 +305,7 @@ $\mathbb Q$ of the multiset of positive ordinates $\gamma$ (LI in
 particular forces all $\gamma$ to be distinct, i.e.\ the zeros to be
 simple; recall also that $L(\tfrac12,\chi_4)=\sum_{k\ge0}(-1)^k(2k+1)^{-1/2}>0$
 by the alternating series test, so no ordinate vanishes). For
-$m\in(-\tfrac12,0]$ define the ($\theta$-form) weighted race
+$m\in(-\tfrac12,\infty)$ define the ($\theta$-form) weighted race
 \[
 R_m(x)\;=\;\sum_{\substack{p\le x\\ p\equiv3\,(4)}}p^m\log p
 \;-\;\sum_{\substack{p\le x\\ p\equiv1\,(4)}}p^m\log p
@@ -254,17 +325,37 @@ with $\theta_\gamma$ i.i.d.\ uniform on $[0,2\pi)$; the series converges
 a.s.\ and in $L^2$ since $\sum_\gamma a_\gamma(m)^2<\infty$ (the ordinates
 have density $\ll\log\gamma$). Set
 \[
-C\;:=\;\sum_{\gamma>0}\frac{2}{\gamma^2}\;=\;0.156033\ldots
+C\;:=\;\sum_{\gamma>0}\frac{2}{\gamma^2}\;=\;0.1560296498896\ldots
 \]
-(numerically: $0.152546$ from the first $511$ ordinates plus the
-Riemann--von Mangoldt tail $\int_{\gamma_{511}}^\infty 2t^{-2}\,dN(t)
-=0.003487$ with $dN(t)=(2\pi)^{-1}\log(2t/\pi)\,dt$; the neglected
-fluctuation of the zero-counting remainder contributes $O(10^{-5})$).
+Under GRH$(\chi_4)$ (in force throughout this section) this constant has
+a closed evaluation: the completed function
+$\Lambda(s)=(4/\pi)^{(s+1)/2}\Gamma\bigl(\tfrac{s+1}{2}\bigr)L(s,\chi_4)$
+is entire and satisfies $\Lambda(s)=\Lambda(1-s)$ (the root number of
+$\chi_4$ is $+1$), so $\Xi(z):=\Lambda(\tfrac12+z)$ is even; since
+$\Xi(0)>0$ (as $L(\tfrac12,\chi_4)>0$), $\sum_\gamma\gamma^{-2}<\infty$,
+and, under GRH, the zeros of $\Xi$ are exactly $\pm i\gamma$, the
+Hadamard factorization takes the genus-zero form
+$\Xi(z)/\Xi(0)=\prod_{\gamma>0}(1+z^2/\gamma^2)$, exactly as for the
+Riemann $\xi$-function \cite[\S12]{Dav00}. Hence
+\[
+C\;=\;(\log\Lambda)''\bigl(\tfrac12\bigr)
+\;=\;\tfrac14\,\psi'\bigl(\tfrac34\bigr)
++\frac{d^2}{ds^2}\log L(s,\chi_4)\Big|_{s=1/2}
+\;=\;0.15602964988964488\ldots,
+\]
+with $\psi'(\tfrac34)=\pi^2-8G$ ($G$ Catalan's constant), evaluated at
+$40$-digit working precision. Cross-check from the zero data: the first
+$511$ ordinates give $0.152546$ and the Riemann--von Mangoldt tail
+$\int_{\gamma_{511}}^\infty 2t^{-2}\,dN(t)$ with
+$dN(t)=(2\pi)^{-1}\log(2t/\pi)\,dt$ gives $0.003487$, total $0.156033$,
+agreeing with the exact value to $3.4\times10^{-6}$ --- within the
+expected $O(10^{-5})$ fluctuation of the zero-counting remainder.
+(Earlier drafts printed the cruder value $0.156033$.)
 
 \begin{theorem}\label{thm:interp}
 Assume GRH$(\chi_4)$.
 \begin{enumerate}
-\item[(i)] For each $m\in(-\tfrac12,0]$ the function
+\item[(i)] For each $m\in(-\tfrac12,\infty)$ the function
 $u\mapsto E_m(e^u)$ possesses a limiting distribution
 $\nu_m$: for every bounded continuous $f:\mathbb R\to\mathbb R$,
 $\lim_{Y\to\infty}\frac1Y\int_0^Y f(E_m(e^u))\,du
@@ -274,9 +365,9 @@ $X_m$.
 support $\mathbb R$; the logarithmic density
 $\delta(m)$ of the set $\{x\ge2: R_m(x)>0\}$ exists, equals
 $\nu_m\bigl((0,\infty)\bigr)$, satisfies
-$\tfrac12<\delta(m)<1$ for every $m\in(-\tfrac12,0]$, and
-$m\mapsto\delta(m)$ is continuous on $(-\tfrac12,0]$.
-\item[(iii)] Under LI$(\chi_4)$, for all $m\in(-\tfrac12,0]$,
+$\tfrac12<\delta(m)<1$ for every $m\in(-\tfrac12,\infty)$, and
+$m\mapsto\delta(m)$ is continuous on $(-\tfrac12,\infty)$.
+\item[(iii)] Under LI$(\chi_4)$, for all $m\in(-\tfrac12,\infty)$,
 \[
 1-\delta(m)\;\le\;C\,(2m+1)^2
 \qquad\text{and}\qquad
@@ -284,19 +375,30 @@ $m\mapsto\delta(m)$ is continuous on $(-\tfrac12,0]$.
 \]
 with no restriction on $m$; the second bound is in fact the stronger of
 the two for every $m$. In particular $\delta(m)\to1$ as
-$m\to-\tfrac12^{\,+}$.
+$m\to-\tfrac12^{\,+}$. Both bounds are informative only near the left
+endpoint: the (stronger) exponential bound drops below the trivial
+estimate $1-\delta(m)<\tfrac12$ of part (ii) precisely for
+$m<m_0:=\tfrac12\bigl((2C\log2)^{-1/2}-1\bigr)=0.57507\ldots$, and the
+first bound is $\ge1$ for $m\ge\tfrac12(C^{-1/2}-1)=0.76580\ldots$;
+for $m\ge m_0$ part (iii) asserts nothing beyond part (ii), and this
+theorem makes no claim about the rate at which $\delta(m)$ approaches
+$\tfrac12$ as $m\to\infty$.
 \item[(iv)] Consequently the classical density formulation of
 Chebyshev's bias at $m=0$ (logarithmic density
 $\delta(0)=0.995928\ldots$; $0.9959$ in \cite{RS94}, six decimals as in
 \cite{FM13} and re-derived here) is joined by the continuous family
-$\{\delta(m)\}_{m\in(-1/2,0]}$, with $\delta(m)\to1$, to the
+$\{\delta(m)\}_{m\in(-1/2,\infty)}$, with $\delta(m)\to1$ as
+$m\to-\tfrac12^{\,+}$, to the
 total-bias regime at the weighted threshold $m=-\tfrac12$, where the
 unlogged race $D_{-1/2}(x)=\sum_{p\le x}(-\chi_4(p))p^{-1/2}$ equals
 $\tfrac12\log\log x+O(1)$ and is eventually of one sign (under DRH
 \cite{AK23}; under GRH off a set of finite logarithmic measure
 \cite{Sheth24}; single-signed on a set of logarithmic density one under
 GRH alone \cite{Hay25}). None of these three endpoint results assumes
-LI.
+LI. In the opposite direction the family now covers every positive
+weight; there the computed densities of Table~\ref{tab:delta} decrease
+toward $\tfrac12$, in the manner of the dissolution law of the Results
+section, which this theorem does not prove.
 \end{enumerate}
 \end{theorem}
 
@@ -318,74 +420,275 @@ an application of the framework of Akbary--Ng--Shahabi \cite{ANS14}
 
 We isolate the two number-theoretic inputs as lemmas.
 
-\begin{lemma}[shifted truncated explicit formula]\label{lem:trunc}
-Assume GRH$(\chi_4)$ and let $m\in(-\tfrac12,0]$ be fixed. For
-$\psi_m(x):=\sum_{n\le x}\Lambda(n)\chi(n)n^m$ and all $x\ge2$,
-$T\ge2$ (the range $T>x$ is allowed),
-\begin{equation}\label{eq:trunc}
-\psi_m(x)\;=\;-\sum_{|\gamma|\le T}\frac{x^{\rho+m}}{\rho+m}
-\;+\;O_m\!\Bigl(\frac{x^{m+1}\log^2(xT)}{T}+\log x\Bigr).
+\begin{lemma}[truncated explicit formula, all truncations]\label{lem:classical}
+Let $\chi=\chi_4$ and let $\rho=\beta+i\gamma$ run over the nontrivial
+zeros of $L(s,\chi)$, listed with multiplicity. Unconditionally, for all
+$x\ge2$ and all $T\ge2$,
+\begin{equation}\label{eq:classical}
+\psi(x,\chi)\;=\;-\sum_{|\gamma|\le T}\frac{x^{\rho}}{\rho}
++O\!\Bigl(\frac{x\log^2(xT)}{T}+\log x\Bigr).
 \end{equation}
+No inequality between $T$ and $x$ is assumed; in particular $T>x$ is
+allowed.
 \end{lemma}
 
 \begin{proof}
-The classical truncated explicit formula for the fixed odd primitive
-character $\chi_4$ states that for $x\ge2$, $T\ge2$,
-\begin{equation}\label{eq:classical}
-\psi(x,\chi)\;=\;-\sum_{|\gamma|\le T}\frac{x^{\rho}}{\rho}
-+O\!\Bigl(\frac{x\log^2(xT)}{T}+\log x\Bigr),
-\end{equation}
-by the standard Perron-plus-contour argument (\cite[Chs.~17, 19]{Dav00};
-the usual statement is recorded for $2\le T\le x$, but the proof nowhere
-uses $T\le x$ --- the horizontal-segment and vertical-segment estimates
-only improve as $T$ grows past $x$ --- and the analogous automorphic
-formula \cite[Prop.~4.2]{ANS14} is stated for all $T\ge2$; the $O(\log x)$
-floor absorbs the constant $-\tfrac{L'}{L}(0,\chi)$ and the trivial-zero
-sum $\sum_{k\ge0}x^{-2k-1}/(2k+1)=O(1)$ that survive as
-$T\to\infty$).
+All implied constants are absolute ($q=4$ is fixed). We use five
+standard facts; each is a statement about a single point $s$ or a single
+height $t$ and contains no parameter $x$, so no hidden comparison of $T$
+with $x$ can enter through them.
 
+\emph{(F1) (Perron kernel).} For $y>0$, $c>0$, $T\ge2$ put
+$I(y,T)=\frac{1}{2\pi i}\int_{c-iT}^{c+iT}y^s s^{-1}\,ds$ and
+$\delta(y)=1,\tfrac12,0$ according as $y>1$, $y=1$, $y<1$. Then
+\[
+|I(y,T)-\delta(y)|\;\le\;y^{c}\min\Bigl(1,\frac{1}{\pi T|\log y|}\Bigr)
+\quad(y\ne1),\qquad
+\bigl|I(1,T)-\tfrac12\bigr|\;\le\;\frac{c}{\pi T}.
+\]
+\emph{Proof of (F1).} For $y<1$ close the contour to the right: on the
+rectangle with right edge at $\mathrm{Re}\,s=A$ the integrand
+$y^ss^{-1}$ is analytic, and the right edge is $\ll y^A/A\to0$ as
+$A\to\infty$; hence $I$ equals minus the two horizontal rays from
+$c\pm iT$ to $+\infty\pm iT$, each of modulus
+$\le\frac{1}{2\pi T}\int_c^\infty y^\sigma d\sigma
+=\frac{y^c}{2\pi T\log(1/y)}$. For $y>1$ close to the left, picking up
+the residue $1$ at $s=0$; the rays to $-\infty\pm iT$ give the same
+bound with $\log y$. For the $\min(1,\cdot)$ alternative, replace the
+vertical segment by the arc of the circle $|s|=\sqrt{c^2+T^2}$ through
+$c\pm iT$ on the side not containing $0$ (for $y>1$, the side
+containing $0$, picking up the residue $1$): on the arc
+$|y^s|\le y^{c}$ and $|s|=\sqrt{c^2+T^2}$, so the arc integral is
+$\le y^c\cdot(\text{length})/(2\pi|s|)\le y^{c}$. For $y=1$ the odd
+part of the integrand integrates to zero and
+$I(1,T)=\frac1\pi\arctan(T/c)=\tfrac12-\frac1\pi\arctan(c/T)$, with
+$\arctan(c/T)\le c/T$. Nothing here involves any second parameter.
+
+\emph{(F2)} $-\zeta'/\zeta(\sigma)\le(\sigma-1)^{-1}+O(1)$ for
+$1<\sigma\le3$ (simple pole of $\zeta$ at $1$; \cite[\S17]{Dav00}).
+
+\emph{(F3)} $N(t+1,\chi)-N(t,\chi)\ll\log(t+2)$ for $t\ge0$, where
+$N(t,\chi)$ counts zeros with $0<\gamma\le t$; unconditional
+Riemann--von Mangoldt for $L(s,\chi_4)$ \cite[\S16]{Dav00}. Zeros are
+symmetric under $\gamma\mapsto-\gamma$ ($\chi_4$ is real).
+
+\emph{(F4)} For $-1\le\sigma\le2$, $s=\sigma+it$,
+$\frac{L'}{L}(s,\chi)=\sum_{\rho:\,|\gamma-t|\le1}\frac{1}{s-\rho}
++O(\log(|t|+2))$ \cite[\S16]{Dav00}; and for $2\le\sigma\le3$,
+$|L'/L(s,\chi)|\le\sum_n\Lambda(n)n^{-2}=O(1)$.
+
+\emph{(F5)} $\Lambda(s)=(4/\pi)^{(s+1)/2}\Gamma(\tfrac{s+1}2)L(s,\chi)$
+satisfies $\Lambda(s)=\Lambda(1-s)$ (\cite[\S9]{Dav00}; the root number
+of $\chi_4$ is $\tau(\chi_4)/(i\sqrt4)=2i/2i=+1$). Taking logarithmic
+derivatives,
+\[
+\frac{L'}{L}(s,\chi)
+=-\log\frac4\pi-\tfrac12\psi\Bigl(\frac{s+1}2\Bigr)
+-\tfrac12\psi\Bigl(\frac{2-s}2\Bigr)-\frac{L'}{L}(1-s,\chi).
+\]
+If $\sigma\le-1$ and either $|t|\ge2$ or $\sigma$ is a negative even
+integer, then: $\mathrm{Re}(1-s)\ge2$, so $|L'/L(1-s,\chi)|=O(1)$ by
+(F4); $\mathrm{Re}\bigl(\frac{2-s}2\bigr)\ge\tfrac32$, so
+$|\psi(\frac{2-s}2)|\ll\log(2+|s|)$ by Stirling; and for
+$w=\frac{s+1}2$ the reflection $\psi(w)=\psi(1-w)-\pi\cot(\pi w)$
+applies with $\mathrm{Re}(1-w)\ge1$ and with $|\cot(\pi w)|\le
+\coth(\pi)$ when $|\mathrm{Im}\,w|=|t|/2\ge1$, respectively
+$|\cot(\pi w)|=|\tanh(\pi t/2)|\le1$ when $\mathrm{Re}\,w$ is a
+half-odd-integer (which is the case when $\sigma$ is a negative even
+integer). Hence on those sets
+$|L'/L(s,\chi)|\ll\log(2+|s|)$.
+
+Also $L(0,\chi_4)=\tfrac12\ne0$: evaluating $\Lambda(0)=\Lambda(1)$
+from (F5),
+$(4/\pi)^{1/2}\Gamma(\tfrac12)L(0,\chi_4)=(4/\pi)\Gamma(1)L(1,\chi_4)$,
+and $L(1,\chi_4)=\pi/4$ (Leibniz), so
+$L(0,\chi_4)=(4/\pi)^{1/2}(\pi/4)/\sqrt{\pi}=\tfrac12$.
+Consequently $L'/L$ is regular at $s=0$. Moreover every nontrivial zero
+has $0<\beta<1$: there are no zeros with $\beta=1$ (de la Vall\'ee
+Poussin, unconditional), hence none with $\beta=0$ by (F5); so the pole
+of $1/s$ at $s=0$ collides with no zero.
+
+\emph{Step 1 (Perron).} Let $c=1+1/\log x\in(1,1+1/\log2]$, so
+$x^c=ex$. On $\mathrm{Re}\,s=c$ the Dirichlet series
+$-L'/L(s,\chi)=\sum_n\Lambda(n)\chi(n)n^{-s}$ converges absolutely, so
+term-by-term application of (F1) on the finite segment gives
+\[
+\psi(x,\chi)\;=\;\frac{1}{2\pi i}\int_{c-iT}^{c+iT}
+\Bigl(-\frac{L'}{L}(s,\chi)\Bigr)\frac{x^s}{s}\,ds\;+\;O(R_1),
+\qquad
+R_1=\sum_{n\ge2}\Lambda(n)\Bigl(\frac xn\Bigr)^{c}
+\min\Bigl(1,\frac{1}{T|\log(x/n)|}\Bigr)+\log x,
+\]
+the final $\log x$ covering the possible term $n=x$ (where (F1) gives
+$\tfrac12$ instead of the weight $1$ used in $\psi$, a discrepancy
+$\le\Lambda(x)\ll\log x$). Split $R_1$:
+for $n\le\tfrac34x$ or $n\ge\tfrac54x$ one has $|\log(x/n)|\ge
+\log\tfrac54$, so these terms contribute
+$\ll T^{-1}x^{c}\sum_n\Lambda(n)n^{-c}
+=T^{-1}x^{c}\bigl(-\zeta'/\zeta(c)\bigr)\ll(x/T)\log x$ by (F2). For
+$\tfrac34x<n<\tfrac54x$, $n\ne x$: here $\Lambda(n)\ll\log x$,
+$(x/n)^c\ll1$, and $|\log(x/n)|\ge|n-x|/(2x)$, so these terms
+contribute
+\[
+\ll\log x\sum_{1\le k\le x}\min\Bigl(1,\frac{2x}{Tk}\Bigr)
+\;\ll\;\log x\Bigl(1+\frac xT+\frac xT\log x\Bigr)
+\;\ll\;\log x+\frac{x\log^2x}{T},
+\]
+where $k$ runs over the possible values of $\lceil|n-x|\rceil$ (the at
+most two integers nearest $x$ are covered by the $\min(\cdot)\le1$
+bound). Hence $R_1\ll x\log^2x/T+\log x$, for every $T\ge2$; when $T>x$
+these bounds only become smaller.
+
+\emph{Step 2 (choice of height $T'$).} Let
+$G=\{\gamma:\,T-1<\gamma<T+2\}$; by (F3), $\#G\le A_1\log(T+2)$ for an
+absolute $A_1$. With $r=1/(4A_1\log(T+2))$ the union of the intervals
+$(\gamma-r,\gamma+r)$, $\gamma\in G$, has measure $\le\tfrac12$, so
+there exists $T'\in[T,T+1]$ with $|T'-\gamma|\ge r$ for all
+$\gamma\in G$; for $\gamma\notin G$, $|T'-\gamma|\ge1$ automatically.
+Thus $|T'-\gamma|\gg1/\log(T+2)$ for \emph{every} ordinate $\gamma$,
+and by the $\gamma\mapsto-\gamma$ symmetry the same holds at height
+$-T'$.
+
+\emph{Step 3 (contour).} For $K\in\mathbb N$ set $U=2K$ and integrate
+$(-L'/L)(s,\chi)\,x^s/s$ counterclockwise around the rectangle with
+vertices $c\pm iT'$, $-U\pm iT'$. The poles inside are: the nontrivial
+zeros with $|\gamma|\le T'$ (residue $-x^\rho/\rho$ each, with
+multiplicity; $\rho\ne0$ since $0<\beta<1$); the simple pole of $1/s$
+at $s=0$ (residue $-L'/L(0,\chi)=O(1)$, using $L(0,\chi)=\tfrac12$);
+and the trivial zeros $s=-(2j+1)$, $0\le j\le K-1$, of $L(s,\chi_4)$
+(simple, from the poles of $\Gamma(\tfrac{s+1}2)$; residue
+$+x^{-(2j+1)}/(2j+1)$ each). Hence
+\[
+\frac{1}{2\pi i}\oint
+=-\sum_{|\gamma|\le T'}\frac{x^\rho}{\rho}-\frac{L'}{L}(0,\chi)
++\sum_{j=0}^{K-1}\frac{x^{-(2j+1)}}{2j+1}.
+\]
+
+\emph{Step 4 (horizontal segments, $-1\le\sigma\le c$).} On
+$s=\sigma\pm iT'$ with $-1\le\sigma\le2$, (F4) and Step 2 give
+$|L'/L(s,\chi)|\le\sum_{|\gamma\mp T'|\le1}|T'-\gamma|^{-1}
++O(\log T')\ll\log^2(T+2)$ ($\ll\log(T+2)$ terms, each
+$\ll\log(T+2)$); for $2\le\sigma\le c$ (nonempty only if $x<e$) the
+$O(1)$ bound of (F4) applies. Hence these pieces contribute
+\[
+\ll\frac{\log^2(T+2)}{T}\int_{-1}^{c}x^\sigma\,d\sigma
+\ll\frac{\log^2(T+2)}{T}\cdot\frac{x^c}{\log x}
+\ll\frac{x\log^2(xT)}{T}.
+\]
+
+\emph{Step 5 (horizontal segments $-U\le\sigma\le-1$, and vertical
+segment $\sigma=-U$).} By (F5), $|L'/L|\ll\log(2+|s|)$ on both. The
+horizontal parts contribute
+\[
+\ll\frac1T\int_{1}^{\infty}x^{-v}\log(3+v+T)\,dv
+\ll\frac1T\Bigl(\frac{\log(3+T)}{x\log x}+\frac1x\Bigr)
+\ll\frac{\log(3+T)}{T}\ll1,
+\]
+uniformly in $U$, absorbed in $O(\log x)$. The vertical segment has
+length $2T'$, $|x^s/s|\le x^{-U}/U$, so it contributes
+$\ll T'\,x^{-U}\log(U+T'+2)/U\to0$ as $K\to\infty$ (here $x\ge2>1$).
+
+\emph{Step 6 (assemble; $U\to\infty$).} Letting $K\to\infty$, the
+trivial-zero sum increases to
+$\sum_{j\ge0}x^{-(2j+1)}/(2j+1)=\operatorname{artanh}(1/x)
+\le\operatorname{artanh}(\tfrac12)<0.55$. Combining Steps 1--5,
+\[
+\psi(x,\chi)=-\sum_{|\gamma|\le T'}\frac{x^\rho}{\rho}
++O\Bigl(\frac{x\log^2(xT)}{T}+\log x\Bigr).
+\]
+\emph{Step 7 ($T'\to T$).} The zeros with $T<|\gamma|\le T'\le T+1$
+number $\ll\log(T+2)$ by (F3), and each satisfies
+$|x^\rho/\rho|\le x^{\beta}/|\gamma|\le x/T$; restoring the summation
+range to $|\gamma|\le T$ therefore costs $\ll x\log(T+2)/T\ll
+x\log^2(xT)/T$. This proves \eqref{eq:classical}. Every estimate above
+is uniform in $T\ge2$, and no step compared $T$ with $x$.
+\end{proof}
+
+
+\begin{lemma}[shifted truncated explicit formula]\label{lem:trunc}
+Assume GRH$(\chi_4)$ and let $m\in(-\tfrac12,\infty)$ be fixed. For
+$\psi_m(x):=\sum_{n\le x}\Lambda(n)\chi(n)n^m$ and all $x\ge2$,
+$T\ge2$ (no inequality between $T$ and $x$ is assumed;
+Lemma~\ref{lem:classical}),
+\begin{equation}\label{eq:trunc}
+\psi_m(x)\;=\;-\sum_{|\gamma|\le T}\frac{x^{\rho+m}}{\rho+m}
+\;+\;O_m\!\Bigl(\frac{x^{m+1}\log^2(xT)}{T}+(1+x^m)\log x\Bigr).
+\end{equation}
+For $m\le0$ the floor $(1+x^m)\log x\le2\log x$ recovers the earlier
+form of this lemma.
+\end{lemma}
+
+\begin{proof}
 Since $\psi(t,\chi)=0$ for $t<3$, Riemann--Stieltjes partial summation
 gives exactly
 \[
 \psi_m(x)\;=\;\int_{2^-}^{x}t^m\,d\psi(t,\chi)
 \;=\;x^m\psi(x,\chi)-m\int_2^x t^{m-1}\psi(t,\chi)\,dt .
 \]
-Insert \eqref{eq:classical}, with the same $T$, at $x$ and at every
-$t\in[2,x]$. The zero terms produce, for each $\rho$ with
-$|\gamma|\le T$,
+Insert \eqref{eq:classical} (Lemma~\ref{lem:classical}, valid for every
+$T\ge2$), with the same $T$, at $x$ and at every $t\in[2,x]$. The zero
+terms produce, for each $\rho$ with $|\gamma|\le T$,
 \[
 x^m\frac{x^{\rho}}{\rho}-m\int_2^x t^{m-1}\frac{t^{\rho}}{\rho}\,dt
 \;=\;\frac{x^{\rho+m}}{\rho+m}
 \;+\;\frac{m\,2^{\rho+m}}{\rho\,(\rho+m)},
 \]
 an identity (integrate $t^{\rho+m-1}$; note
-$\mathrm{Re}(\rho+m)=m+\tfrac12>0$ and $|\rho+m|\ge\gamma_1>6$, so no
-denominator degenerates). The endpoint terms are \emph{summable}: since
+$\mathrm{Re}(\rho+m)=m+\tfrac12>0$ for every $m>-\tfrac12$, and
+$|\rho+m|\ge\gamma\ge\gamma_1>6$, so no denominator degenerates at any
+$m$ in the range). The endpoint terms are \emph{summable}: since
 $|\rho|\ge\gamma$ and $|\rho+m|\ge\gamma$,
 \[
 \sum_{|\gamma|\le T}\Bigl|\frac{m\,2^{\rho+m}}{\rho(\rho+m)}\Bigr|
-\;\ll_m\;\sum_{\gamma>0}\frac{1}{\gamma^{2}}\;\ll\;1,
+\;\le\;|m|\,2^{m+1/2}\sum_{|\gamma|\le T}\frac{1}{\gamma^{2}}
+\;\ll_m\;1,
 \]
 uniformly in $T$. (Bounding each term by $O_\gamma(1)$ alone would not
 suffice, as there are $\asymp T\log T$ of them.) The error terms of
 \eqref{eq:classical} contribute
 \[
 x^m\cdot O\Bigl(\frac{x\log^2(xT)}{T}+\log x\Bigr)
-+|m|\int_2^x t^{m-1}\,O\Bigl(\frac{t\log^2(tT)}{T}+\log t\Bigr)dt
-\;=\;O_m\!\Bigl(\frac{x^{m+1}\log^2(xT)}{T}+x^m\log x+1\Bigr),
++|m|\int_2^x t^{m-1}\,O\Bigl(\frac{t\log^2(tT)}{T}+\log t\Bigr)dt .
 \]
-using $\int_2^x t^m\,dt\le 2x^{m+1}$ for $m>-1$ and, for $m<0$,
-$\int_2^\infty t^{m-1}\log t\,dt=O_m(1)$ (for $m=0$ the integral term
-carries the factor $m=0$). Since $x^m\log x+1\le 2\log x$ for
-$m\le 0$, $x\ge2$, all non-zero-sum contributions are
-$O_m(x^{m+1}\log^2(xT)/T+\log x)$, proving \eqref{eq:trunc}. (The
-$O_m(1)$ floor is the reason \eqref{eq:trunc} carries $\log x$ rather
-than $x^m\log x$: the latter tends to $0$ for $m<0$ and is therefore
-not an admissible bound.)
+The truncation parts are
+$\ll_m x^{m+1}\log^2(xT)/T$, using $\log^2(tT)\le\log^2(xT)$ and
+$\int_2^xt^m\,dt\le x^{m+1}/(m+1)$ for $m>-1$. The $\log$-floor parts
+split into three cases:
+\[
+|m|\int_2^x t^{m-1}\log t\,dt\;\ll_m\;
+\begin{cases}
+x^m\log x, & m>0
+\quad\bigl(\le\log x\cdot\int_2^x mt^{m-1}dt\le x^m\log x\bigr),\\
+0, & m=0 \ \text{(the factor $m$ vanishes)},\\
+1, & m<0
+\quad\bigl(\int_2^\infty t^{m-1}\log t\,dt=O_m(1)\bigr).
+\end{cases}
+\]
+Since $\log x\ge\log2$, every $O_m(1)$ above (including the endpoint
+sum) is $\ll_m\log x$, so all non-zero-sum contributions are
+$O_m\bigl(x^{m+1}\log^2(xT)/T+(1+x^m)\log x\bigr)$, proving
+\eqref{eq:trunc}. Neither half of the floor can be dropped on the full
+range: for $m<0$ the quantity $x^m\log x$ tends to $0$ while genuinely
+$O_m(1)$ terms (the endpoint sum, the constants inside
+\eqref{eq:classical}) persist, so the summand $1$ is needed; for $m>0$
+the term $x^m\log x$ arises from $m\int_2^xt^{m-1}O(\log t)\,dt$, and
+removing it would require sign cancellation in the $O(\log t)$ errors
+of \eqref{eq:classical} that we do not know. After the normalization by
+$(2m+1)x^{-(m+1/2)}$, the floor becomes, with $x=e^u$,
+\[
+(1+e^{mu})\,u\,e^{-(m+1/2)u}
+=u\bigl(e^{-(m+1/2)u}+e^{-u/2}\bigr)
+\;\le\;2u\,e^{-\kappa_m u},
+\qquad
+\kappa_m:=\min\bigl(m+\tfrac12,\tfrac12\bigr)>0,
+\]
+an $L^2(0,\infty)$ function of $u$ for every $m>-\tfrac12$; the
+mean-square hypothesis \eqref{eq:ansmean} used in the proof of (i) is
+therefore unaffected by the extension.
 \end{proof}
 
 \begin{lemma}[prime-power separation]\label{lem:squares}
-Fix $m\in(-\tfrac12,0]$. For $x\ge4$,
+Fix $m\in(-\tfrac12,\infty)$. For $x\ge4$,
 \[
 -R_m(x)\;=\;\psi_m(x)\;-\;\sum_{p\le\sqrt x}p^{2m}\log p
 \;+\;O_m\!\bigl(x^{m+1/3}\log x+\log^2x\bigr),
@@ -396,52 +699,94 @@ and
 +O_m\!\bigl(x^{m+1/2}e^{-c\sqrt{\log x}}\bigr)
 \]
 with $c>0$ absolute and the implied constants depending on $m$. Both
-error terms are $o(x^{m+1/2})$.
+error terms are $o(x^{m+1/2})$. The $\log^2x$ term originates solely in
+the prime powers $p^k$, $k\ge3$, with $km\le-1$; such $k$ exist only
+for $m<0$, and for $m>-\tfrac13$ the term is absorbed by
+$O_m(x^{m+1/3}\log x)$, so it is genuinely present only for
+$m\in(-\tfrac12,-\tfrac13]$.
 \end{lemma}
 
 \begin{proof}
 $\psi_m$ splits over prime powers $p^k\le x$. The $k=1$ part is
 $\sum_{p\le x}\chi(p)p^m\log p=-R_m(x)$. The $k=2$ part is
 $\sum_{p^2\le x}\chi(p)^2p^{2m}\log p=\sum_{3\le p\le\sqrt x}p^{2m}\log p
-=\sum_{p\le\sqrt x}p^{2m}\log p+O(1)$, since $\chi(p)^2=1$ for odd $p$
-and $\chi(2)=0$. For $k\ge3$, using $p^{km}\le p^{3m}$ ($m\le0$) and
-Chebyshev's bound $\theta(y)\ll y$ with partial summation,
+=\sum_{p\le\sqrt x}p^{2m}\log p+O_m(1)$, since $\chi(p)^2=1$ for odd
+$p$ and $\chi(2)=0$.
+
+\emph{The $k\ge3$ terms.} Here $3\le k\le\log x/\log2$ and
+$y:=x^{1/k}$. Let $A$ be Chebyshev's absolute constant in
+$\theta(y)\le Ay$.
+
+If $m\ge0$ then $km\ge0>-1$ for every $k$ --- no case split occurs ---
+and monotonicity gives, uniformly in $k$,
 \[
-\sum_{p\le x^{1/k}}p^{km}\log p\;\ll_m\;
-\begin{cases}
-x^{(km+1)/k}\le x^{m+1/3}, & km>-1,\\
-\log x, & km\le-1,
-\end{cases}
+\sum_{p\le y}p^{km}\log p\;\le\;y^{km}\theta(y)\;\le\;Ay^{km+1}
+\;=\;Ax^{(km+1)/k}\;=\;Ax^{m+1/k}\;\le\;Ax^{m+1/3};
 \]
-and there are at most $\log x/\log2$ values of $k$, giving the total
-$O_m(x^{m+1/3}\log x+\log^2x)$. This is $o(x^{m+1/2})$ uniformly, as
-$x^{m+1/3}\log x/x^{m+1/2}=x^{-1/6}\log x\to0$. (The crude bound
+summing over the $\le\log x/\log2$ values of $k$ yields
+$O(x^{m+1/3}\log x)$ with an absolute constant.
+
+If $m<0$, split on the sign of $km+1$. For the (fewer than $1/|m|$,
+hence $O_m(1)$ many) $k$ with $-1<km<0$, partial summation with
+$\theta(t)\le At$ gives
+\[
+\sum_{p\le y}p^{km}\log p
+=y^{km}\theta(y)+|km|\int_2^y t^{km-1}\theta(t)\,dt
+\;\le\;Ay^{km+1}\Bigl(1+\frac{|km|}{km+1}\Bigr)
+\;\ll_m\;x^{m+1/k}\;\le\;x^{m+1/3},
+\]
+the constant depending on $m$ through the least positive value of
+$km+1$ over the finitely many admissible $k$; the total over these $k$
+is $O_m(x^{m+1/3})$. For the $k$ with $km\le-1$ (these exist iff
+$m<0$, namely $k\ge1/|m|$), we have $p^{km}\log p\le p^{-1}\log p$, so
+by Mertens
+\[
+\sum_{p\le y}p^{km}\log p\;\le\;\sum_{p\le y}\frac{\log p}{p}
+\;=\;\log y+O(1)\;\ll\;\log x ,
+\]
+uniformly in $k$; over $\le\log x/\log2$ values of $k$ the total is
+$O(\log^2x)$. Combining the cases, the $k\ge3$ contribution is
+$O_m(x^{m+1/3}\log x+\log^2x)$ for every $m\in(-\tfrac12,\infty)$, and
+the provenance stated in the lemma is exactly the case analysis just
+made; for $m>-\tfrac13$ one has $\log x\ll_m x^{m+1/3}$, so there the
+$\log^2x$ term may be dropped --- we keep it so that a single statement
+covers the whole range. Both error terms are $o(x^{m+1/2})$ uniformly:
+$x^{m+1/3}\log x/x^{m+1/2}=x^{-1/6}\log x\to0$ and
+$\log^2x\cdot x^{-(m+1/2)}\to0$ since $m+\tfrac12>0$. (The crude bound
 ``$O(x^{1/3})$ prime powers times $\log x$'' is \emph{not} sufficient
 here: $x^{1/3}\ge x^{m+1/2}$ for $m\le-\tfrac16$.)
 
-For the squares sum write $\theta(y)=y+E(y)$,
-$E(y)\ll ye^{-2c\sqrt{\log y}}$ (prime number theorem with the
-classical de la Vall\'ee Poussin error). Partial summation gives, with
-$y=\sqrt x$,
+\emph{The squares sum.} The argument is unchanged from the
+$(-\tfrac12,0]$ version, and we record that its only structural input
+is $2m+1>0$, so it holds on the whole range. Write
+$\theta(y)=y+E(y)$, $E(y)\ll ye^{-2c\sqrt{\log y}}$ (prime number
+theorem with the classical de la Vall\'ee Poussin error). Partial
+summation gives, with $y=\sqrt x$,
 \[
 \sum_{p\le y}p^{2m}\log p
 =y^{2m}\theta(y)-2m\int_2^y t^{2m-1}\theta(t)\,dt
 =\frac{y^{2m+1}}{2m+1}+O_m(1)
-+y^{2m}E(y)-2m\int_2^y t^{2m-1}E(t)\,dt .
++y^{2m}E(y)-2m\int_2^y t^{2m-1}E(t)\,dt ,
 \]
-Here $y^{2m}E(y)\ll y^{2m+1}e^{-2c\sqrt{\log y}}$, and splitting the
-integral at $\sqrt y$,
+the $O_m(1)$ being the endpoint term
+$2m\,2^{2m+1}/(2m+1)$. Here $y^{2m}E(y)\ll y^{2m+1}e^{-2c\sqrt{\log y}}$,
+and splitting the integral at $\sqrt y$,
 \[
 \int_2^y t^{2m}e^{-2c\sqrt{\log t}}\,dt
-\;\ll_m\; y^{(2m+1)/2}+e^{-2c\sqrt{(\log y)/2}}\,y^{2m+1}
+\;\le\;\frac{y^{(2m+1)/2}}{2m+1}
++e^{-2c\sqrt{(\log y)/2}}\,\frac{y^{2m+1}}{2m+1}
 \;\ll_m\; y^{2m+1}e^{-c\sqrt{\log y}} ,
 \]
-since $2m+1>0$ and $e^{c\sqrt{\log y}}$ grows slower than any power.
-As $y^{2m+1}=x^{m+1/2}\to\infty$, the $O_m(1)$ is absorbed. All
-constants depend on $m$ (they blow up like $(2m+1)^{-1}$ as
-$m\to-\tfrac12$); the theorem is for fixed $m$, and no uniformity in
-$m$ is used anywhere below --- the continuity in (ii) is proved at the
-level of the limit random variables, not of the explicit formula.
+where both steps use only $2m+1>0$: the first integral was extended
+using $\int_2^{\sqrt y}t^{2m}dt\le y^{(2m+1)/2}/(2m+1)$, and
+$y^{(2m+1)/2}\ll_m y^{2m+1}e^{-c\sqrt{\log y}}$ because
+$e^{c\sqrt{\log y}}$ grows slower than any positive power of $y$. As
+$y^{2m+1}=x^{m+1/2}\to\infty$, the $O_m(1)$ is absorbed. All constants
+depend on $m$: they blow up like $(2m+1)^{-1}$ as $m\to-\tfrac12^{\,+}$
+and (through $2^{2m+1}$ and the factor $2m+1$) grow with $m$ as
+$m\to\infty$; the theorem is for fixed $m$, and no uniformity in $m$ is
+used anywhere below --- the continuity in (ii) is proved at the level
+of the limit random variables, not of the explicit formula.
 \end{proof}
 
 \begin{proof}[Proof of (i)]
@@ -475,26 +820,33 @@ e^{i\gamma u}\;+\;\mathcal E(u,T),
 \[
 \mathcal E(u,T)\;\ll_m\;
 \frac{e^{u/2}\log^2(e^uT)}{T}
-+u^2e^{-(m+1/2)u}
++u^2e^{-\kappa_m u}
 +u\,e^{-u/6}
-+e^{-c\sqrt{u}} .
++e^{-c\sqrt{u}},
+\qquad
+\kappa_m:=\min\bigl(m+\tfrac12,\tfrac12\bigr)>0 .
 \]
 (The four terms come from, in order: the truncation error of
-\eqref{eq:trunc} times $(2m+1)x^{-(m+1/2)}$; the $\log x$ floor of
-\eqref{eq:trunc} together with the $\log^2x$ prime-power floor, both
-$\le u^2e^{-(m+1/2)u}$; the $k\ge3$ term
-$x^{m+1/3}\log x\cdot x^{-(m+1/2)}= x^{-1/6}\log x=u\,e^{-u/6}$; and
-the PNT error. All exponents are strictly negative, using
-$m+\tfrac12>0$.) This establishes their (1.7) with our $\mathcal E$
-\emph{defined} by the display, for every $T\ge2$; square-integrability
-of $\phi$ on $[0,y_0]$ is trivial since $E_m$ is bounded there.
+\eqref{eq:trunc} times $(2m+1)x^{-(m+1/2)}$; the $(1+x^m)\log x$ floor
+of \eqref{eq:trunc} together with the $\log^2x$ prime-power floor of
+Lemma~\ref{lem:squares}, which after normalization are
+$(1+e^{mu})u\,e^{-(m+1/2)u}+u^2e^{-(m+1/2)u}\le3u^2e^{-\kappa_mu}$,
+since $e^{-(m+1/2)u}\le e^{-\kappa_mu}$ and
+$e^{mu}e^{-(m+1/2)u}=e^{-u/2}\le e^{-\kappa_mu}$; the $k\ge3$ term
+$x^{m+1/3}\log x\cdot x^{-(m+1/2)}=x^{-1/6}\log x=u\,e^{-u/6}$; and
+the PNT error. All exponents are strictly negative for every
+$m>-\tfrac12$, which is the only property used.) This establishes their
+(1.7) with our $\mathcal E$ \emph{defined} by the display, for every
+$T\ge2$; square-integrability of $\phi$ on $[0,y_0]$ is trivial since
+$E_m$ is bounded there.
 
 For \eqref{eq:ansmean}, put $T=e^{Y}$ and $u\in[2,Y]$, so
 $e^u\le e^Y=T$: the first term is
 $\ll e^{u/2}(2Y)^2e^{-Y}$, whose square integrates to
 $\frac1Y\int_2^Y 16Y^4e^{u-2Y}\,du\ll Y^3e^{-Y}\to0$; each of the
-remaining terms is a fixed $L^2(0,\infty)$ function of $u$, so its
-contribution to the Ces\`aro mean square is $O_m(1/Y)\to0$.
+remaining terms is a fixed $L^2(0,\infty)$ function of $u$ (here
+$\kappa_m>0$ is used), so its contribution to the Ces\`aro mean square
+is $O_m(1/Y)\to0$.
 
 The coefficient conditions: $|r_\gamma(m)|\le2(2m+1)/\gamma$, so
 $\beta=1>\tfrac12$; and $\sum_{T<\gamma\le T+1}1\ll\log T$ is the
@@ -523,7 +875,7 @@ the law of $X_m$.
 \end{proof}
 
 \begin{proof}[Proof of (ii)]
-Fix $m\in(-\tfrac12,0]$ and write $V_m=X_m-1
+Fix $m\in(-\tfrac12,\infty)$ and write $V_m=X_m-1
 =\sum_{\gamma>0}2a_\gamma\cos\theta_\gamma$ (convergent a.s.\ and in
 $L^2$).
 
@@ -546,18 +898,63 @@ defining property of $\nu_m$ shows that the logarithmic density of
 $\{x:E_m(x)>0\}=\{x:R_m(x)>0\}$ exists and equals
 $\nu_m((0,\infty))$; this is the same passage as \cite[eq.~(1.22)]{ANS14} and \cite[\S2]{RS94}.
 
-\emph{Full support.} $a_\gamma(m)\ge(2m+1)/(\gamma\sqrt2)$ for all
-$\gamma\ge\gamma_1$ (as $(m+\tfrac12)^2\le\gamma^2$), and
-$\sum_{\gamma\le T}\gamma^{-1}\gg(\log T)^2$ by
-$N(T,\chi_4)\sim\frac{T}{2\pi}\log\frac{2T}{\pi e}$; hence
-$\sum_\gamma 2a_\gamma(m)=\infty$ while $a_\gamma\to0$. A positive
-divergent series with terms tending to $0$ has finite subset sums,
-with signs, dense in $\mathbb R$; since each arcsine factor has full
-support $[-2a_\gamma,2a_\gamma]\ni0$ and the tail beyond any finite
-set can be confined near $0$ with positive probability (finitely many
-factors near $0$, plus Chebyshev on the remaining $L^2$-tail), every
-interval receives positive mass: $\mathrm{supp}(V_m)=\mathbb R$ (cf.\
-the positivity-of-densities argument of \cite{RS94}).
+\emph{Full support.} We show that
+$\mathbb P\bigl(|V_m-v|<\varepsilon\bigr)>0$ for every $v\in\mathbb R$
+and $\varepsilon>0$; this gives $\mathrm{supp}(V_m)=\mathbb R$. Let
+$\gamma_1<\gamma_2<\cdots$ be the positive ordinates (distinct under
+LI) and $c_n:=2a_{\gamma_n}(m)>0$. Three facts:
+($\alpha$) $c_n\to0$, since $a_\gamma(m)\le(2m+1)/\gamma$;
+($\beta$) $\sum_nc_n=\infty$: for every $\gamma\ge m+\tfrac12$ --- all
+but finitely many ordinates --- one has
+$(m+\tfrac12)^2\le\gamma^2$, hence
+$a_\gamma(m)\ge(2m+1)/(\gamma\sqrt2)$, and
+$\sum_{\gamma\le T}\gamma^{-1}\gg(\log T)^2$ by partial summation
+against $N(T,\chi_4)\sim\frac{T}{2\pi}\log\frac{2T}{\pi e}$;
+($\gamma$) $\sum_nc_n^2<\infty$. By symmetry of $V_m$ we may take
+$v\ge0$ (for $v<0$ replace $\cos\theta\approx1$ by
+$\cos\theta\approx-1$ in Step 3).
+
+\emph{Step 1 (a finite block reaching $v$ to within $\varepsilon/4$).}
+By ($\alpha$) fix $N_0$ with $c_n<\varepsilon/4$ for all $n>N_0$. By
+($\beta$), $\sum_{n>N_0}c_n=\infty$, so there is a minimal $N_1\ge N_0$
+with $S:=\sum_{n=N_0+1}^{N_1}c_n\ge v$ (if $v=0$ take $N_1=N_0$,
+$S=0$). Minimality and $c_{N_1}<\varepsilon/4$ give
+$v\le S<v+\varepsilon/4$. Put $B=\{N_0+1,\dots,N_1\}$.
+
+\emph{Step 2 (tail).} By ($\gamma$) fix $N\ge N_1$ with
+$\sum_{n>N}2a_{\gamma_n}^2\le\varepsilon^2/64$. The tail
+$W:=\sum_{n>N}2a_{\gamma_n}\cos\theta_{\gamma_n}$ (convergent a.s.\ and
+in $L^2$) has mean $0$ and
+$\mathrm{Var}(W)=\sum_{n>N}2a_{\gamma_n}^2\le\varepsilon^2/64$
+(each summand has variance $2a_{\gamma_n}^2$), so Chebyshev gives
+$\mathbb P(|W|\ge\varepsilon/4)\le(\varepsilon^2/64)(16/\varepsilon^2)
+=\tfrac14$, i.e.\ $\mathbb P(|W|<\varepsilon/4)\ge\tfrac34$.
+
+\emph{Step 3 (head).} Put
+$\delta:=\varepsilon/\bigl(4(1+\sum_{n\le N}c_n)\bigr)>0$ and
+\[
+A\;:=\;\bigcap_{n\in B}\bigl\{|\cos\theta_{\gamma_n}-1|<\delta\bigr\}
+\;\cap\;\bigcap_{\substack{n\le N\\ n\notin B}}
+\bigl\{|\cos\theta_{\gamma_n}|<\delta\bigr\}.
+\]
+Each event has positive probability ($\theta_{\gamma_n}$ is uniform on
+$[0,2\pi)$, and $\cos\theta$ lies within $\delta$ of $1$, resp.\ of
+$0$, on a set of positive measure), the events concern distinct
+phases, and the phases are independent, so $\mathbb P(A)>0$. On $A$
+the head $H:=\sum_{n\le N}c_n\cos\theta_{\gamma_n}$ satisfies
+$|H-S|\le\delta\sum_{n\le N}c_n<\varepsilon/4$.
+
+\emph{Step 4 (combine).} $A$ and $\{|W|<\varepsilon/4\}$ involve
+disjoint sets of independent phases, hence are independent, and
+$V_m=H+W$ a.s. On their intersection,
+$|V_m-v|\le|H-S|+|S-v|+|W|<\tfrac34\varepsilon<\varepsilon$, and
+\[
+\mathbb P\bigl(|V_m-v|<\varepsilon\bigr)
+\;\ge\;\tfrac34\,\mathbb P(A)\;>\;0 .
+\]
+Every open interval therefore carries positive mass:
+$\mathrm{supp}(V_m)=\mathbb R$ (cf.\ the positivity-of-densities
+argument of \cite{RS94}, of which this is the quantitative form).
 
 \emph{Strict inequalities.} $V_m$ is symmetric and atomless, so
 $\mathbb P(V_m\ge0)=\tfrac12$ and
@@ -568,26 +965,34 @@ support. Hence $\tfrac12<\delta(m)<1$.
 \emph{Continuity.} The characteristic function of $V_m$ is
 $\Phi_m(t)=\prod_{\gamma}J_0(2a_\gamma(m)t)$ (dominated convergence
 from the finite products). Fix $t_0\ge1$ and a compact
-$K\subset(-\tfrac12,0]$; on $K$, $a_\gamma(m')\le\gamma^{-1}$ for
-all $m'$. For $\Gamma\ge2t_0$ and $\gamma>\Gamma$ we have
-$|2a_\gamma(m')t|\le 2t_0/\gamma\le1$, and for $|z|\le1$ the
+$K\subset(-\tfrac12,\infty)$, and put
+\[
+A_K\;:=\;2\max K+1\;\in\;(0,\infty),
+\qquad\text{so}\qquad
+a_\gamma(m')\;\le\;\frac{2m'+1}{\gamma}\;\le\;\frac{A_K}{\gamma}
+\quad\text{for all } m'\in K,\ \gamma>0 .
+\]
+For $\Gamma\ge2A_Kt_0$ and $\gamma>\Gamma$ we have
+$|2a_\gamma(m')t|\le 2A_Kt_0/\gamma\le1$, and for $|z|\le1$ the
 alternating series gives $J_0(z)\ge1-z^2/4\ge\tfrac34$, whence
 $|\log J_0(z)|\le z^2/3$. Therefore
 \[
 \Bigl|\sum_{\gamma>\Gamma}\log J_0\bigl(2a_\gamma(m')t\bigr)\Bigr|
-\;\le\;\frac{4t_0^2}{3}\sum_{\gamma>\Gamma}\gamma^{-2}
-\;=:\;\eta(\Gamma)\;\longrightarrow\;0\qquad(\Gamma\to\infty),
+\;\le\;\frac{4A_K^2t_0^2}{3}\sum_{\gamma>\Gamma}\gamma^{-2}
+\;=:\;\eta_K(\Gamma)\;\longrightarrow\;0\qquad(\Gamma\to\infty),
 \]
 uniformly in $m'\in K$ and $|t|\le t_0$. Writing $\Phi_{m'}$ as (finite
-product over $\gamma\le\Gamma$, jointly continuous in $m'$)
+product over $\gamma\le\Gamma$, jointly continuous in $(m',t)$ since
+each $a_\gamma(\cdot)$ is continuous on $(-\tfrac12,\infty)$)
 $\times\exp(\sum_{\gamma>\Gamma}\log J_0)$, and noting all factors
 have modulus $\le1$, a standard $3\varepsilon$ argument gives
-$\Phi_{m'}(t)\to\Phi_m(t)$ for every $t$ as $m'\to m$ in
-$(-\tfrac12,0]$. Each $\Phi_{m'}$ is a characteristic function and the
-limit $\Phi_m$ is continuous at $0$, so by L\'evy's continuity theorem
-$X_{m'}\Rightarrow X_m$ weakly. Since $\nu_m(\{0\})=0$, the
+$\Phi_{m'}(t)\to\Phi_m(t)$ for every $t$ as $m'\to m$ within
+$(-\tfrac12,\infty)$. Each $\Phi_{m'}$ is a characteristic function and
+the limit $\Phi_m$ is continuous at $0$, so by L\'evy's continuity
+theorem $X_{m'}\Rightarrow X_m$ weakly. Since $\nu_m(\{0\})=0$, the
 portmanteau theorem for the set $(0,\infty)$ gives
-$\delta(m')\to\delta(m)$.
+$\delta(m')\to\delta(m)$: the map $m\mapsto\delta(m)$ is continuous on
+$(-\tfrac12,\infty)$.
 \end{proof}
 
 \begin{proof}[Proof of (iii)]
@@ -633,10 +1038,32 @@ $\varepsilon\to0^+$,
 1-\delta(m)=\mathbb P(V_m\le-1)\;\le\;\exp\Bigl(-\frac1{4A}\Bigr)
 \;\le\;\exp\Bigl(-\frac{1}{2C(2m+1)^2}\Bigr).
 \]
-Both stated bounds follow, for every $m\in(-\tfrac12,0]$, and
-$e^{-1/(2z)}<z$ for all $z>0$ (equivalent to $\log w<w/2$ at
-$w=1/z$), so the exponential bound is always the stronger one.
-$\delta(m)\to1$ as $m\to-\tfrac12^{\,+}$ is immediate.
+Both stated bounds follow, for every $m\in(-\tfrac12,\infty)$ --- no
+step above used $m\le0$ --- and $e^{-1/(2z)}<z$ for all $z>0$
+(equivalent to $\log w<w/2$ at $w=1/z$), so the exponential bound is
+always the stronger one. $\delta(m)\to1$ as $m\to-\tfrac12^{\,+}$ is
+immediate.
+
+\emph{Scope.} Although valid on the whole range, the bounds carry
+information only near the left endpoint, and we state this openly.
+With $C=0.1560296\ldots$: the Chebyshev bound $C(2m+1)^2$ is below the
+trivial estimate $\tfrac12$ of part (ii) only for
+$m<\tfrac12\bigl((2C)^{-1/2}-1\bigr)=0.39506\ldots$ and is $\ge1$ for
+$m\ge\tfrac12\bigl(C^{-1/2}-1\bigr)=0.76580\ldots$; the exponential
+bound is below $\tfrac12$ only for
+$m<m_0=\tfrac12\bigl((2C\log2)^{-1/2}-1\bigr)=0.57507\ldots$. For
+$m\ge m_0$, part (iii) asserts nothing beyond part (ii). This
+limitation is consistent with the expected truth: the computed
+densities approach $\tfrac12$ from above (Table~\ref{tab:delta}), so an
+upper bound on $1-\delta(m)$ tending to $0$ for large $m$ would
+contradict the numerics, and none should be sought. The conjectured
+large-$m$ statement,
+$\delta(m)-\tfrac12\sim(2\pi\,\mathrm{Var}_4(m))^{-1/2}$ with
+$\mathrm{Var}_4(m)$ as in Results item 3 (asymptotically equal to
+$\sigma_m^2=\mathrm{Var}(V_m)$ above), is the
+dissolution law of the Results section; its proof is the subject of
+Theorem~\ref{thm:dissolution} of the companion draft and is \emph{not}
+proved in this paper.
 
 \emph{Remark on constants.} Plain Hoeffding (range form:
 $\mathbb P(S\le-t)\le\exp(-2t^2/\sum_i(\text{range}_i)^2)$ with
@@ -666,7 +1093,7 @@ Immediate from (i)--(iii) together with the cited endpoint results:
 \cite{RS94} and \cite{FM13} at $m=0$ (our deterministic recomputation
 agrees to six decimals), and \cite{AK23,Sheth24,Hay25} at $m=-\tfrac12$
 for the unlogged race as quoted in the statement. We emphasize the
-logical status: $\delta(m)$ is defined for $m\in(-\tfrac12,0]$ and
+logical status: $\delta(m)$ is defined for $m\in(-\tfrac12,\infty)$ and
 $m=-\tfrac12$ is not a value of the family; the connection asserted is
 $\delta(m)\to1$ as $m\to-\tfrac12^{\,+}$ (proved in (iii) under
 GRH+LI) matching the almost-sure single-sign regime established at
@@ -675,14 +1102,18 @@ $m=-\tfrac12$ by different methods and under different hypotheses
 threshold itself, the prime-square mechanism of
 Lemma~\ref{lem:squares} produces a $\tfrac12\log x$ drift
 ($\sum_{p\le\sqrt x}p^{-1}\log p\sim\tfrac12\log x$); the
-$\tfrac12\log\log x$ drift of \cite[Sheth]{AK23} belongs to the
+$\tfrac12\log\log x$ drift of \cite{AK23,Sheth24} belongs to the
 unlogged race $D_{-1/2}$, and the two are compatible by partial
 summation. We do not claim the $m=-\tfrac12$ results, nor any new
-statement at $m=-\tfrac12$.
+statement at $m=-\tfrac12$. At the right end of the family we prove
+existence, continuity, and $\tfrac12<\delta(m)<1$ for every $m$, but
+no statement about the rate of approach to $\tfrac12$; the decrease of
+the computed values in Table~\ref{tab:delta} is numerical observation,
+not a theorem of this paper.
 \end{proof}
 
 \begin{proposition}[transfer to the unlogged races]\label{prop:unlogged}
-Assume GRH$(\chi_4)$ and fix $m\in(-\tfrac12,0]$. Let
+Assume GRH$(\chi_4)$ and fix $m\in(-\tfrac12,\infty)$. Let
 $D_m(x)=\sum_{p\le x,\,p\equiv3(4)}p^m-\sum_{p\le x,\,p\equiv1(4)}p^m$
 and
 \[
@@ -694,18 +1125,24 @@ $\nu_m$ as $E_m(e^u)$; consequently, under LI$(\chi_4)$, all of
 $\delta(m)$.
 \end{proposition}
 
+
 \begin{proof}
 Partial summation: $D_m(x)=\int_{2^-}^x(\log t)^{-1}dR_m(t)
-=\frac{R_m(x)}{\log x}+\int_2^x\frac{R_m(t)}{t\log^2t}\,dt$. Insert
-the expansion of $R_m$ from Lemmas~\ref{lem:trunc}--\ref{lem:squares}
+=\frac{R_m(x)}{\log x}+\int_2^x\frac{R_m(t)}{t\log^2t}\,dt$. Insert the expansion of $R_m$ from
+Lemmas~\ref{lem:trunc}--\ref{lem:squares}
 (truncation $T$, valid uniformly in $t\le x$),
 \[
 R_m(t)=\frac{t^{m+1/2}}{2m+1}
 +\sum_{|\gamma|\le T}\frac{t^{\rho+m}}{\rho+m}+F(t,T),
-\qquad
-F(t,T)\ll_m \frac{t^{m+1}\log^2(tT)}{T}+t^{m+1/3}\log t
-+t^{m+1/2}e^{-c\sqrt{\log t}}+\log^2 t .
 \]
+\[
+F(t,T)\ll_m \frac{t^{m+1}\log^2(tT)}{T}+t^{m+1/3}\log t
++t^{m+1/2}e^{-c\sqrt{\log t}}+(1+t^m)\log t+\log^2 t ,
+\]
+the fourth term being the full-range floor of \eqref{eq:trunc}
+(for $m\le0$ it is $\le2\log t$ and merges with the last term, giving
+back the earlier display).
+
 Write $s=\rho+m=m+\tfrac12+i\gamma$, so $|s|\asymp\gamma$ and
 $\mathrm{Re}\,s=m+\tfrac12>0$.
 
@@ -745,11 +1182,27 @@ u\,e^{-(m+1/2)u}\sum_\gamma\gamma^{-2}\ll_m ue^{-(m+1/2)u},
 all uniform in $T$ (here $\sum_\gamma a_\gamma(m)/\gamma
 \ll_m\sum\gamma^{-2}<\infty$ is the key convergence).
 
-\emph{Truncation/PNT term.} $\int_2^x F(t,T)t^{-1}\log^{-2}t\,dt
-\ll_m F^*(x,T)$ with the same shape as $F(x,T)$ up to logarithms, and
-$F(x,T)/\log x$ likewise; after normalization these are covered by the
-same four expressions as $\mathcal E(u,T)$ in the proof of (i), with
-one extra factor $u$ at worst on the $T$-term.
+\emph{Truncation/PNT term.} Each component of $F$ passes through
+$\frac{R_m(x)}{\log x}$ and
+$\int_2^x F(t,T)\,t^{-1}\log^{-2}t\,dt$ with at most one extra factor
+$\log$. For the components carrying a power $t^a$ with $a>0$
+($a=m+1$ and $a=m+\tfrac12$ always; $a=m+\tfrac13$ when
+$m>-\tfrac13$), splitting the
+integral at $\sqrt x$ gives
+$\int_2^xt^{a-1}\log^{-2}t\,dt\ll_a x^a\log^{-2}x$, the PNT component
+retaining its factor $e^{-c\sqrt{\log t}}$ (decreasing, so bounded on
+$[\sqrt x,x]$ by $e^{-(c/\sqrt2)\sqrt{\log x}}$). For
+$m\le-\tfrac13$ the $k\ge3$ component has $m+\tfrac13\le0$, so
+$t^{m+1/3}\log t\le(\log2)^{-1}\log^2t$ for $t\ge2$ and it is
+absorbed by the $\log^2t$ component (this case must be separated:
+for $a\le0$ the integral $\int_2^xt^{a-1}\log^{-2}t\,dt$ is
+$\asymp_m1$, not $\ll x^a\log^{-2}x$). The $\log^2t$
+component gives $\int_2^xt^{-1}dt=\log x-\log2$; and the new floor
+$(1+t^m)\log t$ contributes
+$\int_2^x(1+t^m)t^{-1}\log^{-1}t\,dt
+\ll_m\log\log x+1+x^m/\log x$. After multiplication by the normalizer
+$(2m+1)x^{-(m+1/2)}\log x$, all of these are covered by the display
+below (the floor's contribution is $\ll_m u^2e^{-\kappa_mu}$).
 
 Collecting, for $u\ge2$, $T\ge2$,
 \[
@@ -757,17 +1210,20 @@ E_m'(e^u)\;=\;1+\mathrm{Re}\!\!\sum_{0<\gamma\le T}\!\!
 r_\gamma(m)e^{i\gamma u}+\mathcal E'(u,T),
 \qquad
 \mathcal E'(u,T)\ll_m
-\frac{u\,e^{u/2}\log^2(e^uT)}{T}+\frac1u+u^2e^{-(m+1/2)u}
-+ue^{-u/6}+e^{-c\sqrt u},
+\frac{u\,e^{u/2}\log^2(e^uT)}{T}+\frac1u+u^2e^{-\kappa_m u}
++ue^{-u/6}+ue^{-c\sqrt u},
 \]
-and at $T=e^Y$, $u\in[2,Y]$ each term's Ces\`aro mean square tends to
+with $\kappa_m=\min(m+\tfrac12,\tfrac12)$ as in the proof of (i), and
+at $T=e^Y$, $u\in[2,Y]$ each term's Ces\`aro mean square tends to
 $0$ exactly as in (i) (the first is $\ll Y^5e^{-Y}$ after
-integration; $1/u$ contributes $\frac1Y\int_2^Y u^{-2}du\ll1/Y$).
-Thus $E_m'(e^u)$ satisfies the same \cite{ANS14} hypotheses with the
-\emph{same} constant $1$ and the \emph{same} coefficients
-$r_\gamma(m)$, so its limiting distribution is again $\nu_m$. At
-$m=0$ this recovers the classical passage of \cite{RS94} between
-$\theta$- and $\pi$-races.
+integration; $1/u$ contributes $\frac1Y\int_2^Y u^{-2}du\ll1/Y$; the
+remaining three are fixed $L^2(0,\infty)$ functions of $u$ since
+$\kappa_m>0$). Thus $E_m'(e^u)$ satisfies the same \cite{ANS14}
+hypotheses with the \emph{same} constant $1$ and the \emph{same}
+coefficients $r_\gamma(m)$, so its limiting distribution is again
+$\nu_m$. At $m=0$ this recovers the classical passage of \cite{RS94}
+between $\theta$- and $\pi$-races.
+
 \end{proof}
 
 \begin{remark}
@@ -788,21 +1244,1451 @@ $0.15557$ vs $0.15603$); we state the $C(2m+1)^2$ form because the
 $m$-dependence is transparent.
 \end{remark}
 
+\subsection*{Monotonicity in the weight}\label{subsec:monotone}
+
+Every computed value in this note is consistent with a strict
+monotonicity that the dissolution asymptotics alone do not give:
+
+\begin{conjecture}\label{conj:monotone}
+For $q\in\{3,4\}$ the map $m\mapsto\delta_q(m)$ is strictly decreasing
+on $(-\tfrac12,\infty)$.
+\end{conjecture}
+
+Three remarks on its status. \emph{(a) Numerical evidence.}
+Deterministic Gil--Pelaez inversion with certified enclosures --- the
+unseen-zero tail variance evaluated in closed form from the completed
+$L$-function (the Hadamard-product identity behind the evaluation of
+$C$), the tail's departure from Gaussianity bounded by a proved
+quartic estimate, truncation and quadrature budgeted into the interval
+radius; every enclosure width below $5\times10^{-7}$ --- on the
+$30$-point grid
+\[
+m\in\{-0.2,\,-0.15,\,-0.1,\,-0.05,\,0,\,0.25,\,0.5,\,0.75,\,1,\,1.25,
+\,1.5,\,2,\,2.5,\,3,\,4,\,5,\,6,\,8,\,10,\,12,\,15,\,20,\,25,\,30,
+\,40,\,50,\,60,\,75,\,90,\,100\}
+\]
+yields enclosures that are pairwise disjoint and decreasing at all
+$29$ consecutive pairs, for both moduli; the smallest gap between
+adjacent enclosures is $2.9\times10^{-5}$ for modulus $4$ and
+$8.6\times10^{-7}$ for modulus $3$ (both at the leftmost pair). The
+enclosures are rigorous modulo the stated computational budget
+(IEEE-double quadrature with step-doubling control; $40$-digit
+floating-point evaluation of the closed-form variance; no interval
+arithmetic is claimed). Left of the grid the inversion loses
+resolution: at $m=-0.2$ itself the enclosures give
+$1-\delta_4\in[4.8,\,7.7]\times10^{-7}$ and
+$1-\delta_3\le2.5\times10^{-7}$, and on $(-\tfrac12,-0.2)$ the only
+control we have is the Chernoff bound of Theorem~\ref{thm:interp}(iii)
+(stated for $\chi_4$; the same argument applies verbatim mod $3$), a
+monotone upper envelope for $1-\delta$ which is consistent with ---
+but does not imply --- monotonicity of $\delta$ itself.
+
+\emph{(b) Why the conjecture is plausible.} With $M=m+\tfrac12$, every
+amplitude is strictly increasing in the weight:
+\[
+\frac{\partial a_\gamma}{\partial M}
+\;=\;\frac{2\gamma^2}{(M^2+\gamma^2)^{3/2}}\;>\;0 ,
+\]
+so as $m$ grows each noise component of
+$X_m=1+\sum_{\gamma>0}2a_\gamma\cos\theta_\gamma$ strictly grows while
+the mean stays fixed at $1$; the conjecture asserts that this pointwise
+growth of the noise always lowers $\mathbb P(X_m>0)$.
+
+\emph{(c) Why it is not a theorem.} If the family were a dilation,
+$V_{m}=c(m)V$ with $c$ increasing, monotonicity would be immediate; it
+is not --- the ratio $a_\gamma(m')/a_\gamma(m)$ depends on $\gamma$
+(low zeros saturate near $2$, high zeros still grow linearly in $M$).
+The natural tool is a peakedness ordering: for the symmetric variable
+$V_m=X_m-1$ one has $\delta(m)=1-\tfrac12\,\mathbb P(|V_m|\ge1)$, so it
+would suffice that $V_{m'}$ is more peaked than $V_m$ for $m'<m$ in the
+sense of Birnbaum~\cite{Bir48}. Scaling up a single component always
+makes that component less peaked, but the classical results that push
+such comparisons through convolution --- Birnbaum's
+lemma~\cite{Bir48} and Proschan's theorem on convex
+combinations~\cite{Pro65} --- require symmetric \emph{unimodal}
+summands (Proschan's in the stronger log-concave form), and the
+arcsine components $2a_\gamma\cos\theta_\gamma$ are symmetric but not
+unimodal (their density is U-shaped and diverges at the endpoints). We know of no peakedness comparison valid for arcsine
+components, and the conjecture remains open: neither the Chernoff
+envelope near $m=-\tfrac12$ nor the large-$m$ dissolution asymptotics
+controls the difference $\delta(m)-\delta(m')$ at nearby weights.
+
+\section{The variance in closed form}\label{sec:variance}
+
+The variance
+$\sigma_m^2=\sum_{\gamma>0}2a_\gamma(m)^2$ of the limiting variable
+$X_m$ has so far entered this paper through a truncation: $511$
+computed ordinates plus a tail estimated from the zero-counting
+density. This section removes the estimate. The variance is the value
+of an explicitly computable entire function of the weight, with three
+consequences: the constant $C$ of Theorem~\ref{thm:interp} acquires a
+closed form (and its printed value a correction of $3.4\times10^{-6}$);
+the variance half of the dissolution law of the introduction becomes a
+theorem with an explicit constant term; and the Gaussianized tails of
+the numerical work become exactly computable quantities.
+
+Throughout, $\Lambda(s):=(4/\pi)^{(s+1)/2}\,\Gamma\!\bigl(\tfrac{s+1}2\bigr)
+L(s,\chi_4)$ denotes the completed $L$-function and
+$\Xi(z):=\Lambda(\tfrac12+z)$.
+
+\begin{proposition}[variance identity]\label{prop:varid}
+Assume GRH$(\chi_4)$. For every real $m>-\tfrac12$, with $M=m+\tfrac12$,
+\begin{equation}\label{eq:varid}
+\sigma_m^2\;=\;\sum_{\gamma>0}2a_\gamma(m)^2
+\;=\;8M^2\sum_{\gamma>0}\frac{1}{M^2+\gamma^2}
+\;=\;4M\,\frac{\Lambda'}{\Lambda}(m+1).
+\end{equation}
+GRH enters only by placing the zeros on the critical line, so that the
+ordinates $\gamma$ are real; no linear-independence hypothesis is
+involved.
+\end{proposition}
+
+\begin{proof}
+The first equality in \eqref{eq:varid} is the definition together with
+$a_\gamma(m)^2=(2M)^2/(M^2+\gamma^2)$. The content is the last
+equality.
+
+\emph{Step 1: $\Xi$ is entire of order $1$ and even.} Since $\chi_4$ is
+primitive and nonprincipal, $\Lambda$ is entire of order $1$
+\cite[Chs.~9, 12]{Dav00}. For a primitive character $\chi$ mod $q$ with
+$\chi(-1)=(-1)^a$, the functional equation reads
+$\Lambda(1-s,\bar\chi)=\bigl(i^a\sqrt q/\tau(\chi)\bigr)\Lambda(s,\chi)$
+with $\tau(\chi)=\sum_{n\ (q)}\chi(n)e^{2\pi in/q}$ \cite[Ch.~9]{Dav00}.
+Here $q=4$, $a=1$ (as $\chi_4(-1)=\chi_4(3)=-1$), $\bar\chi_4=\chi_4$,
+and the Gauss sum is a two-term computation:
+\[
+\tau(\chi_4)\;=\;e^{2\pi i/4}-e^{2\pi i\cdot3/4}\;=\;i-(-i)\;=\;2i,
+\qquad\text{so}\qquad
+\frac{i^a\sqrt q}{\tau(\chi_4)}=\frac{2i}{2i}=1,
+\]
+i.e.\ the root number is $+1$ and $\Lambda(s)=\Lambda(1-s)$. Hence
+$\Xi(z)=\Xi(-z)$. (The script verifies the evenness numerically to
+$4\times10^{-51}$ relative at several complex points.)
+
+\emph{Step 2: no central zero.} $L(\tfrac12,\chi_4)
+=\sum_{k\ge0}(-1)^k(2k+1)^{-1/2}>0$ by the alternating series test
+(terms strictly decreasing to $0$); numerically
+$L(\tfrac12,\chi_4)=0.667691457\ldots$ So $\Xi(0)=\Lambda(\tfrac12)>0$
+(each factor of $\Lambda(\tfrac12)$ is positive), and no zero of $\Xi$
+sits at the origin.
+
+\emph{Step 3: Hadamard product.} The zeros of $\Xi$ are exactly
+$z_\rho=\rho-\tfrac12$ over the nontrivial zeros $\rho$ of
+$L(s,\chi_4)$; under GRH and Step 2 they are $\pm i\gamma$ with
+$\gamma>0$ real, and the multiset of ordinates is symmetric under
+$\gamma\mapsto-\gamma$ because $\Lambda$ is real on the real axis. By
+the Riemann--von Mangoldt formula $N(T,\chi_4)\ll T\log T$
+\cite[\S16]{Dav00}, $\sum_{\gamma>0}\gamma^{-2}<\infty$. Hadamard's
+factorization for the order-$1$ function $\Xi$ gives
+\[
+\Xi(z)\;=\;e^{A+Bz}\prod_{\rho}\Bigl(1-\frac{z}{z_\rho}\Bigr)e^{z/z_\rho},
+\]
+the product converging absolutely and locally uniformly (indeed
+$\sum|z/z_\rho|^2=|z|^2\sum\gamma^{-2}<\infty$ locally uniformly, and
+$|\log\{(1-w)e^{w}\}|\le|w|^2$ for $|w|\le\tfrac12$), so its factors
+may be grouped at will. Grouping $\pm i\gamma$ cancels the exponential
+factors pairwise:
+\[
+\Xi(z)\;=\;e^{A+Bz}\prod_{\gamma>0}\Bigl(1+\frac{z^2}{\gamma^2}\Bigr).
+\]
+The paired product is even in $z$; evenness of $\Xi$ then forces
+$e^{Bz}=e^{-Bz}$, i.e.\ $B=0$ (alternatively, $\Xi'(0)=0$ since $\Xi$
+is even and analytic, and the paired product has vanishing derivative
+at $0$). Setting $z=0$ identifies $e^A=\Xi(0)\ne0$:
+\begin{equation}\label{eq:hadamard}
+\frac{\Xi(z)}{\Xi(0)}\;=\;\prod_{\gamma>0}
+\Bigl(1+\frac{z^2}{\gamma^2}\Bigr).
+\end{equation}
+
+\emph{Step 4: logarithmic differentiation on the real axis.} Under GRH
+all zeros of $\Xi$ are purely imaginary and nonzero, so $\Xi>0$ on
+$\mathbb R$ (it is real there, positive at $0$, and nonvanishing).
+Taking logarithms in \eqref{eq:hadamard} at real $z=x$,
+\[
+\log\frac{\Xi(x)}{\Xi(0)}\;=\;\sum_{\gamma>0}
+\log\Bigl(1+\frac{x^2}{\gamma^2}\Bigr),
+\]
+a series of nonnegative terms dominated on $|x|\le A$ by
+$A^2/\gamma^2$; the termwise-differentiated series
+$\sum_\gamma 2x/(x^2+\gamma^2)$ is dominated on $|x|\le A$ by
+$2A/\gamma^2$. Both therefore converge uniformly on compact subsets of
+$\mathbb R$, and the standard theorem on differentiation of series
+(pointwise convergence plus locally uniform convergence of the
+derivative series) yields, for every real $x$,
+\[
+\frac{\Xi'}{\Xi}(x)\;=\;\sum_{\gamma>0}\frac{2x}{x^2+\gamma^2}.
+\]
+At $x=M>0$, since $\Xi'/\Xi(M)=(\Lambda'/\Lambda)(M+\tfrac12)
+=(\Lambda'/\Lambda)(m+1)$,
+\[
+4M\,\frac{\Lambda'}{\Lambda}(m+1)
+\;=\;8M^2\sum_{\gamma>0}\frac1{M^2+\gamma^2}\;=\;\sigma_m^2. \qedhere
+\]
+\end{proof}
+
+\begin{remark}\label{rem:varid-numerics}
+The right-hand side of \eqref{eq:varid} is computable to arbitrary
+precision with \emph{no} zero data:
+$(\Lambda'/\Lambda)(s)=\tfrac12\log\tfrac4\pi
++\tfrac12\psi\bigl(\tfrac{s+1}2\bigr)+(L'/L)(s,\chi_4)$, with
+$L(s,\chi_4)=4^{-s}\bigl(\zeta(s,\tfrac14)-\zeta(s,\tfrac34)\bigr)$.
+As a consistency check on both the identity and our ordinate list, the
+truncated zero sum $\sum_{\gamma\le\gamma_{511}}2a_\gamma^2$ plus the
+Riemann--von Mangoldt tail integral reproduces \eqref{eq:varid} at
+$m\in\{0,1,2,3,8,20,100\}$ within the expected fluctuation of the
+zero-counting remainder ($3.2\times10^{-6}$ at $m=0$, growing to
+$0.13$ absolute --- $1.5\times10^{-4}$ relative --- at $m=100$), and
+$\log(\Xi(z)/\Xi(0))-\sum_{\gamma\le\gamma_{511}}\log(1+z^2/\gamma^2)$
+matches the corresponding tail integral
+$\int_{\gamma_{511}}^\infty\log(1+z^2/t^2)\,dN(t)$ to
+$1.6\times10^{-6}$ at $z=1$.
+\end{remark}
+
+\begin{corollary}[the constant $C$ in closed form]\label{cor:Cexact}
+Assume GRH$(\chi_4)$. With $G$ Catalan's constant,
+\[
+C\;=\;\sum_{\gamma>0}\frac{2}{\gamma^2}
+\;=\;(\log\Lambda)''(\tfrac12)
+\;=\;\tfrac14\psi'(\tfrac34)\;+\;(\log L)''(\tfrac12,\chi_4),
+\qquad
+\psi'(\tfrac34)=\pi^2-8G,
+\]
+and numerically
+\begin{gather*}
+C\;=\;0.156029649889644884607682\ldots,\\
+\tfrac14\psi'(\tfrac34)=0.635469911917901\ldots,\qquad
+(\log L)''(\tfrac12,\chi_4)=-0.479440262028256\ldots
+\end{gather*}
+This supersedes the zero-sum estimate $C=0.156033$ of earlier drafts,
+whose excess $+3.4\times10^{-6}$ is the neglected fluctuation term
+flagged there as $O(10^{-5})$ (the unrounded zero-sum-plus-tail
+estimate is $0.1560328$, an excess of $3.2\times10^{-6}$; rounding to
+the printed six decimals accounts for the rest). All bounds stated
+with $C$ only improve.
+\end{corollary}
+
+\begin{proof}
+Differentiating $\sum_\gamma 2x/(x^2+\gamma^2)$ termwise once more is
+legitimate on $|x|\le1$: the differentiated terms
+$2(\gamma^2-x^2)/(\gamma^2+x^2)^2$ are bounded there by $2/\gamma^2$
+(numerator at most $\gamma^2$, denominator at least $\gamma^4$; recall
+$\gamma_1>6$), giving uniform convergence. Evaluating at $x=0$ yields
+$(\log\Xi)''(0)=\sum_{\gamma>0}2/\gamma^2=C$, and
+$(\log\Xi)''(0)=(\log\Lambda)''(\tfrac12)$. Since the linear factor of
+$\log\Lambda(s)=\tfrac{s+1}2\log\tfrac4\pi+\log\Gamma(\tfrac{s+1}2)
++\log L(s,\chi_4)$ has vanishing second derivative,
+$(\log\Lambda)''(\tfrac12)=\tfrac14\psi'(\tfrac34)
++(\log L)''(\tfrac12,\chi_4)$; the argument $\tfrac34$ is
+$(s+1)/2$ at $s=\tfrac12$, and $\log L$ is well defined near
+$s=\tfrac12$ by Step 2 above. Finally
+$\psi'(\tfrac14)+\psi'(\tfrac34)=\pi^2/\sin^2(\pi/4)=2\pi^2$
+(reflection) and, writing $\psi'(x)=\sum_{n\ge0}(n+x)^{-2}$,
+$\psi'(\tfrac14)-\psi'(\tfrac34)
+=16\sum_{n\ge0}\bigl[(4n+1)^{-2}-(4n+3)^{-2}\bigr]=16\beta(2)=16G$,
+whence $\psi'(\tfrac34)=\pi^2-8G$.
+
+On the numerical claim, an honesty note: the closed form is exact, and
+its decimal evaluation is a routine high-precision computation (mpmath
+at $50$ digits with guard digits; the routes
+$\tfrac14\psi'(\tfrac34)+(\log L)''(\tfrac12)$ and direct numerical
+$(\log\Lambda)''(\tfrac12)$ agree to $38$ digits, stably under
+doubling of the working precision). We have not run certified interval
+arithmetic; the quantities are derivatives of entire functions
+evaluated far from any singularity.
+\end{proof}
+
+\begin{proposition}[rigorous variance asymptotic]\label{prop:varasymp}
+Assume GRH$(\chi_4)$. As $m\to\infty$,
+\begin{equation}\label{eq:varasymp4}
+\sigma_m^2\;=\;2M\log\frac{4M}{2\pi}\;+\;1\;+\;\frac{1}{12M}
+\;+\;O\Bigl(\frac{1}{M^2}\Bigr).
+\end{equation}
+More generally, let $\chi$ be a real primitive character mod $q$ with
+$\chi(-1)=(-1)^a$, $a\in\{0,1\}$, assume GRH$(\chi)$ and
+$L(\tfrac12,\chi)\ne0$, and set
+$\mathrm{Var}_q(m)=\sum_{\gamma_\chi>0}2a_{\gamma}(m)^2$ over the
+ordinates of $L(s,\chi)$. Then
+\begin{equation}\label{eq:varasympq}
+\mathrm{Var}_q(m)\;=\;2M\log\frac{qM}{2\pi}\;+\;(2a-1)
+\;+\;\frac{1}{12M}\;+\;O\Bigl(\frac{1}{M^2}\Bigr),
+\end{equation}
+with an absolute implied constant. In particular the constant term of
+the dissolution law of the introduction is $+1$ for odd real
+characters ($q=3,4$ included) and $-1$ for even ones.
+\end{proposition}
+
+\begin{proof}
+Proposition~\ref{prop:varid} and its proof apply verbatim to $\chi$:
+the completed function
+$\xi(s,\chi)=(q/\pi)^{(s+a)/2}\Gamma\bigl(\tfrac{s+a}2\bigr)L(s,\chi)$
+is entire of order $1$; a real primitive character has root number
+$+1$ --- Gauss's evaluation of the sign of the quadratic Gauss sum,
+$\tau(\chi)=\sqrt q$ for $a=0$ and $i\sqrt q$ for $a=1$ (see
+\cite[Ch.~2]{Dav00} for prime modulus; the script evaluates
+$\tau$ directly for the moduli $3,4,5$ used in this paper) --- so
+$\xi(s,\chi)=\xi(1-s,\chi)$; the hypothesis
+$L(\tfrac12,\chi)\ne0$ replaces Step 2 (for $q=3,4$ it holds
+unconditionally by grouping the Dirichlet series at $s=\tfrac12$ into
+positive blocks); and
+\begin{equation}\label{eq:varidq}
+\mathrm{Var}_q(m)\;=\;4M\,\frac{\xi'}{\xi}(m+1,\chi)
+\;=\;4M\Bigl[\tfrac12\log\tfrac q\pi
++\tfrac12\psi\Bigl(\tfrac{m+1+a}2\Bigr)+\frac{L'}{L}(m+1,\chi)\Bigr].
+\end{equation}
+
+\emph{Digamma term.} Stirling's series
+$\psi(x)=\log x-\tfrac1{2x}-\tfrac1{12x^2}+O(x^{-4})$, $x\to\infty$,
+at $x=\tfrac{m+1+a}2=\tfrac M2+\tfrac{2a+1}4$. For $a=1$,
+$x=\tfrac M2\bigl(1+\tfrac3{2M}\bigr)$ and, expanding each ingredient
+to two orders,
+\[
+\log x=\log\tfrac M2+\tfrac3{2M}-\tfrac9{8M^2}+O(M^{-3}),\quad
+\tfrac1{2x}=\tfrac1M-\tfrac3{2M^2}+O(M^{-3}),\quad
+\tfrac1{12x^2}=\tfrac1{3M^2}+O(M^{-3}),
+\]
+so that, with $-\tfrac98+\tfrac32-\tfrac13=\tfrac1{24}$,
+\[
+\psi\Bigl(\tfrac{m+2}2\Bigr)=\log\tfrac M2+\frac1{2M}
++\frac{1}{24M^2}+O(M^{-3}).
+\]
+For $a=0$, $x=\tfrac M2\bigl(1+\tfrac1{2M}\bigr)$ and the same
+computation ($-\tfrac18+\tfrac12-\tfrac13=\tfrac1{24}$ again) gives
+$\psi\bigl(\tfrac{m+1}2\bigr)=\log\tfrac M2-\tfrac1{2M}
++\tfrac1{24M^2}+O(M^{-3})$. Multiplying by $4M\cdot\tfrac12$ and adding
+$2M\log\tfrac q\pi$,
+\[
+4M\Bigl[\tfrac12\log\tfrac q\pi+\tfrac12\psi\Bigl(\tfrac{m+1+a}2\Bigr)\Bigr]
+\;=\;2M\log\frac{qM}{2\pi}\;+\;(2a-1)\;+\;\frac1{12M}\;+\;O(M^{-2}),
+\]
+using $\tfrac q\pi\cdot\tfrac M2=\tfrac{qM}{2\pi}$; the sign of the
+$\pm\tfrac1{2M}$ term is the sole source of the parity-dependent
+constant $2a-1$.
+
+\emph{The $L'/L$ term is exponentially small.} For $m\ge1$,
+\[
+\Bigl|\frac{L'}{L}(m+1,\chi)\Bigr|
+=\Bigl|\sum_{n\ge2}\Lambda(n)\chi(n)n^{-(m+1)}\Bigr|
+\le2^{-(m-1)}\sum_{n\ge2}\Lambda(n)\,n^{-2}
+\le0.57\cdot2^{-(m-1)}
+\]
+(using $n^{-(m+1)}\le n^{-2}\cdot2^{-(m-1)}$ for $n\ge2$ and
+$\sum_n\Lambda(n)n^{-2}=-\tfrac{\zeta'}{\zeta}(2)=0.56996\ldots$),
+so $4M|L'/L(m+1,\chi)|\ll M2^{-m}$, absorbed into $O(M^{-2})$ (with an
+absolute constant, uniformly in $q$). For $\chi_4$ the decay is in fact
+$3^{-(m+1)}\log3\,(1+o(1))$, since $\chi_4(2^k)=0$ and the leading
+surviving term is $n=3$ with $\chi_4(3)=-1$; the script confirms
+$|L'/L(21,\chi_4)|=1.050\times10^{-10}=3^{-21}\log3$ to three digits.
+Combining the three displays proves \eqref{eq:varasympq}, and $q=4$,
+$a=1$ gives \eqref{eq:varasymp4}.
+\end{proof}
+
+\begin{remark}\label{rem:varasymp-numerics}
+(1) Numerically, $M\bigl(\sigma_m^2-2M\log\tfrac{4M}{2\pi}-1\bigr)$
+equals $0.080845$, $0.082709$, $0.083083$ at $m=100$, $400$, $1000$,
+converging to $\tfrac1{12}=0.08333\ldots$ exactly as
+\eqref{eq:varasymp4} requires; for the even real character mod $5$
+(where $L(\tfrac12,\chi_5)=0.23175\ldots\ne0$ numerically), the same
+computation gives
+$\mathrm{Var}_5(m)-2M\log\tfrac{5M}{2\pi}\to-1$, confirming
+$c_0(q,0)=-1$. (2) The law is asymptotic, not a bound: at $m=1$ the
+main term $2M\log\tfrac{4M}{2\pi}=-0.138$ is negative and useless
+(Table~\ref{tab:varexact}). (3) What is \emph{not} proved in this
+section: the density half of the dissolution law,
+$\delta_q(m)-\tfrac12\sim(2\pi\,\mathrm{Var}_q(m))^{-1/2}$.
+Proposition~\ref{prop:varasymp} certifies only its variance input.
+\end{remark}
+
+\begin{remark}[certified tails for the numerical densities]
+\label{rem:tails}
+The Gil--Pelaez and Monte Carlo computations of
+Sections~1 and~\ref{sec:methods} replace the unseen zeros
+$\gamma>\Gamma:=\gamma_{511}=639.9157\ldots$ by a Gaussian whose
+variance was previously \emph{estimated} from the zero-counting
+density. By Proposition~\ref{prop:varid} that variance is now exact:
+\[
+\sigma^2_{\mathrm{tail}}(\Gamma)
+\;=\;\sum_{\gamma>\Gamma}2a_\gamma(m)^2
+\;=\;4M\,\frac{\Lambda'}{\Lambda}(m+1)
+-\sum_{\gamma\le\Gamma}2a_\gamma(m)^2 ,
+\]
+the subtracted sum being exact up to the $25$-digit accuracy of the
+computed ordinates (the resulting uncertainty is below $10^{-20}$).
+Table~\ref{tab:varexact} gives the exact variances against the law of
+the introduction. The smoothed tail estimate used previously deviates
+from the exact tail by at most $1.5\times10^{-4}$ relative to
+$\sigma_m^2$ over the computed range (worst at $m=100$, where the tail
+carries $16.7\%$ of the variance). Re-running the Gil--Pelaez
+inversion with the exact tail variances shifts the entries of
+Table~\ref{tab:delta} by at most $3.3\times10^{-6}$ (worst at $q=3$,
+$m=1$): up to three units in their sixth printed decimal --- well
+within the $10^{-4}$ Monte Carlo cross-check, though not strictly
+below the printed resolution, so the last digit of a few entries
+moves --- and the tail-variance estimation error is now exactly
+zero. For the record, the identity also gives
+$\sigma_0^2=0.1555679799235859\ldots$ (the rounded $0.15557$ quoted in
+Section~\ref{sec:theorem} is unaffected).
+\end{remark}
+
+\begin{table}[h]\centering
+\begin{tabular}{cccccc}
+\toprule
+$m$ & $\sigma_m^2$ (exact, \eqref{eq:varid}) &
+$2M\log\frac{4M}{2\pi}$ &
+$\sigma_m^2-2M\log\frac{4M}{2\pi}-1$ &
+$\sigma^2_{\mathrm{tail}}(\gamma_{511})$ & tail share\\
+\midrule
+$1$   & $1.368555$   & $-0.138353$  & $0.506908$ & $0.031353$   & $2.3\%$\\
+$3$   & $6.776846$   & $5.608262$   & $0.168585$ & $0.170697$   & $2.5\%$\\
+$8$   & $29.712468$  & $28.704219$  & $0.008249$ & $1.006718$   & $3.4\%$\\
+$20$  & $106.326000$ & $105.322529$ & $0.003470$ & $5.854189$   & $5.5\%$\\
+$100$ & $836.874384$ & $835.873579$ & $0.000804$ & $139.712453$ & $16.7\%$\\
+\bottomrule
+\end{tabular}
+\caption{Exact variances from the identity \eqref{eq:varid} against
+the paper's dissolution-law main term, modulus $4$. The residual
+column converges to $0$ like $\tfrac1{12M}$ once the constant $c_0=1$
+of Proposition~\ref{prop:varasymp} is subtracted; at small $m$ it is
+dominated by the (exponentially small in $m$, but not yet small)
+$L'/L$ term and higher Stirling corrections. The last columns show the
+exact variance of the Gaussianized tail beyond the $511$th ordinate
+and its share of $\sigma_m^2$.}
+\label{tab:varexact}
+\end{table}
+
+
+\section{The dissolution law: from heuristic to theorem}
+\label{sec:dissolution}
+
+The introduction stated the dissolution law
+$\delta_q(m)-\tfrac12\sim(2\pi\,\mathrm{Var}_q(m))^{-1/2}$ as a
+Gaussian-comparison heuristic with numerical confirmation, and
+Proposition~\ref{prop:varasymp} made its variance input
+$\mathrm{Var}_q(m)=2M\log\tfrac{qM}{2\pi}+O(1)$ rigorous. This section
+proves the density half, with a rate, and in fact with a proved
+second-order term. The method is direct Fourier inversion: the limiting
+variable is $1+V$ with $V$ a sum of independent scaled cosines, its
+characteristic function is a product of Bessel factors
+$J_0(2a_\gamma t)$, and
+\[
+\delta_q(m)-\tfrac12\;=\;\frac1\pi\int_0^\infty
+\Phi_m(t)\,\frac{\sin t}{t}\,dt,
+\qquad
+\Phi_m(t)=\prod_{\gamma>0}J_0\bigl(2a_\gamma(m)\,t\bigr).
+\]
+Near $t=0$ the product is Gaussian to high accuracy, with variance
+$\sigma_m^2$ and a fourth-cumulant correction governed by
+$S_4(m):=\sum_{\gamma>0}(2a_\gamma(m))^4$; away from $t=0$ the
+$\gtrsim M\log M$ zeros in the window $(M,2M]$, each carrying an
+amplitude $a_\gamma\in[2/\sqrt5,\sqrt2\,]$ bounded away from $0$ and
+$\infty$, force superexponential decay. Both $\sigma_m^2$ and $S_4(m)$
+turn out to be exact values of the completed $L$-function
+(Proposition~\ref{prop:varid} and Lemma~\ref{lem:S4mom}), so every
+coefficient below is a closed form.
+
+\subsection*{Setting and statement}
+
+Let $\chi$ be a real primitive character mod $q\ge3$,
+$\chi(-1)=(-1)^a$ with $a\in\{0,1\}$, and let
+$\xi(s,\chi)=(q/\pi)^{(s+a)/2}\Gamma\bigl(\tfrac{s+a}2\bigr)L(s,\chi)$
+be its completed $L$-function. We assume GRH$(\chi)$ and
+$L(\tfrac12,\chi)\ne0$ (for $q=3,4$ the nonvanishing is unconditional,
+as noted in the proof of Proposition~\ref{prop:varasymp}); $\gamma$
+runs over the positive ordinates of $L(s,\chi)$, listed with
+multiplicity. For $m>0$ put $M=m+\tfrac12$,
+\[
+a_\gamma(m)=\frac{2M}{\sqrt{M^2+\gamma^2}},\qquad
+X_{m,\chi}=1+V_m,\qquad
+V_m=\sum_{\gamma>0}2a_\gamma(m)\cos\theta_\gamma,
+\]
+with $\theta_\gamma$ i.i.d.\ uniform on $[0,2\pi)$ (the series
+converges a.s.\ and in $L^2$, as in Section~\ref{sec:theorem}), and
+\[
+\delta_q(m)\;:=\;\mathbb P\bigl(X_{m,\chi}>0\bigr),
+\qquad
+\sigma_m^2\;:=\;\sum_{\gamma>0}2a_\gamma(m)^2,
+\qquad
+S_4(m)\;:=\;\sum_{\gamma>0}\bigl(2a_\gamma(m)\bigr)^4 .
+\]
+For $q=4$, Theorem~\ref{thm:interp}(ii) identifies $\delta_4(m)$, under
+LI$(\chi_4)$, with the logarithmic density $\delta(m)$ of the set where
+the weighted race $R_m$ is positive; for other moduli $\delta_q(m)$ is,
+in this paper, a statement about the limiting random variable only (see
+the Scope remark at the end of the section). Note that the theorem
+below does \emph{not} assume LI: independence of the phases is built
+into the definition of $X_{m,\chi}$, and LI is what transfers the
+conclusion to the race.
+
+\begin{theorem}[dissolution law]\label{thm:dissolution}
+Let $\chi$ be a real primitive character mod $q$; assume GRH$(\chi)$
+and $L(\tfrac12,\chi)\ne0$. Then, with
+$\sigma_m^2=4M\,\frac{\xi'}{\xi}(m+1,\chi)$ as in
+\eqref{eq:varidq} and $S_4(m)$ as in Lemma~\ref{lem:S4mom}, as
+$m\to\infty$:
+\begin{itemize}
+\item[(i)]
+$\displaystyle
+\delta_q(m)-\tfrac12\;=\;\frac{1}{\sqrt{2\pi\sigma_m^2}}
+\Bigl(1+O\Bigl(\frac{1}{M\log M}\Bigr)\Bigr);
+$
+\item[(ii)] more precisely,
+$\displaystyle
+\delta_q(m)-\tfrac12\;=\;\frac{1}{\sqrt{2\pi\sigma_m^2}}
+\Bigl(1-\frac{1}{6\sigma_m^2}-\frac{3S_4(m)}{64\,\sigma_m^4}
++O\Bigl(\frac{1}{(M\log M)^2}\Bigr)\Bigr);
+$
+\item[(iii)] consequently, by
+Proposition~\ref{prop:varasymp},
+\[
+\delta_q(m)-\tfrac12\;=\;
+\Bigl(4\pi M\log\tfrac{qM}{2\pi}\Bigr)^{-1/2}
+\Bigl(1+O\Bigl(\frac{1}{M\log M}\Bigr)\Bigr).
+\]
+\end{itemize}
+All implied constants depend on $q$ alone; they are effectively
+computable in principle and we have not optimized them. Nothing is
+claimed uniformly in $q$.
+\end{theorem}
+
+\begin{corollary}[the race itself, $q=4$]\label{cor:dissolution-race}
+Assume GRH$(\chi_4)$ and LI$(\chi_4)$. Then the logarithmic density
+$\delta(m)$ of $\{x\ge2:R_m(x)>0\}$ of Theorem~\ref{thm:interp}
+satisfies (i)--(iii) of Theorem~\ref{thm:dissolution} verbatim. In
+particular $\delta(m)\to\tfrac12$ as $m\to\infty$ at the rate
+$(4\pi M\log\tfrac{2M}{\pi})^{-1/2}$, closing the gap left open in
+Theorem~\ref{thm:interp}(iii).
+\end{corollary}
+
+\begin{corollary}[closed second order]\label{cor:secondorder}
+Under the hypotheses of Theorem~\ref{thm:dissolution}, with
+$L:=\log\tfrac{qM}{2\pi}$,
+\[
+\delta_q(m)-\tfrac12\;=\;\frac{1}{\sqrt{2\pi\sigma_m^2}}
+\Bigl(1-\frac{11}{24\,ML}+O\Bigl(\frac{1}{ML^2}\Bigr)\Bigr)
+\qquad(m\to\infty).
+\]
+\end{corollary}
+
+The relative error in (i) is thus not just $O(1/(M\log M))$ but
+asymptotically equal to $-\tfrac{11}{24}(ML)^{-1}$: the density
+approaches the Gaussian prediction from \emph{below}, as every entry
+of Table~\ref{tab:dissolution} shows.
+
+We assemble the proof from four lemmas: elementary Bessel estimates
+(Lemma~\ref{lem:J0facts}); a count of zeros in the dyadic window
+$(M,2M]$ (Lemma~\ref{lem:window}); the closed form and asymptotics of
+$S_4$ (Lemma~\ref{lem:S4mom}); and the inversion formula
+(Lemma~\ref{lem:invert}) together with the tail bound that justifies
+it (Lemma~\ref{lem:bigt}).
+
+\subsection*{Lemmas}
+
+\begin{lemma}[Bessel facts]\label{lem:J0facts}
+Let $J_0(z)=\sum_{k\ge0}(-1)^k(z^2/4)^k/(k!)^2$. For real $z$:
+\begin{itemize}
+\item[(J1)] $|J_0(z)|\le1$, with strict inequality for $z\ne0$;
+moreover for every $z_0>0$,
+\[
+\rho(z_0)\;:=\;\sup_{z\ge z_0}|J_0(z)|\;<\;1 .
+\]
+\item[(J2)] $|J_0(z)|\le\dfrac{8}{\pi}\,z^{-1/2}$ for all $z>0$.
+\item[(J3)] For $0\le z\le1$: $J_0(z)\ge\tfrac34$ and
+$\bigl|\log J_0(z)+\tfrac{z^2}4\bigr|\le\tfrac{z^4}{17}$.
+\item[(J4)] For $0\le z\le1$:
+$\bigl|\log J_0(z)+\tfrac{z^2}4+\tfrac{z^4}{64}\bigr|
+\le\tfrac{z^6}{80}$.
+\end{itemize}
+\end{lemma}
+
+\begin{proof}
+Throughout we use the integral representation
+\begin{equation}\label{eq:J0int}
+J_0(z)\;=\;\frac2\pi\int_0^{\pi/2}\cos(z\sin\varphi)\,d\varphi
+\;=\;\frac2\pi\int_0^1\frac{\cos(zu)}{\sqrt{1-u^2}}\,du ,
+\end{equation}
+obtained by expanding $\cos(z\sin\varphi)$ into its (uniformly
+convergent) power series and integrating termwise with Wallis's
+formula $\int_0^{\pi/2}\sin^{2k}\varphi\,d\varphi
+=\tfrac\pi2\binom{2k}{k}4^{-k}$, which reproduces the defining series;
+the second form is the substitution $u=\sin\varphi$.
+
+(J1) The first form of \eqref{eq:J0int} gives $|J_0(z)|\le1$. If
+$z\ne0$, then $\varphi\mapsto z\sin\varphi$ is injective on
+$[0,\pi/2]$, so $\cos(z\sin\varphi)=\pm1$ for at most finitely many
+$\varphi$, and by continuity $|J_0(z)|<1$ strictly. For the supremum:
+by (J2), $|J_0(z)|\le\tfrac12$ for $z\ge26>(16/\pi)^2$; on the compact
+interval $[z_0,26]$ the continuous function $|J_0|$ attains a maximum,
+which is $<1$ by the strict inequality just proved. Hence
+$\rho(z_0)=\max\bigl(\max_{[z_0,26]}|J_0|,\tfrac12\bigr)<1$ (for
+$z_0\ge26$ the compact piece is vacuous and $\rho(z_0)\le\tfrac12$
+directly). (No
+numerical value of $\rho$ is used in the proofs; for orientation,
+$\rho(1/(2\sqrt5))=J_0(1/(2\sqrt5))=0.98754$, computed in the
+verification script.)
+
+(J2) For $0<z<1$ the bound exceeds $8/\pi>1$ and is trivial. For
+$z\ge1$ set $\delta=1/z\in(0,1]$ and split \eqref{eq:J0int} at
+$u=1-\delta$. The singular piece:
+\[
+\int_{1-\delta}^1\frac{du}{\sqrt{1-u^2}}
+\le\int_{1-\delta}^1\frac{du}{\sqrt{1-u}}=2\sqrt\delta .
+\]
+The oscillatory piece, integrating by parts
+($\cos(zu)=\tfrac1z\frac{d}{du}\sin(zu)$) and using
+$1-u^2\ge\delta(2-\delta)\ge\delta$ at $u=1-\delta$ together with
+$\int_0^{1-\delta}u(1-u^2)^{-3/2}du=(1-u^2)^{-1/2}\big|_0^{1-\delta}
+\le\delta^{-1/2}$:
+\[
+\Bigl|\int_0^{1-\delta}\frac{\cos(zu)}{\sqrt{1-u^2}}\,du\Bigr|
+\;\le\;\frac1z\cdot\frac1{\sqrt\delta}
++\frac1z\int_0^{1-\delta}\frac{u\,du}{(1-u^2)^{3/2}}
+\;\le\;\frac2{z\sqrt\delta} .
+\]
+With $\delta=1/z$ both pieces are $2z^{-1/2}$, so
+$|J_0(z)|\le\tfrac2\pi\cdot4z^{-1/2}=\tfrac8\pi z^{-1/2}$.
+
+(J3) For $|z|\le1$ the series terms $c_k=(z^2/4)^k/(k!)^2$ decrease
+strictly ($c_{k+1}/c_k=z^2/(4(k+1)^2)\le\tfrac14$), so the alternating
+series gives
+\[
+1-\tfrac{z^2}4\;\le\;J_0(z)\;\le\;1-\tfrac{z^2}4+\tfrac{z^4}{64},
+\qquad\text{hence } J_0(z)\ge\tfrac34,
+\]
+and, writing $J_0=1-w$ with $w=\tfrac{z^2}4-R$,
+\[
+R:=\sum_{k\ge2}(-1)^kc_k\in\bigl[0,\tfrac{z^4}{64}\bigr],
+\qquad
+w\in\bigl[\tfrac{z^2}4-\tfrac{z^4}{64},\,\tfrac{z^2}4\bigr]
+\subset\bigl[0,\tfrac14\bigr].
+\]
+Then $\log J_0+\tfrac{z^2}4=R-\sum_{j\ge2}\tfrac{w^j}j$, and
+$\sum_{j\ge2}\tfrac{w^j}j\le\tfrac{w^2}{2(1-w)}\le\tfrac23w^2
+\le\tfrac23\bigl(\tfrac{z^2}4\bigr)^2=\tfrac{z^4}{24}$, so the total
+is at most $\tfrac{z^4}{64}+\tfrac{z^4}{24}=\tfrac{11z^4}{192}
+\le\tfrac{z^4}{17}$.
+
+(J4) Refine each piece by one order. First,
+$R-\tfrac{z^4}{64}=\sum_{k\ge3}(-1)^kc_k$ has absolute value at most
+$c_3=\tfrac{z^6}{2304}$. Next,
+$w^2=\tfrac{z^4}{16}-\tfrac{z^2R}2+R^2$, so
+\[
+\log J_0+\tfrac{z^2}4+\tfrac{z^4}{64}
+=\Bigl(R-\tfrac{z^4}{64}\Bigr)+\tfrac{z^2R}4-\tfrac{R^2}2
+-\sum_{j\ge3}\tfrac{w^j}j ,
+\]
+and, for $|z|\le1$: $\tfrac{z^2R}4\le\tfrac{z^6}{256}$,
+$\tfrac{R^2}2\le\tfrac{z^8}{8192}\le\tfrac{z^6}{8192}$, and
+$\sum_{j\ge3}\tfrac{w^j}j\le\tfrac{w^3}{3(1-w)}
+\le\tfrac49\bigl(\tfrac{z^2}4\bigr)^3=\tfrac{z^6}{144}$. The sum of
+the four bounds is
+$z^6\bigl(\tfrac1{2304}+\tfrac1{256}+\tfrac1{8192}+\tfrac1{144}\bigr)
+<0.0115\,z^6<\tfrac{z^6}{80}$. (The true limit ratio as $z\to0$ is
+$\tfrac1{576}$; the script checks the claimed bounds on a grid in
+multiprecision, float64 being insufficient near $z=0$.)
+\end{proof}
+
+\begin{lemma}[zeros in the dyadic window]\label{lem:window}
+Unconditionally, with
+$N_\chi(T):=\#\{\gamma\in(0,T]\}$, there is $M_0(q)$ such that for all
+$M\ge M_0(q)$,
+\[
+N_0\;:=\;N_\chi(2M)-N_\chi(M)\;\ge\;\frac{M}{4\pi}\log M
+\;\ (\ge5).
+\]
+\end{lemma}
+
+\begin{proof}
+For a primitive $\chi$ mod $q$ the Riemann--von Mangoldt formula gives
+$N_\chi(T)=\frac{T}{2\pi}\log\frac{qT}{2\pi e}+O(\log qT)$ for
+$T\ge2$ \cite[\S16]{Dav00} (Davenport counts zeros with $|\gamma|\le
+T$; for real $\chi$ the multiset of ordinates is symmetric under
+$\gamma\mapsto-\gamma$, as used in Proposition~\ref{prop:varid}, so
+the one-sided count is half). Hence
+\[
+N_\chi(2M)-N_\chi(M)
+=\frac{M}{2\pi}\Bigl(\log\frac{qM}{2\pi e}+2\log2\Bigr)+O_q(\log M)
+\ge\frac{M}{2\pi}\log\frac{qM}{2\pi e}-C_q\log M ,
+\]
+which exceeds $\frac{M}{4\pi}\log M$ once $M\ge M_0(q)$.
+\end{proof}
+
+\begin{lemma}[fourth moment of the amplitudes]\label{lem:S4mom}
+Assume GRH$(\chi)$ and $L(\tfrac12,\chi)\ne0$. Then for every
+$m>-\tfrac12$,
+\begin{equation}\label{eq:S4id}
+S_4(m)\;=\;\sum_{\gamma>0}\frac{256\,M^4}{(M^2+\gamma^2)^2}
+\;=\;16\,\sigma_m^2\;-\;64\,M^2\,(\log\xi)''(m+1,\chi),
+\end{equation}
+and, as $m\to\infty$,
+\begin{equation}\label{eq:S4asymp}
+S_4(m)\;=\;32M\Bigl(\log\frac{qM}{2\pi}-1\Bigr)+32(2a-1)
++O_q\Bigl(\frac1M\Bigr).
+\end{equation}
+Moreover, unconditionally on the size of $m$,
+$S_4(m)\le32\,\sigma_m^2$ and
+$S_6(m):=\sum_\gamma(2a_\gamma)^6\le16\,S_4(m)$.
+\end{lemma}
+
+\begin{proof}
+The trivial bounds are immediate from $(2a_\gamma)^2\le16$ and
+$\sum_\gamma(2a_\gamma)^2=2\sigma_m^2$.
+
+For \eqref{eq:S4id}: exactly as in the proof of the closed form for
+$C$ (Corollary~\ref{cor:Cexact}, applied to $\chi$ in place of
+$\chi_4$ as in Proposition~\ref{prop:varasymp}), the series
+$(\log\Xi)'(x)=\sum_{\gamma>0}2x/(x^2+\gamma^2)$,
+$\Xi(z):=\xi(\tfrac12+z,\chi)$, may be differentiated termwise on a
+neighbourhood of $x=M$: the differentiated terms
+$2(\gamma^2-x^2)/(x^2+\gamma^2)^2$ are dominated by
+$2/(x^2+\gamma^2)\le2/\gamma^2$, uniformly on compacts. Hence
+\[
+(\log\Xi)''(M)=\sum_{\gamma>0}\frac{2(\gamma^2-M^2)}{(M^2+\gamma^2)^2},
+\]
+and the identity is termwise algebra:
+\[
+16\cdot\frac{8M^2}{M^2+\gamma^2}
+-64M^2\cdot\frac{2(\gamma^2-M^2)}{(M^2+\gamma^2)^2}
+=\frac{128M^2(M^2+\gamma^2)-128M^2\gamma^2+128M^4}{(M^2+\gamma^2)^2}
+=\frac{256M^4}{(M^2+\gamma^2)^2},
+\]
+summed over $\gamma>0$, using
+$\sigma_m^2=\sum_\gamma8M^2/(M^2+\gamma^2)$
+(Proposition~\ref{prop:varid}, \eqref{eq:varidq}) and
+$(\log\Xi)''(M)=(\log\xi)''(m+1,\chi)$.
+
+For \eqref{eq:S4asymp}: $(\log\xi)''(s)=\tfrac14\psi'\bigl(\tfrac{s+a}2
+\bigr)+\bigl(\tfrac{L'}{L}\bigr)'(s,\chi)$. At $s=m+1$,
+$x:=\tfrac{m+1+a}2=\tfrac M2+\tfrac{2a+1}4$, and Euler--Maclaurin for
+$\psi'(x)=\sum_{n\ge0}(n+x)^{-2}$ (comparison with
+$\int_0^\infty(t+x)^{-2}dt=1/x$; correction $f(0)/2=1/(2x^2)$;
+remainder at most
+$\tfrac1{12}|f'(0)|+\tfrac1{12}\int_0^\infty|f''|\le\tfrac1{2x^3}$)
+gives $\psi'(x)=\tfrac1x+\tfrac1{2x^2}+O(x^{-3})$, whence
+\[
+\tfrac14\psi'(x)=\frac1{2M}\cdot\frac1{1+\frac{2a+1}{2M}}
++\frac1{2M^2}+O\Bigl(\frac1{M^3}\Bigr)
+=\frac1{2M}-\frac{2a+1}{4M^2}+\frac1{2M^2}
++O\Bigl(\frac1{M^3}\Bigr)
+=\frac1{2M}+\frac{1-2a}{4M^2}+O\Bigl(\frac1{M^3}\Bigr),
+\]
+so $64M^2\cdot\tfrac14\psi'(x)=32M+16(1-2a)+O(1/M)$. The Dirichlet
+series $(\tfrac{L'}{L})'(s,\chi)=\sum_{n\ge2}\Lambda(n)\chi(n)(\log
+n)\,n^{-s}$ is bounded at $s=m+1$ by
+$2^{-(m-1)}\sum_n\Lambda(n)(\log n)n^{-2}\ll2^{-m}$, so
+$64M^2(\tfrac{L'}{L})'(m+1)\ll M^22^{-m}=O(1/M)$ eventually. Combining
+with $16\sigma_m^2=32M\log\tfrac{qM}{2\pi}+16(2a-1)+O(1/M)$
+(Proposition~\ref{prop:varasymp}) yields \eqref{eq:S4asymp}:
+\[
+S_4(m)=32M\log\tfrac{qM}{2\pi}+16(2a-1)-32M-16(1-2a)+O(1/M).
+\qedhere
+\]
+\end{proof}
+
+Numerically \eqref{eq:S4id} and \eqref{eq:S4asymp} agree to the
+expected order: at $(q,m)=(4,100)$, the closed form gives
+$S_4=10190.02$, the $511$ ordinates plus Riemann--von Mangoldt tail
+give $10190.11$, and \eqref{eq:S4asymp} without its $O(1/M)$ gives
+$10189.98$.
+
+\begin{lemma}[characteristic function and inversion]\label{lem:invert}
+Let $V_m=\sum_{\gamma>0}2a_\gamma(m)\cos\theta_\gamma$ as above. Then:
+\begin{itemize}
+\item[(a)] the law of $V_m$ is symmetric, and its characteristic
+function is
+$\Phi_m(t)=\prod_{\gamma>0}J_0(2a_\gamma(m)t)$, the limit of the
+partial products, which is real and even; moreover for every finite
+set $F$ of positive ordinates,
+$|\Phi_m(t)|\le\prod_{\gamma\in F}|J_0(2a_\gamma(m)t)|$;
+\item[(b)] if $\Phi_m\in L^1(\mathbb R)$, then $V_m$ has a bounded
+continuous even density and
+\[
+\delta_q(m)-\tfrac12\;=\;\mathbb P(V_m>-1)-\tfrac12
+\;=\;\frac1\pi\int_0^\infty\Phi_m(t)\,\frac{\sin t}{t}\,dt ,
+\]
+the integral converging absolutely.
+\end{itemize}
+\end{lemma}
+
+\begin{proof}
+(a) For a single summand, $\mathbb E\,e^{it\cdot2a\cos\theta}
+=\frac1{2\pi}\int_0^{2\pi}e^{2iat\cos\theta}d\theta=J_0(2at)$: expand
+the exponential and integrate termwise (odd powers vanish;
+$\frac1{2\pi}\int_0^{2\pi}\cos^{2k}\theta\,d\theta
+=\binom{2k}{k}4^{-k}$), recovering the series of $J_0$; in particular
+each summand is symmetric ($\theta\mapsto\theta+\pi$ preserves the
+uniform law and flips the sign), hence so are the partial sums
+$S_N=\sum_{n\le N}2a_{\gamma_n}\cos\theta_{\gamma_n}$ and their a.s.\
+limit $V_m$. Independence gives the characteristic function of $S_N$
+as the $N$-th partial product; $S_N\to V_m$ a.s.\ implies convergence
+in distribution, so the characteristic functions converge pointwise
+to that of $V_m$, which is therefore the limit of the partial
+products, real (symmetry) and even. For the subset bound, take
+$N$ large enough that the first $N$ ordinates contain $F$; all
+factors have modulus $\le1$ by (J1), so the modulus of the $N$-th
+partial product is at most $\prod_{\gamma\in F}|J_0|$, and let
+$N\to\infty$.
+
+(b) By the Fourier inversion theorem for integrable characteristic
+functions \cite[Ch.~XV.3]{Fel71}, the law of $V_m$ has the bounded
+continuous density $f(x)=\frac1{2\pi}\int_{\mathbb R}
+e^{-itx}\Phi_m(t)\,dt$, which is even since $\Phi_m$ is real and
+even. Hence, using symmetry and then Fubini (justified by
+$\int_{\mathbb R}\int_{-1}^1|\Phi_m(t)|\,dx\,dt
+=2\|\Phi_m\|_1<\infty$),
+\[
+\mathbb P(V_m>-1)=\tfrac12+\tfrac12\,\mathbb P(|V_m|<1)
+=\tfrac12+\tfrac12\int_{-1}^1 f
+=\tfrac12+\frac1{4\pi}\int_{\mathbb R}\Phi_m(t)\Bigl(\int_{-1}^1
+e^{-itx}dx\Bigr)dt ,
+\]
+and $\int_{-1}^1e^{-itx}dx=2\sin t/t$, so
+$\mathbb P(V_m>-1)-\tfrac12=\frac1{2\pi}\int_{\mathbb R}\Phi_m(t)
+\frac{\sin t}t\,dt=\frac1\pi\int_0^\infty\Phi_m(t)\frac{\sin t}t\,dt$
+by evenness. Finally $\delta_q(m)=\mathbb P(1+V_m>0)
+=\mathbb P(V_m>-1)$.
+\end{proof}
+
+\begin{lemma}[superexponential decay for $t\ge\tfrac18$]\label{lem:bigt}
+Assume GRH$(\chi)$. Let $\rho:=\rho\bigl(1/(2\sqrt5)\bigr)<1$ and
+$\tilde\rho:=\max(\rho,\tfrac12)<1$ (absolute constants, by (J1)).
+There is $M_0(q)$ such that for all $m$ with $M\ge M_0(q)$,
+\[
+\int_{1/8}^\infty|\Phi_m(t)|\,\frac{|\sin t|}{t}\,dt
+\;\le\;17\,\tilde\rho^{\,N_0}
+\;\le\;\exp\Bigl(-\frac{\log(1/\tilde\rho)}{8\pi}\,M\log M\Bigr),
+\]
+with $N_0=N_\chi(2M)-N_\chi(M)$ as in Lemma~\ref{lem:window};
+in particular $\Phi_m\in L^1(\mathbb R)$.
+\end{lemma}
+
+\begin{proof}
+For $\gamma\in(M,2M]$ we have $M^2+\gamma^2\in(2M^2,5M^2]$, so
+\[
+a_\gamma(m)=\frac{2M}{\sqrt{M^2+\gamma^2}}\in
+\Bigl[\frac{2}{\sqrt5},\sqrt2\Bigr),
+\qquad
+2a_\gamma(m)\,t\;\ge\;\frac{4}{\sqrt5}\,t .
+\]
+By Lemma~\ref{lem:invert}(a) with $F=\{\gamma\in(M,2M]\}$ (a set of
+$N_0$ ordinates, nonempty for $M\ge M_0(q)$):
+\emph{(i)} for $t\ge\tfrac18$, every factor has argument
+$\ge\tfrac{4}{\sqrt5}\cdot\tfrac18=\tfrac1{2\sqrt5}$, so by (J1)
+$|\Phi_m(t)|\le\rho^{N_0}$;
+\emph{(ii)} for any $t>0$, by (J2),
+\[
+|\Phi_m(t)|\;\le\;
+\Bigl(\frac{8}{\pi}\Bigl(\frac{4t}{\sqrt5}\Bigr)^{-1/2}\Bigr)^{N_0}
+=\Bigl(\frac{c_3}{\sqrt t}\Bigr)^{N_0},
+\qquad
+c_3:=\frac{4\cdot5^{1/4}}{\pi}=1.9040\ldots<2 ,
+\]
+so that $c_3/\sqrt t\le\tfrac12$ for $t\ge16$. Using
+$|\sin t|/t\le1$ on $[\tfrac18,16]$ and $|\sin t|\le1$ beyond, and
+(for $M\ge M_0(q)$, by Lemma~\ref{lem:window}) $N_0\ge5$:
+\[
+\int_{1/8}^{16}|\Phi_m|\,\frac{|\sin t|}t\,dt\le16\rho^{N_0},
+\qquad
+\int_{16}^\infty|\Phi_m|\,\frac{dt}t
+\le2^{5-N_0}c_3^5\int_{16}^\infty t^{-7/2}\,dt
+=2^{5-N_0}c_3^5\cdot\frac{2}{5\cdot1024}
+\le\frac{2^{-N_0}}{2},
+\]
+where the middle step keeps five factors $(c_3/\sqrt t)^5$ and bounds
+the remaining $N_0-5$ by $2^{-(N_0-5)}$. The sum is at most
+$17\tilde\rho^{\,N_0}$, and with
+$N_0\ge\tfrac{M}{4\pi}\log M$ the final bound follows for
+$M\ge M_0(q)$ enlarged if necessary (to absorb the factor $17$ into
+half the exponent). The same estimates with $|\sin t|/t$ replaced by
+$1$ on $[\tfrac18,16]$ and by nothing beyond show
+$\int_{1/8}^\infty|\Phi_m|<\infty$; on $[0,\tfrac18]$, $|\Phi_m|\le1$.
+Hence $\Phi_m\in L^1$.
+\end{proof}
+
+\subsection*{Proof of Theorem~\ref{thm:dissolution}}
+
+\begin{proof}
+Throughout, $M\ge M_0(q)$ so that Lemmas~\ref{lem:window} and
+\ref{lem:bigt} apply, and $G:=(2\pi\sigma_m^2)^{-1/2}$. By
+Lemma~\ref{lem:bigt}, $\Phi_m\in L^1$, so Lemma~\ref{lem:invert}(b)
+gives
+\begin{equation}\label{eq:GP}
+\delta_q(m)-\tfrac12
+=\frac1\pi\int_0^{1/8}\Phi_m(t)\frac{\sin t}t\,dt
++O\bigl(e^{-c_qM\log M}\bigr),
+\qquad c_q:=\frac{\log(1/\tilde\rho)}{8\pi}.
+\end{equation}
+
+\emph{The Gaussian factorization on $[0,\tfrac18]$.} For
+$0\le t\le\tfrac18$ every argument satisfies
+$2a_\gamma(m)t\le4t\le\tfrac12$, since $a_\gamma\le2$. By (J3) each
+factor is $\ge\tfrac34>0$ and
+$\sum_\gamma|\log J_0(2a_\gamma t)|\le\sum_\gamma\bigl(a_\gamma^2t^2
++(2a_\gamma t)^4/17\bigr)<\infty$, so the limit of the partial
+products is
+\begin{equation}\label{eq:smallt}
+\Phi_m(t)=\exp\Bigl(-\frac{\sigma_m^2t^2}{2}+E(t)\Bigr),
+\qquad
+E(t):=\sum_{\gamma>0}\Bigl(\log J_0(2a_\gamma t)
++\frac{(2a_\gamma t)^2}{4}\Bigr),
+\end{equation}
+using $\sum_\gamma(2a_\gamma)^2t^2/4=\sigma_m^2t^2/2$. By (J3),
+$|E(t)|\le\tfrac{t^4}{17}S_4$, and since $S_4\le32\sigma_m^2$
+(Lemma~\ref{lem:S4mom}) and $t\le\tfrac18$,
+\begin{equation}\label{eq:Eunif}
+|E(t)|\;\le\;\frac{t^2}{17}\cdot\frac{1}{64}\cdot32\,\sigma_m^2
+\;=\;\frac{\sigma_m^2t^2}{34}
+\qquad\bigl(0\le t\le\tfrac18\bigr),
+\end{equation}
+so that $|\Phi_m(t)|\le e^{-(8/17)\sigma_m^2t^2}$ there: the Gaussian
+decay survives the correction uniformly.
+
+\emph{Decomposition.} Write, on $[0,\tfrac18]$,
+$\Phi_m\frac{\sin t}t
+=e^{-\sigma^2t^2/2}
+-e^{-\sigma^2t^2/2}\bigl(1-\tfrac{\sin t}t\bigr)
++e^{-\sigma^2t^2/2}\bigl(e^{E}-1\bigr)\tfrac{\sin t}t$
+(abbreviating $\sigma=\sigma_m$), so that
+\begin{equation}\label{eq:decomp}
+\frac1\pi\int_0^{1/8}\Phi_m\frac{\sin t}t\,dt
+\;=\;G-T_1-T_2+T_3 ,
+\end{equation}
+with, using $\frac1\pi\int_0^\infty e^{-\sigma^2t^2/2}dt=G$ and the
+moments $\frac1\pi\int_0^\infty t^{2k}e^{-\sigma^2t^2/2}dt
+=(2k-1)!!\,G\,\sigma^{-2k}$:
+\begin{itemize}
+\item[$T_1$:] the completed Gaussian tail,
+$0\le T_1=\frac1\pi\int_{1/8}^\infty e^{-\sigma^2t^2/2}dt
+\le\frac{8}{\pi\sigma^2}e^{-\sigma^2/128}$;
+\item[$T_2$:] the $\sin$ correction: since
+$0\le1-\frac{\sin t}t\le\frac{t^2}6$ for all $t>0$ (from
+$t-\frac{t^3}6\le\sin t\le t$),
+\[
+0\;\le\;T_2\;=\;\frac1\pi\int_0^{1/8}
+e^{-\sigma^2t^2/2}\Bigl(1-\frac{\sin t}t\Bigr)dt
+\;\le\;\frac1{6\pi}\int_0^{\infty}t^2e^{-\sigma^2t^2/2}\,dt
+\;=\;\frac{G}{6\sigma^{2}} ;
+\]
+\item[$T_3$:] the Bessel correction: by \eqref{eq:Eunif} and
+$|e^w-1|\le|w|e^{|w|}$,
+\[
+|T_3|\le\frac1\pi\int_0^{1/8}e^{-\sigma^2t^2/2}
+\cdot\frac{t^4S_4}{17}\,e^{\sigma^2t^2/34}\,dt
+\le\frac{S_4}{17\pi}\int_0^\infty t^4e^{-\frac{8}{17}\sigma^2t^2}dt
+=\frac{3S_4}{8\cdot17\sqrt\pi}
+\Bigl(\frac{17}{8}\Bigr)^{5/2}\sigma^{-5}
+\le\frac{S_4}{12\,\sigma^{5}}\le\frac{G\,S_4}{4\,\sigma^{4}} ,
+\]
+the last step by $\sigma^{-5}=\sqrt{2\pi}\,G\sigma^{-4}$ and
+$\sqrt{2\pi}/12<\tfrac14$.
+\end{itemize}
+
+\emph{Part (i).} By Proposition~\ref{prop:varasymp} there is
+$M_1(q)\ge M_0(q)$ with
+$ML\le\sigma_m^2\le3ML$ for $M\ge M_1(q)$, where
+$L=\log\tfrac{qM}{2\pi}\asymp_q\log M$; and
+$S_4\le33ML$ by \eqref{eq:S4asymp}. Hence
+\[
+\frac{T_2}{G}\le\frac1{6ML},\qquad
+\frac{|T_3|}{G}\le\frac{33ML}{4M^2L^2}\le\frac{9}{ML},\qquad
+\frac{T_1+O(e^{-c_qM\log M})}{G}
+\ll\sigma\,e^{-\sigma^2/128}+\sigma\,e^{-c_qM\log M}
+\le\frac1{ML}
+\]
+for $M$ large, and \eqref{eq:GP}--\eqref{eq:decomp} give
+$\delta_q(m)-\tfrac12=G\bigl(1+O_q(1/(ML))\bigr)$, which is (i).
+
+\emph{Part (ii).} Refine $T_2$ and $T_3$ by one order each. For
+$T_2$: on $[0,\tfrac18]$ the alternating series of $\frac{\sin t}t$
+has decreasing terms, so
+$\bigl|1-\frac{\sin t}t-\frac{t^2}6\bigr|\le\frac{t^4}{120}$, and
+extending the integral to $\infty$ costs $O(e^{-\sigma^2/129})$:
+\[
+T_2=\frac1{6\pi}\int_0^{\infty}t^2e^{-\sigma^2t^2/2}dt
++O\Bigl(\frac1{120\pi}\int_0^\infty t^4e^{-\sigma^2t^2/2}dt\Bigr)
++O\bigl(e^{-\sigma^2/129}\bigr)
+=\frac{G}{6\sigma^2}+O\bigl(G\sigma^{-4}\bigr).
+\]
+For $T_3$: by (J4), $E(t)=-\frac{t^4}{64}S_4+E_2(t)$ with
+$|E_2(t)|\le\frac{t^6}{80}S_6\le\frac{t^6}{5}S_4$
+(Lemma~\ref{lem:S4mom}); and $e^E-1=E+\omega$ with
+$|\omega|\le\frac{E^2}2e^{|E|}
+\le\frac{t^8S_4^2}{578}\,e^{\sigma^2t^2/34}$ by \eqref{eq:Eunif}.
+Hence
+\[
+T_3=-\frac{S_4}{64\pi}\int_0^{1/8}t^4e^{-\sigma^2t^2/2}
+\frac{\sin t}t\,dt
++O\Bigl(\frac{S_4}{5\pi}\int_0^\infty
+t^6e^{-\sigma^2t^2/2}dt\Bigr)
++O\Bigl(\frac{S_4^2}{578\pi}\int_0^\infty
+t^8e^{-\frac{8}{17}\sigma^2t^2}dt\Bigr),
+\]
+and in the first integral $\frac{\sin t}t=1+O(t^2)$, so, with the
+moment values and extension to $\infty$ as before,
+\[
+T_3=-\frac{3\,S_4}{64}\,G\,\sigma^{-4}
++O\bigl(G\,S_4\,\sigma^{-6}\bigr)
++O\bigl(G\,S_4^2\,\sigma^{-8}\bigr).
+\]
+Since $\sigma^2\asymp_qML$ and $S_4\asymp_qML$, the error terms
+$G\cdot O(\sigma^{-4}+S_4\sigma^{-6}+S_4^2\sigma^{-8})$ are all
+$G\cdot O_q\bigl((ML)^{-2}\bigr)$, and the exponentially small terms
+$T_1$, \eqref{eq:GP} are absorbed. Collecting,
+\[
+\delta_q(m)-\tfrac12
+=G\Bigl(1-\frac1{6\sigma_m^2}-\frac{3S_4}{64\sigma_m^4}
++O_q\bigl((M\log M)^{-2}\bigr)\Bigr).
+\]
+
+\emph{Part (iii).} By Proposition~\ref{prop:varasymp},
+$\sigma_m^2=2ML+O(1)$, so
+$(2\pi\sigma_m^2)^{-1/2}=(4\pi ML)^{-1/2}(1+O(1/(ML)))$; combine with
+(i).
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{cor:dissolution-race}]
+$L(\tfrac12,\chi_4)>0$ unconditionally, so
+Theorem~\ref{thm:dissolution} applies to $\chi_4$; and under
+GRH$(\chi_4)$+LI$(\chi_4)$, Theorem~\ref{thm:interp}(ii) gives
+$\delta(m)=\nu_m\bigl((0,\infty)\bigr)=\mathbb P(X_{m,\chi_4}>0)
+=\delta_4(m)$.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{cor:secondorder}]
+Insert $\sigma_m^2=2ML+O(1)$ and
+$S_4=32M(L-1)+O(1)$ (Proposition~\ref{prop:varasymp},
+Lemma~\ref{lem:S4mom}) into (ii):
+\[
+\frac1{6\sigma_m^2}=\frac1{12ML}+O\Bigl(\frac1{M^2L^2}\Bigr),
+\qquad
+\frac{3S_4}{64\sigma_m^4}
+=\frac{96M(L-1)}{256M^2L^2}+O\Bigl(\frac1{M^2L^2}\Bigr)
+=\frac{3}{8ML}+O\Bigl(\frac1{ML^2}\Bigr),
+\]
+and $\frac1{12}+\frac38=\frac{11}{24}$; the error
+$O((ML)^{-2})$ of (ii) is also $O(1/(ML^2))$.
+\end{proof}
+
+\begin{remark}[numerical consistency]\label{rem:dissolution-numerics}
+Table~\ref{tab:dissolution} compares the theorem with deterministic
+Gil--Pelaez reference densities (computational, not part of any
+proof): $511$ resp.\ $537$ ordinates, unseen zeros Gaussianized with
+the \emph{exact} tail variance of Remark~\ref{rem:tails}, trapezoidal
+inversion with grid-halving and window-doubling stable to
+$10^{-9}$. Both $\sigma_m^2$ and $S_4$ are evaluated by their closed
+forms \eqref{eq:varidq}, \eqref{eq:S4id} --- no zero data enters the
+predictions. Gaussianizing the unseen zeros biases the \emph{reference}
+values themselves: on $t\le\tfrac18$ the $T_3$ estimate, applied to
+the tail factors alone, rigorously bounds the relative bias by
+$0.21\,S_4^{\mathrm{tail}}/\sigma_m^4$; on $t>\tfrac18$ that estimate
+does not apply, and we instead bound the remaining bias by the same
+integrand with the \emph{computed} $|\Phi_m|$ inserted, which is below
+$9\times10^{-7}$ at every table point. The total ---
+$9.9\times10^{-6}$ at $(q,m)=(4,100)$, less elsewhere in the table ---
+is the accuracy floor of the comparison; the $t>\tfrac18$ piece is a
+numerical evaluation, not a theorem, on the same footing as the
+reference densities themselves. The certified enclosures of Table~\ref{tab:enclose},
+computed by an independent route, contain the (unrounded) reference
+values used here at all four table points (e.g.\
+$0.51377836\in[0.5137782134,0.5137783837]$ at $(4,100)$; the table
+entry $0.5137784$ is that reference rounded to seven decimals and lies
+just above the enclosure's upper end, consistent with the one-sided
+Gaussianization bias of the reference noted above).
+
+\begin{table}[h]\centering
+\begin{tabular}{lcccccc}
+\toprule
+$(q,m)$ & $\sigma_m^2$ & $S_4$ & $\delta_q(m)$ (ref.) &
+$\dfrac{\delta_q(m)-\frac12}{(2\pi\sigma_m^2)^{-1/2}}-1$ &
+$-\dfrac1{6\sigma_m^2}-\dfrac{3S_4}{64\sigma_m^4}$ &
+residual \\
+\midrule
+$(4,8)$   & $29.7125$  & $219.83$   & $0.5718701$ & $-1.80\times10^{-2}$ & $-1.73\times10^{-2}$ & $-7.4\times10^{-4}$ \\
+$(4,20)$  & $106.3260$ & $1061.32$  & $0.5384553$ & $-6.05\times10^{-3}$ & $-5.97\times10^{-3}$ & $-7.9\times10^{-5}$ \\
+$(4,100)$ & $836.8744$ & $10190.02$ & $0.5137784$ & $-8.80\times10^{-4}$ & $-8.81\times10^{-4}$ & $+7.0\times10^{-7}$ \\
+$(3,60)$  & $407.9701$ & $4607.56$  & $0.5197175$ & $-1.71\times10^{-3}$ & $-1.71\times10^{-3}$ & $-4.9\times10^{-6}$ \\
+\bottomrule
+\end{tabular}
+\caption{The dissolution law against deterministic reference
+densities. Column 5 is the observed relative deviation from the
+leading term of Theorem~\ref{thm:dissolution}(i); column 6 is the
+second-order term of (ii); the residual --- the relative error of the
+two-term prediction, equal to
+$(\text{col.~5}-\text{col.~6})/(1+\text{col.~6})$ --- shrinks like
+$(M\log M)^{-2}$, as (ii) requires --- indeed at $(4,100)$ it is below
+the $9.9\times10^{-6}$ modelling floor of the reference value, i.e.\
+(ii) is confirmed there to the full accuracy of the computation. The
+$m=100$ row is the consistency check promised in the introduction:
+$(2\pi\cdot836.8744)^{-1/2}=0.0137905$ against
+$\delta_4(100)-\tfrac12=0.0137784$, a relative gap of
+$8.8\times10^{-4}$, against the theorem's error scale
+$1/(M\log\tfrac{qM}{2\pi})=1/418=2.4\times10^{-3}$.}
+\label{tab:dissolution}
+\end{table}
+
+Corollary~\ref{cor:secondorder} at $(4,100)$: $-\tfrac{11}{24}(ML)^{-1}
+=-1.10\times10^{-3}$ against the observed $-8.80\times10^{-4}$; the
+difference, $2.2\times10^{-4}$, is consistent with the corollary's
+$O(1/(ML^2))=O(5.8\times10^{-4})$ --- at these heights $L\approx4.2$
+is still small, which is why the table works with (ii) rather than
+the corollary. The reference values $\delta_4(100)=0.5137784$ and
+$\delta_3(60)=0.5197175$ refine the six-decimal values of the
+introduction: $0.513778$ in Table~\ref{tab:delta}, and $0.519716$ in
+the text beside it (the $(3,60)$ point is not a table entry; its value
+shifts by $1.5\times10^{-6}$ upon replacing the estimated tail
+variance of the original computation by the exact one).
+\end{remark}
+
+\begin{remark}[scope, and what is not proved]\label{rem:dissolution-scope}
+(1) \emph{Race interpretation.} For $q=4$,
+Corollary~\ref{cor:dissolution-race} makes the dissolution law a
+statement about the weighted prime race itself. For $q=3$ the proof
+of Theorem~\ref{thm:interp} goes through verbatim (nothing in
+Lemmas~\ref{lem:trunc}--\ref{lem:squares} or the
+\cite{ANS14} verification is specific to the modulus $4$ beyond
+$\chi$ being real, primitive and nonprincipal), but we have not
+restated it, so for $q=3$ --- and for every other real primitive
+character --- Theorem~\ref{thm:dissolution} is, in this paper, a
+theorem about the limiting random variable $X_{m,\chi}$ only. (2)
+\emph{Hypotheses.} LI is not among the hypotheses of
+Theorem~\ref{thm:dissolution}; GRH enters through the reality of the
+ordinates and the closed forms \eqref{eq:varidq}, \eqref{eq:S4id},
+and $L(\tfrac12,\chi)\ne0$ (automatic for $q=3,4$) through the
+Hadamard product. (3) \emph{Constants.} The constants are effective
+in principle ($\rho$ is a computable supremum, numerically $0.98754$;
+the Riemann--von Mangoldt constants for fixed $q$ are classical) but
+the large-$t$ bound uses only the zeros in $(M,2M]$ and is extremely
+wasteful; no attempt has been made to make $M_0(q)$ small, and at the
+heights of Table~\ref{tab:dissolution} the \emph{proved} bounds on
+the tail terms are not yet numerically dominant --- the table is a
+consistency check on the asymptotics, not a certified enclosure. (4)
+\emph{Uniformity.} Nothing is claimed uniformly in $q$; a uniform
+version would require the window count and
+Proposition~\ref{prop:varasymp} with explicit $q$-dependence,
+which we have not carried out (cf.\ the $q$-aspect asymptotics of
+Fiorilli--Martin \cite{FM13}, whose densities-near-$\tfrac12$
+regime is the natural companion statement). (5) The reference
+densities of Remark~\ref{rem:dissolution-numerics} remain
+conditional computations under GRH+LI, as throughout this
+literature.
+\end{remark}
+
+
 \section{Methods and verification}\label{sec:methods}
 
 Zeros of $L(s,\chi_4)$ and $L(s,\chi_3)$ ($511$ resp.\ $537$ ordinates
 to $25$ digits) were computed by Hardy $Z$-scans with derived phases,
 validated by reality of $Z$ to $\sim10^{-27}$, Riemann--von Mangoldt
-counts, and the known first ordinates. Densities: Monte Carlo over
-independent uniform phases (LI), $2$--$4\times10^6$ samples, with the
-unseen-zero tail added as an independent Gaussian with variance from
-the counting density; calibration anchors $\delta_4(0)=0.99593$,
-$\delta_3(0)=0.99904$ against \cite{RS94}. Exact races: segmented
+counts, and the known first ordinates. \subsection*{Certified enclosures for the densities}
+\label{subsec:certified}
+
+The densities of Table~\ref{tab:delta} were produced with a tail model:
+the unseen zeros $\gamma>\Gamma$ ($\Gamma=\gamma_{511}=639.9157\ldots$
+for $\chi_4$, $\gamma_{537}=699.7747\ldots$ for $\chi_3$) were replaced
+by a Gaussian whose variance was \emph{estimated} from the
+zero-counting density. This subsection replaces the estimate by a
+certified computation and states precisely which error terms are proved
+and which remain estimated. Throughout, the standing hypotheses are
+GRH$(\chi)$ + LI$(\chi)$ (as for every density in this literature)
+together with the completeness of the computed ordinate list up to
+$\Gamma$ (validated by the Hardy $Z$-scans and Riemann--von Mangoldt
+counts described above; the enclosure script repeats a smoothed count
+check, which matches to $0.6$ resp.\ $1.3$ of a zero, within the
+$S(T)$ fluctuation).
+
+Under LI, $\delta_q(m)=\mathbb P(1+V>0)$ with
+$V=\sum_{\gamma>0}2a_\gamma(m)\cos\theta_\gamma$, whose characteristic
+function factors over the computed and unseen ordinates,
+\[
+\Phi(t)\;=\;\prod_{\gamma>0}J_0\bigl(2a_\gamma t\bigr)
+\;=\;P(t)\,\Psi(t),\qquad
+P=\prod_{\gamma\le\Gamma},\quad \Psi=\prod_{\gamma>\Gamma}.
+\]
+Since $|J_0(x)|\le\min\{1,\sqrt{2/(\pi x)}\}$ for $x>0$ (the classical
+envelope; the extremal value $\sup_{x>0}\sqrt x\,|J_0(x)|=\sqrt{2/\pi}
+=0.79788\ldots$ is re-verified numerically in the script, which uses
+the rounded-up constant $0.8$), $\Phi$ is integrable, $V$ has a
+continuous density, and the Gil--Pelaez inversion is an identity:
+\begin{equation}\label{eq:gilpelaez}
+\delta_q(m)\;=\;\frac12+\frac1\pi\int_0^\infty
+\Phi(t)\,\frac{\sin t}{t}\,dt .
+\end{equation}
+The enclosure controls the three gaps between \eqref{eq:gilpelaez} and
+what a finite computation can evaluate.
+
+\emph{(i) The tail variance is certified, not estimated.} By
+Proposition~\ref{prop:varid},
+\[
+V_T\;:=\;\sum_{\gamma>\Gamma}2a_\gamma(m)^2
+\;=\;4M\,\frac{\Lambda'}{\Lambda}(m+1)-\sum_{\gamma\le\Gamma}2a_\gamma(m)^2 ,
+\]
+with no reference to the zero-counting density. The subtracted finite
+sum inherits the $25$-digit accuracy of the ordinates (effect
+$<10^{-20}$); the closed form is evaluated by mpmath at $40$ digits
+through two independent routes that must agree to $25$ digits, anchored
+at $L(2,\chi_4)=G$ (Catalan), at a directly summed series for
+$L(2,\chi_3)$, at $(L'/L)(1,\chi_q)$ expressed through generalized
+Stieltjes constants, and at the closed form for $\sigma_0^2$. This is
+high-precision floating point, \emph{not} interval arithmetic; we
+budget a defensive slack of $10^{-15}$ for it, absorbed into the error
+radius below. The script aborts if any $V_T\le0$; in fact
+$V_T$ ranges from $0.0030943$ ($q=3$, $m=0$) to $139.71$
+($q=4$, $m=100$); see Table~\ref{tab:enclose}.
+
+\emph{(ii) The unseen product is a Gaussian with a proved quartic
+correction.} Since $a_\gamma=2M/\sqrt{M^2+\gamma^2}$ is strictly
+decreasing in $\gamma$, every unseen ordinate satisfies
+$2a_\gamma t\le 2a_\Gamma t\le1$ whenever
+$t\le t_{\max}:=1/(2a_\Gamma)$. On $|z|\le1$ we use
+\begin{equation}\label{eq:quartic}
+0\;\le\;-\log J_0(z)-\frac{z^2}{4}\;\le\;c_4\,z^4,
+\qquad
+c_4=-\log J_0(1)-\tfrac14=0.0176210647\ldots,
+\end{equation}
+with the \emph{sharp} constant: from the product
+$J_0(z)=\prod_n(1-z^2/j_{0,n}^2)$ over the Bessel zeros,
+$-\log J_0(z)=\sum_{k\ge1}(\sigma_k/k)z^{2k}$ with Rayleigh sums
+$\sigma_k=\sum_nj_{0,n}^{-2k}>0$, valid for $|z|<j_{0,1}=2.40\ldots$;
+$\sigma_1=\tfrac14$ (Rayleigh), and $z^{2k}\le z^4$ for $k\ge2$,
+$|z|\le1$, so the middle member of \eqref{eq:quartic} equals
+$\sum_{k\ge2}(\sigma_k/k)z^{2k}\in[0,c_4z^4]$ with
+$c_4=\sum_{k\ge2}\sigma_k/k$, attained at $z=1$. (The script uses the
+rounded-up $c_4'=0.018$ and re-verifies \eqref{eq:quartic} on a grid.)
+Summing over the unseen zeros: for $0\le t\le t_{\max}$,
+\[
+\Psi(t)=\exp\Bigl(-\tfrac12V_Tt^2+\eps(t)\Bigr),
+\qquad
+-c_4'\,S_4\,t^4\le\eps(t)\le0,
+\qquad
+S_4:=\!\!\sum_{\gamma>\Gamma}\!(2a_\gamma)^4
+\le(2a_\Gamma)^2\cdot 2V_T,
+\]
+the last bound because $(2a_\gamma)^2\le(2a_\Gamma)^2$ beyond $\Gamma$
+and $\sum_{\gamma>\Gamma}(2a_\gamma)^2=2V_T$. The sign information is
+exploited: the Gaussian model \emph{over}states $|\Psi|$, and with
+$w(t):=c_4'S_4t^4$ the factor $e^{\eps(t)}\in[e^{-w},1]$ is enclosed by
+its midpoint,
+\[
+\Bigl|e^{\eps(t)}-\tfrac{1+e^{-w(t)}}2\Bigr|\;\le\;\tfrac{1-e^{-w(t)}}2,
+\]
+which halves the tail-model radius relative to the symmetric bound
+$e^{w}-1$.
+
+\emph{(iii) Enclosure.} With $G(t):=e^{-V_Tt^2/2}$ and a truncation
+point $T_1\le t_{\max}$,
+\[
+\delta_q(m)\;=\;\frac12+\frac1\pi\Bigl(\,
+\underbrace{\int_0^{T_1}\!P\,G\,\frac{1+e^{-w}}2\,\frac{\sin t}{t}\,dt}_{I,\ \text{computed}}
+\;+\;R\Bigr),
+\qquad |R|\;\le\;E_1+E_2,
+\]
+\[
+E_1=\int_0^{T_1}\!|P|\,G\,\frac{1-e^{-w}}2\,dt
+\quad(\text{tail-model radius, from the midpoint enclosure of }e^{\eps}),
+\]
+\[
+E_2=\frac{(0.8)^K}{\sqrt{\prod_{i\le K}2a_{\gamma_i}}}\cdot
+\frac{T_1^{-K/2}}{K/2}
+\;\ge\;\Bigl|\int_{T_1}^\infty\!\Phi\,\frac{\sin t}{t}\,dt\Bigr|
+\quad(\text{truncation; envelope on the first }K\text{ ordinates,}
+\]
+all other factors bounded by $1$, $|\sin t/t|\le1/t$). The script
+chooses $K\in\{24,\dots,72\}$ and $T_1\le t_{\max}$ so that
+$E_2\le\pi\times10^{-15}$; this holds at every $(q,m)$ computed.
+What remains \emph{estimated} rather than certified, stated openly:
+the quadrature error of $I$ and of $E_1$ (composite Simpson on $2^{17}$
+subintervals in IEEE double precision; a step-doubling Richardson
+comparison is below $10^{-12}$ at every $(q,m)$, and is budgeted as
+$E_3=10^{-12}$; $E_1$, itself a bound of size $\lesssim5\times10^{-7}$,
+is inflated by $50\%$ against its own quadrature error), the
+double-precision rounding of the $511$-fold product ($\lesssim10^{-13}$
+relative), and the $10^{-15}$ variance slack of (i), together budgeted
+as $E_4=2\times10^{-11}$ plus the computed slack sensitivity. The
+radius of the quoted intervals is $(E_1+E_2+E_3+E_4)/\pi$, dominated
+everywhere by the proved bound $E_1$. These enclosures are rigorous
+\emph{modulo} exactly the items just listed (double-precision
+quadrature with Richardson control and the anchored $40$-digit
+evaluation of $\sigma_m^2$); no interval arithmetic was used, and we do
+not claim otherwise.
+
+\begin{table}[h]\centering
+\begin{tabular}{crrllcr}
+\toprule
+$q$ & $m$ & $V_T$\quad\ & $\delta_q(m)$ lower & $\delta_q(m)$ upper &
+width & Tab.~\ref{tab:delta} $-$ mid \\
+\midrule
+$4$ & $0$   & $0.0034836$ & $0.9959278380$ & $0.9959280127$ & $1.7\times10^{-7}$ & $+0.07$ \\
+$4$ & $1$   & $0.0313527$ & $0.7976303685$ & $0.7976304296$ & $6.1\times10^{-8}$ & $-2.40$ \\
+$4$ & $2$   & $0.0870906$ & $0.6945210810$ & $0.6945211213$ & $4.0\times10^{-8}$ & $-1.10$ \\
+$4$ & $3$   & $0.1706968$ & $0.6458510415$ & $0.6458510746$ & $3.3\times10^{-8}$ & $-1.06$ \\
+$4$ & $8$   & $1.0067182$ & $0.5718700860$ & $0.5718701185$ & $3.3\times10^{-8}$ & $-1.10$ \\
+$4$ & $20$  & $5.8541890$ & $0.5384552785$ & $0.5384553290$ & $5.1\times10^{-8}$ & $-0.30$ \\
+$4$ & $100$ & $139.71245$ & $0.5137782134$ & $0.5137783837$ & $1.7\times10^{-7}$ & $-0.30$ \\
+\midrule
+$3$ & $0$   & $0.0030943$ & $0.9990630500$ & $0.9990633364$ & $2.9\times10^{-7}$ & $-0.19$ \\
+$3$ & $1$   & $0.0278484$ & $0.8368804319$ & $0.8368805308$ & $9.9\times10^{-8}$ & $-3.48$ \\
+$3$ & $2$   & $0.0773564$ & $0.7234728791$ & $0.7234729425$ & $6.3\times10^{-8}$ & $-2.91$ \\
+$3$ & $3$   & $0.1516181$ & $0.6665542399$ & $0.6665542896$ & $5.0\times10^{-8}$ & $-2.26$ \\
+$3$ & $8$   & $0.8942043$ & $0.5785355754$ & $0.5785356134$ & $3.8\times10^{-8}$ & $-1.59$ \\
+$3$ & $20$  & $5.2001295$ & $0.5407681867$ & $0.5407682369$ & $5.0\times10^{-8}$ & $-1.21$ \\
+$3$ & $60$  & $45.202127$ & $0.5197174290$ & $0.5197175306$ & $1.0\times10^{-7}$ & $-1.48$ \\
+\bottomrule
+\end{tabular}
+\caption{Certified enclosures $[\delta_{\mathrm{lo}},
+\delta_{\mathrm{hi}}]$ for the logarithmic densities, under
+GRH + LI and completeness of the ordinate lists to height $\Gamma$
+($511$ ordinates for $\chi_4$, $537$ for $\chi_3$). $V_T$ is the
+certified variance of the unseen-zero tail. The last column is the
+deviation of the previously printed six-decimal value from the interval
+midpoint, in units of $10^{-6}$; entries exceeding $1$ in absolute
+value are discrepancies beyond the sixth decimal (ten of the fourteen).
+All widths are below $3\times10^{-7}$, against the design target
+$5\times10^{-6}$.}
+\label{tab:enclose}
+\end{table}
+
+\emph{Corrected values, and what was wrong.} The enclosures confirm
+Table~\ref{tab:delta} at $(q,m)=(4,0)$, $(4,20)$, $(4,100)$, $(3,0)$
+and move the sixth decimal in the other ten entries by $1$--$4$ units;
+the corrected six-decimal values are
+\[
+\delta_4:\ 0.995928,\ 0.797630,\ 0.694521,\ 0.645851,\ 0.571870,\
+0.538455,\ 0.513778;
+\]
+\[
+\delta_3:\ 0.999063,\ 0.836880\,(*),\ 0.723473,\ 0.666554,\ 0.578536,\
+0.540768,\ 0.519717\,(*),
+\]
+$(*)$: two sixth decimals are \emph{not resolved} by the enclosures.
+At $(3,1)$ the interval $[0.83688043,0.83688053]$ straddles the
+rounding boundary $0.8368805$ (the value is $0.836880$ or $0.836881$;
+the midpoint $0.83688048$ sits within $2.5\times10^{-9}$ of the
+boundary, so no computation at this zero height can be expected to
+settle it). At $(3,60)$ the interval $[0.51971743,0.51971753]$
+straddles $0.5197175$ (the value is $0.519717$ or $0.519718$). All
+twelve remaining sixth decimals, including $(4,100)$, are certified by
+the enclosures. The cause of the drift is
+quantitatively identified: re-running the certified pipeline with the
+old smoothed-tail variance in place of $V_T$ reproduces the deviations
+(e.g.\ $-3.2\times10^{-6}$ of the observed $-3.5\times10^{-6}$ at
+$(3,1)$, the small remainder being the old code's coarser quadrature).
+The classical anchors are unaffected: our intervals contain
+$0.9959279\ldots$ and $0.9990632\ldots$ at $m=0$, consistent with
+\cite{RS94,FM13} to all six printed decimals.
+
+\emph{Correction to Remark~\ref{rem:tails}.} That remark asserted that
+replacing the estimated tail by the exact one moves the densities of
+Table~\ref{tab:delta} by less than their quoted precision. The
+enclosures above show this is false at the sixth decimal for ten of
+fourteen entries (largest shift $3.5\times10^{-6}$, at $(q,m)=(3,1)$);
+the remark's claim should be read as ``below $5\times10^{-6}$'', and
+Table~\ref{tab:enclose} now supersedes the affected entries.
+
+\emph{The two computations, honestly described.} The deterministic
+Gil--Pelaez inversion and the Monte Carlo evaluation of
+Section~\ref{sec:methods} share their inputs: the identical
+$511$- resp.\ $537$-ordinate lists and (in their original form) the
+identical Gaussianized tail. Their mutual agreement (largest deviation
+$5.5\times10^{-4}$, i.e.\ $2.2$ binomial standard errors at the actual
+sample counts of Table~\ref{tab:delta}) therefore validated only the
+\emph{evaluation} step ---
+quadrature against sampling --- and could not have detected an error in
+the shared tail model. They are independent as implementations, not as
+models. The enclosures of this subsection close that gap from the model
+side: the tail variance is now the certified $V_T$ of (i), the
+non-Gaussianity of the tail is bounded by the proved $E_1$, and a
+Monte Carlo rerun with the certified $V_T$ in the tail agrees with the
+enclosure midpoints within half a standard error at each tested point
+($2\times10^6$ samples at $(q,m)=(4,0),(4,1),(3,1)$).
+
+\emph{General real primitive modulus.} For use beyond $q\in\{3,4\}$ we
+record the general form of Theorem~\ref{thm:interp} and of the variance
+identity. Let $\chi$ be a real primitive character mod $q$ with
+$\chi(-1)=(-1)^a$, $a\in\{0,1\}$, and assume GRH$(\chi)$, LI$(\chi)$,
+and the no-central-zero hypothesis
+\[
+\mathrm{NCZ}(\chi):\qquad L(\tfrac12,\chi)\neq0 .
+\]
+Define $R_m(x)=-\sum_{p\le x}\chi(p)p^m\log p$ (nonresidues minus
+residues), $E_m=(2m+1)x^{-(m+1/2)}R_m$, and
+$a_\gamma(m)=2M/\sqrt{M^2+\gamma^2}$ over the positive ordinates of
+$L(s,\chi)$. Then parts (i)--(iii) of Theorem~\ref{thm:interp} hold
+verbatim with $C(\chi)=\sum_{\gamma_\chi>0}2\gamma_\chi^{-2}$, and the
+variance identity becomes, with
+$\xi(s,\chi)=(q/\pi)^{(s+a)/2}\Gamma\bigl(\tfrac{s+a}2\bigr)L(s,\chi)$,
+\[
+\sigma_m^2(\chi)\;=\;4M\,\frac{\xi'}{\xi}(m+1,\chi),
+\qquad
+C(\chi)\;=\;(\log\xi)''(\tfrac12,\chi).
+\]
+What changes and what does not. \emph{Unchanged:} the prime-square bias
+term --- the $k=2$ prime powers contribute
+$\sum_{p\le\sqrt x,\,p\nmid q}p^{2m}\log p=x^{m+1/2}/(2m+1)+o(x^{m+1/2})$
+because $\chi(p)^2=1$ for every $p\nmid q$ and the finitely many $p\mid q$
+contribute $O_m(x^{m}\log x)$, so the normalized mean is $1$ for every
+real $\chi$; the Chernoff/Chebyshev bounds of (iii), which use only the
+arcsine moment generating function. \emph{Changed:} the gamma factor
+and conductor in $\xi$ (parity $a$ enters the variance asymptotic only
+through the constant term $2a-1$ of
+Proposition~\ref{prop:varasymp}); all implied constants of the
+explicit-formula lemmas, which now depend on $q$, and the
+first-ordinate constants ($|\rho+m|\ge\gamma_1(\chi)$ in
+Lemma~\ref{lem:trunc}; numerically $\gamma_1(\chi_4)=6.0209\ldots$,
+$\gamma_1(\chi_3)=8.0397\ldots$, and $\gamma_1(\chi)>0$ is exactly
+NCZ under GRH); for $a=0$ the pole of $1/s$ in the Perron contour meets
+the trivial zero of $L(s,\chi)$ at $s=0$, and the classical formula
+carries an extra $-\log x+b(\chi)$ term \cite[Ch.~19]{Dav00}, absorbed
+by the $O(\log x)$ floor of \eqref{eq:trunc}; and the functional
+equation input, $\xi(s,\chi)=\xi(1-s,\chi)$, i.e.\ root number $+1$,
+which holds for every real primitive $\chi$ by the evaluation of the
+sign of the quadratic Gauss sum ($\tau(\chi)=\sqrt q$ for $a=0$,
+$i\sqrt q$ for $a=1$; \cite[Ch.~2]{Dav00} for prime modulus, the
+general case reducing to it via the factorization of Gauss sums over
+coprime moduli --- for the moduli $3,4$ used here the two-term sums
+are evaluated directly in the verification script). On the
+no-central-zero hypothesis itself: for $\chi_4$ it is the alternating
+series $L(\tfrac12,\chi_4)=\sum_k(-1)^k(2k+1)^{-1/2}>0$; for $\chi_3$
+it is \emph{not} an alternating-series statement (the zero terms
+$\chi_3(3k)=0$ interleave), but it is still unconditional: the
+Dirichlet series $\sum\chi_3(n)n^{-1/2}$ converges by Dirichlet's test
+(bounded character sums) and equals $L(\tfrac12,\chi_3)$ by analytic
+continuation, and regrouping the convergent series in blocks of three
+gives
+\[
+L(\tfrac12,\chi_3)\;=\;\sum_{k\ge0}
+\Bigl[\frac1{\sqrt{3k+1}}-\frac1{\sqrt{3k+2}}\Bigr]
+\;\ge\;1-\frac1{\sqrt2}\;>\;0
+\]
+(every block positive; numerically $0.4808675\ldots$). For general
+$q$ we do not prove NCZ: under GRH one has $L(\tfrac12,\chi)\ge0$
+(a negative central value would force a real zero in $(\tfrac12,1)$),
+so NCZ is then exactly central nonvanishing, which is Chowla's
+conjecture for quadratic characters --- known in every numerically
+checked case but open in general; it must be assumed, or verified
+computationally for the modulus at hand, as part of the hypotheses.
+Nothing in this paper uses NCZ beyond $q\in\{3,4\}$, where it is proved
+above. For the record, the certified constants at the two moduli used
+here are
+\[
+C(\chi_4)=0.15602964988964488\ldots,\qquad
+C(\chi_3)=0.11340215685275857\ldots,
+\]
+\[
+\sigma_0^2(\chi_4)=0.15556797992358593\ldots,\qquad
+\sigma_0^2(\chi_3)=0.11322996985747234\ldots
+\]
+ Exact races: segmented
 sieves to $10^{10}$ with exact signed $128$-bit (integer weights) or
 compensated long-double (fractional weights) accumulation,
 cross-checked against independent implementations at overlapping
 ranges; the $m=0$ anchors (first flip $26{,}861$; no mod-$3$ flip
-below $10^{10}$) reproduce the classical values. The density kernel is
+below $10^{10}$) reproduce the classical values. The finite-$x$
+logarithmic measure of a set $S$ reported in the introduction is
+$(\log(X/3))^{-1}\int_3^X\mathbf 1_S(t)\,dt/t$ for modulus $4$ (the
+race is tracked from the first odd prime) and
+$(\log(X/2))^{-1}\int_2^X\mathbf 1_S(t)\,dt/t$ for modulus $3$ (the
+race starts at $p=2$); intervals on which $D_m=0$ are assigned to the
+previous leader. The convention is not cosmetic: at $X=10^{10}$ the
+choice of lower endpoint alone shifts the normalization by
+$\log 3/\log X\approx4.8\%$. The density kernel is
 derived for the $\log$-weighted ($\theta$-form) race; partial summation
 gives every term of the unlogged race the same $1/\log x$ factor, which
 cancels under the bias normalization, so the limiting distribution and
@@ -811,19 +2697,43 @@ kernel derives from a uniform smoothed-Perron framework developed in a
 companion manuscript (analytic computation of $S_m(x)$ from zeros,
 exact to $10^9$ at $m=1$), available with all code and data at
 \url{https://github.com/raghavs1729/weighted-prime-races} (archived at
-\href{https://doi.org/10.5281/zenodo.21947102}{doi:10.5281/zenodo.21947102}). Every headline number in this note was
-re-computed independently of the code that first produced it.
+\href{https://doi.org/10.5281/zenodo.21947102}{doi:10.5281/zenodo.21947102}). Every headline number in this note was re-computed by a second
+implementation. For the sieve computations the two implementations are
+independent throughout; for the densities they shared the ordinate
+lists and, prior to the enclosures above, the Gaussian tail model, so
+their agreement tested evaluation error only --- the tail model itself
+is certified by Table~\ref{tab:enclose}.
 
 \emph{Assumptions and limitations.} Densities are conditional on
-GRH + LI, as throughout this literature; the existence of the limiting
-distribution is proved for $m\in(-\tfrac12,0\,]$ in
-Section~\ref{sec:theorem}, and for $m>0$ it is a routine adaptation of
-\cite{ANS14,Dev20} and is not claimed as new; the dissolution law is
-derived at the level of rigor of \cite{FM13}'s heuristic term plus
-numerical confirmation, and a fully rigorous proof (with error term)
-is left open. The finite-$x$ log-measure for $(q,m)=(3,2)$ shows the
+GRH + LI, as throughout this literature. The existence of the limiting
+distribution, the continuity of $m\mapsto\delta(m)$, and the strict
+bounds $\tfrac12<\delta(m)<1$ are proved for all
+$m\in(-\tfrac12,\infty)$ in Section~\ref{sec:theorem} (the $m>0$ part
+is the routine direction of the extension: the only changes are the
+$(1+x^m)\log x$ error floor in the explicit formula and the constant
+$2\max K+1$ in the continuity argument). The dissolution law,
+heuristic in earlier drafts, is proved with an error term in
+Theorem~\ref{thm:dissolution} (for the density of the limiting
+variable; the transfer to the race itself uses LI and is stated for
+$q=4$). The finite-$x$ log-measure for $(q,m)=(3,2)$ shows the
 weakest agreement in the study ($0.023$ at $10^{10}$), plausibly a
 slow almost-periodic phase; we flag it rather than explain it.
+
+\emph{Outlook: growing weights and short intervals.} Everything in
+this note keeps $m$ fixed as $x\to\infty$. In the joint limit
+$m=m(x)\to\infty$ the weight localizes the race: writing $p=x(1-u)$,
+the weight $p^{\,m}=x^{\,m}e^{m\log(1-u)}$ is within a bounded factor
+of its maximum only for $u\ll1/m$, so the fluctuating part of
+$\sum_{p\le x}\chi(p)p^{\,m}\log p$ is dominated by the primes in the
+short window $x-p\ll x/m$. A growing-weight race is in this sense a
+smoothed race between primes in a short interval at the edge of the
+range, and the weight aspect should connect to the extensively studied
+statistics of primes in short intervals --- in particular to the
+Gaussian limit laws, under RH and a quantitative form of LI, of
+Leung~\cite{Leung24} for primes in multiple short intervals, which
+include short-interval race applications. We state this only as a
+direction: we prove nothing in any joint regime $m=m(x)\to\infty$, and
+even the existence of a limiting distribution there is open.
 
 \begin{thebibliography}{99}
 \bibitem{RS94} M. Rubinstein, P. Sarnak, \emph{Chebyshev's bias},
@@ -876,6 +2786,27 @@ free regions for $L$ functions}, Int.\ J. Number Theory \textbf{18}
 numbers}, Proceedings of the Queen's Number Theory Conference
 (Kingston, Ont., 1979), Queen's Papers in Pure and Appl.\ Math.\
 \textbf{54} (1980), 1--31.
+\bibitem{Yam25} K. Yamamuro, \emph{A weighted prime number race through
+some perspective of probability theory}, Ann.\ Univ.\ Sci.\ Budapest.\
+Sect.\ Comput.\ \textbf{58} (2025), 299--313.
+\bibitem{Hay26} M. Hayani, \emph{On the role of higher roots in prime
+ideal races}, arXiv:2607.23150 (2026).
+\bibitem{BHU26} A. Bailleul, M. Hayani, T. Untrau, \emph{A Wasserstein
+metric approach to generalized Skewes' numbers. I. Prime number races},
+arXiv:2603.20093 (2026).
+\bibitem{Leung24} S.-K. Leung, \emph{Joint distribution of primes in
+multiple short intervals}, arXiv:2401.04000 (2024).
+\bibitem{MN20} G. Martin, N. Ng, \emph{Inclusive prime number races},
+Trans.\ Amer.\ Math.\ Soc.\ \textbf{373} (2020), no.\ 5, 3561--3607.
+arXiv:1710.00088.
+\bibitem{Bir48} Z.~W. Birnbaum, \emph{On random variables with
+comparable peakedness}, Ann.\ Math.\ Statist.\ \textbf{19} (1948),
+76--81.
+\bibitem{Pro65} F. Proschan, \emph{Peakedness of distributions of
+convex combinations}, Ann.\ Math.\ Statist.\ \textbf{36} (1965),
+1703--1706.
+\bibitem{Fel71} W. Feller, \emph{An Introduction to Probability Theory
+and Its Applications}, Vol.~II, 2nd ed., Wiley, New York, 1971.
 \end{thebibliography}
 
 \end{document}

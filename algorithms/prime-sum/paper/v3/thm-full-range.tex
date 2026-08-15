@@ -1,0 +1,942 @@
+% ============================================================================
+% thm-full-range.tex  (v3, 2026-08-15)
+%
+% Extension of Theorem 1 (thm:interp) of weighted-races.tex from
+% m in (-1/2, 0] to the full range m in (-1/2, infinity).
+%
+% This file is a set of REPLACEMENT BLOCKS for weighted-races.tex (the line
+% numbers below refer to the 881-line draft current on 2026-08-15).  Each
+% block is preceded by a comment  "%% REPLACES: ..."  naming exactly the
+% paragraphs it replaces; blocks marked NEW are insertions.  The fragment is
+% self-contained in the sense that every lemma environment, every proof, and
+% the replacement map are present here; it compiles when \input into the
+% paper's preamble (amsmath/amssymb/amsthm + the theorem environments and
+% \eps of weighted-races.tex).  Labels thm:interp, lem:trunc, lem:squares,
+% eq:trunc, eq:classical, eq:ansmean, prop:unlogged are REUSED so existing
+% cross-references survive; lem:classical is NEW.
+%
+% REPLACEMENT MAP (anchor = first words of the replaced text):
+%  Block A  replaces lines 229-262   ("Throughout this section ..." through
+%           "... contributes $O(10^{-5})$).")  -- range and corrected C.
+%  Block B  replaces lines 264-301   (the theorem environment).
+%  Block K  is NEW: insert immediately BEFORE Lemma [lem:trunc] (after line
+%           319 "We isolate the two number-theoretic inputs as lemmas."),
+%           or as Appendix A.  It contains eq:classical, which therefore
+%           moves out of the proof of lem:trunc.
+%  Block C  replaces lines 321-385   (Lemma lem:trunc + its proof).
+%  Block D  replaces lines 387-445   (Lemma lem:squares + its proof).
+%  Block E  replaces lines 467-497   inside the Proof of (i): from "Pairing
+%           $\rho$ and $\bar\rho$ ..." through "... is $O_m(1/Y)\to0$."
+%           Lines 447-466 and 499-523 of that proof are UNCHANGED.
+%  Block F  replaces lines 549-560   (the "Full support." paragraph of the
+%           proof of (ii)).
+%  Block G  replaces lines 568-590   (the "Continuity." paragraph of the
+%           proof of (ii)).  Lines 525-548 and 562-566 are UNCHANGED.
+%  Block H  replaces lines 636-639   (closing sentences of the proof of
+%           (iii), "Both stated bounds follow ... is immediate.") and ADDS
+%           a "Scope" paragraph.  Lines 593-635 and the two trailing
+%           remark paragraphs (641-661) are UNCHANGED.
+%  Block I  replaces lines 664-682   (the Proof of (iv) environment; only
+%           the range sentence and one added closing sentence change).
+%  Block J  replaces: lines 684-695  (statement of prop:unlogged);
+%           lines 699-708 (from the WORDS "Insert the expansion of $R_m$
+%           ..." --- which begin at the end of line 699; keep the first
+%           part of that line --- through the F(t,T) display);
+%           lines 748-770 (the "Truncation/PNT term" paragraph, the closing
+%           display, the Cesaro sentence, and the concluding "Thus ..."
+%           sentences, all retyped in (J3)).
+%           The middle paragraphs of that proof ("Bias term" and "Zero
+%           terms", lines 709-746) are unchanged.
+%  Block L  replaces the clause at lines 818-821 of "Assumptions and
+%           limitations".
+%  Block M  micro-edit at line 187: "$\Sigma=\sum_\gamma2/\gamma^2
+%           =0.156033$" -> "$\Sigma=\sum_\gamma2/\gamma^2=0.1560296$".
+%
+% NOT INCLUDED (must be edited to match; see the gaps list returned with
+% this file): the abstract (lines 53-67) and Results item 5 (lines 201-226)
+% still say $(-\tfrac12,0]$; the forward reference \ref{thm:dissolution}
+% below points to a theorem of a parallel draft that is NOT yet in the
+% repository and will render as "??" until it lands.
+% ============================================================================
+
+
+% ---------------------------------------------------------------------------
+%% Block A.  REPLACES lines 229-262 (section preamble of Section 2).
+% Changes: the range of m becomes (-1/2,\infty); the constant C is corrected
+% from 0.156033 to 0.1560296... and its evaluation is upgraded from
+% zeros-plus-tail to the exact completed-L formula (the old zeros-plus-tail
+% number is kept as a cross-check).
+% ---------------------------------------------------------------------------
+
+Throughout this section $\chi=\chi_4$ is the nontrivial character mod
+$4$, $\rho=\tfrac12+i\gamma$ runs over the nontrivial zeros of
+$L(s,\chi)$ (listed with multiplicity), GRH$(\chi)$ denotes the Riemann
+hypothesis for $L(s,\chi)$, and LI$(\chi)$ the linear independence over
+$\mathbb Q$ of the multiset of positive ordinates $\gamma$ (LI in
+particular forces all $\gamma$ to be distinct, i.e.\ the zeros to be
+simple; recall also that $L(\tfrac12,\chi_4)=\sum_{k\ge0}(-1)^k(2k+1)^{-1/2}>0$
+by the alternating series test, so no ordinate vanishes). For
+$m\in(-\tfrac12,\infty)$ define the ($\theta$-form) weighted race
+\[
+R_m(x)\;=\;\sum_{\substack{p\le x\\ p\equiv3\,(4)}}p^m\log p
+\;-\;\sum_{\substack{p\le x\\ p\equiv1\,(4)}}p^m\log p
+\;=\;-\sum_{p\le x}\chi(p)\,p^m\log p ,
+\]
+and its normalization
+\[
+E_m(x)\;=\;(2m+1)\,x^{-(m+1/2)}\,R_m(x).
+\]
+Write
+\[
+a_\gamma(m)\;=\;\frac{2m+1}{\sqrt{(m+\tfrac12)^2+\gamma^2}},
+\qquad
+X_m\;=\;1+\sum_{\gamma>0}2a_\gamma(m)\cos\theta_\gamma ,
+\]
+with $\theta_\gamma$ i.i.d.\ uniform on $[0,2\pi)$; the series converges
+a.s.\ and in $L^2$ since $\sum_\gamma a_\gamma(m)^2<\infty$ (the ordinates
+have density $\ll\log\gamma$). Set
+\[
+C\;:=\;\sum_{\gamma>0}\frac{2}{\gamma^2}\;=\;0.1560296498896\ldots
+\]
+Under GRH$(\chi_4)$ (in force throughout this section) this constant has
+a closed evaluation: the completed function
+$\Lambda(s)=(4/\pi)^{(s+1)/2}\Gamma\bigl(\tfrac{s+1}{2}\bigr)L(s,\chi_4)$
+is entire and satisfies $\Lambda(s)=\Lambda(1-s)$ (the root number of
+$\chi_4$ is $+1$), so $\Xi(z):=\Lambda(\tfrac12+z)$ is even; since
+$\Xi(0)>0$ (as $L(\tfrac12,\chi_4)>0$), $\sum_\gamma\gamma^{-2}<\infty$,
+and, under GRH, the zeros of $\Xi$ are exactly $\pm i\gamma$, the
+Hadamard factorization takes the genus-zero form
+$\Xi(z)/\Xi(0)=\prod_{\gamma>0}(1+z^2/\gamma^2)$, exactly as for the
+Riemann $\xi$-function \cite[\S12]{Dav00}. Hence
+\[
+C\;=\;(\log\Lambda)''\bigl(\tfrac12\bigr)
+\;=\;\tfrac14\,\psi'\bigl(\tfrac34\bigr)
++\frac{d^2}{ds^2}\log L(s,\chi_4)\Big|_{s=1/2}
+\;=\;0.15602964988964488\ldots,
+\]
+with $\psi'(\tfrac34)=\pi^2-8G$ ($G$ Catalan's constant), evaluated at
+$40$-digit working precision. Cross-check from the zero data: the first
+$511$ ordinates give $0.152546$ and the Riemann--von Mangoldt tail
+$\int_{\gamma_{511}}^\infty 2t^{-2}\,dN(t)$ with
+$dN(t)=(2\pi)^{-1}\log(2t/\pi)\,dt$ gives $0.003487$, total $0.156033$,
+agreeing with the exact value to $3.4\times10^{-6}$ --- within the
+expected $O(10^{-5})$ fluctuation of the zero-counting remainder.
+(Earlier drafts printed the cruder value $0.156033$.)
+
+
+% ---------------------------------------------------------------------------
+%% Block B.  REPLACES lines 264-301 (the statement of Theorem thm:interp).
+% Changes: all ranges (-1/2,0] become (-1/2,\infty); (iii) gains an explicit
+% informativeness clause; (iv) gains a sentence about the m -> infinity end;
+% the printed value of C is corrected.
+% ---------------------------------------------------------------------------
+
+\begin{theorem}\label{thm:interp}
+Assume GRH$(\chi_4)$.
+\begin{enumerate}
+\item[(i)] For each $m\in(-\tfrac12,\infty)$ the function
+$u\mapsto E_m(e^u)$ possesses a limiting distribution
+$\nu_m$: for every bounded continuous $f:\mathbb R\to\mathbb R$,
+$\lim_{Y\to\infty}\frac1Y\int_0^Y f(E_m(e^u))\,du
+=\int_{\mathbb R}f\,d\nu_m$. Under LI$(\chi_4)$, $\nu_m$ is the law of
+$X_m$.
+\item[(ii)] Under LI$(\chi_4)$, $\nu_m$ is absolutely continuous with
+support $\mathbb R$; the logarithmic density
+$\delta(m)$ of the set $\{x\ge2: R_m(x)>0\}$ exists, equals
+$\nu_m\bigl((0,\infty)\bigr)$, satisfies
+$\tfrac12<\delta(m)<1$ for every $m\in(-\tfrac12,\infty)$, and
+$m\mapsto\delta(m)$ is continuous on $(-\tfrac12,\infty)$.
+\item[(iii)] Under LI$(\chi_4)$, for all $m\in(-\tfrac12,\infty)$,
+\[
+1-\delta(m)\;\le\;C\,(2m+1)^2
+\qquad\text{and}\qquad
+1-\delta(m)\;\le\;\exp\!\Bigl(-\frac{1}{2C\,(2m+1)^2}\Bigr),
+\]
+with no restriction on $m$; the second bound is in fact the stronger of
+the two for every $m$. In particular $\delta(m)\to1$ as
+$m\to-\tfrac12^{\,+}$. Both bounds are informative only near the left
+endpoint: the (stronger) exponential bound drops below the trivial
+estimate $1-\delta(m)<\tfrac12$ of part (ii) precisely for
+$m<m_0:=\tfrac12\bigl((2C\log2)^{-1/2}-1\bigr)=0.57507\ldots$, and the
+first bound is $\ge1$ for $m\ge\tfrac12(C^{-1/2}-1)=0.76580\ldots$;
+for $m\ge m_0$ part (iii) asserts nothing beyond part (ii), and this
+theorem makes no claim about the rate at which $\delta(m)$ approaches
+$\tfrac12$ as $m\to\infty$.
+\item[(iv)] Consequently the classical density formulation of
+Chebyshev's bias at $m=0$ (logarithmic density
+$\delta(0)=0.995928\ldots$; $0.9959$ in \cite{RS94}, six decimals as in
+\cite{FM13} and re-derived here) is joined by the continuous family
+$\{\delta(m)\}_{m\in(-1/2,\infty)}$, with $\delta(m)\to1$ as
+$m\to-\tfrac12^{\,+}$, to the
+total-bias regime at the weighted threshold $m=-\tfrac12$, where the
+unlogged race $D_{-1/2}(x)=\sum_{p\le x}(-\chi_4(p))p^{-1/2}$ equals
+$\tfrac12\log\log x+O(1)$ and is eventually of one sign (under DRH
+\cite{AK23}; under GRH off a set of finite logarithmic measure
+\cite{Sheth24}; single-signed on a set of logarithmic density one under
+GRH alone \cite{Hay25}). None of these three endpoint results assumes
+LI. In the opposite direction the family now covers every positive
+weight; there the computed densities of Table~\ref{tab:delta} decrease
+toward $\tfrac12$, in the manner of the dissolution law of the Results
+section, which this theorem does not prove.
+\end{enumerate}
+\end{theorem}
+
+
+% ---------------------------------------------------------------------------
+%% Block K.  NEW.  Insert immediately BEFORE Lemma lem:trunc (after line 319,
+% "We isolate the two number-theoretic inputs as lemmas."), or as Appendix A
+% with the same label.  This lemma carries the label eq:classical, which
+% therefore moves here from the old proof of lem:trunc.
+%
+% Purpose: the framework of Akbary--Ng--Shahabi is applied with truncation
+% T = e^Y while x = e^u ranges over [e^2, e^Y], so the explicit formula is
+% needed for T much larger than x.  The classical references record it for
+% 2 <= T <= x.  The proof below is self-contained modulo five standard,
+% x-free facts about L(s,chi_4) cited from Davenport, and it is checked at
+% every step that no comparison between T and x is used.
+% ---------------------------------------------------------------------------
+
+\begin{lemma}[truncated explicit formula, all truncations]\label{lem:classical}
+Let $\chi=\chi_4$ and let $\rho=\beta+i\gamma$ run over the nontrivial
+zeros of $L(s,\chi)$, listed with multiplicity. Unconditionally, for all
+$x\ge2$ and all $T\ge2$,
+\begin{equation}\label{eq:classical}
+\psi(x,\chi)\;=\;-\sum_{|\gamma|\le T}\frac{x^{\rho}}{\rho}
++O\!\Bigl(\frac{x\log^2(xT)}{T}+\log x\Bigr).
+\end{equation}
+No inequality between $T$ and $x$ is assumed; in particular $T>x$ is
+allowed.
+\end{lemma}
+
+\begin{proof}
+All implied constants are absolute ($q=4$ is fixed). We use five
+standard facts; each is a statement about a single point $s$ or a single
+height $t$ and contains no parameter $x$, so no hidden comparison of $T$
+with $x$ can enter through them.
+
+\emph{(F1) (Perron kernel).} For $y>0$, $c>0$, $T\ge2$ put
+$I(y,T)=\frac{1}{2\pi i}\int_{c-iT}^{c+iT}y^s s^{-1}\,ds$ and
+$\delta(y)=1,\tfrac12,0$ according as $y>1$, $y=1$, $y<1$. Then
+\[
+|I(y,T)-\delta(y)|\;\le\;y^{c}\min\Bigl(1,\frac{1}{\pi T|\log y|}\Bigr)
+\quad(y\ne1),\qquad
+\bigl|I(1,T)-\tfrac12\bigr|\;\le\;\frac{c}{\pi T}.
+\]
+\emph{Proof of (F1).} For $y<1$ close the contour to the right: on the
+rectangle with right edge at $\mathrm{Re}\,s=A$ the integrand
+$y^ss^{-1}$ is analytic, and the right edge is $\ll y^A/A\to0$ as
+$A\to\infty$; hence $I$ equals minus the two horizontal rays from
+$c\pm iT$ to $+\infty\pm iT$, each of modulus
+$\le\frac{1}{2\pi T}\int_c^\infty y^\sigma d\sigma
+=\frac{y^c}{2\pi T\log(1/y)}$. For $y>1$ close to the left, picking up
+the residue $1$ at $s=0$; the rays to $-\infty\pm iT$ give the same
+bound with $\log y$. For the $\min(1,\cdot)$ alternative, replace the
+vertical segment by the arc of the circle $|s|=\sqrt{c^2+T^2}$ through
+$c\pm iT$ on the side not containing $0$ (for $y>1$, the side
+containing $0$, picking up the residue $1$): on the arc
+$|y^s|\le y^{c}$ and $|s|=\sqrt{c^2+T^2}$, so the arc integral is
+$\le y^c\cdot(\text{length})/(2\pi|s|)\le y^{c}$. For $y=1$ the odd
+part of the integrand integrates to zero and
+$I(1,T)=\frac1\pi\arctan(T/c)=\tfrac12-\frac1\pi\arctan(c/T)$, with
+$\arctan(c/T)\le c/T$. Nothing here involves any second parameter.
+
+\emph{(F2)} $-\zeta'/\zeta(\sigma)\le(\sigma-1)^{-1}+O(1)$ for
+$1<\sigma\le3$ (simple pole of $\zeta$ at $1$; \cite[\S17]{Dav00}).
+
+\emph{(F3)} $N(t+1,\chi)-N(t,\chi)\ll\log(t+2)$ for $t\ge0$, where
+$N(t,\chi)$ counts zeros with $0<\gamma\le t$; unconditional
+Riemann--von Mangoldt for $L(s,\chi_4)$ \cite[\S16]{Dav00}. Zeros are
+symmetric under $\gamma\mapsto-\gamma$ ($\chi_4$ is real).
+
+\emph{(F4)} For $-1\le\sigma\le2$, $s=\sigma+it$,
+$\frac{L'}{L}(s,\chi)=\sum_{\rho:\,|\gamma-t|\le1}\frac{1}{s-\rho}
++O(\log(|t|+2))$ \cite[\S16]{Dav00}; and for $2\le\sigma\le3$,
+$|L'/L(s,\chi)|\le\sum_n\Lambda(n)n^{-2}=O(1)$.
+
+\emph{(F5)} $\Lambda(s)=(4/\pi)^{(s+1)/2}\Gamma(\tfrac{s+1}2)L(s,\chi)$
+satisfies $\Lambda(s)=\Lambda(1-s)$ (\cite[\S9]{Dav00}; the root number
+of $\chi_4$ is $\tau(\chi_4)/(i\sqrt4)=2i/2i=+1$). Taking logarithmic
+derivatives,
+\[
+\frac{L'}{L}(s,\chi)
+=-\log\frac4\pi-\tfrac12\psi\Bigl(\frac{s+1}2\Bigr)
+-\tfrac12\psi\Bigl(\frac{2-s}2\Bigr)-\frac{L'}{L}(1-s,\chi).
+\]
+If $\sigma\le-1$ and either $|t|\ge2$ or $\sigma$ is a negative even
+integer, then: $\mathrm{Re}(1-s)\ge2$, so $|L'/L(1-s,\chi)|=O(1)$ by
+(F4); $\mathrm{Re}\bigl(\frac{2-s}2\bigr)\ge\tfrac32$, so
+$|\psi(\frac{2-s}2)|\ll\log(2+|s|)$ by Stirling; and for
+$w=\frac{s+1}2$ the reflection $\psi(w)=\psi(1-w)-\pi\cot(\pi w)$
+applies with $\mathrm{Re}(1-w)\ge1$ and with $|\cot(\pi w)|\le
+\coth(\pi)$ when $|\mathrm{Im}\,w|=|t|/2\ge1$, respectively
+$|\cot(\pi w)|=|\tanh(\pi t/2)|\le1$ when $\mathrm{Re}\,w$ is a
+half-odd-integer (which is the case when $\sigma$ is a negative even
+integer). Hence on those sets
+$|L'/L(s,\chi)|\ll\log(2+|s|)$.
+
+Also $L(0,\chi_4)=\tfrac12\ne0$: evaluating $\Lambda(0)=\Lambda(1)$
+from (F5),
+$(4/\pi)^{1/2}\Gamma(\tfrac12)L(0,\chi_4)=(4/\pi)\Gamma(1)L(1,\chi_4)$,
+and $L(1,\chi_4)=\pi/4$ (Leibniz), so
+$L(0,\chi_4)=(4/\pi)^{1/2}(\pi/4)/\sqrt{\pi}=\tfrac12$.
+Consequently $L'/L$ is regular at $s=0$. Moreover every nontrivial zero
+has $0<\beta<1$: there are no zeros with $\beta=1$ (de la Vall\'ee
+Poussin, unconditional), hence none with $\beta=0$ by (F5); so the pole
+of $1/s$ at $s=0$ collides with no zero.
+
+\emph{Step 1 (Perron).} Let $c=1+1/\log x\in(1,1+1/\log2]$, so
+$x^c=ex$. On $\mathrm{Re}\,s=c$ the Dirichlet series
+$-L'/L(s,\chi)=\sum_n\Lambda(n)\chi(n)n^{-s}$ converges absolutely, so
+term-by-term application of (F1) on the finite segment gives
+\[
+\psi(x,\chi)\;=\;\frac{1}{2\pi i}\int_{c-iT}^{c+iT}
+\Bigl(-\frac{L'}{L}(s,\chi)\Bigr)\frac{x^s}{s}\,ds\;+\;O(R_1),
+\qquad
+R_1=\sum_{n\ge2}\Lambda(n)\Bigl(\frac xn\Bigr)^{c}
+\min\Bigl(1,\frac{1}{T|\log(x/n)|}\Bigr)+\log x,
+\]
+the final $\log x$ covering the possible term $n=x$ (where (F1) gives
+$\tfrac12$ instead of the weight $1$ used in $\psi$, a discrepancy
+$\le\Lambda(x)\ll\log x$). Split $R_1$:
+for $n\le\tfrac34x$ or $n\ge\tfrac54x$ one has $|\log(x/n)|\ge
+\log\tfrac54$, so these terms contribute
+$\ll T^{-1}x^{c}\sum_n\Lambda(n)n^{-c}
+=T^{-1}x^{c}\bigl(-\zeta'/\zeta(c)\bigr)\ll(x/T)\log x$ by (F2). For
+$\tfrac34x<n<\tfrac54x$, $n\ne x$: here $\Lambda(n)\ll\log x$,
+$(x/n)^c\ll1$, and $|\log(x/n)|\ge|n-x|/(2x)$, so these terms
+contribute
+\[
+\ll\log x\sum_{1\le k\le x}\min\Bigl(1,\frac{2x}{Tk}\Bigr)
+\;\ll\;\log x\Bigl(1+\frac xT+\frac xT\log x\Bigr)
+\;\ll\;\log x+\frac{x\log^2x}{T},
+\]
+where $k$ runs over the possible values of $\lceil|n-x|\rceil$ (the at
+most two integers nearest $x$ are covered by the $\min(\cdot)\le1$
+bound). Hence $R_1\ll x\log^2x/T+\log x$, for every $T\ge2$; when $T>x$
+these bounds only become smaller.
+
+\emph{Step 2 (choice of height $T'$).} Let
+$G=\{\gamma:\,T-1<\gamma<T+2\}$; by (F3), $\#G\le A_1\log(T+2)$ for an
+absolute $A_1$. With $r=1/(4A_1\log(T+2))$ the union of the intervals
+$(\gamma-r,\gamma+r)$, $\gamma\in G$, has measure $\le\tfrac12$, so
+there exists $T'\in[T,T+1]$ with $|T'-\gamma|\ge r$ for all
+$\gamma\in G$; for $\gamma\notin G$, $|T'-\gamma|\ge1$ automatically.
+Thus $|T'-\gamma|\gg1/\log(T+2)$ for \emph{every} ordinate $\gamma$,
+and by the $\gamma\mapsto-\gamma$ symmetry the same holds at height
+$-T'$.
+
+\emph{Step 3 (contour).} For $K\in\mathbb N$ set $U=2K$ and integrate
+$(-L'/L)(s,\chi)\,x^s/s$ counterclockwise around the rectangle with
+vertices $c\pm iT'$, $-U\pm iT'$. The poles inside are: the nontrivial
+zeros with $|\gamma|\le T'$ (residue $-x^\rho/\rho$ each, with
+multiplicity; $\rho\ne0$ since $0<\beta<1$); the simple pole of $1/s$
+at $s=0$ (residue $-L'/L(0,\chi)=O(1)$, using $L(0,\chi)=\tfrac12$);
+and the trivial zeros $s=-(2j+1)$, $0\le j\le K-1$, of $L(s,\chi_4)$
+(simple, from the poles of $\Gamma(\tfrac{s+1}2)$; residue
+$+x^{-(2j+1)}/(2j+1)$ each). Hence
+\[
+\frac{1}{2\pi i}\oint
+=-\sum_{|\gamma|\le T'}\frac{x^\rho}{\rho}-\frac{L'}{L}(0,\chi)
++\sum_{j=0}^{K-1}\frac{x^{-(2j+1)}}{2j+1}.
+\]
+
+\emph{Step 4 (horizontal segments, $-1\le\sigma\le c$).} On
+$s=\sigma\pm iT'$ with $-1\le\sigma\le2$, (F4) and Step 2 give
+$|L'/L(s,\chi)|\le\sum_{|\gamma\mp T'|\le1}|T'-\gamma|^{-1}
++O(\log T')\ll\log^2(T+2)$ ($\ll\log(T+2)$ terms, each
+$\ll\log(T+2)$); for $2\le\sigma\le c$ (nonempty only if $x<e$) the
+$O(1)$ bound of (F4) applies. Hence these pieces contribute
+\[
+\ll\frac{\log^2(T+2)}{T}\int_{-1}^{c}x^\sigma\,d\sigma
+\ll\frac{\log^2(T+2)}{T}\cdot\frac{x^c}{\log x}
+\ll\frac{x\log^2(xT)}{T}.
+\]
+
+\emph{Step 5 (horizontal segments $-U\le\sigma\le-1$, and vertical
+segment $\sigma=-U$).} By (F5), $|L'/L|\ll\log(2+|s|)$ on both. The
+horizontal parts contribute
+\[
+\ll\frac1T\int_{1}^{\infty}x^{-v}\log(3+v+T)\,dv
+\ll\frac1T\Bigl(\frac{\log(3+T)}{x\log x}+\frac1x\Bigr)
+\ll\frac{\log(3+T)}{T}\ll1,
+\]
+uniformly in $U$, absorbed in $O(\log x)$. The vertical segment has
+length $2T'$, $|x^s/s|\le x^{-U}/U$, so it contributes
+$\ll T'\,x^{-U}\log(U+T'+2)/U\to0$ as $K\to\infty$ (here $x\ge2>1$).
+
+\emph{Step 6 (assemble; $U\to\infty$).} Letting $K\to\infty$, the
+trivial-zero sum increases to
+$\sum_{j\ge0}x^{-(2j+1)}/(2j+1)=\operatorname{artanh}(1/x)
+\le\operatorname{artanh}(\tfrac12)<0.55$. Combining Steps 1--5,
+\[
+\psi(x,\chi)=-\sum_{|\gamma|\le T'}\frac{x^\rho}{\rho}
++O\Bigl(\frac{x\log^2(xT)}{T}+\log x\Bigr).
+\]
+\emph{Step 7 ($T'\to T$).} The zeros with $T<|\gamma|\le T'\le T+1$
+number $\ll\log(T+2)$ by (F3), and each satisfies
+$|x^\rho/\rho|\le x^{\beta}/|\gamma|\le x/T$; restoring the summation
+range to $|\gamma|\le T$ therefore costs $\ll x\log(T+2)/T\ll
+x\log^2(xT)/T$. This proves \eqref{eq:classical}. Every estimate above
+is uniform in $T\ge2$, and no step compared $T$ with $x$.
+\end{proof}
+
+
+% ---------------------------------------------------------------------------
+%% Block C.  REPLACES lines 321-385 (Lemma lem:trunc and its proof).
+% Changes: range extended to (-1/2,\infty); the error floor becomes
+% (1+x^m) log x; the proof of eq:classical is now delegated to Lemma
+% lem:classical (Block K) instead of a parenthetical.
+% ---------------------------------------------------------------------------
+
+\begin{lemma}[shifted truncated explicit formula]\label{lem:trunc}
+Assume GRH$(\chi_4)$ and let $m\in(-\tfrac12,\infty)$ be fixed. For
+$\psi_m(x):=\sum_{n\le x}\Lambda(n)\chi(n)n^m$ and all $x\ge2$,
+$T\ge2$ (no inequality between $T$ and $x$ is assumed;
+Lemma~\ref{lem:classical}),
+\begin{equation}\label{eq:trunc}
+\psi_m(x)\;=\;-\sum_{|\gamma|\le T}\frac{x^{\rho+m}}{\rho+m}
+\;+\;O_m\!\Bigl(\frac{x^{m+1}\log^2(xT)}{T}+(1+x^m)\log x\Bigr).
+\end{equation}
+For $m\le0$ the floor $(1+x^m)\log x\le2\log x$ recovers the earlier
+form of this lemma.
+\end{lemma}
+
+\begin{proof}
+Since $\psi(t,\chi)=0$ for $t<3$, Riemann--Stieltjes partial summation
+gives exactly
+\[
+\psi_m(x)\;=\;\int_{2^-}^{x}t^m\,d\psi(t,\chi)
+\;=\;x^m\psi(x,\chi)-m\int_2^x t^{m-1}\psi(t,\chi)\,dt .
+\]
+Insert \eqref{eq:classical} (Lemma~\ref{lem:classical}, valid for every
+$T\ge2$), with the same $T$, at $x$ and at every $t\in[2,x]$. The zero
+terms produce, for each $\rho$ with $|\gamma|\le T$,
+\[
+x^m\frac{x^{\rho}}{\rho}-m\int_2^x t^{m-1}\frac{t^{\rho}}{\rho}\,dt
+\;=\;\frac{x^{\rho+m}}{\rho+m}
+\;+\;\frac{m\,2^{\rho+m}}{\rho\,(\rho+m)},
+\]
+an identity (integrate $t^{\rho+m-1}$; note
+$\mathrm{Re}(\rho+m)=m+\tfrac12>0$ for every $m>-\tfrac12$, and
+$|\rho+m|\ge\gamma\ge\gamma_1>6$, so no denominator degenerates at any
+$m$ in the range). The endpoint terms are \emph{summable}: since
+$|\rho|\ge\gamma$ and $|\rho+m|\ge\gamma$,
+\[
+\sum_{|\gamma|\le T}\Bigl|\frac{m\,2^{\rho+m}}{\rho(\rho+m)}\Bigr|
+\;\le\;|m|\,2^{m+1/2}\sum_{|\gamma|\le T}\frac{1}{\gamma^{2}}
+\;\ll_m\;1,
+\]
+uniformly in $T$. (Bounding each term by $O_\gamma(1)$ alone would not
+suffice, as there are $\asymp T\log T$ of them.) The error terms of
+\eqref{eq:classical} contribute
+\[
+x^m\cdot O\Bigl(\frac{x\log^2(xT)}{T}+\log x\Bigr)
++|m|\int_2^x t^{m-1}\,O\Bigl(\frac{t\log^2(tT)}{T}+\log t\Bigr)dt .
+\]
+The truncation parts are
+$\ll_m x^{m+1}\log^2(xT)/T$, using $\log^2(tT)\le\log^2(xT)$ and
+$\int_2^xt^m\,dt\le x^{m+1}/(m+1)$ for $m>-1$. The $\log$-floor parts
+split into three cases:
+\[
+|m|\int_2^x t^{m-1}\log t\,dt\;\ll_m\;
+\begin{cases}
+x^m\log x, & m>0
+\quad\bigl(\le\log x\cdot\int_2^x mt^{m-1}dt\le x^m\log x\bigr),\\
+0, & m=0 \ \text{(the factor $m$ vanishes)},\\
+1, & m<0
+\quad\bigl(\int_2^\infty t^{m-1}\log t\,dt=O_m(1)\bigr).
+\end{cases}
+\]
+Since $\log x\ge\log2$, every $O_m(1)$ above (including the endpoint
+sum) is $\ll_m\log x$, so all non-zero-sum contributions are
+$O_m\bigl(x^{m+1}\log^2(xT)/T+(1+x^m)\log x\bigr)$, proving
+\eqref{eq:trunc}. Neither half of the floor can be dropped on the full
+range: for $m<0$ the quantity $x^m\log x$ tends to $0$ while genuinely
+$O_m(1)$ terms (the endpoint sum, the constants inside
+\eqref{eq:classical}) persist, so the summand $1$ is needed; for $m>0$
+the term $x^m\log x$ arises from $m\int_2^xt^{m-1}O(\log t)\,dt$, and
+removing it would require sign cancellation in the $O(\log t)$ errors
+of \eqref{eq:classical} that we do not know. After the normalization by
+$(2m+1)x^{-(m+1/2)}$, the floor becomes, with $x=e^u$,
+\[
+(1+e^{mu})\,u\,e^{-(m+1/2)u}
+=u\bigl(e^{-(m+1/2)u}+e^{-u/2}\bigr)
+\;\le\;2u\,e^{-\kappa_m u},
+\qquad
+\kappa_m:=\min\bigl(m+\tfrac12,\tfrac12\bigr)>0,
+\]
+an $L^2(0,\infty)$ function of $u$ for every $m>-\tfrac12$; the
+mean-square hypothesis \eqref{eq:ansmean} used in the proof of (i) is
+therefore unaffected by the extension.
+\end{proof}
+
+
+% ---------------------------------------------------------------------------
+%% Block D.  REPLACES lines 387-445 (Lemma lem:squares and its proof).
+% Changes: range extended to (-1/2,\infty); the k>=3 estimate is organized
+% so that no case split is needed for m>=0; the origin of the log^2 x floor
+% is stated precisely (present only for m<0, unabsorbable only for
+% m <= -1/3); the k=2 asymptotic is confirmed to use only 2m+1>0.
+% ---------------------------------------------------------------------------
+
+\begin{lemma}[prime-power separation]\label{lem:squares}
+Fix $m\in(-\tfrac12,\infty)$. For $x\ge4$,
+\[
+-R_m(x)\;=\;\psi_m(x)\;-\;\sum_{p\le\sqrt x}p^{2m}\log p
+\;+\;O_m\!\bigl(x^{m+1/3}\log x+\log^2x\bigr),
+\]
+and
+\[
+\sum_{p\le\sqrt x}p^{2m}\log p\;=\;\frac{x^{m+1/2}}{2m+1}
++O_m\!\bigl(x^{m+1/2}e^{-c\sqrt{\log x}}\bigr)
+\]
+with $c>0$ absolute and the implied constants depending on $m$. Both
+error terms are $o(x^{m+1/2})$. The $\log^2x$ term originates solely in
+the prime powers $p^k$, $k\ge3$, with $km\le-1$; such $k$ exist only
+for $m<0$, and for $m>-\tfrac13$ the term is absorbed by
+$O_m(x^{m+1/3}\log x)$, so it is genuinely present only for
+$m\in(-\tfrac12,-\tfrac13]$.
+\end{lemma}
+
+\begin{proof}
+$\psi_m$ splits over prime powers $p^k\le x$. The $k=1$ part is
+$\sum_{p\le x}\chi(p)p^m\log p=-R_m(x)$. The $k=2$ part is
+$\sum_{p^2\le x}\chi(p)^2p^{2m}\log p=\sum_{3\le p\le\sqrt x}p^{2m}\log p
+=\sum_{p\le\sqrt x}p^{2m}\log p+O_m(1)$, since $\chi(p)^2=1$ for odd
+$p$ and $\chi(2)=0$.
+
+\emph{The $k\ge3$ terms.} Here $3\le k\le\log x/\log2$ and
+$y:=x^{1/k}$. Let $A$ be Chebyshev's absolute constant in
+$\theta(y)\le Ay$.
+
+If $m\ge0$ then $km\ge0>-1$ for every $k$ --- no case split occurs ---
+and monotonicity gives, uniformly in $k$,
+\[
+\sum_{p\le y}p^{km}\log p\;\le\;y^{km}\theta(y)\;\le\;Ay^{km+1}
+\;=\;Ax^{(km+1)/k}\;=\;Ax^{m+1/k}\;\le\;Ax^{m+1/3};
+\]
+summing over the $\le\log x/\log2$ values of $k$ yields
+$O(x^{m+1/3}\log x)$ with an absolute constant.
+
+If $m<0$, split on the sign of $km+1$. For the (fewer than $1/|m|$,
+hence $O_m(1)$ many) $k$ with $-1<km<0$, partial summation with
+$\theta(t)\le At$ gives
+\[
+\sum_{p\le y}p^{km}\log p
+=y^{km}\theta(y)+|km|\int_2^y t^{km-1}\theta(t)\,dt
+\;\le\;Ay^{km+1}\Bigl(1+\frac{|km|}{km+1}\Bigr)
+\;\ll_m\;x^{m+1/k}\;\le\;x^{m+1/3},
+\]
+the constant depending on $m$ through the least positive value of
+$km+1$ over the finitely many admissible $k$; the total over these $k$
+is $O_m(x^{m+1/3})$. For the $k$ with $km\le-1$ (these exist iff
+$m<0$, namely $k\ge1/|m|$), we have $p^{km}\log p\le p^{-1}\log p$, so
+by Mertens
+\[
+\sum_{p\le y}p^{km}\log p\;\le\;\sum_{p\le y}\frac{\log p}{p}
+\;=\;\log y+O(1)\;\ll\;\log x ,
+\]
+uniformly in $k$; over $\le\log x/\log2$ values of $k$ the total is
+$O(\log^2x)$. Combining the cases, the $k\ge3$ contribution is
+$O_m(x^{m+1/3}\log x+\log^2x)$ for every $m\in(-\tfrac12,\infty)$, and
+the provenance stated in the lemma is exactly the case analysis just
+made; for $m>-\tfrac13$ one has $\log x\ll_m x^{m+1/3}$, so there the
+$\log^2x$ term may be dropped --- we keep it so that a single statement
+covers the whole range. Both error terms are $o(x^{m+1/2})$ uniformly:
+$x^{m+1/3}\log x/x^{m+1/2}=x^{-1/6}\log x\to0$ and
+$\log^2x\cdot x^{-(m+1/2)}\to0$ since $m+\tfrac12>0$. (The crude bound
+``$O(x^{1/3})$ prime powers times $\log x$'' is \emph{not} sufficient
+here: $x^{1/3}\ge x^{m+1/2}$ for $m\le-\tfrac16$.)
+
+\emph{The squares sum.} The argument is unchanged from the
+$(-\tfrac12,0]$ version, and we record that its only structural input
+is $2m+1>0$, so it holds on the whole range. Write
+$\theta(y)=y+E(y)$, $E(y)\ll ye^{-2c\sqrt{\log y}}$ (prime number
+theorem with the classical de la Vall\'ee Poussin error). Partial
+summation gives, with $y=\sqrt x$,
+\[
+\sum_{p\le y}p^{2m}\log p
+=y^{2m}\theta(y)-2m\int_2^y t^{2m-1}\theta(t)\,dt
+=\frac{y^{2m+1}}{2m+1}+O_m(1)
++y^{2m}E(y)-2m\int_2^y t^{2m-1}E(t)\,dt ,
+\]
+the $O_m(1)$ being the endpoint term
+$2m\,2^{2m+1}/(2m+1)$. Here $y^{2m}E(y)\ll y^{2m+1}e^{-2c\sqrt{\log y}}$,
+and splitting the integral at $\sqrt y$,
+\[
+\int_2^y t^{2m}e^{-2c\sqrt{\log t}}\,dt
+\;\le\;\frac{y^{(2m+1)/2}}{2m+1}
++e^{-2c\sqrt{(\log y)/2}}\,\frac{y^{2m+1}}{2m+1}
+\;\ll_m\; y^{2m+1}e^{-c\sqrt{\log y}} ,
+\]
+where both steps use only $2m+1>0$: the first integral was extended
+using $\int_2^{\sqrt y}t^{2m}dt\le y^{(2m+1)/2}/(2m+1)$, and
+$y^{(2m+1)/2}\ll_m y^{2m+1}e^{-c\sqrt{\log y}}$ because
+$e^{c\sqrt{\log y}}$ grows slower than any positive power of $y$. As
+$y^{2m+1}=x^{m+1/2}\to\infty$, the $O_m(1)$ is absorbed. All constants
+depend on $m$: they blow up like $(2m+1)^{-1}$ as $m\to-\tfrac12^{\,+}$
+and (through $2^{2m+1}$ and the factor $2m+1$) grow with $m$ as
+$m\to\infty$; the theorem is for fixed $m$, and no uniformity in $m$ is
+used anywhere below --- the continuity in (ii) is proved at the level
+of the limit random variables, not of the explicit formula.
+\end{proof}
+
+
+% ---------------------------------------------------------------------------
+%% Block E.  REPLACES lines 467-497 (NOT 466: line 466 is the closing "\]"
+% of the $r_\gamma$ display and must be kept), i.e. the part of the Proof of (i) from
+% "Pairing $\rho$ and $\bar\rho$ ..." through "... is $O_m(1/Y)\to0$."
+% The surrounding parts of that proof (lines 447-465: the ANS setup and the
+% definition of r_gamma; lines 499-523: coefficient conditions and the LI
+% identification) are unchanged and are NOT repeated here.
+% ---------------------------------------------------------------------------
+
+Pairing $\rho$ and $\bar\rho$ in Lemma~\ref{lem:trunc} (the zeros of
+$L(s,\chi_4)$ are symmetric under conjugation since $\chi_4$ is real)
+and combining with Lemma~\ref{lem:squares}, for $u\ge2$ and any
+$T\ge2$,
+\[
+E_m(e^u)\;=\;1+\mathrm{Re}\!\!\sum_{0<\gamma\le T}\!\! r_\gamma(m)\,
+e^{i\gamma u}\;+\;\mathcal E(u,T),
+\]
+\[
+\mathcal E(u,T)\;\ll_m\;
+\frac{e^{u/2}\log^2(e^uT)}{T}
++u^2e^{-\kappa_m u}
++u\,e^{-u/6}
++e^{-c\sqrt{u}},
+\qquad
+\kappa_m:=\min\bigl(m+\tfrac12,\tfrac12\bigr)>0 .
+\]
+(The four terms come from, in order: the truncation error of
+\eqref{eq:trunc} times $(2m+1)x^{-(m+1/2)}$; the $(1+x^m)\log x$ floor
+of \eqref{eq:trunc} together with the $\log^2x$ prime-power floor of
+Lemma~\ref{lem:squares}, which after normalization are
+$(1+e^{mu})u\,e^{-(m+1/2)u}+u^2e^{-(m+1/2)u}\le3u^2e^{-\kappa_mu}$,
+since $e^{-(m+1/2)u}\le e^{-\kappa_mu}$ and
+$e^{mu}e^{-(m+1/2)u}=e^{-u/2}\le e^{-\kappa_mu}$; the $k\ge3$ term
+$x^{m+1/3}\log x\cdot x^{-(m+1/2)}=x^{-1/6}\log x=u\,e^{-u/6}$; and
+the PNT error. All exponents are strictly negative for every
+$m>-\tfrac12$, which is the only property used.) This establishes their
+(1.7) with our $\mathcal E$ \emph{defined} by the display, for every
+$T\ge2$; square-integrability of $\phi$ on $[0,y_0]$ is trivial since
+$E_m$ is bounded there.
+
+For \eqref{eq:ansmean}, put $T=e^{Y}$ and $u\in[2,Y]$, so
+$e^u\le e^Y=T$: the first term is
+$\ll e^{u/2}(2Y)^2e^{-Y}$, whose square integrates to
+$\frac1Y\int_2^Y 16Y^4e^{u-2Y}\,du\ll Y^3e^{-Y}\to0$; each of the
+remaining terms is a fixed $L^2(0,\infty)$ function of $u$ (here
+$\kappa_m>0$ is used), so its contribution to the Ces\`aro mean square
+is $O_m(1/Y)\to0$.
+
+
+% ---------------------------------------------------------------------------
+%% Block F.  REPLACES lines 549-560 (the "Full support." paragraph in the
+% Proof of (ii)).  The old paragraph sketched the argument ("the tail beyond
+% any finite set can be confined near 0 ... every interval receives positive
+% mass"); the version below is the complete proof.  It also repairs a small
+% slip in the old text: the lower bound a_gamma(m) >= (2m+1)/(gamma sqrt 2)
+% requires gamma >= m+1/2, which for m > gamma_1 - 1/2 = 5.52... excludes
+% finitely many ordinates -- enough for divergence, but the old "for all
+% gamma >= gamma_1" was wrong for large m.
+% ---------------------------------------------------------------------------
+
+\emph{Full support.} We show that
+$\mathbb P\bigl(|V_m-v|<\varepsilon\bigr)>0$ for every $v\in\mathbb R$
+and $\varepsilon>0$; this gives $\mathrm{supp}(V_m)=\mathbb R$. Let
+$\gamma_1<\gamma_2<\cdots$ be the positive ordinates (distinct under
+LI) and $c_n:=2a_{\gamma_n}(m)>0$. Three facts:
+($\alpha$) $c_n\to0$, since $a_\gamma(m)\le(2m+1)/\gamma$;
+($\beta$) $\sum_nc_n=\infty$: for every $\gamma\ge m+\tfrac12$ --- all
+but finitely many ordinates --- one has
+$(m+\tfrac12)^2\le\gamma^2$, hence
+$a_\gamma(m)\ge(2m+1)/(\gamma\sqrt2)$, and
+$\sum_{\gamma\le T}\gamma^{-1}\gg(\log T)^2$ by partial summation
+against $N(T,\chi_4)\sim\frac{T}{2\pi}\log\frac{2T}{\pi e}$;
+($\gamma$) $\sum_nc_n^2<\infty$. By symmetry of $V_m$ we may take
+$v\ge0$ (for $v<0$ replace $\cos\theta\approx1$ by
+$\cos\theta\approx-1$ in Step 3).
+
+\emph{Step 1 (a finite block reaching $v$ to within $\varepsilon/4$).}
+By ($\alpha$) fix $N_0$ with $c_n<\varepsilon/4$ for all $n>N_0$. By
+($\beta$), $\sum_{n>N_0}c_n=\infty$, so there is a minimal $N_1\ge N_0$
+with $S:=\sum_{n=N_0+1}^{N_1}c_n\ge v$ (if $v=0$ take $N_1=N_0$,
+$S=0$). Minimality and $c_{N_1}<\varepsilon/4$ give
+$v\le S<v+\varepsilon/4$. Put $B=\{N_0+1,\dots,N_1\}$.
+
+\emph{Step 2 (tail).} By ($\gamma$) fix $N\ge N_1$ with
+$\sum_{n>N}2a_{\gamma_n}^2\le\varepsilon^2/64$. The tail
+$W:=\sum_{n>N}2a_{\gamma_n}\cos\theta_{\gamma_n}$ (convergent a.s.\ and
+in $L^2$) has mean $0$ and
+$\mathrm{Var}(W)=\sum_{n>N}2a_{\gamma_n}^2\le\varepsilon^2/64$
+(each summand has variance $2a_{\gamma_n}^2$), so Chebyshev gives
+$\mathbb P(|W|\ge\varepsilon/4)\le(\varepsilon^2/64)(16/\varepsilon^2)
+=\tfrac14$, i.e.\ $\mathbb P(|W|<\varepsilon/4)\ge\tfrac34$.
+
+\emph{Step 3 (head).} Put
+$\delta:=\varepsilon/\bigl(4(1+\sum_{n\le N}c_n)\bigr)>0$ and
+\[
+A\;:=\;\bigcap_{n\in B}\bigl\{|\cos\theta_{\gamma_n}-1|<\delta\bigr\}
+\;\cap\;\bigcap_{\substack{n\le N\\ n\notin B}}
+\bigl\{|\cos\theta_{\gamma_n}|<\delta\bigr\}.
+\]
+Each event has positive probability ($\theta_{\gamma_n}$ is uniform on
+$[0,2\pi)$, and $\cos\theta$ lies within $\delta$ of $1$, resp.\ of
+$0$, on a set of positive measure), the events concern distinct
+phases, and the phases are independent, so $\mathbb P(A)>0$. On $A$
+the head $H:=\sum_{n\le N}c_n\cos\theta_{\gamma_n}$ satisfies
+$|H-S|\le\delta\sum_{n\le N}c_n<\varepsilon/4$.
+
+\emph{Step 4 (combine).} $A$ and $\{|W|<\varepsilon/4\}$ involve
+disjoint sets of independent phases, hence are independent, and
+$V_m=H+W$ a.s. On their intersection,
+$|V_m-v|\le|H-S|+|S-v|+|W|<\tfrac34\varepsilon<\varepsilon$, and
+\[
+\mathbb P\bigl(|V_m-v|<\varepsilon\bigr)
+\;\ge\;\tfrac34\,\mathbb P(A)\;>\;0 .
+\]
+Every open interval therefore carries positive mass:
+$\mathrm{supp}(V_m)=\mathbb R$ (cf.\ the positivity-of-densities
+argument of \cite{RS94}, of which this is the quantitative form).
+
+
+% ---------------------------------------------------------------------------
+%% Block G.  REPLACES lines 568-590 (the "Continuity." paragraph in the
+% Proof of (ii)).  Change: the compact set K now sits in (-1/2,\infty), so
+% the uniform bound a_gamma(m') <= 1/gamma (true only for K within
+% (-1/2,0]) is replaced by a_gamma(m') <= A_K/gamma with A_K = 2 max K + 1,
+% and the constant is propagated.
+% ---------------------------------------------------------------------------
+
+\emph{Continuity.} The characteristic function of $V_m$ is
+$\Phi_m(t)=\prod_{\gamma}J_0(2a_\gamma(m)t)$ (dominated convergence
+from the finite products). Fix $t_0\ge1$ and a compact
+$K\subset(-\tfrac12,\infty)$, and put
+\[
+A_K\;:=\;2\max K+1\;\in\;(0,\infty),
+\qquad\text{so}\qquad
+a_\gamma(m')\;\le\;\frac{2m'+1}{\gamma}\;\le\;\frac{A_K}{\gamma}
+\quad\text{for all } m'\in K,\ \gamma>0 .
+\]
+For $\Gamma\ge2A_Kt_0$ and $\gamma>\Gamma$ we have
+$|2a_\gamma(m')t|\le 2A_Kt_0/\gamma\le1$, and for $|z|\le1$ the
+alternating series gives $J_0(z)\ge1-z^2/4\ge\tfrac34$, whence
+$|\log J_0(z)|\le z^2/3$. Therefore
+\[
+\Bigl|\sum_{\gamma>\Gamma}\log J_0\bigl(2a_\gamma(m')t\bigr)\Bigr|
+\;\le\;\frac{4A_K^2t_0^2}{3}\sum_{\gamma>\Gamma}\gamma^{-2}
+\;=:\;\eta_K(\Gamma)\;\longrightarrow\;0\qquad(\Gamma\to\infty),
+\]
+uniformly in $m'\in K$ and $|t|\le t_0$. Writing $\Phi_{m'}$ as (finite
+product over $\gamma\le\Gamma$, jointly continuous in $(m',t)$ since
+each $a_\gamma(\cdot)$ is continuous on $(-\tfrac12,\infty)$)
+$\times\exp(\sum_{\gamma>\Gamma}\log J_0)$, and noting all factors
+have modulus $\le1$, a standard $3\varepsilon$ argument gives
+$\Phi_{m'}(t)\to\Phi_m(t)$ for every $t$ as $m'\to m$ within
+$(-\tfrac12,\infty)$. Each $\Phi_{m'}$ is a characteristic function and
+the limit $\Phi_m$ is continuous at $0$, so by L\'evy's continuity
+theorem $X_{m'}\Rightarrow X_m$ weakly. Since $\nu_m(\{0\})=0$, the
+portmanteau theorem for the set $(0,\infty)$ gives
+$\delta(m')\to\delta(m)$: the map $m\mapsto\delta(m)$ is continuous on
+$(-\tfrac12,\infty)$.
+
+
+% ---------------------------------------------------------------------------
+%% Block H.  REPLACES lines 636-639 of the Proof of (iii) ("Both stated
+% bounds follow, for every $m\in(-\tfrac12,0]$ ... is immediate.") and ADDS
+% the "Scope" paragraph.  The derivations above it (lines 593-635) hold
+% verbatim for all m > -1/2 -- the Chebyshev step uses only
+% a_gamma(m)^2 <= (2m+1)^2/gamma^2 and the Chernoff step only the arcsine
+% MGF bound I_0(z) <= e^{z^2/4}, neither of which restricts m -- and the two
+% trailing remark paragraphs (lines 641-661) are unchanged.
+% NOTE: \ref{thm:dissolution} below is a forward reference to the parallel
+% dissolution-law draft; it is NOT contained in this file or in the current
+% repository and will render as "??" until that draft is merged.  Remove or
+% resolve before submission.
+% ---------------------------------------------------------------------------
+
+Both stated bounds follow, for every $m\in(-\tfrac12,\infty)$ --- no
+step above used $m\le0$ --- and $e^{-1/(2z)}<z$ for all $z>0$
+(equivalent to $\log w<w/2$ at $w=1/z$), so the exponential bound is
+always the stronger one. $\delta(m)\to1$ as $m\to-\tfrac12^{\,+}$ is
+immediate.
+
+\emph{Scope.} Although valid on the whole range, the bounds carry
+information only near the left endpoint, and we state this openly.
+With $C=0.1560296\ldots$: the Chebyshev bound $C(2m+1)^2$ is below the
+trivial estimate $\tfrac12$ of part (ii) only for
+$m<\tfrac12\bigl((2C)^{-1/2}-1\bigr)=0.39506\ldots$ and is $\ge1$ for
+$m\ge\tfrac12\bigl(C^{-1/2}-1\bigr)=0.76580\ldots$; the exponential
+bound is below $\tfrac12$ only for
+$m<m_0=\tfrac12\bigl((2C\log2)^{-1/2}-1\bigr)=0.57507\ldots$. For
+$m\ge m_0$, part (iii) asserts nothing beyond part (ii). This
+limitation is consistent with the expected truth: the computed
+densities approach $\tfrac12$ from above (Table~\ref{tab:delta}), so an
+upper bound on $1-\delta(m)$ tending to $0$ for large $m$ would
+contradict the numerics, and none should be sought. The conjectured
+large-$m$ statement,
+$\delta(m)-\tfrac12\sim(2\pi\,\mathrm{Var}_4(m))^{-1/2}$ with
+$\mathrm{Var}_4(m)$ as in Results item 3 (asymptotically equal to
+$\sigma_m^2=\mathrm{Var}(V_m)$ above), is the
+dissolution law of the Results section; its proof is the subject of
+Theorem~\ref{thm:dissolution} of the companion draft and is \emph{not}
+proved in this paper.
+
+
+% ---------------------------------------------------------------------------
+%% Block I.  REPLACES lines 664-682 (the Proof of (iv) environment).
+% Changes relative to the original: "(- 1/2, 0]" becomes "(-1/2, \infty)" in
+% the logical-status sentence, and one closing sentence about the right end
+% of the family is added.  Everything else is verbatim.
+% ---------------------------------------------------------------------------
+
+\begin{proof}[Proof of (iv)]
+Immediate from (i)--(iii) together with the cited endpoint results:
+\cite{RS94} and \cite{FM13} at $m=0$ (our deterministic recomputation
+agrees to six decimals), and \cite{AK23,Sheth24,Hay25} at $m=-\tfrac12$
+for the unlogged race as quoted in the statement. We emphasize the
+logical status: $\delta(m)$ is defined for $m\in(-\tfrac12,\infty)$ and
+$m=-\tfrac12$ is not a value of the family; the connection asserted is
+$\delta(m)\to1$ as $m\to-\tfrac12^{\,+}$ (proved in (iii) under
+GRH+LI) matching the almost-sure single-sign regime established at
+$m=-\tfrac12$ by different methods and under different hypotheses
+(DRH, resp.\ GRH variants, no LI). For the $\theta$-form race at the
+threshold itself, the prime-square mechanism of
+Lemma~\ref{lem:squares} produces a $\tfrac12\log x$ drift
+($\sum_{p\le\sqrt x}p^{-1}\log p\sim\tfrac12\log x$); the
+$\tfrac12\log\log x$ drift of \cite{AK23,Sheth24} belongs to the
+unlogged race $D_{-1/2}$, and the two are compatible by partial
+summation. We do not claim the $m=-\tfrac12$ results, nor any new
+statement at $m=-\tfrac12$. At the right end of the family we prove
+existence, continuity, and $\tfrac12<\delta(m)<1$ for every $m$, but
+no statement about the rate of approach to $\tfrac12$; the decrease of
+the computed values in Table~\ref{tab:delta} is numerical observation,
+not a theorem of this paper.
+\end{proof}
+
+
+% ---------------------------------------------------------------------------
+%% Block J.  Changes to Proposition prop:unlogged (transfer to the unlogged
+% races) needed for the extended range.  Three replacements; the middle
+% paragraphs of the proof ("Bias term", lines 712-720; "Zero terms", lines
+% 722-746) are UNCHANGED -- they use only m+1/2>0 and summability in gamma.
+%
+% (J1) REPLACES lines 684-695 (the proposition statement): the only change
+%      is "(-1/2,0]" -> "(-1/2,\infty)".
+% ---------------------------------------------------------------------------
+
+\begin{proposition}[transfer to the unlogged races]\label{prop:unlogged}
+Assume GRH$(\chi_4)$ and fix $m\in(-\tfrac12,\infty)$. Let
+$D_m(x)=\sum_{p\le x,\,p\equiv3(4)}p^m-\sum_{p\le x,\,p\equiv1(4)}p^m$
+and
+\[
+E_m'(x)\;=\;(2m+1)\,x^{-(m+1/2)}(\log x)\,D_m(x).
+\]
+Then $u\mapsto E_m'(e^u)$ has the \emph{same} limiting distribution
+$\nu_m$ as $E_m(e^u)$; consequently, under LI$(\chi_4)$, all of
+(ii)--(iii) hold verbatim for the unlogged race, with the same
+$\delta(m)$.
+\end{proposition}
+
+% ---------------------------------------------------------------------------
+% (J2) REPLACES, inside the proof of prop:unlogged, the text from the words
+%      "Insert the expansion of $R_m$ ..." through the F(t,T) display (line
+%      708).  CAUTION: "Insert" begins at the END of line 699; the first
+%      part of line 699, "=\frac{R_m(x)}{\log x}+\int_2^x...\,dt$.", is the
+%      tail of the partial-summation sentence (lines 698-699) and is
+%      UNCHANGED --- replace from the word "Insert" onward only, not the
+%      whole of line 699.
+%      Change: F gains the full-range floor (1+t^m) log t of Lemma lem:trunc.
+% ---------------------------------------------------------------------------
+
+Insert the expansion of $R_m$ from
+Lemmas~\ref{lem:trunc}--\ref{lem:squares}
+(truncation $T$, valid uniformly in $t\le x$),
+\[
+R_m(t)=\frac{t^{m+1/2}}{2m+1}
++\sum_{|\gamma|\le T}\frac{t^{\rho+m}}{\rho+m}+F(t,T),
+\]
+\[
+F(t,T)\ll_m \frac{t^{m+1}\log^2(tT)}{T}+t^{m+1/3}\log t
++t^{m+1/2}e^{-c\sqrt{\log t}}+(1+t^m)\log t+\log^2 t ,
+\]
+the fourth term being the full-range floor of \eqref{eq:trunc}
+(for $m\le0$ it is $\le2\log t$ and merges with the last term, giving
+back the earlier display).
+
+% ---------------------------------------------------------------------------
+% (J3) REPLACES lines 748-770 (the "Truncation/PNT term" paragraph, the
+%      closing display + Cesaro sentence, AND the concluding sentences
+%      "Thus $E_m'(e^u)$ ... $\theta$- and $\pi$-races." of lines 766-770,
+%      which are retyped below --- replacing only through line 765 would
+%      duplicate them).  Changes: the new floor is
+%      propagated through the partial-summation integral, and the closing
+%      display uses kappa_m; the verification at T = e^Y is as before.
+% ---------------------------------------------------------------------------
+
+\emph{Truncation/PNT term.} Each component of $F$ passes through
+$\frac{R_m(x)}{\log x}$ and
+$\int_2^x F(t,T)\,t^{-1}\log^{-2}t\,dt$ with at most one extra factor
+$\log$. For the components carrying a power $t^a$ with $a>0$
+($a=m+1$ and $a=m+\tfrac12$ always; $a=m+\tfrac13$ when
+$m>-\tfrac13$), splitting the
+integral at $\sqrt x$ gives
+$\int_2^xt^{a-1}\log^{-2}t\,dt\ll_a x^a\log^{-2}x$, the PNT component
+retaining its factor $e^{-c\sqrt{\log t}}$ (decreasing, so bounded on
+$[\sqrt x,x]$ by $e^{-(c/\sqrt2)\sqrt{\log x}}$). For
+$m\le-\tfrac13$ the $k\ge3$ component has $m+\tfrac13\le0$, so
+$t^{m+1/3}\log t\le(\log2)^{-1}\log^2t$ for $t\ge2$ and it is
+absorbed by the $\log^2t$ component (this case must be separated:
+for $a\le0$ the integral $\int_2^xt^{a-1}\log^{-2}t\,dt$ is
+$\asymp_m1$, not $\ll x^a\log^{-2}x$). The $\log^2t$
+component gives $\int_2^xt^{-1}dt=\log x-\log2$; and the new floor
+$(1+t^m)\log t$ contributes
+$\int_2^x(1+t^m)t^{-1}\log^{-1}t\,dt
+\ll_m\log\log x+1+x^m/\log x$. After multiplication by the normalizer
+$(2m+1)x^{-(m+1/2)}\log x$, all of these are covered by the display
+below (the floor's contribution is $\ll_m u^2e^{-\kappa_mu}$).
+
+Collecting, for $u\ge2$, $T\ge2$,
+\[
+E_m'(e^u)\;=\;1+\mathrm{Re}\!\!\sum_{0<\gamma\le T}\!\!
+r_\gamma(m)e^{i\gamma u}+\mathcal E'(u,T),
+\qquad
+\mathcal E'(u,T)\ll_m
+\frac{u\,e^{u/2}\log^2(e^uT)}{T}+\frac1u+u^2e^{-\kappa_m u}
++ue^{-u/6}+ue^{-c\sqrt u},
+\]
+with $\kappa_m=\min(m+\tfrac12,\tfrac12)$ as in the proof of (i), and
+at $T=e^Y$, $u\in[2,Y]$ each term's Ces\`aro mean square tends to
+$0$ exactly as in (i) (the first is $\ll Y^5e^{-Y}$ after
+integration; $1/u$ contributes $\frac1Y\int_2^Y u^{-2}du\ll1/Y$; the
+remaining three are fixed $L^2(0,\infty)$ functions of $u$ since
+$\kappa_m>0$). Thus $E_m'(e^u)$ satisfies the same \cite{ANS14}
+hypotheses with the \emph{same} constant $1$ and the \emph{same}
+coefficients $r_\gamma(m)$, so its limiting distribution is again
+$\nu_m$. At $m=0$ this recovers the classical passage of \cite{RS94}
+between $\theta$- and $\pi$-races.
+
+
+% ---------------------------------------------------------------------------
+%% Block L.  REPLACES the clause at lines 818-821 of "Assumptions and
+% limitations" ("the existence of the limiting distribution is proved for
+% $m\in(-\tfrac12,0\,]$ ... is not claimed as new;").
+% ---------------------------------------------------------------------------
+
+% ... Densities are conditional on GRH + LI, as throughout this literature;
+the existence of the limiting distribution, the continuity of
+$m\mapsto\delta(m)$, and the strict bounds $\tfrac12<\delta(m)<1$ are
+proved for all $m\in(-\tfrac12,\infty)$ in Section~\ref{sec:theorem}
+(the $m>0$ part is the routine direction of the extension: the only
+changes are the $(1+x^m)\log x$ error floor in the explicit formula and
+the constant $2\max K+1$ in the continuity argument);
+% ... the dissolution law is derived at the level of rigor of ... (unchanged)
+
+
+% ---------------------------------------------------------------------------
+%% Block M.  Micro-edit at line 187 (Results item 4): the printed value of
+% Sigma = sum 2/gamma^2 is corrected.
+%   OLD: "$\Sigma=\sum_\gamma2/\gamma^2=0.156033$"
+%   NEW: "$\Sigma=\sum_\gamma2/\gamma^2=0.1560296$"
+% ---------------------------------------------------------------------------
