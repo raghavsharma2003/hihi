@@ -1,8 +1,8 @@
 # Weighted Chebyshev races: the density curve δ(m) and its two ends
 
 **Positioning (calibrated by an adversarial literature review — see the end).**
-This work answers, computationally, Problem 12 of the Comparative Prime
-Number Theorem problem list (Hamieh–Kadiri–Martin–Ng, arXiv:2407.03530,
+This work contributes computational evidence toward Problem 12 of the
+Comparative Prime Number Theory problem list (Hamieh–Kadiri–Martin–Ng, arXiv:2407.03530,
 posed by Koyama): the relation between the *weighted* formulation of
 Chebyshev's bias (Aoki–Koyama school) and the classical *logarithmic
 density* formulation (Rubinstein–Sarnak). We connect the two by computing,
