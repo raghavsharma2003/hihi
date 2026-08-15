@@ -46,6 +46,12 @@ then confirmed against every single prime up to ten billion. It turned out our
 numbers bear directly on an open problem posed by researchers in 2024
 (Problem 12 of the Comparative Prime Number Theory problem list) — the
 first computational evidence connecting the two definitions it asks about.
+And in the very last push, the computations became a theorem: under the
+field's standard working hypotheses, the two competing definitions of
+Chebyshev's bias turn out to be the two ends of one continuous curve, with
+an explicit bound on how fast the bias becomes total at the far end — new
+for prime races, built on methods from a 2013 blueprint. (The problem
+itself remains open; this is a bridge, not the final answer.)
 
 Full transparency, because it's the most interesting part: the AI didn't
 just help — it derived, coded, and then *attacked its own work*. Twice its

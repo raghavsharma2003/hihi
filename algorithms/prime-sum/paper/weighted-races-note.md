@@ -8,8 +8,11 @@ Chebyshev's bias (Aoki–Koyama school) and the classical *logarithmic
 density* formulation (Rubinstein–Sarnak). We connect the two by computing,
 for the first time for any weighted prime race, the Rubinstein–Sarnak
 densities δ(m) across the whole delicate range, extending the race to
-growing weights m > 0 (untouched in the literature), and deriving the
-density's asymptotic dissolution law in the weight aspect.
+growing weights m > 0 (untouched in the literature), deriving the
+density's asymptotic dissolution law in the weight aspect, and — since
+the final version — proving an interpolation theorem (existence,
+continuity in the weight, and an explicit rate for δ(m) → 1 on
+(−1/2, 0], under GRH + LI; see item 4 below).
 
 **The object.** D_m(x) = Σ_{p≤x, p≡3(4)} p^m − Σ_{p≡1(4)} p^m. The m ≤ 0
 structure has an established literature: Aoki–Koyama (JNT 2023) proved the
@@ -53,7 +56,26 @@ the difference is OEIS A086239, the constants A368645/A368646). Our claims are t
    the weight-aspect instance of the Fiorilli "highly biased" and
    Humphries δ_α → 1 phenomena.
 
-4. **Numerical completion of the m ≤ 0 boundary** (confirming, not
+4. **An interpolation theorem (GRH + LI), doubly red-teamed.** For
+   m ∈ (−1/2, 0]: the limiting logarithmic distribution of the normalized
+   race exists (Akbary–Ng–Shahabi framework, Cor 1.3(a)+Thm 1.9, applied
+   to the shifted explicit formula); δ(m) ∈ (1/2, 1); m ↦ δ(m) is
+   **continuous** (Lévy continuity + arcsine absolute continuity ⇒ no atom
+   at 0); and 1 − δ(m) ≤ min{C(2m+1)², exp(−1/(2C(2m+1)²))} with
+   C = Σ_γ 2/γ² = 0.156033 — so δ(m) → 1 as m → −1/2⁺, matching the
+   Aoki–Koyama/Sheth/Hayani single-sign regime at m = −1/2. Stated for
+   the θ-form race; a proposition transfers everything verbatim to the
+   unlogged race D_m. NEW: the prime-race statement, the continuity in
+   the weight, the explicit rate with computable constant. NOT new: the
+   method (Humphries 2013 proved the Liouville analogue of the limit;
+   our mechanism is his transposed — variance collapse at fixed mean
+   instead of mean divergence at fixed variance; the paper says so).
+   NEVER claim this answers Problem 12: it exhibits the two definitions
+   as the two ends of one continuous, quantitatively controlled family —
+   a conditional structural connection, not a logical inclusion; the
+   problem remains open.
+
+5. **Numerical completion of the m ≤ 0 boundary** (confirming, not
    discovering): at m = −1/2 our zero-free-parameter prediction
    D = ½·log log x + C*, C* = (M − log2 − ½)/2 + K₃ − log L(½,χ₄)
    = −0.07153, hits the exact sieve value at 10¹⁰ within 0.63σ

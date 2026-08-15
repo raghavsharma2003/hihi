@@ -105,12 +105,19 @@ existence machinery for limiting distributions (Akbary–Ng–Shahabi, Devin).
 
 **New, to the best of a determined search:** the analytic prime-sum
 computations themselves; the weighted-race densities δ(m); the entire
-growing-weight regime; and the dissolution law. Together they connect the
-"weighted" school of Chebyshev's bias with the classical "density" school —
-the two definitions whose relationship Problem 12 of the comparative prime
-number theory problem list (Hamieh–Kadiri–Martin–Ng, 2024) asks about. Our
-contribution is computational evidence; the logical relation the problem
-demands remains for the theorists.
+growing-weight regime; the dissolution law; and — from the final push — an
+interpolation theorem: under the field's standard hypotheses (GRH + LI),
+the density δ(m) exists for every weight in the delicate range, varies
+*continuously* in the weight, and tends to 1 at the weighted end with an
+explicit, computable rate. The theorem is new in this setting but proved
+with known machinery (Akbary–Ng–Shahabi's framework, plus a 2013 method of
+Humphries transposed) — the paper says exactly that. Together these connect
+the "weighted" school of Chebyshev's bias with the classical "density"
+school — the two definitions whose relationship Problem 12 of the
+comparative prime number theory problem list (Hamieh–Kadiri–Martin–Ng,
+2024) asks about — as the two ends of one continuous, quantitatively
+controlled curve. That is a structural connection, not the logical
+inclusion the problem ultimately demands: Problem 12 itself remains open.
 
 ## Part 5: About the AI
 
