@@ -61,8 +61,9 @@ the difference is OEIS A086239, the constants A368645/A368646). Our claims are t
    that the log-stripped fluctuation *decays* like √Σ/log x
    (Σ = Σ_γ 2/γ² = 0.156033) — visible decade-by-decade in the data.
    Neither race with m ∈ {−1/2, −3/4, −1} flips even once on [3, 10¹⁰]:
-   the 3-side leads from the first odd prime, minimum margin 2/15 at
-   p = 5. Frozen limits identified with published constants:
+   the 3-side leads from the first odd prime; minimum margin
+   1/√3−1/√5 ≈ 0.13014 at p = 5 (attained by the m=−½ race; the m=−1
+   margin there is 2/15). Frozen limits identified with published constants:
    D_{−1}(∞) = M(4,3) − M(4,1) = 0.334981325299993181… (our independent
    Möbius-over-log-L computation agrees with Languasco–Zaccagnini/OEIS
    values to all compared digits).

@@ -41,3 +41,8 @@ D literature: CRITICAL RECALIBRATION. m<=0 half is occupied: Aoki-Koyama 2023 pr
 
 ## PR
 raghavsharma2003/hihi #2, branch claude/prime-sum-algo-optimization-lkry0q, base claude/voice-notes-app-calendar-f0d541. PR monitoring/check-ins STOPPED at user request — do not re-arm.
+
+## FINAL AUDIT (2026-08-15, pre-outreach) — PASSED
+Numbers audit: 38/39 claims reproduced exactly (both 1e10 sieves regenerated; all density cells to last digit; kernel derivation verified analytically incl. theta-form->unlogged 1/log x cancellation; off-by-one kernel alternative excluded via m=0 anchor). ONE error found+fixed: min margin over m in {-1,-3/4,-1/2} is 1/sqrt3-1/sqrt5=0.13014 (m=-1/2 at x=5), not 2/15 (that's m=-1 only). Evidence gap closed: fresh 1e10 frozen-race scan (race_frozen_scan.c, archived) confirms zero flips for m=-1,-3/4 to 1e10.
+Citations audit: Problem 12 VERIFIED (number, statement, Koyama attribution, quote obtained); fixes applied: problem-list title, authors-not-eds, Sheth MPCPS 179 (2025) 331-349, OEIS A086239=difference/A368645+A368646=constants. Martin: gerg@math.ubc.ca, Professor Emeritus, UBC.
+Outreach package READY: paper/weighted-races.tex (audited), paper/outreach-email.md (to Greg Martin), bundle in scratchpad prime-sum-research.tar.gz.
