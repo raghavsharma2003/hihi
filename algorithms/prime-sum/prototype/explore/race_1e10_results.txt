@@ -1,0 +1,9 @@
+X = 10000000000
+m=0: D_m(X)=5960  first 1-side lead at p=26861  lead-changes=3082
+      3-side leads: natural measure 0.992770   log measure 0.999046
+m=1: D_m(X)=27201020910942  first 1-side lead at p=5  lead-changes=125624
+      3-side leads: natural measure 0.809512   log measure 0.793800
+m=2: D_m(X)=214170566822845470531904  first 1-side lead at p=5  lead-changes=159942
+      3-side leads: natural measure 0.725752   log measure 0.692749
+m=3: D_m(X)=1870471578152975225306023820239110  first 1-side lead at p=5  lead-changes=199540
+      3-side leads: natural measure 0.682522   log measure 0.649003
