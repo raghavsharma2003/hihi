@@ -1,0 +1,35 @@
+COMMAND: python verify_monotonicity_arb.py
+WORKDIR: algorithms/prime-sum/paper/v3
+DATE: 2026-08-17 Asia/Calcutta
+
+isolated 90 J1 extrema through 283.527414; widest root enclosure < 5.68e-14
+q=4: loaded 511 certified ordinate balls
+  q=4: certified  20/145 intervals through M=25.736609
+  q=4: certified  40/145 intervals through M=38.243247
+  q=4: certified  60/145 intervals through M=56.827453
+  q=4: certified  80/145 intervals through M=84.442606
+  q=4: certified 100/145 intervals through M=125.477271
+  q=4: certified 120/145 intervals through M=186.452624
+  q=4: certified 140/145 intervals through M=277.058791
+  q=4: certified 145/145 intervals through M=300.000000
+q=4: ALL 145 intervals certified on [17.32,300.0]
+  worst certified relative margin 0.105567 on [17.320000000,17.666400000]
+  MAIN=[0.000448164065787491538352318944986483259519 +/- 7.95e-43]
+  TAIL=[0.000400852880483599627485602998149137394060 +/- 8.23e-43]
+q=4: analytic M=300 bridge certified; TAIL/MAIN <= 4.501347e-04
+q=3: loaded 537 certified ordinate balls
+  q=3: certified  20/140 intervals through M=28.411314
+  q=3: certified  40/140 intervals through M=42.217718
+  q=3: certified  60/140 intervals through M=62.733309
+  q=3: certified  80/140 intervals through M=93.218397
+  q=3: certified 100/140 intervals through M=138.517634
+  q=3: certified 120/140 intervals through M=205.829917
+  q=3: certified 140/140 intervals through M=300.000000
+q=3: ALL 140 intervals certified on [19.12,300.0]
+  worst certified relative margin 0.035182 on [19.120000000,19.502400000]
+  MAIN=[0.000420770132976451173143233869512054825917 +/- 5.37e-43]
+  TAIL=[0.000405966567754490438688846911544727193859 +/- 5.89e-43]
+q=3: analytic M=300 bridge certified; TAIL/MAIN <= 2.909838e-03
+PASS: finite thresholds and analytic bridge certified in ball arithmetic
+
+EXIT_CODE: 0

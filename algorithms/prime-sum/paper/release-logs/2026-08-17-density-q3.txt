@@ -1,0 +1,23 @@
+COMMAND: python race_density_arb.py --q 3
+WORKDIR: algorithms/prime-sum/prototype/explore
+DATE: 2026-08-17 Asia/Calcutta
+
+working q=3, m=0 ...
+working q=3, m=1 ...
+working q=3, m=2 ...
+working q=3, m=3 ...
+working q=3, m=8 ...
+working q=3, m=20 ...
+working q=3, m=60 ...
+
+CERTIFIED conditional density enclosures
+ q   m       lower bound             upper bound        width       E1 cells
+ 3   0  0.999063097443  0.999063289012  1.92e-07     4409
+ 3   1  0.836880448106  0.836880514652  6.65e-08     1553
+ 3   2  0.723472889305  0.723472932221  4.29e-08      948
+ 3   3  0.666554247837  0.666554281617  3.38e-08      724
+ 3   8  0.578535581419  0.578535607434  2.60e-08      422
+ 3  20  0.540768194762  0.540768228848  3.41e-08      484
+ 3  60  0.519717445589  0.519717513972  6.84e-08      900
+
+EXIT_CODE: 0

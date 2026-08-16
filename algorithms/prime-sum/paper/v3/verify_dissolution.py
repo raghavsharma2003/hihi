@@ -118,6 +118,7 @@ print("[2] Bessel constants:")
 zs = np.linspace(1e-4, 400.0, 4_000_000)
 bad = np.abs(j0(zs)) - (8 / math.pi) / np.sqrt(zs)
 print(f"    max |J0(z)| - (8/pi)z^-1/2 on (0,400]: {bad.max():.6f}  (must be <0)")
+del zs, bad
 # the log J0 expansion bounds need multiprecision: near z=0 the remainders are
 # below float64 cancellation noise (z^6/576 ~ 1e-21 at z=0.005).
 e1m = mpf(0); e2m = mpf(0); e3m = mpf(0)
@@ -137,6 +138,7 @@ grid = np.linspace(zstar, 400, 4_000_000)
 rho = np.abs(j0(grid)).max()
 print(f"    rho(z*) = sup_(z>=1/(2 sqrt5))|J0| = {rho:.6f} = J0({zstar:.6f}) itself? "
       f"J0(z*)={j0(zstar):.6f}  (must be <1)")
+del grid
 print(f"    c3 = 4*5^(1/4)/pi = {4 * 5**0.25 / math.pi:.6f}  (claim < 2)")
 
 # ---------------------------------------------------------------- [3]
@@ -166,18 +168,43 @@ for (q, m) in [(4, 100), (4, 20), (4, 8), (3, 60)]:
           f"   S6={S6[(q,m)]:12.4f}")
 
 # ---------------------------------------------------------------- [4]
+def phi_model(t, amplitudes, tail_variance, signed=True):
+    """Finite Bessel product times the exact Gaussian tail on one grid chunk."""
+    lg = np.zeros_like(t)
+    sg = np.ones_like(t) if signed else None
+    for av in amplitudes:
+        v = j0(2 * av * t)
+        lg += np.log(np.abs(v) + 1e-300)
+        if signed:
+            sg *= np.sign(v)
+    out = np.exp(lg - tail_variance * t * t / 2)
+    return sg * out if signed else out
+
+
+def chunked_trapezoid(start, stop, n, value_fn, chunk_intervals=1_000_000):
+    """Trapezoidal rule on the exact n-point uniform grid with bounded memory."""
+    if n < 2:
+        raise ValueError("trapezoidal grid needs at least two points")
+    step = (stop - start) / (n - 1)
+    total = 0.0
+    # Consecutive chunks overlap at one endpoint, but their *intervals* are
+    # disjoint, so summing the local trapezoids equals one global trapezoid.
+    for i0 in range(0, n - 1, chunk_intervals):
+        i1 = min(n - 1, i0 + chunk_intervals)
+        t = start + step * np.arange(i0, i1 + 1, dtype=np.float64)
+        total += float(np.trapezoid(value_fn(t), t))
+    return total
+
+
 def delta(m, q, T=2.0, n=2_000_001):
     g = zeros(q); M = m + 0.5
     a = (2 * m + 1) / np.sqrt(M**2 + g**2)           # a_gamma
     s2_exact = float(S2[(q, m)])
     tv = s2_exact - float((2 * a**2).sum())          # exact tail variance
-    t = np.linspace(1e-12, T, n)
-    lg = np.zeros_like(t); sg = np.ones_like(t)
-    for av in a:
-        v = j0(2 * av * t)
-        lg += np.log(np.abs(v) + 1e-300); sg *= np.sign(v)
-    phi = sg * np.exp(lg - tv * t * t / 2)
-    val = 0.5 + np.trapezoid(phi * np.sin(t) / t, t) / math.pi
+    val = 0.5 + chunked_trapezoid(
+        1e-12, T, n,
+        lambda t: phi_model(t, a, tv) * np.sin(t) / t,
+    ) / math.pi
     return val, tv, s2_exact
 
 print("[4] densities vs dissolution predictions:")
@@ -207,13 +234,10 @@ for (q, m) in [(4, 8), (4, 20), (4, 100), (3, 60)]:
     s4t = s4 - s4_head
     smallt = 0.21 * s4t / s2**2
     aa = (2 * m + 1) / np.sqrt(M**2 + gg**2)
-    tt = np.linspace(0.125, 2.5, 400001)
-    lgt = np.zeros_like(tt)
-    for av in aa:
-        lgt += np.log(np.abs(j0(2 * av * tt)) + 1e-300)
-    integ = (np.exp(lgt - tv * tt**2 / 2) * (tt**4 * s4t / 17)
-             * np.exp(np.minimum(tt**4 * s4t / 17, 200.0)))
-    bigt = np.trapezoid(integ, tt) / math.pi / pred1
+    def bias_integrand(tt):
+        u = tt**4 * s4t / 17
+        return phi_model(tt, aa, tv, signed=False) * u * np.exp(np.minimum(u, 200.0))
+    bigt = chunked_trapezoid(0.125, 2.5, 400001, bias_integrand) / math.pi / pred1
     print(f"    ({q},{m:>3})  {d:.9f}  {dd:.7f}  {pred1:.7f}  {pred2:.7f}  {pred3:.7f}  "
           f"{dd/pred1-1:+.2e}  {dd/pred2-1:+.2e}  {dd/pred3-1:+.2e}  "
           f"{smallt:.1e}+{bigt:.1e}={smallt+bigt:.1e}")

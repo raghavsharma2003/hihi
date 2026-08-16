@@ -1,0 +1,15 @@
+COMMAND: tectonic -X compile algorithms/prime-sum/paper/weighted-races.tex --outdir output/pdf --keep-logs --keep-intermediates
+DATE: 2026-08-17 Asia/Calcutta
+TECTONIC: 0.17.0
+
+Automatic rerun completed.
+Output PDF: 66 pages, 563209 bytes
+SHA-256: aa1d3ee9a87e37067f1840deacb4bd094803cb8fe815637d6b17da3cced7e27a
+Undefined references: 0
+Undefined citations: 0
+Overfull boxes: 0
+PDF bookmark warnings: 0
+Underfull boxes: 4
+Empty extracted-text pages: 0
+
+EXIT_CODE: 0

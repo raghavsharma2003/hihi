@@ -6,6 +6,12 @@
 > Remaining: recompile PDF with DOI footnote -> Zenodo "New version" ->
 > send the email (Step 3) -> posts (Step 4) -> arXiv (Step 5).
 
+> **LEGACY / SUPERSEDED — DO NOT EXECUTE.** This playbook records an obsolete
+> August 15 draft state. Its upload, email, and posting instructions are not
+> authorization and do not apply to the current `weighted-races.tex`. The
+> public archive named above is stale. Follow `SUBMISSION-READINESS.md` and
+> synchronize the release only after external expert review.
+
 Everything below is sequenced. Don't reorder: the DOI must exist before the
 email, and the email before the social posts.
 

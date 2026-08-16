@@ -1,5 +1,12 @@
 # Computing weighted prime sums from zeros of ζ and Dirichlet L-functions — manuscript
 
+> **LEGACY COMPANION NOTES — NOT THE CURRENT SUBMISSION SOURCE.** This file
+> describes the older `analytic-prime-sum.tex` project. It does not describe
+> `weighted-races.tex`, its repaired Arb density certificates, or the Lean
+> supplement. Do not use the status or submission advice below for the
+> weighted-races paper. The authoritative records are `REPRODUCIBILITY.md` and
+> `SUBMISSION-READINESS.md` in this directory.
+
 `analytic-prime-sum.tex` is the submission-format LaTeX source (compiles on
 Overleaf; standard packages only). `prior-art-review.md` is the adversarial
 literature sweep that shaped the claims. This file is the readable summary.

@@ -350,3 +350,87 @@ accordingly.  The still-open monotonicity range is the bounded initial interval
 `(-1/2,16.82)` resp. `(-1/2,18.62)`; the final density quadrature remains a
 separate floating-point computation with estimated, not interval-certified,
 quadrature error.
+
+## 2026-08-17 - genuine Lean 4 verification layer established
+
+A standalone Lean project now lives in `algorithms/prime-sum/formal/`, pinned
+to Lean `v4.33.0` and mathlib `v4.33.0` (manifest commit
+`db584cd6d46c92f209a44c0f1c829460d327499d`).  A clean full build completed:
+
+```text
+cd algorithms/prime-sum/formal
+lake build
+# Build completed successfully (2718 jobs).
+```
+
+`Formal/WeightedRaces.lean` contains 34 kernel-checked theorem declarations
+with no `sorry`, `admit`, `unsafe`, or project-local `axiom` command.  The
+formalized scope is deliberately precise:
+
+- doubled-amplitude squares, the one-zero variance contribution, and its
+  positive derivative;
+- the termwise `S4` and `S6` logarithmic-derivative identities;
+- the critical squared-amplitude rescaling;
+- exact normalized second and fourth uniform-cosine moments and the negative
+  fourth-cumulant arithmetic;
+- finite-zero variance differentiation and the bounds
+  `S4 <= 32 sigma^2`, `S6 <= 16 S4`, `S8 <= 16 S6`;
+- one-zero threshold/profile case algebra; and
+- all rational Gaussian moments and coefficients in the third-order
+  Edgeworth correction.
+
+`lake env lean Formal/Audit.lean` also completed successfully and printed the
+axiom dependency of every declaration.  Every non-constructive declaration
+uses only the standard Lean/mathlib foundations `propext`,
+`Classical.choice`, and `Quot.sound`; the recursive zeroth Gaussian moment is
+axiom-free, and the remaining elementary Gaussian moment evaluations use only
+`propext`.
+
+The repository CI now has a separate `lean-formalization` job using the
+official `leanprover/lean-action@v1`, an independent `nanoda` kernel check with
+`nanoda-allow-sorry: false`, an anchored source guard against local proof escape
+hatches, and the complete axiom report.
+
+This is not, and must not be described as, a full formalization of the paper.
+GRH and LI, Dirichlet L-function analytic continuation and explicit formulae,
+zero-list completeness, infinite products/series, weak convergence, Fourier
+remainder estimates, Arb certificates, and numerical quadrature remain outside
+the present Lean boundary.  Formalizing those honestly is a substantial
+multi-stage research-engineering project, not a matter of restating them as
+assumptions.
+
+## 2026-08-17 - density certificates repaired, audited, and rerun
+
+The earlier entries that describe the fourteen density intervals as
+floating-point error budgets are superseded.  A new fail-closed program,
+`prototype/explore/race_density_arb.py`, encloses the complete Gil--Pelaez
+calculation at 192-bit Arb precision.  It certifies the variance by a
+complex-step/Cauchy--Abel remainder, isolates the 16 Gauss--Legendre nodes and
+weights, bounds the analytic quadrature remainder, interval-integrates the
+unseen-zero model error, and applies Landau's global `J0` envelope to the
+infinite Fourier tail.
+
+The first implementation audit found two real certificate-breaking bugs:
+
+1. the adaptive `E1` accumulator added one pair of Arb endpoints but
+   subtracted endpoints of a separately rounded hull, which could make its
+   claimed upper sum too small;
+2. the decimal printer routed endpoints through binary64, so its strings were
+   not guaranteed to round outward.
+
+No interval from that first run was accepted as a certificate.  The code now
+recomputes `E1` totals directly from all active leaves, formats via Arb integer
+floor/ceiling, reparses every decimal to assert containment, verifies the
+quartic constant in Arb, and proves the Gauss node balls disjoint and
+exhaustive.  A second internal AI-agent adversarial audit reproduced the old failures on
+synthetic cases and confirmed that the repairs close them.  Both full modulus
+runs then exited successfully on all fourteen cases.  The outward-rounded
+results are stored in `race_density_arb_results.txt`; their widths range from
+`2.23e-8` to `1.92e-7`.
+
+These are rigorous numerical certificates only conditional on GRH, LI, the
+paper's analytic reduction, and the separately certified zero-list
+completeness.  They are not Lean-verified and do not prove GRH or LI.  The
+manuscript methods section and all numerical consistency tables were updated
+to propagate the new interval radii; in particular, several old third-order
+point residuals were replaced by honest midpoint-plus-radius statements.

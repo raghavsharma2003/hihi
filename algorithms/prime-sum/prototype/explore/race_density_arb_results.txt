@@ -1,0 +1,46 @@
+Arb density certification results
+=================================
+
+Command (python-flint 0.9.0):
+  python race_density_arb.py
+
+Conditional mathematical inputs:
+  * GRH + LI for the Rubinstein--Sarnak limiting-variable model;
+  * the zero localization/completeness certificates from certify_arb.py.
+
+Numerical certification:
+  * Arb precision: 192 bits;
+  * listed zero ordinates widened by +/- 1e-20;
+  * sigma^2 enclosed with Arb plus an explicit Cauchy remainder;
+  * 16-point composite Gauss--Legendre nodes and weights isolated in Arb;
+  * analytic Gauss remainder bounded by Cauchy's estimate;
+  * unseen-tail model error bounded by adaptive interval subdivision;
+  * infinite-t tail bounded using Landau's global J_0 envelope.
+
+Every lower bound below was rounded downward and every upper bound upward.
+The rounding is performed by Arb integer floor/ceiling and each printed
+decimal is reparsed to verify outward containment.  The adaptive E1 integral
+is summed afresh from its active leaf intervals; no subtractive interval
+bookkeeping is used.  A post-repair audit by a second internal AI agent exercised both
+mechanisms on adversarial examples before the full rerun below.
+
+ q   m       lower bound             upper bound        width       E1 cells
+ 4   0  0.995927866782  0.995927983908  1.17e-07     4249
+ 4   1  0.797630378395  0.797630419780  4.14e-08     1493
+ 4   2  0.694521087360  0.694521114910  2.75e-08      899
+ 4   3  0.645851046701  0.645851069409  2.27e-08      640
+ 4   8  0.571870091125  0.571870113448  2.23e-08      379
+ 4  20  0.538455286605  0.538455320880  3.43e-08      486
+ 4 100  0.513778241424  0.513778355623  1.14e-07     1423
+ 3   0  0.999063097443  0.999063289012  1.92e-07     4409
+ 3   1  0.836880448106  0.836880514652  6.65e-08     1553
+ 3   2  0.723472889305  0.723472932221  4.29e-08      948
+ 3   3  0.666554247837  0.666554281617  3.38e-08      724
+ 3   8  0.578535581419  0.578535607434  2.60e-08      422
+ 3  20  0.540768194762  0.540768228848  3.41e-08      484
+ 3  60  0.519717445589  0.519717513972  6.84e-08      900
+
+Both independent modulus runs exited with status 0 after the E1-bookkeeping
+and directed-formatting repairs.  Total wall time while run concurrently was
+about six minutes on the development machine; this is performance
+information, not part of the certificate.

@@ -37,6 +37,10 @@ yarn-error.*
 *.log
 __pycache__/
 .venv-research/
+.tools/
+tmp/
+output/pdf/*.aux
+output/pdf/*.out
 algorithms/prime-sum/fenwick
 algorithms/prime-sum/lucy
 algorithms/prime-sum/sieve

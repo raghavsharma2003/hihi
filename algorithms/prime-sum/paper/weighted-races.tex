@@ -3,6 +3,7 @@
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{booktabs}
 \usepackage[hidelinks]{hyperref}
+\setlength{\emergencystretch}{3em}
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{proposition}{Proposition}
@@ -13,87 +14,54 @@
 \newcommand{\eps}{\varepsilon}
 \newcommand{\loglog}{\log\log}
 
-\title{Rubinstein--Sarnak densities for weighted prime number races}
+\title{Weighted prime races: interpolation, dissolution, and a low-zero transition}
 \author{Raghav Sharma\thanks{Draft of August 2026, not yet submitted.
-This work was carried out with substantial AI assistance (Anthropic's
-Claude): derivations, implementations, and the literature review were
-AI-produced and then machine- and hand-verified as described in
-Section~\ref{sec:methods}; the author takes responsibility for the
-content. Comments are very welcome. Contact: raghavsharma1729@gmail.com.
-Preprint: \href{https://doi.org/10.5281/zenodo.21947102}{doi:10.5281/zenodo.21947102};
-code and data: \url{https://github.com/raghavs1729/weighted-prime-races}.}}
+AI systems (Anthropic Claude and OpenAI Codex) assisted with derivations,
+implementations, exposition, and literature discovery. The verification
+status of each computational claim is recorded in Section~\ref{sec:methods};
+the author takes responsibility for the content, which has not yet received
+independent expert review. Comments are very welcome. Contact:
+raghavsharma1729@gmail.com.  The source, certificates, and public archive must
+be synchronized to the final release commit before submission.}}
 \date{August 2026}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-For $m\in\mathbb R$ consider the weighted prime race
-$D_m(x)=\sum_{p\le x,\,p\equiv 3\,(4)}p^{\,m}-\sum_{p\le x,\,p\equiv
-1\,(4)}p^{\,m}$ and its analogues for other moduli. The regime
-$m\le 0$ has a developed literature: the critical
-$\tfrac12\loglog x$ deflection at $m=-\tfrac12$ (Aoki--Koyama; Sheth),
-the sign-change threshold (Shimada--Koyama), and, for $m<-\tfrac12$,
-limits expressible through Meissel--Mertens constants for progressions
-(Languasco--Zaccagnini). We contribute the pieces this literature does
-not contain: (i) the first numerical Rubinstein--Sarnak logarithmic
-densities for a weighted race between primes in arithmetic progressions
-(for weighted prime-sum races against main terms, cf.\ Lamzouri's
-Mertens-race density~\cite{Lam16}), computed across the delicate
-range under the standard GRH + LI hypotheses by deterministic Fourier
-inversion --- e.g.\ for modulus $4$, $\delta(1)=0.79763$,
-$\delta(2)=0.69452$, $\delta(3)=0.64585$, with the calibration
-$\delta(0)=0.995928$ recovering the classical Rubinstein--Sarnak value
-to six decimals; (ii) the
-growing-weight regime $m>0$ (we are not aware of prior
-Rubinstein--Sarnak density computations or weight-aspect density
-asymptotics for growing weights $p^{\,m}$, $m>0$), with exact sieve
-computations to $10^{10}$ agreeing with the predicted densities to
-$\lesssim4\times10^{-3}$ for modulus $4$; (iii) an asymptotic dissolution law in the weight
-aspect, $\delta_q(m)-\tfrac12\sim(2\pi\cdot
-2(m+\tfrac12)\log\tfrac{q(m+1/2)}{2\pi})^{-1/2}$, an analogue of the
-Fiorilli--Martin density asymptotics and an extension of their aggregate
-quadratic race from $m=0$ to growing weights, proved here with an error term
-for the density of the limiting distribution of any real primitive
-character under GRH and $L(\tfrac12,\chi)\neq0$ --- under LI$(\chi)$
-it applies
-to the logarithmic density of the race itself for every such $\chi$
---- and verified
-numerically in moduli $3$ and $4$. We complement the computations with an interpolation
-theorem, proved by the framework of Akbary--Ng--Shahabi and the method
-of Humphries and stated for an arbitrary real primitive character
-$\chi$ mod $q$: under GRH$(\chi)$, LI$(\chi)$ and
-$L(\tfrac12,\chi)\ne0$ (the nonvanishing is unconditional for
-$q=3,4$), for every
-$m\in(-\tfrac12,\infty)$ the logarithmic density $\delta_\chi(m)$ of
-the set of $x$ where the weighted nonresidue count leads (for
-$\chi=\chi_4$, where the class $3\ (\mathrm{mod}\ 4)$ leads) exists
-and lies in
-$(\tfrac12,1)$, the map $m\mapsto\delta_\chi(m)$ is continuous, and
-$1-\delta_\chi(m)\le\exp\bigl(-1/(2C(\chi)(2m+1)^2)\bigr)$ with
-$C(\chi)=\sum_{\gamma>0}2\gamma^{-2}$ evaluated in closed form
-($C(\chi_4)=0.1560296\ldots$, $C(\chi_3)=0.1134021\ldots$), so
-$\delta_\chi(m)\to1$ as $m\to-\tfrac12^{\,+}$. Two further theorems
-complete the picture: the dissolution asymptotic holds
-\emph{uniformly} over all real primitive characters and all
-$M=m+\tfrac12\ge\delta_0$ (any fixed $\delta_0>0$, with effective
-constants), while the critical corner $M\log q\to\lambda$ is governed
-by the microscopic scaled-zero point measure: under its natural vague
-convergence and an $L^2$-tail condition we prove convergence to an
-explicit, generally non-Gaussian Bessel-product law; and
-$m\mapsto\delta_\chi(m)$ is \emph{strictly
-decreasing} for $m\ge16.82$ ($q=4$; $18.62$ for $q=3$), so beyond
-these thresholds Chebyshev's bias dissolves monotonically. The
-constants $C(\chi)$, every variance $\sigma_m^2$, the positivity of
-the central $L$-values, and the completeness of the zero lists
-underlying the numerics are machine-certified in ball arithmetic.
-This exhibits the classical density formulation
-($m=0$) and the weighted formulation of Aoki--Koyama ($m=-\tfrac12$) as
-the two ends of one continuous, quantitatively controlled family --- a
-conditional structural connection between, though not a logical
-inclusion between, the two definitions compared in Problem 12 of the
-comparative prime number theory problem list of Hamieh, Kadiri, Martin
-and Ng, which remains open.
+Let $\chi$ be a real primitive Dirichlet character and weight the associated
+prime race by $p^m$. Under GRH$(\chi)$, LI$(\chi)$, and
+$L(\tfrac12,\chi)\ne0$, we prove that for every $m>-\tfrac12$ its
+Rubinstein--Sarnak logarithmic density $\delta_\chi(m)$ exists, belongs to
+$(\tfrac12,1)$, and varies continuously with $m$. Moreover
+$\delta_\chi(m)\to1$ as $m\to-\tfrac12^+$, quantitatively, thereby placing
+the classical race ($m=0$) and the critical weighted race at
+$m=-\tfrac12$ in one family.
+
+Write $M=m+\tfrac12$ and
+$\sigma^2=4M(\Lambda'/\Lambda)(m+1,\chi)$. We prove the dissolution law
+\[
+ \delta_\chi(m)-\tfrac12=(2\pi\sigma^2)^{-1/2}
+ \{1+O_{\delta_0}(\sigma^{-2})\},
+\]
+uniformly over all such characters and all $M\ge\delta_0>0$, together
+with second- and third-order terms. The singular joint corner is different:
+if $M\log q\to\lambda\in(0,\infty)$ and the scaled low-zero point measures
+converge vaguely with a reciprocal-square tail condition, then the limiting
+race variables converge to an explicit Bessel-product law determined by that
+point measure. Every nonempty limiting law is non-Gaussian. Thus the critical
+transition retains microscopic low-zero data rather than collapsing to a
+scalar variance.
+
+For the characters modulo $4$ and $3$, a computer-assisted argument in Arb
+proves that $\delta_4'(m)<0$ for $m\ge16.82$ and
+$\delta_3'(m)<0$ for $m\ge18.62$. Deterministic Fourier inversion in Arb and
+exact sieves to $10^{10}$ supplement the theorems with numerical densities
+across the transition. All fourteen displayed density intervals, the
+zero-list completeness checks, and the monotonicity computation are
+independently checkable ball-arithmetic certificates. The density statements
+remain conditional on GRH and LI as specified above; interval arithmetic does
+not discharge those hypotheses.
 \end{abstract}
 
 \section{Introduction}
@@ -152,10 +120,17 @@ multivariate Gaussian limit laws with weak negative correlations for
 smoothed counts of primes in multiple short intervals, with
 short-interval race applications; the weights there are smoothings in
 the interval aspect, not powers $p^m$, and the contact point with this
-note is the outlook at the end of Section~\ref{sec:methods}. In all of
-this literature the weight is constant or decaying; we are not aware
-of prior Rubinstein--Sarnak density computations, or weight-aspect
-density asymptotics, for growing weights $p^{\,m}$, $m>0$.
+note is the outlook at the end of Section~\ref{sec:methods}. Numerical
+Bessel-product inversion and tail control have important precedents in
+Feuerverger--Martin~\cite{FM00} and Myerscough~\cite{Mye13}; more recently,
+Bhattacharya--Martin--Simpson~\cite{BMS26} proved limiting-law and correlation
+results for reciprocal-weighted prime-counting functions and computed a
+constant with a rigorous error term. Thus the inversion methodology is not a
+novelty claim here. In all of this weighted-race literature the power weight
+is constant or decaying. Our literature search
+found no earlier systematic treatment of Rubinstein--Sarnak densities or
+weight-aspect density asymptotics for growing weights $p^{\,m}$, $m>0$;
+this novelty claim should be checked again during independent review.
 
 This note treats the two formulations as endpoints of one family ---
 a viewpoint anticipated in the $s$-parametrized theorems of
@@ -166,19 +141,17 @@ D_m(x)\;=\;\sum_{\substack{p\le x\\ p\equiv 3\,(4)}}p^{\,m}
 -\sum_{\substack{p\le x\\ p\equiv 1\,(4)}}p^{\,m},
 \]
 so $m=0$ is the classical race and $m=-s$ the Aoki--Koyama weighting;
-we allow $m>0$; the related work reviewed above contains, to our
-knowledge, no prior treatment of the race with growing weights. Apart from
-the interpolation theorem of Section~\ref{sec:theorem}, our results are
-computational, at the standard of numerical work in this area
-(GRH + LI where densities are involved). Every headline number was
-computed twice: the sieve counts by fully independent implementations,
-the densities by deterministic inversion against Monte Carlo --- two
-evaluations that share the same zero data and tail model and are
-independent only in the evaluation step; the shared tail model is
-controlled by the validated enclosures of
-Section~\ref{sec:methods} (Table~\ref{tab:enclose}: exact tail
-variance and explicit analytic error bounds, with quadrature error
-estimated rather than certified).
+we allow $m>0$; the related work reviewed above contains no treatment known
+to us of this growing-weight race. The paper combines conditional analytic
+theorems, computer-assisted inequalities, and numerical experiments; their
+different verification standards are separated in Section~\ref{sec:methods}.
+Every headline numerical value was checked by a second route: the sieve
+counts by independent implementations, and the density centers by Monte
+Carlo. The latter comparison tests evaluation rather than the shared
+zero-model assumptions. The reported density intervals themselves come from
+the separate fail-closed Arb calculation of Section~\ref{sec:methods}, with a
+closed-form tail variance, interval quadrature, and analytic bounds for both
+omitted zeros and the infinite Fourier tail.
 
 \subsection*{Results}
 
@@ -191,12 +164,13 @@ almost-periodic form $1+\sum_{\gamma>0}2a_\gamma(m)\cos(\gamma u)$ with
 a_\gamma(m)\;=\;\frac{2m+1}{\sqrt{(m+\tfrac12)^2+\gamma^2}},
 \]
 $\gamma$ the ordinates of $L(s,\chi_4)$, and the constant $1$
-normalizing the prime-square bias term. Deterministic Gil--Pelaez
-inversion with validated error bounds, cross-checked by Monte Carlo
-under LI (Section~\ref{sec:methods}), gives Table~\ref{tab:delta}.
-These are,
-to our knowledge, the first Rubinstein--Sarnak densities computed for a
-weighted race between primes in arithmetic progressions (for weighted
+normalizing the prime-square bias term. Deterministic Gil--Pelaez inversion
+with Arb interval quadrature and explicit tail bounds, cross-checked by Monte
+Carlo under LI (Section~\ref{sec:methods}), gives
+Table~\ref{tab:delta}. These appear to be the first published numerical
+Rubinstein--Sarnak densities for a growing-weight race between primes in
+arithmetic progressions, subject to confirmation by independent literature
+review (for weighted
 prime sums against main terms, densities exist in the Mertens-race
 literature~\cite{Lam16}; for analytic explicit-formula control of the
 log-weighted sum $\theta(x)$, cf.\ Platt--Trudgian~\cite{PT14}).
@@ -214,10 +188,10 @@ $\delta_3(m)$ & $0.999063$ & $0.836880^{\dagger}$ & $0.723473$ & $0.666554$
 \bottomrule
 \end{tabular}
 \caption{Logarithmic densities of the set where the nonresidue class
-leads, moduli $4$ and $3$: midpoints of the validated enclosures of
+leads, moduli $4$ and $3$: midpoints of the certified intervals of
 Table~\ref{tab:enclose} (Section~\ref{sec:methods}), rounded to six
-decimals; dashes mark uncomputed points. The enclosure widths are
-below $3\times10^{-7}$, so every sixth decimal is determined except
+decimals; dashes mark uncomputed points. The interval widths are below
+$2\times10^{-7}$, so every sixth decimal is fixed except
 the two marked $^{\dagger}$, whose intervals straddle the rounding
 boundary: at $(3,1)$ the value is $0.836880$ or $0.836881$, at
 $(3,60)$ it is $0.519717$ or $0.519718$. The underlying computation is
@@ -343,14 +317,15 @@ uniformly over all real primitive characters and all
 $M=m+\tfrac12\ge\delta_0$ (any fixed $\delta_0>0$, effective
 constants), extending the $m=0$ aggregate
 quadratic race of Fiorilli--Martin and the weight aspect of this paper
-inside one statement. Section~\ref{sec:critical} then classifies the
-excluded critical scaling $M\log q\to\lambda$: its limiting law is a
-functional of the microscopic low-zero point process, not a universal
-Gaussian. Section~\ref{sec:monotone-large} proves
+inside one statement. Section~\ref{sec:critical} then gives a conditional
+transfer principle for the excluded critical scaling
+$M\log q\to\lambda$, assuming convergence and reciprocal-square tightness
+of the microscopic low-zero point measures; the resulting law is not
+universally Gaussian. Section~\ref{sec:monotone-large} proves
 $\delta_\chi'(m)<0$ for $m\ge16.82$ ($q=4$) resp.\ $18.62$ ($q=3$):
 beyond these thresholds Chebyshev's bias dissolves
 \emph{monotonically}; on the compact remainder monotonicity remains
-Conjecture~\ref{conj:monotone}, supported by the validated
+Conjecture~\ref{conj:monotone}, supported by the numerical error-budget
 $30$-point grid.
 
 \section{An interpolation theorem}\label{sec:theorem}
@@ -716,11 +691,12 @@ $x^c=ex$. On $\mathrm{Re}\,s=c$ the Dirichlet series
 $-L'/L(s,\chi)=\sum_n\Lambda(n)\chi(n)n^{-s}$ converges absolutely, so
 term-by-term application of (F1) on the finite segment gives
 \[
-\psi(x,\chi)\;=\;\frac{1}{2\pi i}\int_{c-iT}^{c+iT}
-\Bigl(-\frac{L'}{L}(s,\chi)\Bigr)\frac{x^s}{s}\,ds\;+\;O(R_1),
-\qquad
-R_1=\sum_{n\ge2}\Lambda(n)\Bigl(\frac xn\Bigr)^{c}
-\min\Bigl(1,\frac{1}{T|\log(x/n)|}\Bigr)+\log x,
+\begin{aligned}
+\psi(x,\chi)&=\frac{1}{2\pi i}\int_{c-iT}^{c+iT}
+\Bigl(-\frac{L'}{L}(s,\chi)\Bigr)\frac{x^s}{s}\,ds+O(R_1),\\
+R_1&=\sum_{n\ge2}\Lambda(n)\Bigl(\frac xn\Bigr)^{c}
+\min\Bigl(1,\frac{1}{T|\log(x/n)|}\Bigr)+\log x.
+\end{aligned}
 \]
 the final $\log x$ covering the possible term $n=x$ (where (F1) gives
 $\tfrac12$ instead of the weight $1$ used in $\psi$, a discrepancy
@@ -964,10 +940,12 @@ If $m<0$, split on the sign of $km+1$. For the (fewer than $1/|m|$,
 hence $O_m(1)$ many) $k$ with $-1<km<0$, partial summation with
 $\theta(t)\le At$ gives
 \[
+\begin{aligned}
 \sum_{p\le y}p^{km}\log p
-=y^{km}\theta(y)+|km|\int_2^y t^{km-1}\theta(t)\,dt
-\;\le\;Ay^{km+1}\Bigl(1+\frac{|km|}{km+1}\Bigr)
-\;\ll_m\;x^{m+1/k}\;\le\;x^{m+1/3},
+&=y^{km}\theta(y)+|km|\int_2^y t^{km-1}\theta(t)\,dt\\
+&\le Ay^{km+1}\Bigl(1+\frac{|km|}{km+1}\Bigr)
+\ll_m x^{m+1/k}\le x^{m+1/3}.
+\end{aligned}
 \]
 the constant depending on $m$ through the least positive value of
 $km+1$ over the finitely many admissible $k$; the total over these $k$
@@ -997,10 +975,12 @@ $\theta(y)=y+E(y)$, $E(y)\ll ye^{-2c\sqrt{\log y}}$ (prime number
 theorem with the classical de la Vall\'ee Poussin error). Partial
 summation gives, with $y=\sqrt x$,
 \[
+\begin{aligned}
 \sum_{p\le y}p^{2m}\log p
-=y^{2m}\theta(y)-2m\int_2^y t^{2m-1}\theta(t)\,dt
-=\frac{y^{2m+1}}{2m+1}+O_m(1)
-+y^{2m}E(y)-2m\int_2^y t^{2m-1}E(t)\,dt ,
+&=y^{2m}\theta(y)-2m\int_2^y t^{2m-1}\theta(t)\,dt\\
+&=\frac{y^{2m+1}}{2m+1}+O_m(1)+y^{2m}E(y)
+-2m\int_2^y t^{2m-1}E(t)\,dt .
+\end{aligned}
 \]
 the $O_m(1)$ being the endpoint term
 $2m\,2^{2m+1}/(2m+1)$. Here $y^{2m}E(y)\ll y^{2m+1}e^{-2c\sqrt{\log y}}$,
@@ -1420,25 +1400,32 @@ summing over $|\gamma|\le T$, the three error families contribute,
 after multiplication by the normalizer
 $(2m+1)x^{-(m+1/2)}\log x$,
 \[
-\Bigl|\sum_{0<\gamma\le T}r_\gamma(m)e^{i\gamma u}\,
+\begin{aligned}
+\Bigl|\sum_{0<\gamma\le T}r_\gamma(m)e^{i\gamma u}
 O\Bigl(\frac1{\gamma u}\Bigr)\Bigr|
-\ll_m\frac1u\sum_{\gamma}\frac{1}{\gamma^{2}}\ll_m\frac1u,
-\qquad
-u\,e^{-(m+1/2)u}\sum_\gamma\gamma^{-2}\ll_m ue^{-(m+1/2)u},
-\qquad
-\frac{1}{\log^{2}x}\sum_\gamma\gamma^{-2}\ll_m\frac1{u^{2}} ,
+&\ll_m\frac1u\sum_{\gamma}\frac{1}{\gamma^{2}}\ll_m\frac1u,\\
+u e^{-(m+1/2)u}\sum_\gamma\gamma^{-2}
+&\ll_m ue^{-(m+1/2)u},\\
+\frac{1}{\log^{2}x}\sum_\gamma\gamma^{-2}&\ll_m\frac1{u^{2}}.
+\end{aligned}
 \]
 all uniform in $T$ (here $\sum_\gamma a_\gamma(m)/\gamma
 \ll_m\sum\gamma^{-2}<\infty$ is the key convergence).
 
 \emph{Truncation/PNT term.} Each component of $F$ passes through
-$\frac{R_m(x)}{\log x}$ and
-$\int_2^x F(t,T)\,t^{-1}\log^{-2}t\,dt$ with at most one extra factor
-$\log$. For the components carrying a power $t^a$ with $a>0$
+\[
+\frac{R_m(x)}{\log x}
+\quad\text{and}\quad
+\int_2^x\frac{F(t,T)}{t\log^2t}\,dt,
+\]
+with at most one extra factor $\log$. For the components carrying a
+power $t^a$ with $a>0$
 ($a=m+1$ and $a=m+\tfrac12$ always; $a=m+\tfrac13$ when
-$m>-\tfrac13$), splitting the
-integral at $\sqrt x$ gives
-$\int_2^xt^{a-1}\log^{-2}t\,dt\ll_a x^a\log^{-2}x$, the PNT component
+$m>-\tfrac13$), splitting the integral at $\sqrt x$ gives
+\[
+\int_2^xt^{a-1}\log^{-2}t\,dt\ll_a x^a\log^{-2}x.
+\]
+The PNT component
 retaining its factor $e^{-c\sqrt{\log t}}$ (decreasing, so bounded on
 $[\sqrt x,x]$ by $e^{-(c/\sqrt2)\sqrt{\log x}}$). For
 $m\le-\tfrac13$ the $k\ge3$ component has $m+\tfrac13\le0$, so
@@ -1448,19 +1435,23 @@ for $a\le0$ the integral $\int_2^xt^{a-1}\log^{-2}t\,dt$ is
 $\asymp_m1$, not $\ll x^a\log^{-2}x$). The $\log^2t$
 component gives $\int_2^xt^{-1}dt=\log x-\log2$; and the new floor
 $(1+t^m)\log t$ contributes
-$\int_2^x(1+t^m)t^{-1}\log^{-1}t\,dt
-\ll_m\log\log x+1+x^m/\log x$. After multiplication by the normalizer
+\[
+\int_2^x\frac{1+t^m}{t\log t}\,dt
+\ll_m\log\log x+1+\frac{x^m}{\log x}.
+\]
+After multiplication by the normalizer
 $(2m+1)x^{-(m+1/2)}\log x$, all of these are covered by the display
 below (the floor's contribution is $\ll_m u^2e^{-\kappa_mu}$).
 
 Collecting, for $u\ge2$, $T\ge2$,
 \[
-E_m'(e^u)\;=\;1+\mathrm{Re}\!\!\sum_{0<\gamma\le T}\!\!
-r_\gamma(m)e^{i\gamma u}+\mathcal E'(u,T),
-\qquad
-\mathcal E'(u,T)\ll_m
-\frac{u\,e^{u/2}\log^2(e^uT)}{T}+\frac1u+u^2e^{-\kappa_m u}
-+ue^{-u/6}+ue^{-c\sqrt u},
+\begin{aligned}
+E_m'(e^u)&=1+\mathrm{Re}\!\!\sum_{0<\gamma\le T}\!\!
+r_\gamma(m)e^{i\gamma u}+\mathcal E'(u,T),\\
+\mathcal E'(u,T)&\ll_m
+\frac{u e^{u/2}\log^2(e^uT)}{T}+\frac1u+u^2e^{-\kappa_m u}
++ue^{-u/6}+ue^{-c\sqrt u}.
+\end{aligned}
 \]
 with $\kappa_m=\min(m+\tfrac12,\tfrac12)$ as in the proof of (i), and
 at $T=e^Y$, $u\in[2,Y]$ each term's Ces\`aro mean square tends to
@@ -1518,29 +1509,31 @@ $m_1=16.82$ resp.\ $18.62$.
 \end{conjecture}
 
 Three remarks on its status. \emph{(a) Numerical evidence.}
-Deterministic Gil--Pelaez inversion with validated enclosures --- the
+Deterministic Gil--Pelaez inversion with numerical error-budget intervals --- the
 unseen-zero tail variance evaluated in closed form from the completed
 $L$-function (the Hadamard-product identity behind the evaluation of
 $C$), the tail's departure from Gaussianity bounded by a proved
 quartic estimate, truncation and quadrature budgeted into the interval
-radius; every enclosure width below $5\times10^{-7}$ --- on the
+radius; every modeled interval width below $5\times10^{-7}$ --- on the
 $30$-point grid
 \[
-m\in\{-0.2,\,-0.15,\,-0.1,\,-0.05,\,0,\,0.25,\,0.5,\,0.75,\,1,\,1.25,
-\,1.5,\,2,\,2.5,\,3,\,4,\,5,\,6,\,8,\,10,\,12,\,15,\,20,\,25,\,30,
-\,40,\,50,\,60,\,75,\,90,\,100\}
+\begin{split}
+m\in\{&-0.2,-0.15,-0.1,-0.05,0,0.25,0.5,0.75,1,1.25,\\
+&1.5,2,2.5,3,4,5,6,8,10,12,15,20,25,30,\\
+&40,50,60,75,90,100\}.
+\end{split}
 \]
-yields enclosures that are pairwise disjoint and decreasing at all
+yields intervals that are pairwise disjoint and decreasing at all
 $29$ consecutive pairs, for both moduli; the smallest gap between
-adjacent enclosures is $2.9\times10^{-5}$ for modulus $4$ and
+adjacent intervals is $2.9\times10^{-5}$ for modulus $4$ and
 $8.6\times10^{-7}$ for modulus $3$ (both at the leftmost pair). In
 particular the grid covers the conjectural range
 $(-0.2\le m\le m_1)$ densely, and its last points overlap the proved
-range. The enclosures are rigorous modulo the stated computational
-budget (IEEE-double quadrature with step-doubling control; $40$-digit
-floating-point evaluation of the closed-form variance; no interval
-arithmetic is claimed). Left of the grid the inversion loses
-resolution: at $m=-0.2$ itself the enclosures give
+range. The analytic tail terms are rigorous, but the intervals as a whole
+are not certificates: they use IEEE-double quadrature with step-doubling
+control. (The closed-form variances are separately certified in Arb.) Left
+of the grid the inversion loses
+resolution: at $m=-0.2$ itself the error-budget intervals give
 $1-\delta_4\in[4.8,\,7.7]\times10^{-7}$ and
 $1-\delta_3\le2.5\times10^{-7}$, and on $(-\tfrac12,-0.2)$ the only
 control we have is the Chernoff bound of Theorem~\ref{thm:interp}(iii)
@@ -1766,14 +1759,14 @@ $\psi'(\tfrac14)-\psi'(\tfrac34)
 =16\sum_{n\ge0}\bigl[(4n+1)^{-2}-(4n+3)^{-2}\bigr]=16\beta(2)=16G$,
 whence $\psi'(\tfrac34)=\pi^2-8G$.
 
-On the numerical claim, an honesty note: the closed form is exact, and
-its decimal evaluation is a routine high-precision computation (mpmath
-at $50$ digits with guard digits; the routes
+On the numerical claim, the closed form is exact, and its decimal evaluation
+was first cross-checked at high precision (mpmath at $50$ digits with guard
+digits; the routes
 $\tfrac14\psi'(\tfrac34)+(\log L)''(\tfrac12)$ and direct numerical
 $(\log\Lambda)''(\tfrac12)$ agree to $38$ digits, stably under
-doubling of the working precision). We have not run certified interval
-arithmetic; the quantities are derivatives of entire functions
-evaluated far from any singularity.
+doubling of the working precision).  The displayed decimal was subsequently
+enclosed by the independent Arb calculation recorded in
+Section~\ref{sec:methods}.
 \end{proof}
 
 \begin{proposition}[rigorous variance asymptotic]\label{prop:varasymp}
@@ -1901,13 +1894,14 @@ inversion with the exact tail variances moves the densities by a few
 units in their sixth decimal --- well within the $10^{-4}$ Monte
 Carlo cross-check, but not below the printed resolution: the
 six-decimal values from the earlier Gaussianized-tail computation
-deviate from the enclosure midpoints of Section~\ref{sec:methods} by
+deviate from the interval midpoints of Section~\ref{sec:methods} by
 up to $3.5\times10^{-6}$ (at $(q,m)=(3,1)$; last column of
-Table~\ref{tab:enclose}), of which the estimated tail variance
-accounts for $-3.2\times10^{-6}$ at that worst point and the coarser
-quadrature of the original inversion for the small remainder, so ten
-of the fourteen sixth decimals change by up to three units.
-Table~\ref{tab:delta} prints the corrected values (the enclosure
+Table~\ref{tab:enclose}).  A direct comparison of the two unrounded
+Gaussian-tail inversions gives a $4.23\times10^{-6}$ shift at $(3,1)$;
+the remaining difference between that comparison and the printed table is
+explained by the quartic tail correction, the older grid, and rounding. Thus
+ten of the fourteen sixth decimals change by up to three units.
+Table~\ref{tab:delta} prints the corrected values (the interval
 midpoints rounded to six decimals), and the tail-variance estimation
 error in them is exactly zero. For the record, the identity also gives
 $\sigma_0^2=0.1555679799235859\ldots$ (the rounded $0.15557$ quoted in
@@ -2282,13 +2276,14 @@ $\int_0^\infty(t+x)^{-2}dt=1/x$; correction $f(0)/2=1/(2x^2)$;
 remainder at most
 $\tfrac1{12}|f'(0)|+\tfrac1{12}\int_0^\infty|f''|\le\tfrac1{2x^3}$)
 gives $\psi'(x)=\tfrac1x+\tfrac1{2x^2}+O(x^{-3})$, whence
-\[
-\tfrac14\psi'(x)=\frac1{2M}\cdot\frac1{1+\frac{2a+1}{2M}}
-+\frac1{2M^2}+O\Bigl(\frac1{M^3}\Bigr)
-=\frac1{2M}-\frac{2a+1}{4M^2}+\frac1{2M^2}
-+O\Bigl(\frac1{M^3}\Bigr)
-=\frac1{2M}+\frac{1-2a}{4M^2}+O\Bigl(\frac1{M^3}\Bigr),
-\]
+\begin{align*}
+\tfrac14\psi'(x)
+&=\frac1{2M}\cdot\frac1{1+\frac{2a+1}{2M}}
+  +\frac1{2M^2}+O\Bigl(\frac1{M^3}\Bigr)\\
+&=\frac1{2M}-\frac{2a+1}{4M^2}+\frac1{2M^2}
+  +O\Bigl(\frac1{M^3}\Bigr)\\
+&=\frac1{2M}+\frac{1-2a}{4M^2}+O\Bigl(\frac1{M^3}\Bigr).
+\end{align*}
 so $64M^2\cdot\tfrac14\psi'(x)=32M+16(1-2a)+O(1/M)$. The Dirichlet
 series $(\tfrac{L'}{L})'(s,\chi)=\sum_{n\ge2}\Lambda(n)\chi(n)(\log
 n)\,n^{-s}$ is bounded at $s=m+1$ by
@@ -2297,7 +2292,8 @@ $64M^2(\tfrac{L'}{L})'(m+1)\ll M^22^{-m}=O(1/M)$ eventually. Combining
 with $16\sigma_m^2=32M\log\tfrac{qM}{2\pi}+16(2a-1)+O(1/M)$
 (Proposition~\ref{prop:varasymp}) yields \eqref{eq:S4asymp}:
 \[
-S_4(m)=32M\log\tfrac{qM}{2\pi}+16(2a-1)-32M-16(1-2a)+O(1/M).
+S_4(m)=32M\log\tfrac{qM}{2\pi}-32M
+       +32(2a-1)+O(1/M).
 \qedhere
 \]
 \end{proof}
@@ -2403,14 +2399,14 @@ c_3:=\frac{4\cdot5^{1/4}}{\pi}=1.9040\ldots<2 ,
 so that $c_3/\sqrt t\le\tfrac12$ for $t\ge16$. Using
 $|\sin t|/t\le1$ on $[\tfrac18,16]$ and $|\sin t|\le1$ beyond, and
 (for $M\ge M_0(q)$, by Lemma~\ref{lem:window}) $N_0\ge5$:
-\[
-\int_{1/8}^{16}|\Phi_m|\,\frac{|\sin t|}t\,dt\le16\rho^{N_0},
-\qquad
+\begin{align*}
+\int_{1/8}^{16}|\Phi_m|\,\frac{|\sin t|}t\,dt
+&\le16\rho^{N_0},\\
 \int_{16}^\infty|\Phi_m|\,\frac{dt}t
-\le2^{5-N_0}c_3^5\int_{16}^\infty t^{-7/2}\,dt
-=2^{5-N_0}c_3^5\cdot\frac{2}{5\cdot1024}
-\le\frac{2^{-N_0}}{2},
-\]
+&\le2^{5-N_0}c_3^5\int_{16}^\infty t^{-7/2}\,dt\\
+&=2^{5-N_0}c_3^5\cdot\frac{2}{5\cdot1024}
+ \le\frac{2^{-N_0}}{2}.
+\end{align*}
 where the middle step keeps five factors $(c_3/\sqrt t)^5$ and bounds
 the remaining $N_0-5$ by $2^{-(N_0-5)}$. The sum is at most
 $17\tilde\rho^{\,N_0}$, and with
@@ -2488,14 +2484,17 @@ e^{-\sigma^2t^2/2}\Bigl(1-\frac{\sin t}t\Bigr)dt
 \]
 \item[$T_3$:] the Bessel correction: by \eqref{eq:Eunif} and
 $|e^w-1|\le|w|e^{|w|}$,
-\[
-|T_3|\le\frac1\pi\int_0^{1/8}e^{-\sigma^2t^2/2}
-\cdot\frac{t^4S_4}{17}\,e^{\sigma^2t^2/34}\,dt
-\le\frac{S_4}{17\pi}\int_0^\infty t^4e^{-\frac{8}{17}\sigma^2t^2}dt
-=\frac{3S_4}{8\cdot17\sqrt\pi}
-\Bigl(\frac{17}{8}\Bigr)^{5/2}\sigma^{-5}
-\le\frac{S_4}{12\,\sigma^{5}}\le\frac{G\,S_4}{4\,\sigma^{4}} ,
-\]
+\begin{align*}
+|T_3|
+&\le\frac1\pi\int_0^{1/8}e^{-\sigma^2t^2/2}
+  \frac{t^4S_4}{17}\,e^{\sigma^2t^2/34}\,dt\\
+&\le\frac{S_4}{17\pi}\int_0^\infty
+  t^4e^{-\frac{8}{17}\sigma^2t^2}dt\\
+&=\frac{3S_4}{8\cdot17\sqrt\pi}
+  \Bigl(\frac{17}{8}\Bigr)^{5/2}\sigma^{-5}
+ \le\frac{S_4}{12\,\sigma^{5}}
+ \le\frac{G\,S_4}{4\,\sigma^{4}} .
+\end{align*}
 the last step by $\sigma^{-5}=\sqrt{2\pi}\,G\sigma^{-4}$ and
 $\sqrt{2\pi}/12<\tfrac14$.
 \end{itemize}
@@ -2505,13 +2504,13 @@ $M_1(q)\ge M_0(q)$ with
 $ML\le\sigma_m^2\le3ML$ for $M\ge M_1(q)$, where
 $L=\log\tfrac{qM}{2\pi}\asymp_q\log M$; and
 $S_4\le33ML$ by \eqref{eq:S4asymp}. Hence
-\[
-\frac{T_2}{G}\le\frac1{6ML},\qquad
-\frac{|T_3|}{G}\le\frac{33ML}{4M^2L^2}\le\frac{9}{ML},\qquad
+\begin{align*}
+\frac{T_2}{G}&\le\frac1{6ML},
+&\frac{|T_3|}{G}&\le\frac{33ML}{4M^2L^2}\le\frac{9}{ML},\\
 \frac{T_1+O(e^{-c_qM\log M})}{G}
-\ll\sigma\,e^{-\sigma^2/128}+\sigma\,e^{-c_qM\log M}
-\le\frac1{ML}
-\]
+&\ll\sigma e^{-\sigma^2/128}+\sigma e^{-c_qM\log M}
+ \le\frac1{ML}.
+\end{align*}
 for $M$ large, and \eqref{eq:GP}--\eqref{eq:decomp} give
 $\delta_q(m)-\tfrac12=G\bigl(1+O_q(1/(ML))\bigr)$, which is (i).
 
@@ -2587,81 +2586,52 @@ $O((ML)^{-2})$ of (ii) is also $O(1/(ML^2))$.
 \end{proof}
 
 \begin{remark}[numerical consistency]\label{rem:dissolution-numerics}
-Table~\ref{tab:dissolution} compares the theorem with deterministic
-Gil--Pelaez reference densities (computational, not part of any
-proof): $511$ resp.\ $537$ ordinates, unseen zeros Gaussianized with
-the \emph{exact} tail variance of Remark~\ref{rem:tails}, trapezoidal
-inversion with grid-halving and window-doubling stable to
-$10^{-9}$. Both $\sigma_m^2$ and $S_4$ are evaluated by their closed
-forms \eqref{eq:varidq}, \eqref{eq:S4id} --- no zero data enters the
-predictions. Gaussianizing the unseen zeros biases the \emph{reference}
-values themselves: on $t\le\tfrac18$ the $T_3$ estimate, applied to
-the tail factors alone, rigorously bounds the relative bias by
-$0.21\,S_4^{\mathrm{tail}}/\sigma_m^4$; on $t>\tfrac18$ that estimate
-does not apply, and we instead bound the remaining bias by the same
-integrand with the \emph{computed} $|\Phi_m|$ inserted, which is below
-$9\times10^{-7}$ at every table point. The total ---
-$9.9\times10^{-6}$ at $(q,m)=(4,100)$, less elsewhere in the table ---
-is the accuracy floor of the comparison; the $t>\tfrac18$ piece is a
-numerical evaluation, not a theorem, on the same footing as the
-reference densities themselves. The validated enclosures of Table~\ref{tab:enclose},
-computed by an independent route, contain the (unrounded) reference
-values used here at all four table points (e.g.\
-$0.51377836\in[0.5137782134,0.5137783837]$ at $(4,100)$; the table
-entry $0.5137784$ is that reference rounded to seven decimals and lies
-just above the enclosure's upper end, consistent with the one-sided
-Gaussianization bias of the reference noted above).
+Table~\ref{tab:dissolution} compares the theorem with the certified
+Gil--Pelaez intervals of Table~\ref{tab:enclose}; it uses their midpoints and
+propagates their radii. Both $\sigma_m^2$ and $S_4$ are evaluated by the
+closed forms \eqref{eq:varidq}, \eqref{eq:S4id}, so no zero data enter the
+predictions. These values are checks, not inputs to the proof.
 
 \begin{table}[h]\centering
-\begin{tabular}{lcccccc}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lcccc}
 \toprule
-$(q,m)$ & $\sigma_m^2$ & $S_4$ & $\delta_q(m)$ (ref.) &
-$\dfrac{\delta_q(m)-\frac12}{(2\pi\sigma_m^2)^{-1/2}}-1$ &
-$-\dfrac1{6\sigma_m^2}-\dfrac{3S_4}{64\sigma_m^4}$ &
-residual \\
+$(q,m)$ & $\sigma_m^2$ & $\delta_q(m)$ (mid.) &
+relative error & second-order residual \\
 \midrule
-$(4,8)$   & $29.7125$  & $219.83$   & $0.5718701$ & $-1.80\times10^{-2}$ & $-1.73\times10^{-2}$ & $-7.4\times10^{-4}$ \\
-$(4,20)$  & $106.3260$ & $1061.32$  & $0.5384553$ & $-6.05\times10^{-3}$ & $-5.97\times10^{-3}$ & $-7.9\times10^{-5}$ \\
-$(4,100)$ & $836.8744$ & $10190.02$ & $0.5137784$ & $-8.80\times10^{-4}$ & $-8.81\times10^{-4}$ & $+7.0\times10^{-7}$ \\
-$(3,60)$  & $407.9701$ & $4607.56$  & $0.5197175$ & $-1.71\times10^{-3}$ & $-1.71\times10^{-3}$ & $-4.9\times10^{-6}$ \\
+$(4,8)$   & $29.7125$  & $0.5718701$ & $-1.8008885\!\times10^{-2}\pm1.6\!\times10^{-7}$ & $-7.403203\!\times10^{-4}\pm1.6\!\times10^{-7}$ \\
+$(4,20)$  & $106.3260$ & $0.5384553$ & $-6.046843\!\times10^{-3}\pm4.5\!\times10^{-7}$ & $-7.925247\!\times10^{-5}\pm4.5\!\times10^{-7}$ \\
+$(4,100)$ & $836.8744$ & $0.5137783$ & $-8.845806\!\times10^{-4}\pm4.2\!\times10^{-6}$ & $-3.412243\!\times10^{-6}\pm4.2\!\times10^{-6}$ \\
+$(3,60)$  & $407.9701$ & $0.5197175$ & $-1.712771\!\times10^{-3}\pm1.8\!\times10^{-6}$ & $-6.610401\!\times10^{-6}\pm1.8\!\times10^{-6}$ \\
 \bottomrule
 \end{tabular}
-\caption{The dissolution law against deterministic reference
-densities. Column 5 is the observed relative deviation from the
-leading term of Theorem~\ref{thm:dissolution}(i); column 6 is the
-second-order term of (ii); the residual --- the relative error of the
-two-term prediction, equal to
-$(\text{col.~5}-\text{col.~6})/(1+\text{col.~6})$ --- shrinks like
-$(M\log M)^{-2}$, as (ii) requires --- indeed at $(4,100)$ it is below
-the $9.9\times10^{-6}$ modelling floor of the reference value, i.e.\
-(ii) is confirmed there to the full accuracy of the computation. The
-$m=100$ row is the consistency check promised in the introduction:
-$(2\pi\cdot836.8744)^{-1/2}=0.0137905$ against
-$\delta_4(100)-\tfrac12=0.0137784$, a relative gap of
-$8.8\times10^{-4}$, against the theorem's error scale
-$1/(M\log\tfrac{qM}{2\pi})=1/418=2.4\times10^{-3}$.}
+\caption{The dissolution law against certified density enclosures.  The
+fourth column is the relative deviation from the leading Gaussian term; the
+fifth is the relative residual after the explicit second-order correction of
+Theorem~\ref{thm:dissolution}(ii).  The displayed centers retain enough digits
+and the propagated density radii are rounded outward; at $(4,100)$ the radius
+is larger than the central residual, so its sign is not claimed.}
 \label{tab:dissolution}
 \end{table}
 
-The third-order formula of Theorem~\ref{thm:joint}(iii), evaluated by
-the same independent script, reduces the relative residuals in the
-$(4,8)$, $(4,20)$ and $(3,60)$ rows respectively to
-$-2.04\times10^{-4}$, $-6.18\times10^{-6}$ and
-$+7.74\times10^{-7}$.  At $(4,100)$ it gives $+2.14\times10^{-6}$;
-both this and the second-order residual are below the
-$9.9\times10^{-6}$ modelling floor, so their ordering has no numerical
-significance.  These figures are checks, not inputs to the proof.
+The third-order formula of Theorem~\ref{thm:joint}(iii) gives relative
+residuals $-2.043543\times10^{-4}\pm1.6\times10^{-7}$,
+$-6.617083\times10^{-6}\pm4.5\times10^{-7}$,
+$-1.971976\times10^{-6}\pm4.2\times10^{-6}$ and
+$-9.399714\times10^{-7}\pm1.8\times10^{-6}$ in the four rows. Thus it is
+numerically resolved in the first two rows; the certified intervals do not
+resolve the sign in the final two.
 
 Corollary~\ref{cor:secondorder} at $(4,100)$: $-\tfrac{11}{24}(ML)^{-1}
-=-1.10\times10^{-3}$ against the observed $-8.80\times10^{-4}$; the
+=-1.10\times10^{-3}$ against the central value $-8.85\times10^{-4}$; the
 difference, $2.2\times10^{-4}$, is consistent with the corollary's
 $O(1/(ML^2))=O(5.8\times10^{-4})$ --- at these heights $L\approx4.2$
 is still small, which is why the table works with (ii) rather than
-the corollary. The reference values $\delta_4(100)=0.5137784$ and
-$\delta_3(60)=0.5197175$ are seven-decimal refinements of the
-corresponding entries of Table~\ref{tab:delta}, $0.513778$ and
-$0.519717^{\dagger}$ (the dagger marking the sixth decimal left
-unresolved by the enclosure).
+the corollary. The certified midpoint for $\delta_4(100)$ is
+$0.5137782985\ldots$; the $(3,60)$ interval still straddles the
+sixth-decimal rounding boundary, as indicated by the dagger in
+Table~\ref{tab:delta}.
 \end{remark}
 
 \begin{remark}[scope, and what is not proved]\label{rem:dissolution-scope}
@@ -2683,9 +2653,10 @@ in principle ($\rho$ is a computable supremum, numerically $0.98754$;
 the Riemann--von Mangoldt constants for fixed $q$ are classical) but
 the large-$t$ bound uses only the zeros in $(M,2M]$ and is extremely
 wasteful; no attempt has been made to make $M_0(q)$ small, and at the
-heights of Table~\ref{tab:dissolution} the \emph{proved} bounds on
-the tail terms are not yet numerically dominant --- the table is a
-consistency check on the asymptotics, not a validated enclosure. (4)
+heights of Table~\ref{tab:dissolution} the theorem's explicit remainder
+constants are not yet numerically sharp --- the table is a consistency
+check on the asymptotic formula, while its density inputs are independently
+certified by Table~\ref{tab:enclose}. (4)
 \emph{Uniformity.} A version uniform in $q$ requires the window count
 and Proposition~\ref{prop:varasymp} with explicit $q$-dependence;
 this is carried out in Section~\ref{sec:joint-dissolution} (cf.\ the
@@ -2697,7 +2668,8 @@ literature.
 \end{remark}
 
 
-\section{A joint $(q,m)$-uniform dissolution law}
+\section{\texorpdfstring{A joint $(q,m)$-uniform dissolution law}%
+{A joint (q,m)-uniform dissolution law}}
 \label{sec:joint-dissolution}
 
 Theorem~\ref{thm:dissolution} dissolves the bias in the weight aspect:
@@ -2727,19 +2699,16 @@ Throughout this section, hypothesis (H) means: $\chi$ is a real
 primitive character mod $q\ge3$, GRH$(\chi)$ holds, and
 $L(\tfrac12,\chi)\ne0$. For $m>-\tfrac12$ put $M=m+\tfrac12$ and, as in
 Section~\ref{sec:dissolution},
-\[
-a_\gamma(m)=\frac{2M}{\sqrt{M^2+\gamma^2}},\qquad
-X_{m,\chi}=1+\sum_{\gamma>0}2a_\gamma(m)\cos\theta_\gamma,\qquad
-\delta_\chi(m):=\mathbb P\bigl(X_{m,\chi}>0\bigr),
-\]
-\[
-\sigma^2=\sigma_{m,\chi}^2:=\sum_{\gamma>0}2a_\gamma(m)^2
-=4M\,\frac{\xi'}{\xi}(m+1,\chi),
-\qquad
- S_4=S_4(m,\chi):=\sum_{\gamma>0}\bigl(2a_\gamma(m)\bigr)^4,
- \qquad
- S_6=S_6(m,\chi):=\sum_{\gamma>0}\bigl(2a_\gamma(m)\bigr)^6,
-\]
+\begin{align*}
+a_\gamma(m)&=\frac{2M}{\sqrt{M^2+\gamma^2}},\\
+X_{m,\chi}&=1+\sum_{\gamma>0}2a_\gamma(m)\cos\theta_\gamma,
+&\delta_\chi(m)&:=\mathbb P\bigl(X_{m,\chi}>0\bigr),\\
+\sigma^2=\sigma_{m,\chi}^2
+&:=\sum_{\gamma>0}2a_\gamma(m)^2
+ =4M\,\frac{\xi'}{\xi}(m+1,\chi),\\
+S_4=S_4(m,\chi)&:=\sum_{\gamma>0}\bigl(2a_\gamma(m)\bigr)^4,
+&S_6=S_6(m,\chi)&:=\sum_{\gamma>0}\bigl(2a_\gamma(m)\bigr)^6.
+\end{align*}
 the closed form for $\sigma^2$ being \eqref{eq:varidq}. We write
 $\delta_\chi$ rather than $\delta_q$ because a modulus can carry two
 real primitive characters (e.g.\ $q=8$); all bounds below are uniform
@@ -2916,21 +2885,22 @@ N_0\;:=\;N_\chi(2A)-N_\chi(A)
 \]
 Then
 \begin{equation}\label{eq:windowq}
-N_0\;\ge\;\frac{A_1}{8\pi}\,\overline M\mathcal L\;\ (\ge7),
-\qquad\text{and}\qquad
-a_\gamma(m)\;\ge\;\frac{2}{\sqrt5\,A_1}\,\min(M,1)
-\quad\text{for all }\gamma\in(A,2A].
+\begin{aligned}
+N_0&\ge\frac{A_1}{8\pi}\,\overline M\mathcal L\quad(\ge7),\\
+a_\gamma(m)&\ge\frac{2}{\sqrt5\,A_1}\,\min(M,1)
+\quad\text{for every }\gamma\in(A,2A].
+\end{aligned}
 \end{equation}
 \end{lemma}
 
 \begin{proof}
 By Lemma~\ref{lem:rvm-joint}(a) at $T=A$ and $T=2A$ (both $\ge A_1\ge2$),
-\[
-2N_0=N_{\mathrm f}(2A)-N_{\mathrm f}(A)
-\ge\frac{A}{\pi}\Bigl(\log\frac{qA}{2\pi e}+2\log2\Bigr)
--C_R\log(2qA)-C_R\log(qA)
-\ge\frac{A}{\pi}\log\frac{qA}{2\pi e}-3C_R\log(qA),
-\]
+\begin{align*}
+2N_0&=N_{\mathrm f}(2A)-N_{\mathrm f}(A)\\
+&\ge\frac{A}{\pi}\Bigl(\log\frac{qA}{2\pi e}+2\log2\Bigr)
+ -C_R\log(2qA)-C_R\log(qA)\\
+&\ge\frac{A}{\pi}\log\frac{qA}{2\pi e}-3C_R\log(qA).
+\end{align*}
 using $\log(2qA)\le\tfrac32\log(qA)$ (valid since $qA\ge3A_1\ge4$).
 If $A_1\ge(2\pi e)^2/3$ then $qA\ge3A_1\ge(2\pi e)^2$, so
 $\log\tfrac{qA}{2\pi e}\ge\tfrac12\log(qA)$; if moreover
@@ -3085,6 +3055,70 @@ $c_9:=1/(5\pi A_1)$. The two displays give
 \eqref{eq:lindeberg} at once.
 \end{proof}
 
+\begin{lemma}[quantitative third-order Fourier remainder]
+\label{lem:third-rem}
+Let $\sigma\ge1$, let $S_4,S_6,S_8\ge0$ satisfy
+\[
+ S_4\le32\sigma^2,\qquad S_6\le16S_4,\qquad S_8\le16S_6,
+\]
+and suppose that, for $0\le t\le1/8$,
+\[
+ E(t)=-\frac{S_4t^4}{64}-\frac{S_6t^6}{576}+R_8(t),
+ \qquad |R_8(t)|\le C_8S_8t^8,\qquad E(t)\le0.
+\]
+Put
+\[
+\begin{split}
+ Q(t):={}&1-\frac{t^2}{6}+\frac{t^4}{120}
+ -\frac{S_4t^4}{64}+\frac{S_4t^6}{384}
+ -\frac{S_6t^6}{576}+\frac{S_4^2t^8}{8192}.
+\end{split}
+\]
+Then, with $G=(2\pi\sigma^2)^{-1/2}$,
+\[
+ \frac1\pi\int_0^{1/8}e^{-\sigma^2t^2/2}
+ \left|e^{E(t)}\frac{\sin t}{t}-Q(t)\right|dt
+ \le C\,G\sigma^{-6},
+\]
+where $C$ is an absolute, effectively computable constant depending only
+on the absolute constant $C_8$.
+\end{lemma}
+
+\begin{proof}
+Write $A=S_4/64$ and $B=S_6/576$. Taylor's theorem with Lagrange
+remainder gives, because $E\le0$,
+\[
+ \left|e^E-1-E-\frac{E^2}{2}\right|\le\frac{|E|^3}{6},
+ \qquad
+ \left|\frac{\sin t}{t}-1+\frac{t^2}{6}-\frac{t^4}{120}\right|
+ \le\frac{t^6}{5040}.
+\]
+The hypotheses, $S_6\le16S_4$, $S_8\le256S_4$, and $t\le1/8$ imply
+$|E(t)|\le C(C_8)S_4t^4$. Substitute
+$E=-At^4-Bt^6+R_8$ in the first display, multiply by the second,
+and retain exactly the seven terms displayed in $Q$.
+The triangle inequality bounds the omitted part by an absolute constant
+times
+\[
+ t^6+S_4t^8+S_6t^8+S_8t^8+S_4^2t^{10}
+ +S_4S_6t^{10}+S_4^3t^{12}+S_6^2t^{12}.
+\]
+Here terms containing $R_8^2$, $S_4R_8$, $S_6R_8$, or higher powers
+are absorbed using $S_8\le16S_6\le256S_4$ and $t\le1/8$; the cubic
+Taylor remainder is absorbed using $|E|\le C\sigma^2t^4$ and the same
+moment bounds.
+
+Finally,
+\[
+ \frac1\pi\int_0^\infty t^{2k}e^{-\sigma^2t^2/2}dt
+ =G(2k-1)!!\,\sigma^{-2k}.
+\]
+Apply this identity term by term, with
+$S_4\le32\sigma^2$, $S_6\le512\sigma^2$,
+$S_8\le8192\sigma^2$, and $\sigma\ge1$. Every term is at most an
+absolute constant times $G\sigma^{-6}$, proving the claim.
+\end{proof}
+
 \subsection*{Proof of Theorem~\ref{thm:joint}}
 
 \begin{proof}
@@ -3141,15 +3175,16 @@ $S_4\le32\sigma^2$):
 \emph{Part (i).} Divide by $G=(2\pi\sigma^2)^{-1/2}$. From
 \eqref{eq:threeterms},
 $T_2/G\le\tfrac1{6\sigma^2}$ and $|T_3|/G\le\tfrac8{\sigma^2}$;
-\[
-\frac{T_1}{G}\le\sqrt{2\pi}\,\frac{8}{\pi\sigma}e^{-\sigma^2/128}
-\le\frac{C}{\sigma^{2}}
-\quad\text{(as }\sigma e^{-\sigma^2/128}\le C\text{)},
-\qquad
+\begin{align*}
+\frac{T_1}{G}
+&\le\sqrt{2\pi}\,\frac{8}{\pi\sigma}e^{-\sigma^2/128}
+ \le\frac{C}{\sigma^{2}}
+ \quad\text{(since }\sigma e^{-\sigma^2/128}\le C\text{)},\\
 \frac{|\Theta_{\mathrm{tail}}|}{G}
-\le\sqrt{2\pi}\,\sigma\,C_{11}(\delta_0)e^{-c_{10}\delta_0^2\sigma^2}
-\le\frac{C(\delta_0)}{\sigma^{2}},
-\]
+&\le\sqrt{2\pi}\,\sigma C_{11}(\delta_0)
+ e^{-c_{10}\delta_0^2\sigma^2}
+ \le\frac{C(\delta_0)}{\sigma^{2}}.
+\end{align*}
 the last step since
 $\sigma^{3}e^{-c_{10}\delta_0^2\sigma^2}\le C(c_{10}\delta_0^2)^{-3/2}$.
 Summing proves (i), for \emph{every} $\sigma^2>0$.
@@ -3197,32 +3232,17 @@ By (J5), on $0\le t\le1/8$ the exponent in
  E(t)=-\frac{S_4t^4}{64}-\frac{S_6t^6}{576}+R_8(t),
  \qquad |R_8(t)|\le C_8S_8t^8.
 \]
-Taylor's formula for $e^E$ and for $\sin t/t$, with the surviving
-Gaussian factor $e^{-(8/17)\sigma^2t^2}$ from
-\eqref{eq:Eunif}, now gives
-\[
-\begin{split}
-e^{E(t)}\frac{\sin t}{t}
-= {}&1-\frac{t^2}{6}+\frac{t^4}{120}
--\frac{S_4t^4}{64}+\frac{S_4t^6}{384}
--\frac{S_6t^6}{576}+\frac{S_4^2t^8}{8192}
-+\mathcal R(t).
-\end{split}
-\]
-After multiplication by $e^{-\sigma^2t^2/2}$ and integration, the
-remainder is $O(G\sigma^{-6})$.  For completeness, every omitted term
-is bounded by an absolute constant times the surviving Gaussian times
-a sum of
-\[
- t^6,quad S_4t^8,quad S_6t^8,quad S_8t^8,quad
- S_4^2t^{10},\quad S_4S_6t^{10},\quad
- S_4^3t^{12},\quad S_6^2t^{12};
-\]
-the moment identity in \eqref{eq:decomp}, the three displayed moment
-bounds, and $\sigma\ge1$ make each integral $O(G\sigma^{-6})$.
-Taylor remainders of still higher degree are absorbed by the same
-Gaussian using $|E(t)|\le\sigma^2t^2/34$.  Extending the seven retained
-moments to infinity, as in part (ii), has exponentially small cost.
+For completeness, $E(t)\le0$ follows termwise: if
+$x=z^2/4\le1/16$, the alternating Bessel series and then the alternating
+exponential series give
+$J_0(z)\le1-x+x^2/4\le e^{-x}$, so
+$\log J_0(z)+z^2/4\le0$. The amplitude bound gives
+$S_6\le16S_4$, $S_8\le16S_6$. Hence
+Lemma~\ref{lem:third-rem} applies: after multiplication by
+$e^{-\sigma^2t^2/2}$ and integration, replacing
+$e^E\sin(t)/t$ by its displayed polynomial $Q$ costs
+$O(G\sigma^{-6})$. Extending the seven retained Gaussian moments from
+$[0,1/8]$ to $[0,\infty)$ has exponentially small cost, as in part~(ii).
 
 The Gaussian moments $1,1,3,15,105$ consequently yield
 \[
@@ -3267,11 +3287,11 @@ the Dirichlet-series terms obey
 $4M|\tfrac{L'}L(m+1,\chi)|\le2.28\,M\,2^{-(M-3/2)}\le CM^{-1}$ and
 $64M^2|(\tfrac{L'}L)'(m+1,\chi)|\le CM^{2}2^{-M}\le CM^{-1}$ for
 $M\ge16$, uniformly in $q$. Hence, with absolute $O$'s,
-\[
-\sigma^2=2ML+(2a-1)+O(1/M)=2ML\bigl(1+O((ML)^{-1})\bigr),
-\qquad
-S_4=32M(L-1)+32(2a-1)+O(1/M).
-\]
+\begin{align*}
+\sigma^2&=2ML+(2a-1)+O(1/M)
+ =2ML\bigl(1+O((ML)^{-1})\bigr),\\
+S_4&=32M(L-1)+32(2a-1)+O(1/M).
+\end{align*}
 Substituting into Theorem~\ref{thm:joint}(ii):
 $\tfrac1{6\sigma^2}=\tfrac1{12ML}+O((ML)^{-2})$;
 \[
@@ -3316,8 +3336,9 @@ $O_m(1/\log q)$, and Theorem~\ref{thm:joint}(ii)--(iii) gives second-
 and third-order terms. For pairwise races involving all characters the comparison
 remains an analogue, not a specialization.
 
-There is a normalization slip in the two displays of \cite[\S3.6]{FM13}
-that does not affect their surrounding low-zero discussion. With their
+The normalization in two displays of \cite[\S3.6]{FM13} appears to differ by
+a factor of two from the normalization obtained from their defining formula.
+With their
 definition
 $E(x;N,R)=(\log x)/\sqrt{x}\,(\pi(x;q,N)-\pi(x;q,R))$, summing their
 own residue-class formula over the $(q-1)/2$ nonresidues and residues
@@ -3326,9 +3347,10 @@ gives
   1+2\sum_{\gamma>0}
   \frac{\cos\theta_\gamma}{\sqrt{\tfrac14+\gamma^2}},
 \]
-not the mean-$2$ variable printed there; consequently the leading
-correction is $(2\pi b(\chi))^{-1/2}$, rather than twice that quantity.
-This also follows by taking $m=0$ in
+whereas the displayed variable there has mean $2$; under the definition above
+the corresponding leading correction is $(2\pi b(\chi))^{-1/2}$ rather than
+twice that quantity. This observation should be checked with the authors
+before publication. It also follows formally by taking $m=0$ in
 Proposition~\ref{prop:unlogged}, and is consistent with the classical
 $q=3,4$ densities. None of our proofs uses the affected displays. In the modulus
 aspect the hypothesis (H) rides on $L(\tfrac12,\chi)\ne0$ for every
@@ -3385,39 +3407,37 @@ Table~\ref{tab:joint} tests the uniform error scales of
 Theorem~\ref{thm:joint} at the three points of
 Table~\ref{tab:dissolution} that vary both coordinates; every input
 ($\sigma_m^2$ and $S_4$ from their closed forms \eqref{eq:varidq},
-\eqref{eq:S4id}; deterministic Gil--Pelaez reference densities) is
-reused unchanged from that table, and only the ratio columns are new
-arithmetic. The observed relative deviation from $G$ times $\sigma^2$
-sits at $0.64$--$0.74$, and the residual after the second-order term
-times $\sigma^4$ sits below $1$, at three points with
+\eqref{eq:S4id}; certified Gil--Pelaez intervals) is reused unchanged
+from that table, and only the ratio columns are new arithmetic. The
+observed relative deviation from $G$ times $\sigma^2$ sits at
+$0.64$--$0.74$, and the central residual after the second-order term times
+$\sigma^4$ remains of order one, at three points with
 $(q,\overline M\mathcal L)$ ranging over $(4,90)$, $(3,315)$,
-$(4,603)$: both error scales of the theorem are confirmed with
-constants of order one --- far below the unoptimized proved constants
+$(4,603)$: both error scales are consistent with constants of order one
+--- far below the unoptimized proved constants
 --- and the comparability $\sigma^2/\overline M\mathcal L\in[1.17,1.39]$
-illustrates \eqref{eq:lindeberg}. (At $(4,100)$ the printed residual
-$7.0\times10^{-7}$ is below the $9.9\times10^{-6}$ modelling floor of
-the reference density discussed in
-Remark~\ref{rem:dissolution-numerics}, so its ratio $0.49$ is a bound
-consistent with zero rather than a measurement.)
+illustrates \eqref{eq:lindeberg}.  At $(4,100)$ the certified density radius
+is larger than the central second-order residual, so that row does not
+determine the residual's sign.
 
 \begin{table}[h]\centering
+\small
+\setlength{\tabcolsep}{2.5pt}
 \begin{tabular}{lcccccc}
 \toprule
 $(q,m)$ & $\sigma_m^2$ & $\dfrac{\sigma_m^2}{\overline M\mathcal L}$ &
-rel.\ dev.\ from $G$ & $\sigma^2\cdot|$rel.\ dev.$|$ &
-residual after 2nd order & $\sigma^4\cdot|$residual$|$ \\
+rel.\ error & $\sigma^2|\mathrm{error}|$ &
+ 2nd-order residual & $\sigma^4\mathrm{residual}$ \\
 \midrule
-$(4,20)$  & $106.3260$ & $1.18$ & $-6.05\times10^{-3}$ & $0.64$ & $-7.9\times10^{-5}$ & $0.89$ \\
-$(3,60)$  & $407.9701$ & $1.30$ & $-1.71\times10^{-3}$ & $0.70$ & $-4.9\times10^{-6}$ & $0.82$ \\
-$(4,100)$ & $836.8744$ & $1.39$ & $-8.80\times10^{-4}$ & $0.74$ & $+7.0\times10^{-7}$ & $0.49$ \\
+$(4,20)$  & $106.3260$ & $1.18$ & $-6.046843\times10^{-3}$ & $0.643$ & $-7.925247\times10^{-5}$ & $-0.8960\pm0.0051$ \\
+$(3,60)$  & $407.9701$ & $1.30$ & $-1.712771\times10^{-3}$ & $0.699$ & $-6.610401\times10^{-6}$ & $-1.1003\pm0.2887$ \\
+$(4,100)$ & $836.8744$ & $1.39$ & $-8.845806\times10^{-4}$ & $0.740$ & $-3.412243\times10^{-6}$ & $-2.390\pm2.903$ \\
 \bottomrule
 \end{tabular}
-\caption{Theorem~\ref{thm:joint} against the deterministic reference
-densities of Table~\ref{tab:dissolution} (columns 4 and 6 are that
-table's columns 5 and 7; $\delta_\chi(m)$ references
-$0.5384553$, $0.5197175$, $0.5137784$). Column 5 confirms the
-$C/\sigma^2$ scale of (i), column 7 the $C/\sigma^4$ scale of (ii),
-with $O(1)$ constants across a range of $(q,m)$.}
+\caption{Theorem~\ref{thm:joint} against the certified intervals underlying
+Table~\ref{tab:dissolution}.  The final column is signed and propagates the
+density radius outward; the first two scaled residuals are negative, while
+the $(4,100)$ interval contains zero.}
 \label{tab:joint}
 \end{table}
 \end{remark}
@@ -3454,10 +3474,11 @@ jointly, which we leave open.
 \label{sec:critical}
 
 The joint theorem deliberately keeps $M=m+\tfrac12$ bounded away from
-zero.  We now identify what replaces it at the transition scale
-$M\asymp1/\log q$.  The answer is not another Gaussian formula: the
-limiting law is a continuous functional of the microscopic zero
-configuration.  This makes precise the low-zero mechanism visible at
+zero. We give a conditional transfer principle at the transition scale
+$M\asymp1/\log q$. Under explicit convergence and tail-tightness
+hypotheses, the limiting law is a continuous functional of the microscopic
+zero configuration rather than another Gaussian formula. This makes precise
+the low-zero mechanism visible at
 $m=0$ in \cite[\S3.6]{FM13}, but in a different double scaling in which
 each low zero retains order-one influence.
 
@@ -3472,6 +3493,56 @@ Vague convergence below means convergence against continuous
 compactly supported functions on $[0,\infty)$; a limit is allowed to
 have an atom at $0$, even though central nonvanishing excludes one from
 each $\mu_n$.
+
+For $\eta>0$ set
+\[
+ b_\eta(y):=\frac{4\eta}{\sqrt{\eta^2+(2\pi y)^2}}.
+\]
+
+\begin{lemma}[weighted vague convergence]\label{lem:weighted-vague}
+Suppose $\lambda_n>0$, $\lambda_n\to\lambda\in(0,\infty)$, the locally
+finite counting measures $\mu_n$ converge vaguely to $\mu$, and
+\[
+ \lim_{R\to\infty}\sup_n\int_{(R,\infty)}y^{-2}\,d\mu_n(y)=0.
+\]
+Then, for $p\in\{2,4\}$,
+\[
+ \int b_{\lambda_n}(y)^p\,d\mu_n(y)
+ \longrightarrow \int b_\lambda(y)^p\,d\mu(y),
+\]
+and, for every fixed real $t$,
+\[
+ \prod_{y\in\mu_n}J_0\bigl(tb_{\lambda_n}(y)\bigr)
+ \longrightarrow
+ \prod_{y\in\mu}J_0\bigl(tb_\lambda(y)\bigr).
+\]
+Both infinite products are defined as limits over compact intervals.
+\end{lemma}
+
+\begin{proof}
+After discarding finitely many indices, $(\lambda_n)$ lies in a compact
+subinterval of $(0,\infty)$. Consequently
+$b_{\lambda_n}\to b_\lambda$ uniformly on compact sets and,
+for $y\ge1$, $b_{\lambda_n}(y)^2\le C_\lambda y^{-2}$ uniformly in $n$.
+Choose $R$ with $\mu(\{R\})=0$. Vague convergence of point measures gives
+bounded mass on $[0,R]$ and convergence of the finite configurations there;
+hence the compact parts of the two integrals converge. Their tails tend to
+zero uniformly by the displayed tail condition; the same tail bound passes to
+$\mu$ by approximation with nonnegative compactly supported functions and
+lower semicontinuity. This proves the assertion for $p=2$, and the case
+$p=4$ follows from $0\le b_\lambda\le4$.
+
+On $[0,R]$, convergence of the finite point configurations and uniform
+convergence of the amplitudes give convergence of the finite Bessel products.
+For the tails, $|J_0(u)|\le1$ and
+$|1-J_0(u)|\le u^2/4$ imply the telescoping bound
+\[
+ \left|1-\prod_{y>R}J_0\bigl(tb_{\lambda_n}(y)\bigr)\right|
+ \le\frac{t^2}{4}\sum_{y>R}b_{\lambda_n}(y)^2,
+\]
+uniformly in $n$, and likewise for $\mu$. Letting first $n\to\infty$ and
+then $R\to\infty$ proves the product convergence.
+\end{proof}
 
 \begin{theorem}[critical zero-process transfer]
 \label{thm:critical-transfer}
@@ -3488,9 +3559,6 @@ tightness condition
 \end{equation}
 Put
 \[
- b_\lambda(y):=\frac{4\lambda}
- {\sqrt{\lambda^2+(2\pi y)^2}},
- \qquad
  \mathcal X_{\lambda,\mu}:=
  1+\sum_{y\in\mu}b_\lambda(y)\cos\theta_y,
 \]
@@ -3540,47 +3608,14 @@ The exact identity behind the scaling is
  =\frac{4\lambda_n}
  {\sqrt{\lambda_n^2+(2\pi y_{n,j})^2}}.
 \end{equation}
-Because $(\lambda_n)$ is bounded, the squared right-hand side is at
-most $C_\lambda y^{-2}$ for $y\ge1$.  Vague convergence controls every
-compact interval, while \eqref{eq:critical-tail} controls the
-complement.  It follows first that
-$\int b_\lambda^2\,d\mu<\infty$, and hence the defining series for
-$\mathcal X_{\lambda,\mu}$ converges a.s.\ and in $L^2$ by the same
-independent mean-zero series argument used for $X_{m,\chi}$.
-
-We prove convergence through characteristic functions.  Fix $t$ and
-choose $R$ with $\mu(\{R\})=0$.  On $[0,R]$, vague convergence of
-integer-valued locally finite point measures implies convergence of
-the finite configurations, with multiplicity: enclose the finitely
-many limiting atoms in disjoint intervals whose boundaries carry no
-mass and use convergence of their integer masses.  Together with
-$\lambda_n\to\lambda$ and \eqref{eq:critical-amplitude}, this gives
-\[
- \prod_{y_{n,j}\le R}J_0\bigl(t b_{\lambda_n}(y_{n,j})\bigr)
- \longrightarrow
- \prod_{\substack{y\in\mu\\y\le R}}
- J_0\bigl(t b_\lambda(y)\bigr).
-\]
-For the tails use $|J_0(u)|\le1$ and
-\[
- |1-J_0(u)|
- =\left|\mathbb E(1-\cos(u\cos\theta))\right|
- \le\frac{u^2}{4}.
-\]
-The telescoping product inequality therefore gives, uniformly in $n$,
-\[
- \left|1-\prod_{y_{n,j}>R}
- J_0\bigl(t b_{\lambda_n}(y_{n,j})\bigr)\right|
- \le \frac{t^2}{4}\sum_{y_{n,j}>R}b_{\lambda_n}(y_{n,j})^2
- \le C_{\lambda,t}\int_{(R,\infty)}y^{-2}\,d\mu_n(y),
-\]
-which tends to zero as $R\to\infty$ by
-\eqref{eq:critical-tail}.  The identical bound applies to $\mu$ (by
-vague approximation and lower semicontinuity).  Thus the full
-characteristic functions converge to the product in
-\eqref{eq:critical-product}; L\'evy's theorem proves (i).  Applying the
-same compact-plus-tail argument to $b^2/2$ proves the variance formula
-and its convergence, giving (ii).
+Lemma~\ref{lem:weighted-vague} gives
+$\int b_\lambda^2\,d\mu<\infty$, convergence of the variances, and
+convergence of the Bessel products for every fixed $t$. Hence the defining
+series for $\mathcal X_{\lambda,\mu}$ converges almost surely and in $L^2$
+by the independent mean-zero series theorem used for $X_{m,\chi}$, while
+L\'evy's continuity theorem and \eqref{eq:critical-amplitude} give (i).
+Since the variance of $b\cos\theta$ is $b^2/2$, the same lemma gives the
+formula and convergence in (ii).
 
 If $\mu$ has an atom, split off one corresponding summand.  It has a
 scaled arcsine density, and convolution with the independent remainder
@@ -3590,11 +3625,21 @@ the constant $1$, so the same boundary probability is again zero.
 Part (iii) now follows from weak convergence and the portmanteau
 theorem; the race interpretation is Theorem~\ref{thm:interp}(ii).
 
-Finally, for $Z=b\cos\theta$,
+Finally, enumerate the atoms of $\mu$ as $(y_j)$ with multiplicity. For
+$Z=b\cos\theta$,
 $\mathbb EZ^2=b^2/2$, $\mathbb EZ^4=3b^4/8$, and therefore
-$\kappa_4(Z)=-3b^4/8$.  Cumulants add for independent sums, and the
-sum of fourth powers is finite by the already proved square summability
-and $b_\lambda\le4$.  This proves \eqref{eq:critical-kappa4}, which is
+$\kappa_4(Z)=-3b^4/8$. For a tail sum $W_R$ of the independent centred
+summands, independence gives
+\[
+ \mathbb E W_R^4
+ =\sum_{y_j>R}\frac{3b_\lambda(y_j)^4}{8}
+ +6\!\sum_{\substack{i<j\\y_i,y_j>R}}
+ \frac{b_\lambda(y_i)^2b_\lambda(y_j)^2}{4}
+ \le\frac34\left(\sum_{y_j>R}b_\lambda(y_j)^2\right)^2.
+\]
+Thus the finite partial sums converge in $L^4$, so their fourth cumulants
+converge and may be added term by term. This proves
+\eqref{eq:critical-kappa4}, which is
 strictly negative when $\mu\ne0$ and rules out a Gaussian law.
 \end{proof}
 
@@ -3628,7 +3673,8 @@ claim; the deterministic transfer theorem above is what isolates its
 precise analytic input.
 
 
-\section{Monotonicity in the weight for large $m$}
+\section{\texorpdfstring{Monotonicity in the weight for large $m$}%
+{Monotonicity in the weight for large m}}
 \label{sec:monotone-large}
 
 Conjecture~\ref{conj:monotone} asserts that $m\mapsto\delta_q(m)$ is
@@ -3683,9 +3729,8 @@ such that
 -\delta_q'(m)\;=\;\theta(m)\,\frac{D(M)}{2\sqrt{2\pi}\,\sigma_m^{3}},
 \qquad \theta(m)\in[0.90,\,1.14]\quad(M\ge M_2(\chi)),
 \]
-and by Lemma~\ref{lem:Dprop}(iii) (for $q\in\{3,4\}$; the general
-real primitive case is identical with $2a-1$ in place of $+1$ in the
-variance constant),
+and by Proposition~\ref{prop:varasymp} and
+Lemma~\ref{lem:Dprop}(iv),
 \[
 -\delta_q'(m)\;\asymp\;\frac{2L_M+2}{2\sqrt{2\pi}\,(2ML_M)^{3/2}}
 \;\asymp_q\;\frac{1}{M^{3/2}(\log M)^{1/2}}
@@ -3714,8 +3759,8 @@ by Theorem~\ref{thm:interp}(ii) as in
 Corollary~\ref{cor:dissolution-race}. Combined with
 Conjecture~\ref{conj:monotone}, monotonicity is now proved on
 $[m_1,\infty)$ and open only on the bounded interval
-$(-\tfrac12,m_1)$, $m_1=16.82$ resp.\ $18.62$, where the certified
-grid of Section~\ref{subsec:monotone} supports it numerically.
+$(-\tfrac12,m_1)$, $m_1=16.82$ resp.\ $18.62$, where the numerical
+error-budget grid of Section~\ref{subsec:monotone} supports it.
 \end{corollary}
 
 The proof occupies the rest of the section: Bessel structure
@@ -3932,6 +3977,24 @@ $\tfrac q\pi\cdot\tfrac{T+3/2}2\le\tfrac{q(T+2)}{2\pi}$, the claim
 follows.
 \end{proof}
 
+\begin{lemma}[all-parity upper zero count]\label{lem:Nall}
+Under (H), for every real primitive character and every $T>0$,
+\[
+ N_\chi(T)\le \widetilde N_\chi(T):=
+ C_R'(T+1)\log\bigl(q(T+2)\bigr),
+\]
+where $C_R'$ is the absolute constant of
+Lemma~\ref{lem:rvm-joint}(b). This estimate covers both parities and,
+unlike Lemma~\ref{lem:Nplus}, has no lower restriction on $T$.
+\end{lemma}
+
+\begin{proof}
+For $T\ge1$, Lemma~\ref{lem:rvm-joint}(b) gives
+$N_\chi(T)\le C_R'T\log(qT)\le\widetilde N_\chi(T)$. For $0<T<1$,
+monotonicity and the same lemma at $T=1$ give
+$N_\chi(T)\le C_R'\log q\le\widetilde N_\chi(T)$.
+\end{proof}
+
 \begin{lemma}[self-contained lower zero count]\label{lem:Nlow}
 Under the hypotheses of Lemma~\ref{lem:Nplus}, for every $Y>0$,
 \begin{equation}\label{eq:Nlow}
@@ -4010,6 +4073,11 @@ $0<M_a\le M\le M_b$,
 \item[(iii)] For $q\in\{3,4\}$ and $M\ge10$:
 $\bigl|D(M)-2L_M-2\bigr|\le8/M$ and $2ML_M\le\sigma_m^2\le2ML_M+3.1$;
 for $M\ge20$ also $S_4(m)\le32M(L_M-1)+100$.
+\item[(iv)] For every fixed real primitive $\chi$ satisfying (H),
+\[
+ D(M)=2\log\frac{qM}{2\pi}+2+O(M^{-1})
+ \qquad(M\to\infty).
+\]
 \end{itemize}
 \end{lemma}
 
@@ -4051,6 +4119,19 @@ $|D-2L_M-2|\le4.3/M+9/M^2\le8/M$. The $\sigma^2$ and $S_4$ bounds are
 those derived in the proof of Lemma~\ref{lem:Nlow} (with the $S_4$
 upper bound using the lower $\psi'$ estimate:
 $S_4\le16(2ML_M+1.4)-32M+48-27+0.1\le32M(L_M-1)+100$).
+
+(iv) Put $x=M/2+(2a+1)/4$. The completed-$L$ formula gives, for
+either parity,
+\[
+D=2\log\tfrac q\pi+2\psi(x)+M\psi'(x)
++4\tfrac{L'}L(M+\tfrac12,\chi)
++4M\bigl(\tfrac{L'}L\bigr)'(M+\tfrac12,\chi).
+\]
+Binet's bounds in Lemma~\ref{lem:binet} give
+$2\psi(x)+M\psi'(x)=2\log(M/2)+2+O(M^{-1})$ uniformly in
+$a\in\{0,1\}$. The two Dirichlet-series terms are $O(M2^{-M})$
+(the absolute zeta-series majorants suffice once $M+\tfrac12\ge2$).
+Combining these estimates proves (iv).
 \end{proof}
 
 \subsection*{Differentiating the inversion integral}
@@ -4129,8 +4210,9 @@ $2a_\gamma't\le\tfrac{4t}M$ each, since $a_\gamma'\le
 \eqref{eq:dPhiLog} with $B\le0.517D_{\max}t^2$ and
 $|\Phi_m|\le1$; on $[\tfrac18,16]$, \eqref{eq:Abound} with the
 trivial product bound $1$ and
-$A(t)\le\tfrac{D_{\max}}2t^2+\tfrac{4t}{M_a}N^+(2M_bt)$
-(Lemma~\ref{lem:Nplus}), a fixed continuous function; on
+$A(t)\le\tfrac{D_{\max}}2t^2+\tfrac{4t}{M_a}
+\widetilde N_\chi(2M_bt)$
+(Lemma~\ref{lem:Nall}), a fixed continuous function; on
 $[16,\infty)$, take $S=\{\gamma\le2M_a\}$ ($|S|=n\ge8$): each factor
 obeys (J2) with $2a_\gamma t\ge\tfrac4{\sqrt5}t$, so the product over
 any $n-1$ of them is $\le(c_3/\sqrt t)^{\,n-1}\le c_3^{7}t^{-7/2}$,
@@ -4224,7 +4306,10 @@ $M\in[M_a,M_b]$,
 where $D_{\max}$ is the interval bound of
 Lemma~\ref{lem:Dprop}(ii);
 $\nu_j$ is any upper bound for
-$N_\chi\bigl(M_b\sqrt{4t_{j+1}^2-1}\bigr)$ (the certified list count
+\[
+N_\chi\bigl(M_b\sqrt{4t_{j+1}^2-1}\bigr)
+\]
+(the certified list count
 when the threshold is below the list height, $N^+$ of
 Lemma~\ref{lem:Nplus} otherwise);
 $\kappa_{(1)}\le\kappa_{(2)}\le\cdots$ are the sorted values of
@@ -4275,11 +4360,13 @@ evaluate to the stated closed forms.
 \subsection*{Proof of Theorem~\ref{thm:monotone-large}}
 
 \begin{proof}
-Take $M_1(\chi)\ge M_0(q)$ (Lemma~\ref{lem:window}) large enough that
-the window $(M,2M]$ contains $N_0\ge\tfrac M{4\pi}\log M\ge14$ zeros;
-Lemma~\ref{lem:diffint} then applies on a neighbourhood of any
-$M\ge M_1$ (its hypothesis needs only $8$ zeros below $2M$), so
-$\delta_q'$ exists and \eqref{eq:split} holds.
+Take $M_1(\chi)\ge2M_0(q)$ (Lemma~\ref{lem:window}) large enough that
+the window $(M,2M]$ contains
+$N_0\ge\tfrac M{4\pi}\log M\ge14$ zeros and the window
+$(M/2,M]$ contains at least $8$ zeros.  The latter zeros lie strictly
+below $2M_a$ throughout some two-sided neighbourhood
+$[M_a,M_b]$ of $M$; hence Lemma~\ref{lem:diffint} applies on that
+neighbourhood, so $\delta_q'$ exists and \eqref{eq:split} holds.
 
 \emph{Main term.} By \eqref{eq:S4asymp} and
 Proposition~\ref{prop:varasymp}, $S_4/\sigma_m^2\to16$, so
@@ -4305,10 +4392,11 @@ factor is $\le\rho_1\le0.733$. Take $S=$ the window in
 Lemma~\ref{lem:tailexp} (a one-cell version suffices): on
 $[\tfrac35,64]$ the product over $S$ minus one factor is
 $\le\rho_1^{N_0-1}$, and with
-$A(t)\le\tfrac D2t^2+\tfrac{4t}MN^+(2Mt)\ll_q t^2\log(qMt)$,
+$A(t)\le\tfrac D2t^2+\tfrac{4t}M\widetilde N_\chi(2Mt)
+\ll_q t^2\log(q(Mt+2))$,
 \[
 \mathrm{TAIL}\;\ll_q\;\rho_1^{\,N_0-1}\,\log M
-\;+\;c_3^{12}\,2^{-(N_0-13)}
+\;+\;(1+\log M)c_3^{12}\,2^{-(N_0-13)}
 \;\ll_q\;e^{-c\,M\log M}
 \]
 with $c=\tfrac{\log(1/0.733)}{4\pi}-\varepsilon$, by
@@ -4331,14 +4419,15 @@ $[0,\tfrac18]$ all arguments are $\le\tfrac12$, so
 $B(t)\le0.517\,Dt^2$ (Lemma~\ref{lem:phi}(ii)) and, by
 \eqref{eq:smallt}--\eqref{eq:Eunif},
 $\Phi_m(t)\le e^{-(8/17)\sigma^2t^2}$; hence
-\[
+\begin{align*}
 \frac1\pi\int_0^{1/8}\Phi_mB\,\frac{\sin t}t\,dt
-\;\le\;\frac{0.517\,D}\pi\int_0^\infty t^2e^{-(8/17)\sigma^2t^2}dt
-\;=\;\frac{0.517\,D}{4\sqrt\pi}
-\Bigl(\frac{17}{8\sigma^2}\Bigr)^{3/2}
-\;\le\;0.226\,\frac D{\sigma^3}\;=\;1.133\cdot
-\frac D{2\sqrt{2\pi}\,\sigma^3}\,.
-\]
+&\le\frac{0.517\,D}\pi\int_0^\infty
+ t^2e^{-(8/17)\sigma^2t^2}dt\\
+&=\frac{0.517\,D}{4\sqrt\pi}
+ \Bigl(\frac{17}{8\sigma^2}\Bigr)^{3/2}\\
+&\le0.226\,\frac D{\sigma^3}
+ =1.133\,\frac D{2\sqrt{2\pi}\,\sigma^3}\,.
+\end{align*}
 On $[\tfrac18,\tfrac35]$ every window argument is
 $\ge\tfrac4{\sqrt5}\cdot\tfrac18=0.447$, so each window factor is
 $\le J_0(0.447)\le0.9510$ (alternating series), and by
@@ -4356,8 +4445,8 @@ computation above gives
 $-\delta_q'\ge(0.9973\cdot0.9548\cdot0.996-o(1))
 \frac D{2\sqrt{2\pi}\sigma^3}-\mathrm{TAIL}
 \ge0.90\,\frac D{2\sqrt{2\pi}\sigma^3}$ for $M\ge M_2(\chi)$.
-Finally the closed form $D=2L_M+2+O(1/M)$
-(Lemma~\ref{lem:Dprop}(iii)) and
+Finally $D=2L_M+2+O(1/M)$
+(Lemma~\ref{lem:Dprop}(iv)) and
 $\sigma_m^2=2ML_M+O(1)$ give the last display of the theorem.
 \end{proof}
 
@@ -4425,15 +4514,14 @@ $N_\chi(2M)\ge n_2$ (Lemma~\ref{lem:Nlow}) and
 \end{align*}
 with $I_1'=\tfrac{16^{-2.5}}{2.5}$,
 $I_2'=\tfrac{16^{-2.5}(2.5\log16+1)}{6.25}$, while
-\[
-\mathrm{MAIN}\;\ge\;\mathrm{MAIN}_{\mathrm{an}}(M)
-:=\frac{0.9973}\pi\cdot\frac{D_-}2
+\begin{align*}
+\mathrm{MAIN}&\ge\mathrm{MAIN}_{\mathrm{an}}(M)\\
+&:=\frac{0.9973}\pi\cdot\frac{D_-}2
 \Bigl[\frac{\sqrt\pi}{4\beta_+^{3/2}}
 \operatorname{erf}\Bigl(\frac{\sqrt{\beta_+}}8\Bigr)
--\frac{e^{-\beta_+/64}}{16\beta_+}\Bigr],
-\quad
-\beta_+=M\ell+1.55+\frac{32M(\ell-1)+100}{1088}.
-\]
+-\frac{e^{-\beta_+/64}}{16\beta_+}\Bigr],\\
+\beta_+&=M\ell+1.55+\frac{32M(\ell-1)+100}{1088}.
+\end{align*}
 Then $\mathrm{TAIL}_{\mathrm{an}}(300)<
 \mathrm{MAIN}_{\mathrm{an}}(300)$ for both moduli (ratios
 $<5\times10^{-4}$ for $q=4$ and $<3\times10^{-3}$ for $q=3$; the
@@ -4500,15 +4588,31 @@ $\tfrac d{dM}\log\bigl(\tfrac{D_+}2I_1'+4(\ell_0I_1'+I_2')\bigr)
 \le-\log\tfrac1{0.733}\cdot\frac{\ell_{Y_2}-1}{13.9}+0.001
 \le-0.09 .
 \]
-Meanwhile
-$\frac d{dM}\log\mathrm{MAIN}_{\mathrm{an}}
-\ge-\tfrac32\cdot\tfrac{d\beta_+/dM}{\beta_+}
-\cdot\bigl(1-\tfrac{0.003}{1}\bigr)^{-1}
-\ge-\tfrac32\cdot\tfrac{1.03\ell+1}{M\ell}\cdot1.004\ge-0.007$
-($D_-$ is increasing, the erf factor and the subtracted term of the
-bracket vary favourably, and the subtracted term is at most $0.003$
-of the first, as in the proof of
-Theorem~\ref{thm:monotone-large}). Hence each summand's ratio to
+For the main term, the bracket in its definition is exactly
+\[
+ B(\beta_+):=\int_0^{1/8}t^2e^{-\beta_+t^2}\,dt.
+\]
+Since $D_-=2\ell+2-8/M$ is increasing,
+\[
+ \frac d{dM}\log\mathrm{MAIN}_{\mathrm{an}}
+ \ge\frac{B'(\beta_+)}{B(\beta_+)}\,\beta_+'
+ =-\beta_+'\,
+ \frac{\int_0^{1/8}t^4e^{-\beta_+t^2}dt}
+ {\int_0^{1/8}t^2e^{-\beta_+t^2}dt}.
+\]
+The ratio of truncated moments is at most its full-Gaussian value
+$3/(2\beta_+)$. Indeed, if $A(T)=\int_0^Tt^2e^{-\beta_+t^2}dt$ and
+$B(T)=\int_0^Tt^4e^{-\beta_+t^2}dt$, then
+$(B/A)'=T^2e^{-\beta_+T^2}(T^2A-B)/A^2\ge0$, since
+$T^2A-B=\int_0^Tt^2(T^2-t^2)e^{-\beta_+t^2}dt\ge0$; letting
+$T\to\infty$ gives $3/(2\beta_+)$.
+Here $\beta_+\ge M\ell$ and
+$\beta_+'=(35/34)\ell+1\le1.03\ell+1$, so for $M\ge300$, $q\ge3$,
+\[
+ \frac d{dM}\log\mathrm{MAIN}_{\mathrm{an}}
+ \ge-\frac32\frac{1.03\ell+1}{M\ell}\ge-0.007.
+\]
+Hence each summand's ratio to
 $\mathrm{MAIN}_{\mathrm{an}}$ has logarithmic derivative
 $\le-0.15+0.007=-0.143\le-0.14$ resp.\
 $\le-0.09+0.007\le-0.08$; both ratios decrease on $[300,\infty)$,
@@ -4580,8 +4684,8 @@ Lemma~\ref{lem:negstruct} holds there too, but the tail of the
 differentiated integral is no longer dominated by our bounds when
 fewer than a dozen zeros sit below $2M$; on that range the
 monotonicity remains Conjecture~\ref{conj:monotone}, supported by the
-validated grid (whose points $m=15$ and $m=20$ bracket both
-thresholds, with decreasing, pairwise disjoint enclosures across
+numerical grid (whose points $m=15$ and $m=20$ bracket both
+thresholds, with decreasing, pairwise disjoint intervals across
 them).
 \end{remark}
 
@@ -4603,225 +4707,156 @@ bimodality.
 
 \section{Methods and verification}\label{sec:methods}
 
-Zeros of $L(s,\chi_4)$ and $L(s,\chi_3)$ ($511$ resp.\ $537$ ordinates
-to $25$ digits) were computed by Hardy $Z$-scans with derived phases,
-validated by reality of $Z$ to $\sim10^{-27}$, Riemann--von Mangoldt
-counts, and the known first ordinates.
+The $511$ ordinates for $\chi_4$ and $537$ for $\chi_3$ were first obtained
+from Hardy-$Z$ scans.  The values used below are balls of radius $10^{-20}$.
+Directed Hardy-$Z$ sign changes prove that every disjoint ball contains a
+zero; rigorous winding-number counts give exactly $511$ and $537$ zeros,
+counted with multiplicity, through heights $640.1657$ and $700.0247$.
+Consequently each ball contains exactly one simple zero and the lists are
+complete to those heights.  Thus the zero data are a certificate, not a
+sampled Riemann--von Mangoldt check.
 
-\subsection*{Validated enclosures for the densities}
+\subsection*{Rigorous conditional density certificates}
 \label{subsec:certified}
 
-The densities of Table~\ref{tab:delta} rest on a tail model:
-the unseen zeros $\gamma>\Gamma$ ($\Gamma=\gamma_{511}=639.9157\ldots$
-for $\chi_4$, $\gamma_{537}=699.7747\ldots$ for $\chi_3$) are replaced
-by a Gaussian whose variance was originally \emph{estimated} from the
-zero-counting density. This subsection replaces the estimate by the
-exact closed form of Proposition~\ref{prop:varid} and derives
-validated enclosures for the densities --- explicit analytic error
-bounds throughout, with quadrature error estimated rather than
-certified --- stating precisely which terms are proved and which
-remain estimated; Table~\ref{tab:delta} prints the enclosure
-midpoints. Throughout, the standing hypotheses are
-GRH$(\chi)$ + LI$(\chi)$ (as for every density in this literature)
-together with the completeness of the computed ordinate list up to
-$\Gamma$ (validated by the Hardy $Z$-scans and Riemann--von Mangoldt
-counts described above; the enclosure script repeats a smoothed count
-check, which matches to $0.6$ resp.\ $1.3$ of a zero, within the
-$S(T)$ fluctuation).
-
-Under LI, $\delta_q(m)=\mathbb P(1+V>0)$ with
-$V=\sum_{\gamma>0}2a_\gamma(m)\cos\theta_\gamma$, whose characteristic
-function factors over the computed and unseen ordinates,
+The word \emph{conditional} is essential.  GRH$(\chi)$ and LI$(\chi)$
+identify the logarithmic race density with the probability below; the finite
+zero certificates and the interval computation do not prove either global
+hypothesis.  Under them,
 \[
-\Phi(t)\;=\;\prod_{\gamma>0}J_0\bigl(2a_\gamma t\bigr)
-\;=\;P(t)\,\Psi(t),\qquad
-P=\prod_{\gamma\le\Gamma},\quad \Psi=\prod_{\gamma>\Gamma}.
+\delta_q(m)=\mathbb P(1+V>0),\qquad
+V=\sum_{\gamma>0}2a_\gamma(m)\cos\theta_\gamma,
 \]
-Since $|J_0(x)|\le\min\{1,\sqrt{2/(\pi x)}\}$ for $x>0$ (the classical
-envelope; the extremal value $\sup_{x>0}\sqrt x\,|J_0(x)|=\sqrt{2/\pi}
-=0.79788\ldots$ is re-verified numerically in the script, which uses
-the rounded-up constant $0.8$), $\Phi$ is integrable, $V$ has a
-continuous density, and the Gil--Pelaez inversion is an identity:
+and the characteristic function factors as
+\[
+\Phi(t)=\prod_{\gamma>0}J_0(2a_\gamma t)
+=P(t)\Psi(t),\qquad
+P=\prod_{\gamma\le\Gamma}J_0(2a_\gamma t).
+\]
+Landau's sharp global bound
+$\sup_{x>0}\sqrt{x}\,|J_0(x)|=\sqrt{2/\pi}<1$~\cite{Lan00}
+implies integrability, hence the exact inversion
 \begin{equation}\label{eq:gilpelaez}
-\delta_q(m)\;=\;\frac12+\frac1\pi\int_0^\infty
+\delta_q(m)=\frac12+\frac1\pi\int_0^\infty
 \Phi(t)\,\frac{\sin t}{t}\,dt .
 \end{equation}
-The enclosure controls the three gaps between \eqref{eq:gilpelaez} and
-what a finite computation can evaluate.
 
-\emph{(i) The tail variance is certified, not estimated.} By
-Proposition~\ref{prop:varid},
+\emph{Certified tail variance.}  Proposition~\ref{prop:varid} gives
 \[
-V_T\;:=\;\sum_{\gamma>\Gamma}2a_\gamma(m)^2
-\;=\;4M\,\frac{\Lambda'}{\Lambda}(m+1)-\sum_{\gamma\le\Gamma}2a_\gamma(m)^2 ,
+V_T:=\sum_{\gamma>\Gamma}2a_\gamma(m)^2
+=4M\frac{\Lambda'}{\Lambda}(m+1)
+-\sum_{\gamma\le\Gamma}2a_\gamma(m)^2.
 \]
-with no reference to the zero-counting density. The subtracted finite
-sum inherits the $25$-digit accuracy of the ordinates (effect
-$<10^{-20}$); the closed form is evaluated by mpmath at $40$ digits
-through two independent routes that must agree to $25$ digits, anchored
-at $L(2,\chi_4)=G$ (Catalan), at a directly summed series for
-$L(2,\chi_3)$, at $(L'/L)(1,\chi_q)$ expressed through generalized
-Stieltjes constants, and at the closed form for $\sigma_0^2$. This is
-high-precision floating point, \emph{not} interval arithmetic; we
-budget a defensive slack of $10^{-15}$ for it, absorbed into the error
-radius below. The script aborts if any $V_T\le0$; in fact
-$V_T$ ranges from $0.0030943$ ($q=3$, $m=0$) to $139.71$
-($q=4$, $m=100$); see Table~\ref{tab:enclose}.
+The script \nolinkurl{race_density_arb.py} evaluates this identity at
+$192$-bit Arb precision.  For the only derivative not supplied directly,
+it uses $\operatorname{Im}L(s+ih)/h$, with $h=2^{-60}$ and Cauchy radius
+$R=1/4$.  Since the partial sums of $\chi_3$ and $\chi_4$ have modulus at
+most one, Abel summation gives $|L(z,\chi)|\le |z|/\Re z$ on $\Re z>0$;
+therefore the complete complex-step remainder is at most
+\[
+\frac{M_Lh^2}{R^3\{1-(h/R)^2\}},\qquad
+M_L=\frac{s+R}{s-R}.
+\]
+Every subtraction uses the certified zero balls, and the program aborts if
+$V_T$ is not strictly positive.
 
-\emph{(ii) The unseen product is a Gaussian with a proved quartic
-correction.} Since $a_\gamma=2M/\sqrt{M^2+\gamma^2}$ is strictly
-decreasing in $\gamma$, every unseen ordinate satisfies
-$2a_\gamma t\le 2a_\Gamma t\le1$ whenever
-$t\le t_{\max}:=1/(2a_\Gamma)$. On $|z|\le1$ we use
+\emph{Certified unseen-product bound.}  For real $z$, $|z|\le1$,
 \begin{equation}\label{eq:quartic}
-0\;\le\;-\log J_0(z)-\frac{z^2}{4}\;\le\;c_4\,z^4,
-\qquad
-c_4=-\log J_0(1)-\tfrac14=0.0176210647\ldots,
+0\le-\log J_0(z)-\frac{z^2}{4}\le c_4z^4,\qquad
+c_4=-\log J_0(1)-\tfrac14=0.0176210647\ldots .
 \end{equation}
-with the \emph{sharp} constant: from the product
-$J_0(z)=\prod_n(1-z^2/j_{0,n}^2)$ over the Bessel zeros,
-$-\log J_0(z)=\sum_{k\ge1}(\sigma_k/k)z^{2k}$ with Rayleigh sums
-$\sigma_k=\sum_nj_{0,n}^{-2k}>0$, valid for $|z|<j_{0,1}=2.40\ldots$;
-$\sigma_1=\tfrac14$ (Rayleigh), and $z^{2k}\le z^4$ for $k\ge2$,
-$|z|\le1$, so the middle member of \eqref{eq:quartic} equals
-$\sum_{k\ge2}(\sigma_k/k)z^{2k}\in[0,c_4z^4]$ with
-$c_4=\sum_{k\ge2}\sigma_k/k$, attained at $z=1$. (The script uses the
-rounded-up $c_4'=0.018$ and re-verifies \eqref{eq:quartic} on a grid.)
-Summing over the unseen zeros: for $0\le t\le t_{\max}$,
+Indeed the Rayleigh product gives
+$-\log J_0(z)=\sum_{k\ge1}(\sigma_k/k)z^{2k}$ with
+$\sigma_k>0$ and $\sigma_1=1/4$; the quotient by $z^4$ is increasing on
+$[0,1]$.  Arb verifies $c_4<0.018$, and the computation uses the rational
+upper bound $c_4'=0.018$.  Put
 \[
-\Psi(t)=\exp\Bigl(-\tfrac12V_Tt^2+\eps(t)\Bigr),
-\qquad
--c_4'\,S_4\,t^4\le\eps(t)\le0,
-\qquad
-S_4:=\!\!\sum_{\gamma>\Gamma}\!(2a_\gamma)^4
-\le(2a_\Gamma)^2\cdot 2V_T,
+B_{4,T}:=(2a_\Gamma)^2\,2V_T
+\ge\sum_{\gamma>\Gamma}(2a_\gamma)^4,
+\qquad w(t)=c_4'B_{4,T}t^4.
 \]
-the last bound because $(2a_\gamma)^2\le(2a_\Gamma)^2$ beyond $\Gamma$
-and $\sum_{\gamma>\Gamma}(2a_\gamma)^2=2V_T$. The sign information is
-exploited: the Gaussian model \emph{over}states $|\Psi|$, and with
-$w(t):=c_4'S_4t^4$ the factor $e^{\eps(t)}\in[e^{-w},1]$ is enclosed by
-its midpoint,
+For $0\le t\le t_{\max}:=(2a_\Gamma)^{-1}$,
 \[
-\Bigl|e^{\eps(t)}-\tfrac{1+e^{-w(t)}}2\Bigr|\;\le\;\tfrac{1-e^{-w(t)}}2,
+\Psi(t)=e^{-V_Tt^2/2+\eps(t)},\qquad -w(t)\le\eps(t)\le0,
 \]
-which halves the tail-model radius relative to the symmetric bound
-$e^{w}-1$.
+so $e^{\eps(t)}$ lies in the midpoint enclosure
+\[
+\left|e^{\eps(t)}-\frac{1+e^{-w(t)}}2\right|
+\le\frac{1-e^{-w(t)}}2.
+\]
 
-\emph{(iii) Enclosure.} With $G(t):=e^{-V_Tt^2/2}$ and a truncation
-point $T_1\le t_{\max}$,
+\emph{Certified finite and infinite integrals.}  Choose
+$T_1\le t_{\max}$ and write $G=e^{-V_Tt^2/2}$.  Then
 \[
-\delta_q(m)\;=\;\frac12+\frac1\pi\Bigl(\,
-\underbrace{\int_0^{T_1}\!P\,G\,\frac{1+e^{-w}}2\,\frac{\sin t}{t}\,dt}_{I,\ \text{computed}}
-\;+\;R\Bigr),
-\qquad |R|\;\le\;E_1+E_2,
+\delta_q(m)=\frac12+\frac1\pi\left(
+\underbrace{\int_0^{T_1}PG\frac{1+e^{-w}}2\frac{\sin t}{t}\,dt}_{I}
++R\right),\qquad |R|\le E_1+E_2,
 \]
+where
 \[
-E_1=\int_0^{T_1}\!|P|\,G\,\frac{1-e^{-w}}2\,dt
-\quad(\text{tail-model radius, from the midpoint enclosure of }e^{\eps}),
+E_1=\int_0^{T_1}|P|G\frac{1-e^{-w}}2\,dt
 \]
+and, for any $K$ retained factors, Landau's weaker consequence
+$|J_0(x)|\le x^{-1/2}$ gives
 \[
-E_2=\frac{(0.8)^K}{\sqrt{\prod_{i\le K}2a_{\gamma_i}}}\cdot
-\frac{T_1^{-K/2}}{K/2}
-\;\ge\;\Bigl|\int_{T_1}^\infty\!\Phi\,\frac{\sin t}{t}\,dt\Bigr|
-\quad(\text{truncation; envelope on the first }K\text{ ordinates,}
+E_2=\frac{T_1^{-K/2}}{(K/2)\sqrt{\prod_{i\le K}2a_{\gamma_i}}}
+\ge\left|\int_{T_1}^\infty\Phi(t)\frac{\sin t}{t}\,dt\right|.
 \]
-all other factors bounded by $1$, $|\sin t/t|\le1/t$). The script
-chooses $K\in\{24,\dots,72\}$ and $T_1\le t_{\max}$ so that
-$E_2\le\pi\times10^{-15}$; this holds at every $(q,m)$ computed.
-What remains \emph{estimated} rather than certified, stated openly:
-the quadrature error of $I$ and of $E_1$ (composite Simpson on $2^{17}$
-subintervals in IEEE double precision; a step-doubling Richardson
-comparison is below $10^{-12}$ at every $(q,m)$, and is budgeted as
-$E_3=10^{-12}$; $E_1$, itself a bound of size $\lesssim5\times10^{-7}$,
-is inflated by $50\%$ against its own quadrature error), the
-double-precision rounding of the $511$-fold product ($\lesssim10^{-13}$
-relative), and the $10^{-15}$ variance slack of (i), together budgeted
-as $E_4=2\times10^{-11}$ plus the computed slack sensitivity. The
-radius of the quoted intervals is $(E_1+E_2+E_3+E_4)/\pi$, dominated
-everywhere by the proved bound $E_1$. These enclosures are rigorous
-\emph{modulo} exactly the items just listed (double-precision
-quadrature with Richardson control and the anchored $40$-digit
-evaluation of $\sigma_m^2$); no interval arithmetic was used, and we do
-not claim otherwise.
+The program chooses $K\in[84,140]$ and proves $E_2/\pi\le10^{-15}$.
+It encloses $E_1$ by adaptive interval subdivision.  The main integral is
+computed by composite $16$-point Gauss--Legendre quadrature: every node and
+weight is isolated in Arb, the nodes are proved disjoint and exhaustive, and
+the weights enclose total mass $2$.  On each cell, Cauchy's estimate and the
+exact Gauss remainder constant
+\[
+Q_n=\frac{(n!)^4}{(2n+1)((2n)!)^2}
+\]
+give an explicit enclosure for the quadrature remainder.  Finally, decimal
+endpoints are obtained by Arb integer floor/ceiling and reparsed to check
+outward containment.  Any failed zero ordering, node isolation, positivity,
+error budget, or decimal postcondition aborts before a table is printed.
 
 \begin{table}[h]\centering
-\begin{tabular}{crrllcr}
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{crrll}
 \toprule
-$q$ & $m$ & $V_T$\quad\ & $\delta_q(m)$ lower & $\delta_q(m)$ upper &
-width & old $-$ mid \\
+$q$ & $m$ & $V_T$ & certified lower bound & certified upper bound \\
 \midrule
-$4$ & $0$   & $0.0034836$ & $0.9959278380$ & $0.9959280127$ & $1.7\times10^{-7}$ & $+0.07$ \\
-$4$ & $1$   & $0.0313527$ & $0.7976303685$ & $0.7976304296$ & $6.1\times10^{-8}$ & $-2.40$ \\
-$4$ & $2$   & $0.0870906$ & $0.6945210810$ & $0.6945211213$ & $4.0\times10^{-8}$ & $-1.10$ \\
-$4$ & $3$   & $0.1706968$ & $0.6458510415$ & $0.6458510746$ & $3.3\times10^{-8}$ & $-1.06$ \\
-$4$ & $8$   & $1.0067182$ & $0.5718700860$ & $0.5718701185$ & $3.3\times10^{-8}$ & $-1.10$ \\
-$4$ & $20$  & $5.8541890$ & $0.5384552785$ & $0.5384553290$ & $5.1\times10^{-8}$ & $-0.30$ \\
-$4$ & $100$ & $139.71245$ & $0.5137782134$ & $0.5137783837$ & $1.7\times10^{-7}$ & $-0.30$ \\
+$4$ & $0$   & $0.0034836$ & $0.995927866782$ & $0.995927983908$ \\
+$4$ & $1$   & $0.0313527$ & $0.797630378395$ & $0.797630419780$ \\
+$4$ & $2$   & $0.0870906$ & $0.694521087360$ & $0.694521114910$ \\
+$4$ & $3$   & $0.1706968$ & $0.645851046701$ & $0.645851069409$ \\
+$4$ & $8$   & $1.0067182$ & $0.571870091125$ & $0.571870113448$ \\
+$4$ & $20$  & $5.8541890$ & $0.538455286605$ & $0.538455320880$ \\
+$4$ & $100$ & $139.71245$ & $0.513778241424$ & $0.513778355623$ \\
 \midrule
-$3$ & $0$   & $0.0030943$ & $0.9990630500$ & $0.9990633364$ & $2.9\times10^{-7}$ & $-0.19$ \\
-$3$ & $1$   & $0.0278484$ & $0.8368804319$ & $0.8368805308$ & $9.9\times10^{-8}$ & $-3.48$ \\
-$3$ & $2$   & $0.0773564$ & $0.7234728791$ & $0.7234729425$ & $6.3\times10^{-8}$ & $-2.91$ \\
-$3$ & $3$   & $0.1516181$ & $0.6665542399$ & $0.6665542896$ & $5.0\times10^{-8}$ & $-2.26$ \\
-$3$ & $8$   & $0.8942043$ & $0.5785355754$ & $0.5785356134$ & $3.8\times10^{-8}$ & $-1.59$ \\
-$3$ & $20$  & $5.2001295$ & $0.5407681867$ & $0.5407682369$ & $5.0\times10^{-8}$ & $-1.21$ \\
-$3$ & $60$  & $45.202127$ & $0.5197174290$ & $0.5197175306$ & $1.0\times10^{-7}$ & $-1.48$ \\
+$3$ & $0$   & $0.0030943$ & $0.999063097443$ & $0.999063289012$ \\
+$3$ & $1$   & $0.0278484$ & $0.836880448106$ & $0.836880514652$ \\
+$3$ & $2$   & $0.0773564$ & $0.723472889305$ & $0.723472932221$ \\
+$3$ & $3$   & $0.1516181$ & $0.666554247837$ & $0.666554281617$ \\
+$3$ & $8$   & $0.8942043$ & $0.578535581419$ & $0.578535607434$ \\
+$3$ & $20$  & $5.2001295$ & $0.540768194762$ & $0.540768228848$ \\
+$3$ & $60$  & $45.202127$ & $0.519717445589$ & $0.519717513972$ \\
 \bottomrule
 \end{tabular}
-\caption{Validated enclosures $[\delta_{\mathrm{lo}},
-\delta_{\mathrm{hi}}]$ for the logarithmic densities --- explicit
-analytic error bounds, with quadrature error estimated by Richardson
-step-doubling rather than certified --- under
-GRH + LI and completeness of the ordinate lists to height $\Gamma$
-($511$ ordinates for $\chi_4$, $537$ for $\chi_3$). $V_T$ is the
-certified variance of the unseen-zero tail. The last column
-(``old $-$ mid'') is the deviation of the earlier Gaussianized-tail
-six-decimal value from the interval
-midpoint, in units of $10^{-6}$; entries exceeding $1$ in absolute
-value mark a changed sixth decimal (ten of the fourteen).
-Table~\ref{tab:delta} prints the midpoints.
-All widths are below $3\times10^{-7}$, against the design target
-$5\times10^{-6}$.}
+\caption{Outward-rounded Arb enclosures for the conditional logarithmic
+densities, under GRH + LI and the separately certified completeness of the
+$511$- and $537$-ordinate lists.  The interval widths are all below
+$2\times10^{-7}$.  The center values in Table~\ref{tab:delta} are summaries
+of these intervals, not additional data.}
 \label{tab:enclose}
 \end{table}
 
-\emph{Enclosure-derived values.} Table~\ref{tab:delta} prints the
-midpoints of these enclosures rounded to six decimals; ten of the
-fourteen sixth decimals differ, by one to three units, from the
-earlier Gaussianized-tail computation (last column of
-Table~\ref{tab:enclose}), a drift quantitatively traced to the
-estimated tail variance that computation used: re-running the pipeline
-with the old smoothed-tail variance in place of $V_T$ reproduces the
-deviations (e.g.\ $-3.2\times10^{-6}$ of the observed
-$-3.5\times10^{-6}$ at $(3,1)$, the small remainder being the older
-code's coarser quadrature). Two sixth decimals are \emph{not resolved}
-by the enclosures and are daggered in Table~\ref{tab:delta}: at
-$(3,1)$ the interval $[0.83688043,0.83688053]$ straddles the rounding
-boundary $0.8368805$ (the value is $0.836880$ or $0.836881$; the
-midpoint $0.83688048$ sits within $2.5\times10^{-9}$ of the boundary,
-so no computation at this zero height can be expected to settle it),
-and at $(3,60)$ the interval $[0.51971743,0.51971753]$ straddles
-$0.5197175$ (the value is $0.519717$ or $0.519718$). The twelve
-remaining sixth decimals, including $(4,100)$, are determined by the
-enclosures. The classical anchors are unaffected: our intervals
-contain $0.9959279\ldots$ and $0.9990632\ldots$ at $m=0$, consistent
-with \cite{RS94,FM13} to all six printed decimals.
-
-\emph{The two computations, honestly described.} The deterministic
-Gil--Pelaez inversion and the Monte Carlo evaluation of
-Section~\ref{sec:methods} share their inputs: the identical
-$511$- resp.\ $537$-ordinate lists and (in their original form) the
-identical Gaussianized tail. Their mutual agreement (largest deviation
-$5.5\times10^{-4}$, i.e.\ $2.2$ binomial standard errors at the actual
-sample counts of Table~\ref{tab:delta}) therefore validated only the
-\emph{evaluation} step ---
-quadrature against sampling --- and could not have detected an error in
-the shared tail model. They are independent as implementations, not as
-models. The enclosures of this subsection close that gap from the model
-side: the tail variance is now the certified $V_T$ of (i), the
-non-Gaussianity of the tail is bounded by the proved $E_1$, and a
-Monte Carlo rerun with the certified $V_T$ in the tail agrees with the
-enclosure midpoints within half a standard error at each tested point
-($2\times10^6$ samples at $(q,m)=(4,0),(4,1),(3,1)$).
+Two sixth decimals remain unresolved and are daggered in
+Table~\ref{tab:delta}: the intervals for $(3,1)$ and $(3,60)$ straddle the
+rounding boundaries $0.8368805$ and $0.5197175$.  Every other displayed
+sixth decimal is fixed by Table~\ref{tab:enclose}.  The former
+Gaussian-tail calculation used an estimated tail variance and can shift a
+density by as much as $4.23\times10^{-6}$; it is retained only as a historical
+cross-check and is not evidentiary.  Likewise, Monte Carlo shares the same
+zero model and checks only the evaluation step.  The Arb intervals above are
+the numerical claims of this paper.
 
 \emph{General real primitive modulus.} Theorem~\ref{thm:interp} is
 stated and proved in Section~\ref{sec:theorem} for an arbitrary real
@@ -4905,7 +4940,7 @@ C(\chi_3)=0.11340215685275857\ldots,
 \]
 
 \emph{Machine certification in ball arithmetic.} The analytic inputs of
-the enclosures have additionally been machine-certified in ball
+the numerical intervals have additionally been machine-certified in ball
 arithmetic (FLINT/Arb via python-flint; script
 \texttt{certify\_arb.py}). Certified as rigorous enclosures: the
 constant
@@ -4923,16 +4958,17 @@ case strictly above the final listed ordinate.  The respective winding
 balls are $511\pm3\times10^{-12}$ and
 $537\pm3\times10^{-11}$; combined with the disjoint sign-change
 intervals, this also proves that every listed zero is simple and that
-no unlisted zero occurs below those heights.  The final Gil--Pelaez quadrature remains
-floating-point with estimated error, as stated above.
+no unlisted zero occurs below those heights.  The separate script
+\nolinkurl{race_density_arb.py} then proves all fourteen intervals of
+Table~\ref{tab:enclose} in ball arithmetic, as detailed above.
 
 The same certified zero balls feed the separate monotonicity
-certificate \texttt{paper/v3/verify\_monotonicity\_arb.py}.  This
+certificate \nolinkurl{verify_monotonicity_arb.py}.  This
 script proves Proposition~\ref{prop:criterion-eval} on $285$ closed
 weight cells in total, including the exact decimal left endpoints
 $M=17.32$ and $19.12$, and verifies the overlap at $M=300$ with the
-zero-free analytic leg.  Unlike the density quadrature, this
-calculation is entirely in ball arithmetic; a failed interval-Newton
+zero-free analytic leg.  Like the density certificate, this calculation is
+entirely in ball arithmetic; a failed interval-Newton
 inclusion, incomplete Bessel-extremum coverage, nonpositive bound, or
 overlap of the main and tail balls causes the certificate to abort.
 
@@ -4956,17 +4992,18 @@ cancels under the bias normalization, so the limiting distribution and
 density coincide --- the same passage Rubinstein--Sarnak make at $m=0$. The explicit-formula
 kernel derives from a uniform smoothed-Perron framework developed in a
 companion manuscript (analytic computation of $S_m(x)$ from zeros,
-exact to $10^9$ at $m=1$), available with all code and data at
-\url{https://github.com/raghavs1729/weighted-prime-races} (archived at
-\href{https://doi.org/10.5281/zenodo.21947102}{doi:10.5281/zenodo.21947102}). Every headline number in this note was re-computed by a second
+exact to $10^9$ at $m=1$).  Its code and data are included in the repository
+snapshot accompanying this draft; the public archive is deliberately not
+cited as current until it is synchronized to the final release commit. Every
+headline number in this note was re-computed by a second
 implementation. For the sieve computations the two implementations are
 independent throughout; for the densities they shared the ordinate
-lists and, prior to the enclosures above, the Gaussian tail model, so
-their agreement tested evaluation error only --- the tail model itself
-is now controlled by the validated enclosures of
-Table~\ref{tab:enclose} (its variance exactly, by
-Proposition~\ref{prop:varid}; its non-Gaussianity by the proved bound
-$E_1$).
+lists and, prior to the tail analysis above, the Gaussian tail model, so
+their agreement tested evaluation error only. The tail model and quadrature
+are now enclosed independently by the Arb intervals of
+Table~\ref{tab:enclose}: Proposition~\ref{prop:varid} gives its variance,
+the proved $E_1$ bounds non-Gaussianity, and the Gauss--Legendre remainder is
+enclosed by Cauchy's estimate.
 
 \emph{Assumptions and limitations.} Densities are conditional on
 GRH + LI, as throughout this literature. The existence of the limiting
@@ -5002,6 +5039,17 @@ include short-interval race applications. We state this only as a
 direction: we prove nothing in any joint regime $m=m(x)\to\infty$, and
 even the existence of a limiting distribution there is open.
 
+\section*{Declaration of generative-AI assistance}
+Anthropic Claude and OpenAI Codex were used extensively during the research
+and preparation of this manuscript: for literature discovery, symbolic and
+numerical cross-checks, code generation and review, proof criticism, and
+expository editing. AI output was treated as untrusted and retained only when
+supported by a written derivation, a cited source, or a reproducible
+calculation; Section~\ref{sec:methods} records the verification class of each
+computational claim. The author is responsible for the manuscript. Because
+the present version has not yet received independent expert review, it should
+be regarded as a pre-submission draft rather than a refereed result.
+
 \begin{thebibliography}{99}
 \bibitem{RS94} M. Rubinstein, P. Sarnak, \emph{Chebyshev's bias},
 Experiment.\ Math.\ \textbf{3} (1994), 173--197.
@@ -5029,6 +5077,15 @@ $L$-functions}, Math.\ Proc.\ Cambridge Philos.\ Soc.\ \textbf{169}
 \bibitem{FM13} D. Fiorilli, G. Martin, \emph{Inequities in the
 Shanks--R\'enyi prime number race: an asymptotic formula for the
 densities}, J. reine angew.\ Math.\ \textbf{676} (2013), 121--212.
+\bibitem{FM00} A. Feuerverger, G. Martin, \emph{Biases in the
+Shanks--R\'enyi prime number race}, Experiment.\ Math.\ \textbf{9}
+(2000), no.~4, 535--570. arXiv:math/9910184.
+\bibitem{Mye13} C. Myerscough, \emph{Application of an accurate
+remainder term in the calculation of residue class distributions},
+arXiv:1301.1434 (2013).
+\bibitem{BMS26} S. Bhattacharya, G. Martin, R.~M. Simpson,
+\emph{Correlations of error terms for weighted prime counting functions},
+arXiv:2507.13504v2 (2026), to appear in Acta Arithmetica.
 \bibitem{AB18} J. Andrade, S. Baluyot, \emph{Small zeros of Dirichlet
 $L$-functions of quadratic characters of prime modulus},
 arXiv:1802.03413 (2018).
@@ -5091,6 +5148,10 @@ Dirichlet $L$-functions at $s=\frac12$}, Ann. of Math. (2) 152
 
 \bibitem{Wat44} G.~N. Watson, \emph{A Treatise on the Theory of Bessel
 Functions}, 2nd ed., Cambridge University Press, Cambridge, 1944.
+
+\bibitem{Lan00} L.~J. Landau, \emph{Bessel functions: monotonicity and
+bounds}, J. London Math. Soc.\ (2) \textbf{61} (2000), no.~1, 197--215.
+doi:10.1112/S0024610799008352.
 
 \bibitem{WW27} E.~T. Whittaker, G.~N. Watson, \emph{A Course of Modern
 Analysis}, 4th ed., Cambridge University Press, Cambridge, 1927.

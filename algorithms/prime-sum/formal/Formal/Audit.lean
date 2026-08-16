@@ -1,0 +1,43 @@
+import Formal.WeightedRaces
+
+/-!
+Run this file with `lake env lean Formal/Audit.lean` to ask Lean which axioms
+occur in each compiled theorem.  The expected output contains only Lean/mathlib
+foundational axioms (typically `propext`, `Classical.choice`, and `Quot.sound`),
+never a project-local axiom.
+-/
+
+#print axioms WeightedPrimeRaces.doubledAmplitude_sq
+#print axioms WeightedPrimeRaces.doubledAmplitudeSquared_nonneg
+#print axioms WeightedPrimeRaces.doubledAmplitudeSquared_le_sixteen
+#print axioms WeightedPrimeRaces.varianceTerm_eq_half_doubledAmplitudeSquared
+#print axioms WeightedPrimeRaces.fourth_amplitude_term_identity
+#print axioms WeightedPrimeRaces.sixth_amplitude_term_identity
+#print axioms WeightedPrimeRaces.hasDerivAt_varianceTerm
+#print axioms WeightedPrimeRaces.varianceDerivativeTerm_pos
+#print axioms WeightedPrimeRaces.critical_squared_amplitude_rescaling
+#print axioms WeightedPrimeRaces.uniformCosMoment_zero
+#print axioms WeightedPrimeRaces.uniformCosMoment_one
+#print axioms WeightedPrimeRaces.uniformCosMoment_two
+#print axioms WeightedPrimeRaces.uniformCosMoment_four
+#print axioms WeightedPrimeRaces.scaled_uniform_cos_second_moment
+#print axioms WeightedPrimeRaces.scaled_uniform_cos_fourth_moment
+#print axioms WeightedPrimeRaces.scaled_uniform_cos_fourthCumulant
+#print axioms WeightedPrimeRaces.scaled_uniform_cos_fourthCumulant_neg
+#print axioms WeightedPrimeRaces.hasDerivAt_finiteZeroVariance
+#print axioms WeightedPrimeRaces.finite_fourth_le_thirty_two_variance
+#print axioms WeightedPrimeRaces.finite_sixth_le_sixteen_fourth
+#print axioms WeightedPrimeRaces.finite_eighth_le_sixteen_sixth
+#print axioms WeightedPrimeRaces.finiteCosineFourthCumulant_eq_sum
+#print axioms WeightedPrimeRaces.finiteCosineFourthCumulant_neg
+#print axioms WeightedPrimeRaces.oneZeroProfile_of_le_one
+#print axioms WeightedPrimeRaces.oneZeroProfile_of_one_lt
+#print axioms WeightedPrimeRaces.oneZero_sign_threshold
+#print axioms WeightedPrimeRaces.oneZero_nonnegative_when_small
+#print axioms WeightedPrimeRaces.gaussianEvenMoment_0
+#print axioms WeightedPrimeRaces.gaussianEvenMoment_2
+#print axioms WeightedPrimeRaces.gaussianEvenMoment_4
+#print axioms WeightedPrimeRaces.gaussianEvenMoment_6
+#print axioms WeightedPrimeRaces.gaussianEvenMoment_8
+#print axioms WeightedPrimeRaces.edgeworth_third_order_coefficients
+#print axioms WeightedPrimeRaces.q_polynomial_coefficient_arithmetic

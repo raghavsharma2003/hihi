@@ -1,0 +1,71 @@
+COMMAND: python certify_arb.py --K 0 --prec 200
+WORKDIR: algorithms/prime-sum/prototype/explore
+DATE: 2026-08-17 Asia/Calcutta
+
+python-flint ball-arithmetic certification  (prec = 200 bits)
+
+[A] The constant C = (1/4) psi'(3/4) + (log L)''(1/2, chi)
+    psi'(3/4) [polygamma]              [2.54187964767160649839766288042 +/- 2.93e-30]
+    psi'(3/4) [pi^2 - 8 Catalan]       [2.54187964767160649839766288042 +/- 2.93e-30]
+  chi4:
+    L(1/2)                             [0.667691457189609176658690929300 +/- 2.49e-31]
+    L'(1/2)                            [0.281864748315611781911979594531 +/- 2.03e-31]
+    L''(1/2)                           [-0.201129470407678219453947883266 +/- 3.46e-31]
+    (log L)''(1/2)                     [-0.479440262028256739991733436715 +/- 1.86e-31]
+    C                                  [0.156029649889644884607682283389 +/- 8.37e-32]
+    L(1/2) certified positive (machine NCZ check): OK
+    consistent with paper value 0.156029649889644884607682 (+/- 2 final-digit ulps): OK
+  chi3:
+    L(1/2)                             [0.480867557696828626181220063236 +/- 4.11e-31]
+    L'(1/2)                            [0.272165862792431900687797762617 +/- 4.51e-31]
+    L''(1/2)                           [-0.0970024969072444099908077056441 +/- 4.51e-32]
+    (log L)''(1/2)                     [-0.522067755065143052941301246293 +/- 4.35e-31]
+    C                                  [0.113402156852758571658114473811 +/- 1.65e-31]
+    L(1/2) certified positive (machine NCZ check): OK
+    consistent with paper value 0.11340215685275857 (+/- 2 final-digit ulps): OK
+  [A] done in 6.21s
+
+  (sieved primes to 1000000 in 0.3s)
+
+[B] Variances sigma_m^2 = 4M (log Lambda)'(m+1)   (M = m + 1/2)
+  chi4:
+    sigma_0^2   [0.155567979923585928862158053839 +/- 1.71e-32]
+    sigma_1^2   [1.36855505395451112228480896767 +/- 3.98e-30]
+    sigma_2^2   [3.64763501677644237915548787547 +/- 4.64e-31]
+    sigma_3^2   [6.77684634860615159637805233148 +/- 3.64e-30]
+    sigma_8^2   [29.7124677146037494232662686649 +/- 4.16e-29]
+    sigma_20^2  [106.325999646437554506629863073 +/- 1.89e-28]
+    sigma_100^2 [836.874383888374910970644315484 +/- 4.23e-28]
+  chi3:
+    sigma_0^2   [0.113229969857472341911781603639 +/- 3.63e-31]
+    sigma_1^2   [1.00700991887090450174556918497 +/- 4.61e-30]
+    sigma_2^2   [2.73484571479034271192484664337 +/- 3.40e-30]
+    sigma_3^2   [5.19610097612912270187651983811 +/- 7.51e-32]
+    sigma_8^2   [24.8659671949443477099049230787 +/- 3.59e-29]
+    sigma_20^2  [94.5310617697932157965576910449 +/- 4.87e-29]
+    sigma_100^2 [779.050287325566944555361295279 +/- 7.18e-29]
+  [B] all paper-value and independent-series cross-checks: OK
+  [B] done in 72.77s
+
+[C] Zero localization: certified sign change of Z across each of the
+    first K = ALL listed ordinates, window +/- 1e-20
+  chi4: 511/511 ordinates certified; intervals pairwise disjoint;
+      minimum gap 0.1336; worst Z-ball radius 9.3e-56
+  chi3: 537/537 ordinates certified; intervals pairwise disjoint;
+      minimum gap 0.1121; worst Z-ball radius 1.2e-55
+  [C] done in 4.66s
+
+[D] Completeness: rigorous winding-number count of ALL zeros of L in
+    (-1/2, 3/2) x (-1/2, T), T strictly above gamma_K
+  chi4: T = 640.165707 (exact source value 640.1657072529865)
+      winding ball [511.0000000 +/- 3e-12], L-evaluations 90255
+      EXACTLY 511 zeros with multiplicity; together with [C], every listed
+      ball contains one simple zero and no zero is missing through T.
+  chi3: T = 700.024747 (exact source value 700.0247478100384)
+      winding ball [537.0000000 +/- 3e-11], L-evaluations 115395
+      EXACTLY 537 zeros with multiplicity; together with [C], every listed
+      ball contains one simple zero and no zero is missing through T.
+  [D] done in 167.75s
+
+RESULT: all certifications PASSED (total time 251.7s)
+EXIT_CODE: 0
