@@ -13,7 +13,13 @@ density's asymptotic dissolution law in the weight aspect, and — since
 the final version — proving an interpolation theorem on the FULL range
 (−1/2, ∞), an exact closed form for the variance, a certified constant
 C = 0.15602964988964488, rigorous density enclosures (width ≤ 6×10⁻⁷),
-and the dissolution law as a THEOREM with error term (see items 3–4).
+and the dissolution law as a THEOREM with error term (items 3–4). v4
+adds: the interpolation theorem for GENERAL real primitive characters;
+a JOINT (q,m)-UNIFORM dissolution law (Fiorilli–Martin's modulus aspect
+and our weight aspect in one statement; corner m→−1/2 & q→∞ open);
+MONOTONICITY proved for m ≥ 16.82 (q=4) / 18.62 (q=3); and
+machine-certified constants/zero-lists in Arb ball arithmetic
+(certify_arb.py). 59-page paper.
 
 **The object.** D_m(x) = Σ_{p≤x, p≡3(4)} p^m − Σ_{p≡1(4)} p^m. The m ≤ 0
 structure has an established literature: Aoki–Koyama (JNT 2023) proved the
