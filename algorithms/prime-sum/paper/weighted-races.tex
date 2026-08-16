@@ -52,7 +52,8 @@ computations to $10^{10}$ agreeing with the predicted densities to
 $\lesssim4\times10^{-3}$ for modulus $4$; (iii) an asymptotic dissolution law in the weight
 aspect, $\delta_q(m)-\tfrac12\sim(2\pi\cdot
 2(m+\tfrac12)\log\tfrac{q(m+1/2)}{2\pi})^{-1/2}$, an analogue of the
-Fiorilli--Martin density asymptotics, proved here with an error term
+Fiorilli--Martin density asymptotics and an extension of their aggregate
+quadratic race from $m=0$ to growing weights, proved here with an error term
 for the density of the limiting distribution of any real primitive
 character under GRH and $L(\tfrac12,\chi)\neq0$ --- under LI$(\chi)$
 it applies
@@ -76,8 +77,11 @@ $\delta_\chi(m)\to1$ as $m\to-\tfrac12^{\,+}$. Two further theorems
 complete the picture: the dissolution asymptotic holds
 \emph{uniformly} over all real primitive characters and all
 $M=m+\tfrac12\ge\delta_0$ (any fixed $\delta_0>0$, with effective
-constants; only the corner $m\to-\tfrac12$ jointly with $q\to\infty$
-is left open), and $m\mapsto\delta_\chi(m)$ is \emph{strictly
+constants), while the critical corner $M\log q\to\lambda$ is governed
+by the microscopic scaled-zero point measure: under its natural vague
+convergence and an $L^2$-tail condition we prove convergence to an
+explicit, generally non-Gaussian Bessel-product law; and
+$m\mapsto\delta_\chi(m)$ is \emph{strictly
 decreasing} for $m\ge16.82$ ($q=4$; $18.62$ for $q=3$), so beyond
 these thresholds Chebyshev's bias dissolves monotonically. The
 constants $C(\chi)$, every variance $\sigma_m^2$, the positivity of
@@ -256,10 +260,12 @@ distribution gives
 \delta_q(m)-\tfrac12\;\sim\;\frac{1}{\sqrt{2\pi\,\mathrm{Var}_q(m)}}
 \quad(m\to\infty),
 \]
-a weight-aspect analogue of the Fiorilli--Martin density
-asymptotics~\cite{FM13} (cf.\ Meng~\cite{Meng18} for the $k$-aspect),
+a weight-aspect extension of the aggregate quadratic race in
+Fiorilli--Martin~\cite[\S3.6]{FM13}, together with an analogue of their
+general density asymptotics (cf.\ Meng~\cite{Meng18} for the $k$-aspect),
 now a theorem: Section~\ref{sec:dissolution} proves it with error term
-$O(1/(M\log M))$ and a second-order refinement for the density of the
+$O(1/(M\log M))$, and Section~\ref{sec:joint-dissolution} gives second-
+and third-order refinements for the density of the
 limiting variable of any real primitive character under GRH and
 $L(\tfrac12,\chi)\ne0$, and under LI$(\chi)$ for the logarithmic
 density of the race itself, by Theorem~\ref{thm:interp}(ii)
@@ -335,10 +341,12 @@ computable constant.
 Section~\ref{sec:joint-dissolution} proves the dissolution asymptotic
 uniformly over all real primitive characters and all
 $M=m+\tfrac12\ge\delta_0$ (any fixed $\delta_0>0$, effective
-constants; the corner $m\to-\tfrac12$ jointly with $q\to\infty$ is
-genuinely different and left open), placing the Fiorilli--Martin
-modulus aspect and the weight aspect of this paper inside one
-statement. Section~\ref{sec:monotone-large} proves
+constants), extending the $m=0$ aggregate
+quadratic race of Fiorilli--Martin and the weight aspect of this paper
+inside one statement. Section~\ref{sec:critical} then classifies the
+excluded critical scaling $M\log q\to\lambda$: its limiting law is a
+functional of the microscopic low-zero point process, not a universal
+Gaussian. Section~\ref{sec:monotone-large} proves
 $\delta_\chi'(m)<0$ for $m\ge16.82$ ($q=4$) resp.\ $18.62$ ($q=3$):
 beyond these thresholds Chebyshev's bias dissolves
 \emph{monotonically}; on the compact remainder monotonicity remains
@@ -2074,6 +2082,12 @@ $\bigl|\log J_0(z)+\tfrac{z^2}4\bigr|\le\tfrac{z^4}{17}$.
 \item[(J4)] For $0\le z\le1$:
 $\bigl|\log J_0(z)+\tfrac{z^2}4+\tfrac{z^4}{64}\bigr|
 \le\tfrac{z^6}{80}$.
+\item[(J5)] There is an effectively computable absolute constant $C_8$
+such that, for $0\le z\le1$,
+\[
+ \left|\log J_0(z)+\frac{z^2}{4}+\frac{z^4}{64}
+ +\frac{z^6}{576}\right|\le C_8z^8.
+\]
 \end{itemize}
 \end{lemma}
 
@@ -2162,6 +2176,17 @@ $z^6\bigl(\tfrac1{2304}+\tfrac1{256}+\tfrac1{8192}+\tfrac1{144}\bigr)
 <0.0115\,z^6<\tfrac{z^6}{80}$. (The true limit ratio as $z\to0$ is
 $\tfrac1{576}$; the script checks the claimed bounds on a grid in
 multiprecision, float64 being insufficient near $z=0$.)
+
+(J5) The power series of $J_0$ at the origin and formal composition
+give
+\[
+ \log J_0(z)=-\frac{z^2}{4}-\frac{z^4}{64}
+ -\frac{z^6}{576}+O(z^8).
+\]
+By (J3), $J_0(z)\ge3/4$ on $[0,1]$, so the left side in (J5), divided
+by $z^8$ for $z>0$ and continued by its finite Taylor limit at $0$, is
+continuous on a compact interval. Its maximum supplies an absolute,
+effectively computable $C_8$.
 \end{proof}
 
 \begin{lemma}[zeros in the dyadic window]\label{lem:window}
@@ -2195,6 +2220,11 @@ $m>-\tfrac12$,
 \begin{equation}\label{eq:S4id}
 S_4(m)\;=\;\sum_{\gamma>0}\frac{256\,M^4}{(M^2+\gamma^2)^2}
 \;=\;16\,\sigma_m^2\;-\;64\,M^2\,(\log\xi)''(m+1,\chi),
+\end{equation}
+and the sixth amplitude moment has the closed form
+\begin{equation}\label{eq:S6id}
+ S_6(m)=\sum_{\gamma>0}\frac{4096M^6}{(M^2+\gamma^2)^3}
+ =12S_4(m)+256M^3(\log\xi)'''(m+1,\chi).
 \end{equation}
 and, as $m\to\infty$,
 \begin{equation}\label{eq:S4asymp}
@@ -2232,6 +2262,17 @@ summed over $\gamma>0$, using
 $\sigma_m^2=\sum_\gamma8M^2/(M^2+\gamma^2)$
 (Proposition~\ref{prop:varid}, \eqref{eq:varidq}) and
 $(\log\Xi)''(M)=(\log\xi)''(m+1,\chi)$.
+
+Differentiating the same normally convergent series once more is
+legitimate (on a compact $M$-interval the new terms are
+$O((1+\gamma)^{-4})$). Termwise,
+\[
+ (\log\Xi)'''(M)
+ =\sum_{\gamma>0}\left(-\frac{12M}{(M^2+\gamma^2)^2}
+ +\frac{16M^3}{(M^2+\gamma^2)^3}\right).
+\]
+Multiplication by $256M^3$ and addition of $12S_4$ gives
+\eqref{eq:S6id}.
 
 For \eqref{eq:S4asymp}: $(\log\xi)''(s)=\tfrac14\psi'\bigl(\tfrac{s+a}2
 \bigr)+\bigl(\tfrac{L'}{L}\bigr)'(s,\chi)$. At $s=m+1$,
@@ -2602,6 +2643,15 @@ $1/(M\log\tfrac{qM}{2\pi})=1/418=2.4\times10^{-3}$.}
 \label{tab:dissolution}
 \end{table}
 
+The third-order formula of Theorem~\ref{thm:joint}(iii), evaluated by
+the same independent script, reduces the relative residuals in the
+$(4,8)$, $(4,20)$ and $(3,60)$ rows respectively to
+$-2.04\times10^{-4}$, $-6.18\times10^{-6}$ and
+$+7.74\times10^{-7}$.  At $(4,100)$ it gives $+2.14\times10^{-6}$;
+both this and the second-order residual are below the
+$9.9\times10^{-6}$ modelling floor, so their ordering has no numerical
+significance.  These figures are checks, not inputs to the proof.
+
 Corollary~\ref{cor:secondorder} at $(4,100)$: $-\tfrac{11}{24}(ML)^{-1}
 =-1.10\times10^{-3}$ against the observed $-8.80\times10^{-4}$; the
 difference, $2.2\times10^{-4}$, is consistent with the corollary's
@@ -2654,7 +2704,9 @@ Theorem~\ref{thm:dissolution} dissolves the bias in the weight aspect:
 $q$ fixed, $m\to\infty$, with all constants depending on $q$. The
 classical Chebyshev literature dissolves it in the modulus aspect: the
 weight fixed, $q\to\infty$, as in the asymptotic series of Fiorilli and
-Martin \cite{FM13} for the unweighted race. This section proves one
+Martin \cite{FM13} for unweighted races; their Section~3.6 also treats the
+aggregate quadratic-nonresidue race, which is exactly the $m=0$ member of
+our family. This section proves one
 estimate containing both aspects and their joint interior: the Gaussian
 prediction $(2\pi\sigma_{m,\chi}^2)^{-1/2}$ approximates
 $\delta_\chi(m)-\tfrac12$ with \emph{relative error
@@ -2684,7 +2736,9 @@ X_{m,\chi}=1+\sum_{\gamma>0}2a_\gamma(m)\cos\theta_\gamma,\qquad
 \sigma^2=\sigma_{m,\chi}^2:=\sum_{\gamma>0}2a_\gamma(m)^2
 =4M\,\frac{\xi'}{\xi}(m+1,\chi),
 \qquad
-S_4=S_4(m,\chi):=\sum_{\gamma>0}\bigl(2a_\gamma(m)\bigr)^4,
+ S_4=S_4(m,\chi):=\sum_{\gamma>0}\bigl(2a_\gamma(m)\bigr)^4,
+ \qquad
+ S_6=S_6(m,\chi):=\sum_{\gamma>0}\bigl(2a_\gamma(m)\bigr)^6,
 \]
 the closed form for $\sigma^2$ being \eqref{eq:varidq}. We write
 $\delta_\chi$ rather than $\delta_q$ because a modulus can carry two
@@ -2712,8 +2766,18 @@ $\displaystyle
 \Bigl|\,\delta_\chi(m)-\tfrac12
 -G\Bigl(1-\frac{1}{6\sigma^{2}}-\frac{3S_4}{64\,\sigma^{4}}\Bigr)
 \Bigr|
-\;\le\;C(\delta_0)\,\frac{G}{\sigma^{4}}\,.
-$
+ \;\le\;C(\delta_0)\,\frac{G}{\sigma^{4}}\,.
+ $
+\item[(iii)] one order further,
+\[
+\begin{split}
+\Bigg|\delta_\chi(m)-\frac12-G\Bigg(&1-\frac{1}{6\sigma^2}
+-\frac{3S_4}{64\sigma^4}+\frac{1}{40\sigma^4}
++\frac{5S_4}{128\sigma^6}-\frac{5S_6}{192\sigma^6}
++\frac{105S_4^2}{8192\sigma^8}\Bigg)\Bigg|
+\le C(\delta_0)\frac{G}{\sigma^6}.
+\end{split}
+\]
 \end{itemize}
 No lower bound on $\sigma^2$ is assumed: the inequalities hold for all
 $\sigma^2>0$ and are informative once $\sigma^2$ is large, which by
@@ -2722,7 +2786,7 @@ $\overline M\mathcal L$ is large. In particular, taking $\delta_0=1$:
 (i) and (ii) hold \emph{with absolute constants} uniformly over all
 real primitive $\chi$ satisfying (H) and all $m\ge\tfrac12$. An
 inspection of the proof shows one may take
-$C(\delta_0)\le C\,\delta_0^{-6}$ with $C$ absolute; we have not
+$C(\delta_0)\le C\,\delta_0^{-8}$ with $C$ absolute; we have not
 optimized this.
 \end{theorem}
 
@@ -2796,7 +2860,7 @@ aspect at once.
 
 \subsection*{Lemmas}
 
-The Bessel facts (J1)--(J4) of Lemma~\ref{lem:J0facts}, the inversion
+The Bessel facts (J1)--(J5) of Lemma~\ref{lem:J0facts}, the inversion
 formula of Lemma~\ref{lem:invert}, and the bounds
 $S_4\le32\sigma^2$, $S_6:=\sum_\gamma(2a_\gamma)^6\le16S_4$ of
 Lemma~\ref{lem:S4mom} involve no parameter and are used as they stand;
@@ -3116,10 +3180,68 @@ invoked $\sigma^2\asymp_qM\log M$. The exponentially small terms
 $T_1$ and $\Theta_{\mathrm{tail}}$ are $\le C(\delta_0)G\sigma^{-4}$
 by the supremum bound with $\beta=\tfrac52$. Collecting proves (ii).
 
+\emph{Part (iii).} It is enough to consider $\sigma\ge1$.  Indeed, if
+$0<\sigma\le1$, then $|\delta_\chi(m)-\tfrac12|\le\tfrac12$, while
+$S_4\le32\sigma^2$ and $S_6\le512\sigma^2$ show term by term that the
+left side in (iii) is at most $CG\sigma^{-6}$.
+
+For $\sigma\ge1$, put
+$S_8:=\sum_\gamma(2a_\gamma)^8$.  The amplitude bound gives
+\[
+ S_4\le32\sigma^2,\qquad S_6\le512\sigma^2,
+ \qquad S_8\le8192\sigma^2.
+\]
+By (J5), on $0\le t\le1/8$ the exponent in
+\eqref{eq:smallt} has the refinement
+\[
+ E(t)=-\frac{S_4t^4}{64}-\frac{S_6t^6}{576}+R_8(t),
+ \qquad |R_8(t)|\le C_8S_8t^8.
+\]
+Taylor's formula for $e^E$ and for $\sin t/t$, with the surviving
+Gaussian factor $e^{-(8/17)\sigma^2t^2}$ from
+\eqref{eq:Eunif}, now gives
+\[
+\begin{split}
+e^{E(t)}\frac{\sin t}{t}
+= {}&1-\frac{t^2}{6}+\frac{t^4}{120}
+-\frac{S_4t^4}{64}+\frac{S_4t^6}{384}
+-\frac{S_6t^6}{576}+\frac{S_4^2t^8}{8192}
++\mathcal R(t).
+\end{split}
+\]
+After multiplication by $e^{-\sigma^2t^2/2}$ and integration, the
+remainder is $O(G\sigma^{-6})$.  For completeness, every omitted term
+is bounded by an absolute constant times the surviving Gaussian times
+a sum of
+\[
+ t^6,quad S_4t^8,quad S_6t^8,quad S_8t^8,quad
+ S_4^2t^{10},\quad S_4S_6t^{10},\quad
+ S_4^3t^{12},\quad S_6^2t^{12};
+\]
+the moment identity in \eqref{eq:decomp}, the three displayed moment
+bounds, and $\sigma\ge1$ make each integral $O(G\sigma^{-6})$.
+Taylor remainders of still higher degree are absorbed by the same
+Gaussian using $|E(t)|\le\sigma^2t^2/34$.  Extending the seven retained
+moments to infinity, as in part (ii), has exponentially small cost.
+
+The Gaussian moments $1,1,3,15,105$ consequently yield
+\[
+\begin{split}
+\delta_\chi(m)-\frac12=G\Bigg(&1-\frac1{6\sigma^2}
+-\frac{3S_4}{64\sigma^4}+\frac1{40\sigma^4}
++\frac{5S_4}{128\sigma^6}-\frac{5S_6}{192\sigma^6}
++\frac{105S_4^2}{8192\sigma^8}\Bigg)
++O_{\delta_0}(G\sigma^{-6}).
+\end{split}
+\]
+Finally $T_1$ and $\Theta_{\mathrm{tail}}$ are of this size by the
+same supremum argument, now with $\beta=\tfrac72$. This proves (iii).
+
 \emph{The constant.} Tracing the $\delta_0$-dependence:
 $C_{11}(\delta_0)\le C\delta_0^{-1}$ and
-$(c_{10}\delta_0^{2})^{-5/2}\le C\delta_0^{-5}$, all other constants
-absolute; hence $C(\delta_0)\le C\delta_0^{-6}$.
+$(c_{10}\delta_0^{2})^{-7/2}\le C\delta_0^{-7}$, all other constants
+absolute; hence the common constant in (i)--(iii) may be taken with
+$C(\delta_0)\le C\delta_0^{-8}$.
 \end{proof}
 
 \begin{proof}[Proof of Corollary~\ref{cor:joint-asymp}]
@@ -3178,43 +3300,58 @@ makes the second-order constant $-\tfrac{11}{24}$ aspect-independent
 (Corollary~\ref{cor:joint-second}).
 
 (2) \emph{Modulus aspect} ($m$ fixed). Fiorilli and Martin \cite{FM13}
-prove, under GRH and LI, an asymptotic series for the classical race
-density $\delta(q;a,b)$ as $q\to\infty$, in descending powers of the
-variance of the associated limiting distribution, whose leading
-correction to $\tfrac12$ is of order (variance)$^{-1/2}$.
-Corollary~\ref{cor:joint-asymp}(b) is the exact structural analogue
-for the single-character variable $X_{m,\chi}$: leading term
-$(2\pi\sigma^2)^{-1/2}\asymp_m(\log q)^{-1/2}$, relative error
-$O_m(1/\log q)$, and a proved second-order term
-(Theorem~\ref{thm:joint}(ii)). We stress, honestly, that this is an
-\emph{analogue, not a specialization}: the Fiorilli--Martin density
-aggregates the zeros of \emph{all} non-principal characters mod $q$
-and its bias term is driven by the count of square roots of the
-residues raced, whereas $X_{m,\chi}$ carries the single real character
-$\chi$, with the constant $1$ (the squares' contribution in the
-$m$-weighted race of Theorem~\ref{thm:interp}) playing the role of the
-mean. Neither statement implies the other; Theorem~\ref{thm:joint} is
-the common roof for the one-character object only. In the modulus
+prove, under GRH and LI, an asymptotic series for the pairwise classical
+race density $\delta(q;a,b)$ as $q\to\infty$, whose limiting variable
+usually aggregates the zeros of all non-principal characters mod $q$.
+More directly relevant here, their Section~3.6 separately studies the
+aggregate race between all quadratic nonresidues and all quadratic
+residues for an odd prime modulus. That race is governed by the unique
+quadratic character and is exactly our $m=0$ race. Thus
+Corollary~\ref{cor:joint-asymp}(b) is not merely an analogy: at $m=0$
+it supplies a uniform theorem for that one-character aggregate object,
+and for every fixed $m>-\tfrac12$ it extends the object to the weight
+$p^m$. Its leading term is
+$(2\pi\sigma^2)^{-1/2}\asymp_m(\log q)^{-1/2}$, its relative error is
+$O_m(1/\log q)$, and Theorem~\ref{thm:joint}(ii)--(iii) gives second-
+and third-order terms. For pairwise races involving all characters the comparison
+remains an analogue, not a specialization.
+
+There is a normalization slip in the two displays of \cite[\S3.6]{FM13}
+that does not affect their surrounding low-zero discussion. With their
+definition
+$E(x;N,R)=(\log x)/\sqrt{x}\,(\pi(x;q,N)-\pi(x;q,R))$, summing their
+own residue-class formula over the $(q-1)/2$ nonresidues and residues
+gives
+\[
+  1+2\sum_{\gamma>0}
+  \frac{\cos\theta_\gamma}{\sqrt{\tfrac14+\gamma^2}},
+\]
+not the mean-$2$ variable printed there; consequently the leading
+correction is $(2\pi b(\chi))^{-1/2}$, rather than twice that quantity.
+This also follows by taking $m=0$ in
+Proposition~\ref{prop:unlogged}, and is consistent with the classical
+$q=3,4$ densities. None of our proofs uses the affected displays. In the modulus
 aspect the hypothesis (H) rides on $L(\tfrac12,\chi)\ne0$ for every
 $\chi$ in the family --- conjecturally always true (Chowla), known for
 a positive proportion of quadratic characters \cite{Sou00}, and
 unconditional at $q=3,4$.
 
 (3) \emph{Race interpretation.} As in
-Remark~\ref{rem:dissolution-scope}(1), for $q=4$ (and, with the
-verbatim extension recorded there, $q=3$) the conclusion transfers,
-under LI$(\chi)$, to the logarithmic density of the weighted race
-itself via Theorem~\ref{thm:interp}(ii); for all other moduli
-Theorem~\ref{thm:joint} is, in this paper, a statement about the
-limiting random variable $X_{m,\chi}$ only.
+Remark~\ref{rem:dissolution-scope}(1), under LI$(\chi)$ the conclusion
+transfers to the logarithmic density of the aggregate weighted race
+between primes with $\chi(p)=-1$ and $\chi(p)=+1$ for every real
+primitive $\chi$ satisfying (H), via Theorem~\ref{thm:interp}(ii).
+The moduli $4$ and $3$ are the two concrete examples computed here;
+without LI$(\chi)$, for any modulus, Theorem~\ref{thm:joint} remains a
+statement about the limiting random variable $X_{m,\chi}$ only.
 \end{remark}
 
-\begin{remark}[the excluded corner $M\to0$, $q\to\infty$, and other
-honest limits]\label{rem:joint-corner}
+\begin{remark}[the critical corner $M\to0$, $q\to\infty$]
+\label{rem:joint-corner}
 Theorem~\ref{thm:joint} is uniform on $\{M\ge\delta_0\}$ for each
-fixed $\delta_0>0$, with $C(\delta_0)\le C\delta_0^{-6}$, but it does
-\emph{not} cover the corner $M\to0$ simultaneously with $q\to\infty$,
-and we make no claim there. The corner is genuinely different, not an
+fixed $\delta_0>0$, with $C(\delta_0)\le C\delta_0^{-8}$, but it does
+\emph{not} cover the corner $M\to0$ simultaneously with $q\to\infty$.
+The corner is genuinely different, not an
 artifact of the method's bookkeeping alone. For fixed $\chi$, as
 $M\to0$ one has $\sigma^2\le8M^2\sum_\gamma\gamma^{-2}\to0$ and
 $X_{m,\chi}\to1$, so $\delta_\chi(m)\to1$: the bias \emph{saturates}
@@ -3225,9 +3362,11 @@ size with $M$ small, because a large modulus can place many ordinates
 below $1$ ($N_\chi(1)$ can be as large as $\asymp\log q$, and
 $\gamma_1\gg1/\log q$ is possible), making
 $\sigma^2\asymp M^2\sum_{\gamma\le1}\gamma^{-2}$ as large as
-$\asymp M^2(\log q)^2$; whether
-$\delta_\chi(m)-\tfrac12\sim(2\pi\sigma^2)^{-1/2}$ persists as
-$M\asymp1/\log q$, $q\to\infty$, is open. Two concrete obstructions in
+$\asymp M^2(\log q)^2$. In fact the Gaussian formula need not persist
+when $M\asymp1/\log q$: Theorem~\ref{thm:critical-transfer} below shows
+that any limiting law retains the microscopic scaled-zero configuration
+and is non-Gaussian whenever that configuration is nonempty. Two concrete
+obstructions in
 our proof: the window amplitudes degenerate ($a_\gamma\asymp M$ on any
 window at height $\gg1$), so the per-factor decay of $|\Phi_m|$ at
 $t\asymp1$ weakens to $\exp(-cM^2)$ and the tail bound
@@ -3237,7 +3376,8 @@ then dominate $\sigma^2$ are exactly the ones about which the
 $q$-uniform count of Lemma~\ref{lem:rvm-joint} says least. A uniform
 treatment of the corner would need control of
 $\sum_{\gamma\le1/\log q}$-type sums (low-lying-zero statistics),
-which we have not carried out.
+which Theorem~\ref{thm:critical-transfer} isolates as an explicit
+tightness hypothesis rather than concealing in a Gaussian estimate.
 \end{remark}
 
 \begin{remark}[numerical sanity check]\label{rem:joint-numerics}
@@ -3283,9 +3423,11 @@ with $O(1)$ constants across a range of $(q,m)$.}
 \end{remark}
 
 \begin{remark}[scope, and what is not proved]\label{rem:joint-scope}
-(1) The corner $M\to0$ with $q\to\infty$ is excluded and open
-(Remark~\ref{rem:joint-corner}); on $\{M\ge\delta_0\}$ the constant
-degrades like $\delta_0^{-6}$, which we have not optimized. (2) The
+(1) The corner $M\to0$ with $q\to\infty$ is excluded from
+Theorem~\ref{thm:joint}; Theorem~\ref{thm:critical-transfer} treats its
+critical scale conditionally on convergence and $L^2$-tightness of the
+microscopic zero measures. On $\{M\ge\delta_0\}$ the constant
+degrades like $\delta_0^{-8}$, which we have not optimized. (2) The
 $q$-uniformity rests on the absolute constant in the Riemann--von
 Mangoldt formula: we cite \cite[Theorem~14.5]{MV07}, and,
 independently of any textbook formulation, the explicit bound of
@@ -3295,16 +3437,195 @@ Lemma~\ref{lem:rvm-joint}); the fixed-$q$ formulation of
 includes $L(\tfrac12,\chi)\ne0$ for every
 character in whatever family is considered; in $q$-aspect corollaries
 this is an unproved input beyond GRH (cf.\ \cite{Sou00}). (4) For
-moduli other than $3,4$ the conclusion concerns the limiting variable
-$X_{m,\chi}$, not a prime race, no LI-transfer having been stated
+every modulus the conclusion concerns the limiting variable
+$X_{m,\chi}$ without LI$(\chi)$, and under LI$(\chi)$ it transfers to
+the aggregate nonresidue-versus-residue prime race
 (Remark~\ref{rem:joint-fm}(3)). (5) Constants are effective in
 principle but wasteful; no numerical value of $C(\delta_0)$ is
 claimed, and Table~\ref{tab:joint} is a consistency check, not a
 validated enclosure. (6) Theorem~\ref{thm:joint} makes no claim of an
-asymptotic \emph{series} beyond the second order proved in (ii); the
+asymptotic \emph{series} beyond the third order proved in (iii); the
 Fiorilli--Martin series in the modulus aspect suggests one exists
 jointly, which we leave open.
 \end{remark}
+
+
+\section{The critical scaling and the low-zero point process}
+\label{sec:critical}
+
+The joint theorem deliberately keeps $M=m+\tfrac12$ bounded away from
+zero.  We now identify what replaces it at the transition scale
+$M\asymp1/\log q$.  The answer is not another Gaussian formula: the
+limiting law is a continuous functional of the microscopic zero
+configuration.  This makes precise the low-zero mechanism visible at
+$m=0$ in \cite[\S3.6]{FM13}, but in a different double scaling in which
+each low zero retains order-one influence.
+
+For a real primitive character $\chi_n$ of conductor $q_n$, assume (H)
+and write its positive ordinates as $\gamma_{n,j}$, with multiplicity.
+Define the locally finite point measure on $[0,\infty)$
+\begin{equation}\label{eq:mun}
+  \mu_n:=\sum_{j\ge1}\delta_{y_{n,j}},
+  \qquad y_{n,j}:=\frac{\gamma_{n,j}\log q_n}{2\pi}.
+\end{equation}
+Vague convergence below means convergence against continuous
+compactly supported functions on $[0,\infty)$; a limit is allowed to
+have an atom at $0$, even though central nonvanishing excludes one from
+each $\mu_n$.
+
+\begin{theorem}[critical zero-process transfer]
+\label{thm:critical-transfer}
+Let $q_n\to\infty$, let $M_n=m_n+\tfrac12>0$, and suppose
+\[
+  \lambda_n:=M_n\log q_n\longrightarrow\lambda\in(0,\infty).
+\]
+Assume that the measures \eqref{eq:mun} converge vaguely to a locally
+finite counting measure $\mu$ and satisfy the reciprocal-square
+tightness condition
+\begin{equation}\label{eq:critical-tail}
+  \lim_{R\to\infty}\ \sup_n
+  \int_{(R,\infty)}\frac{d\mu_n(y)}{y^2}=0.
+\end{equation}
+Put
+\[
+ b_\lambda(y):=\frac{4\lambda}
+ {\sqrt{\lambda^2+(2\pi y)^2}},
+ \qquad
+ \mathcal X_{\lambda,\mu}:=
+ 1+\sum_{y\in\mu}b_\lambda(y)\cos\theta_y,
+\]
+where atoms are repeated according to multiplicity and the phases are
+independent and uniform on $[0,2\pi)$.  Then:
+\begin{itemize}
+\item[(i)] the last series converges almost surely and in $L^2$, and
+\[
+ X_{m_n,\chi_n}\ \Rightarrow\ \mathcal X_{\lambda,\mu};
+\]
+\item[(ii)] its characteristic function and variance are
+\begin{equation}\label{eq:critical-product}
+ \mathbb E e^{it\mathcal X_{\lambda,\mu}}
+ =e^{it}\prod_{y\in\mu}J_0\bigl(t b_\lambda(y)\bigr),
+ \qquad
+ \sigma_{\lambda,\mu}^2
+ =8\lambda^2\int_{[0,\infty)}
+ \frac{d\mu(y)}{\lambda^2+(2\pi y)^2},
+\end{equation}
+and $\sigma_{m_n,\chi_n}^2\to\sigma_{\lambda,\mu}^2$;
+\item[(iii)] the critical densities converge:
+\begin{equation}\label{eq:critical-density}
+ \delta_{\chi_n}(m_n)=\mathbb P(X_{m_n,\chi_n}>0)
+ \longrightarrow
+ F_\lambda(\mu):=\mathbb P(\mathcal X_{\lambda,\mu}>0).
+\end{equation}
+If LI$(\chi_n)$ holds for every $n$, the quantities on the left are
+also the logarithmic densities of the corresponding weighted prime
+races;
+\item[(iv)] if $\mu\ne0$, the limiting law is absolutely continuous
+and non-Gaussian.  More precisely, the fourth cumulant of its centred
+part is
+\begin{equation}\label{eq:critical-kappa4}
+ \kappa_4(\mathcal X_{\lambda,\mu}-1)
+ =-\frac38\int_{[0,\infty)}b_\lambda(y)^4\,d\mu(y)<0.
+\end{equation}
+If $\mu=0$, the limit is instead the point mass at $1$ and
+$F_\lambda(0)=1$.
+\end{itemize}
+\end{theorem}
+
+\begin{proof}
+The exact identity behind the scaling is
+\begin{equation}\label{eq:critical-amplitude}
+ 2a_{\gamma_{n,j}}(m_n)
+ =\frac{4M_n}{\sqrt{M_n^2+\gamma_{n,j}^2}}
+ =\frac{4\lambda_n}
+ {\sqrt{\lambda_n^2+(2\pi y_{n,j})^2}}.
+\end{equation}
+Because $(\lambda_n)$ is bounded, the squared right-hand side is at
+most $C_\lambda y^{-2}$ for $y\ge1$.  Vague convergence controls every
+compact interval, while \eqref{eq:critical-tail} controls the
+complement.  It follows first that
+$\int b_\lambda^2\,d\mu<\infty$, and hence the defining series for
+$\mathcal X_{\lambda,\mu}$ converges a.s.\ and in $L^2$ by the same
+independent mean-zero series argument used for $X_{m,\chi}$.
+
+We prove convergence through characteristic functions.  Fix $t$ and
+choose $R$ with $\mu(\{R\})=0$.  On $[0,R]$, vague convergence of
+integer-valued locally finite point measures implies convergence of
+the finite configurations, with multiplicity: enclose the finitely
+many limiting atoms in disjoint intervals whose boundaries carry no
+mass and use convergence of their integer masses.  Together with
+$\lambda_n\to\lambda$ and \eqref{eq:critical-amplitude}, this gives
+\[
+ \prod_{y_{n,j}\le R}J_0\bigl(t b_{\lambda_n}(y_{n,j})\bigr)
+ \longrightarrow
+ \prod_{\substack{y\in\mu\\y\le R}}
+ J_0\bigl(t b_\lambda(y)\bigr).
+\]
+For the tails use $|J_0(u)|\le1$ and
+\[
+ |1-J_0(u)|
+ =\left|\mathbb E(1-\cos(u\cos\theta))\right|
+ \le\frac{u^2}{4}.
+\]
+The telescoping product inequality therefore gives, uniformly in $n$,
+\[
+ \left|1-\prod_{y_{n,j}>R}
+ J_0\bigl(t b_{\lambda_n}(y_{n,j})\bigr)\right|
+ \le \frac{t^2}{4}\sum_{y_{n,j}>R}b_{\lambda_n}(y_{n,j})^2
+ \le C_{\lambda,t}\int_{(R,\infty)}y^{-2}\,d\mu_n(y),
+\]
+which tends to zero as $R\to\infty$ by
+\eqref{eq:critical-tail}.  The identical bound applies to $\mu$ (by
+vague approximation and lower semicontinuity).  Thus the full
+characteristic functions converge to the product in
+\eqref{eq:critical-product}; L\'evy's theorem proves (i).  Applying the
+same compact-plus-tail argument to $b^2/2$ proves the variance formula
+and its convergence, giving (ii).
+
+If $\mu$ has an atom, split off one corresponding summand.  It has a
+scaled arcsine density, and convolution with the independent remainder
+is absolutely continuous.  Hence
+$\mathbb P(\mathcal X_{\lambda,\mu}=0)=0$.  If $\mu=0$, the limit is
+the constant $1$, so the same boundary probability is again zero.
+Part (iii) now follows from weak convergence and the portmanteau
+theorem; the race interpretation is Theorem~\ref{thm:interp}(ii).
+
+Finally, for $Z=b\cos\theta$,
+$\mathbb EZ^2=b^2/2$, $\mathbb EZ^4=3b^4/8$, and therefore
+$\kappa_4(Z)=-3b^4/8$.  Cumulants add for independent sums, and the
+sum of fourth powers is finite by the already proved square summability
+and $b_\lambda\le4$.  This proves \eqref{eq:critical-kappa4}, which is
+strictly negative when $\mu\ne0$ and rules out a Gaussian law.
+\end{proof}
+
+The theorem gives a sharp reason that no scalar ``critical variance
+formula'' can describe individual characters.  For example, if
+$\mu=\delta_y$ and $b=b_\lambda(y)$, then
+\begin{equation}\label{eq:one-zero-profile}
+ F_\lambda(\delta_y)=
+ \begin{cases}
+ 1, & b\le1,\\[2mm]
+ 1-\pi^{-1}\arccos(1/b), & b>1.
+ \end{cases}
+\end{equation}
+Thus moving even one scaled low zero changes the limiting bias.  The
+right universal object, if characters are averaged in a family, is a
+\emph{random} zero point process.  The symplectic Katz--Sarnak model for
+quadratic Dirichlet $L$-functions is consistent with the proved
+one-level results and ratios prediction of Andrade--Baluyot
+\cite{AB18}.  If that point process convergence is strengthened to
+\eqref{eq:critical-tail}, Theorem~\ref{thm:critical-transfer} and the
+continuous-mapping theorem predict a family law
+\[
+  F_\lambda(\mu_{\chi})\ \Rightarrow\
+  F_\lambda(\mu_{\mathrm{Sp}}),
+  \qquad
+  \mathbb E_{\chi}F_\lambda(\mu_\chi)\longrightarrow
+  \mathbb E F_\lambda(\mu_{\mathrm{Sp}}).
+\]
+This last display is a random-matrix conjecture, not an unconditional
+claim; the deterministic transfer theorem above is what isolates its
+precise analytic input.
 
 
 \section{Monotonicity in the weight for large $m$}
@@ -4688,6 +5009,9 @@ $L$-functions}, Math.\ Proc.\ Cambridge Philos.\ Soc.\ \textbf{169}
 \bibitem{FM13} D. Fiorilli, G. Martin, \emph{Inequities in the
 Shanks--R\'enyi prime number race: an asymptotic formula for the
 densities}, J. reine angew.\ Math.\ \textbf{676} (2013), 121--212.
+\bibitem{AB18} J. Andrade, S. Baluyot, \emph{Small zeros of Dirichlet
+$L$-functions of quadratic characters of prime modulus},
+arXiv:1802.03413 (2018).
 \bibitem{Meng18} X. Meng, \emph{Chebyshev's bias for products of $k$
 primes}, Algebra Number Theory \textbf{12} (2018), 305--341.
 \bibitem{LZ10} A. Languasco, A. Zaccagnini, \emph{Computing the

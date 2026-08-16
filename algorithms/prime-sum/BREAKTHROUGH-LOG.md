@@ -169,3 +169,117 @@ family-averaged universal profile should be a Katz–Sarnak/random-matrix
 functional, while an individual-character profile can retain low-zero data.
 The exact hypotheses, proof, novelty, and whether a useful family theorem can
 be made unconditional are still under investigation.
+
+## 2026-08-16 — general-character race-transfer seam
+
+The general interpolation theorem defines
+`R_{m,chi}=-sum_{p<=x} chi(p)p^m log p` and proves under LI(chi) that its
+logarithmic density equals `P(X_{m,chi}>0)` for every real primitive chi.
+The fixed-character dissolution scope paragraph states this correctly.  The
+later joint-uniformity remarks had stale text saying the race transfer existed
+only for q=3,4 and that no transfer was stated for other moduli.  That was a
+direct internal contradiction.  The joint section now states the proved
+generality: q=3,4 are the computed examples; for any real primitive chi the
+joint theorem transfers to the aggregate chi=-1 versus chi=+1 weighted race
+under LI(chi), while without LI it is only a limiting-variable statement.
+
+## 2026-08-16 — Fiorilli–Martin overlap and normalization audit
+
+The primary arXiv source of Fiorilli–Martin (arXiv:0912.4908), not a
+secondary description, was inspected. Section 3.6 explicitly treats
+`pi(x;q,N)-pi(x;q,R)` for odd prime `q` through the unique quadratic
+character, including the influence of the lowest zero. Therefore v4's claim
+that the comparison is only with an all-character pairwise race, and “an
+analogue, not a specialization,” was materially wrong: the present `m=0`
+unlogged race is exactly their aggregate quadratic race. The genuinely new
+scope must be the continuous/growing weight, the joint `(q,m)` uniformity, and
+the quantitative refinements—not the existence of the one-character modulus
+aspect itself.
+
+There is also an apparent factor-two typo in the two displayed formulas of
+their Section 3.6. From their definition
+`E(x;N,R)=log(x)/sqrt(x)*(pi_N-pi_R)` and their own residue-class explicit
+formula, character orthogonality gives the limiting variable
+
+```text
+1 + 2 sum_{gamma>0} cos(theta_gamma)/sqrt(1/4+gamma^2),
+```
+
+whereas their display prints constant `2` with the same noise, then prints a
+leading density correction twice as large. This can be checked immediately
+at `q=3`, where the aggregate race is the ordinary race `2 mod 3` versus
+`1 mod 3`; it also agrees exactly with the `m=0` case of the manuscript's
+partial-summation transfer. The manuscript now states the overlap honestly,
+derives the corrected normalization, and does not rely on the affected
+Fiorilli–Martin displays.
+
+## 2026-08-16 — critical regime promoted from question to theorem
+
+The manuscript previously called the double limit
+`M=m+1/2 -> 0`, `q -> infinity` open.  The genuinely critical scale is
+`M log q -> lambda in (0,infinity)`.  With scaled ordinates
+
+```text
+y_gamma = gamma log(q)/(2 pi),
+b_lambda(y) = 4 lambda/sqrt(lambda^2+(2 pi y)^2),
+```
+
+the exact phase amplitudes converge to `b_lambda(y)`: microscopic low zeros
+retain order-one influence.  A new critical zero-process transfer theorem has
+now been added.  If the scaled positive-zero point measures converge vaguely
+and their reciprocal-square tails are uniformly tight, then:
+
+- the full limiting variables converge in law to the explicit Bessel-product
+  variable `1 + sum b_lambda(y) cos(theta_y)`;
+- the variances converge to the corresponding point-measure integral;
+- the bias probabilities, hence under LI the logarithmic race densities,
+  converge without an extra boundary hypothesis (the limit is atomless unless
+  the zero measure is empty, in which case it is the point mass at 1);
+- every nonempty limit is provably non-Gaussian, with fourth cumulant
+  `-(3/8) sum b_lambda(y)^4 < 0`.
+
+This classifies the critical corner conditionally on precisely the low-zero
+input that conductor-uniform Riemann–von Mangoldt estimates cannot supply.  It
+also changes the conjectural target: quadratic-character families should yield
+a *distribution* of critical densities obtained by applying the explicit
+functional to the symplectic Katz–Sarnak point process, not a deterministic
+Gaussian profile for each character.
+
+## 2026-08-16 — third-order uniform density expansion
+
+The Bessel/Fourier argument was pushed one full order past v4.  With
+`S_6=sum_gamma (2a_gamma)^6`, the new term inside the leading Gaussian factor
+is
+
+```text
+  1/(40 sigma^4)
++ 5 S4/(128 sigma^6)
+- 5 S6/(192 sigma^6)
++ 105 S4^2/(8192 sigma^8),
+```
+
+and the joint theorem now has remainder `O_delta(G/sigma^6)`, uniformly for
+`M>=delta>0`.  The proof uses the exact sixth-order coefficient
+`log J0(z) = -z^2/4-z^4/64-z^6/576+O(z^8)`, Gaussian moments through the
+eighth, and the absolute amplitude bounds `S_{2k+2}<=16 S_{2k}`.  The sixth
+moment also has a new closed form
+
+```text
+S6 = 12 S4 + 256 M^3 (log xi)'''(m+1,chi).
+```
+
+`paper/v3/verify_dissolution.py` was extended and completed successfully.  It
+found `sup |remainder|/z^8 = 0.000259954` on a 1000-point multiprecision grid
+and independently evaluated the new prediction.  Relative residuals after the
+third-order term were:
+
+- `(q,m)=(4,8)`: `-2.04e-4` (second order `-7.40e-4`);
+- `(4,20)`: `-6.18e-6` (second order `-7.88e-5`);
+- `(3,60)`: `+7.74e-7` (second order `-4.90e-6`);
+- `(4,100)`: `+2.14e-6`, below the reference density's `9.9e-6`
+  Gaussian-tail modelling floor (so the apparent worsening from the already
+  sub-floor second-order residual is not statistically meaningful).
+
+The common explicit dependence in the joint theorem was conservatively
+updated from `C delta^-6` to `C delta^-8` because absorbing the large-`t` tail
+at third order uses the supremum of `sigma^7 exp(-c delta^2 sigma^2)`.
