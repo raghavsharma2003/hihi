@@ -87,3 +87,16 @@ MERGE: delegated to Opus agent (stages: F3 39 blocks -> insert P1+P2 sections + 
 
 ## V4 MERGED AND SHIPPED (2026-08-16) — 59-PAGE PAPER
 Opus merge agent: 39/39 general-chi blocks, joint + monotonicity sections inserted (labels all resolve), 5 bibitems (MV07/BMOR21/Sou00/Wat44/WW27), Arb certification paragraph (heights truncated correctly). My finishing pass: rem:dissolution-scope(4) now points to sec:joint-dissolution (contradiction dead); 'certified grid'->validated (line 4228); abstract gains uniformity+monotonicity+machine-certification sentences (final Problem-12 sentence BYTE-UNTOUCHED); Results item 6 added. Compile x3: 59pp, 0 errors, 0 undefined; sweep: envs/cites/refs/labels all OK; three 0.156033 hits = intentional historical notes. Sections: Intro / Interpolation theorem (general real primitive chi) / Variance in closed form / Dissolution theorem / Joint (q,m)-uniform law / Monotonicity for large m / Methods+validated enclosures+Arb certification. USER NEXT: Overleaf recompile -> Zenodo new version -> repo mirror; posts accurate as written, may add one line (uniformity/monotonicity/machine-certified).
+
+## CODEX BRANCH CHECKPOINT (2026-08-16) — FULL ZERO COMPLETENESS
+Branch `codex/weighted-races-breakthrough` starts from v4 commit `1b00bc2`.
+The later audit's last-zero objection was reproduced: baseline `certify_arb.py
+--K 0` localized all 511/537 roots but put each winding contour between the
+last two stored ordinates, so it counted only 510/536.  The script now supports
+a rigorously evaluated top edge above the final stored ordinate.  Fresh
+python-flint 0.9.0 run: winding ball `[511.0000000 +/- 3e-12]` through exact
+height `640.1657072529865` for chi4, and `[537.0000000 +/- 3e-11]` through
+`700.0247478100384` for chi3; all disjoint 1e-20 Hardy-Z sign-change intervals
+also re-certified.  Therefore both full lists are complete and simple below
+heights strictly above their final entries.  Manuscript methods paragraph
+updated.  Durable research context continues in `BREAKTHROUGH-LOG.md`.

@@ -59,9 +59,12 @@ What this script certifies (see the final summary it prints):
 
   [D] Completeness ("no zero is missing"), by a rigorous winding-number /
       argument-principle count.  Let R = (-1/2, 3/2) x (-1/2, T) with T
-      chosen strictly between gamma_K and gamma_{K+1} (the bottom edge sits
+      chosen strictly above gamma_K (between gamma_K and gamma_{K+1} when
+      gamma_{K+1} is stored, or gamma_K + --top-offset for the whole list;
+      the certified contour evaluation itself proves that the latter top edge
+      is zero-free).  The bottom edge sits
       at Im s = -1/2 rather than 0 to keep the contour away from s = 1; see
-      winding_number below).  The boundary of R is covered
+      winding_number below.  The boundary of R is covered
       by finitely many closed segments; for each segment an acb ball
       containing it is evaluated under L, and the output ball is required not
       to contain 0.  This proves L != 0 on the whole contour, and, since a
@@ -92,6 +95,7 @@ Exit status 0 iff every certification above succeeded.
 Usage:
     python3 certify_arb.py            # default: K = 50 zeros per character
     python3 certify_arb.py --K 100    # more zeros (winding contour grows)
+    python3 certify_arb.py --K 0      # certify and count the whole stored list
     python3 certify_arb.py --skip-winding   # skip the completeness count
 """
 
@@ -450,27 +454,41 @@ def winding_number(chi, T, x_left=-0.5, x_right=1.5, y_bottom=-0.5, seed_len=0.0
     return total / (2 * arb.pi()), nev
 
 
-def part_D(chars_zeros, K, eps):
+def part_D(chars_zeros, K, eps, top_offset):
     print("\n[D] Completeness: rigorous winding-number count of ALL zeros of L in")
-    print("    (-1/2, 3/2) x (-1/2, T), T strictly between gamma_K and gamma_{K+1}")
+    print("    (-1/2, 3/2) x (-1/2, T), T strictly above gamma_K")
     t0 = time.time()
     results = {}
     old_prec = ctx.prec
     ctx.prec = 96          # plenty for sign/arg information along the contour
     try:
         for name, (chi, zeros) in chars_zeros.items():
-            Kd = K if K > 0 else len(zeros) - 1
-            if len(zeros) <= Kd:
-                fail("%s: need gamma_{K+1} in the list to place T" % name)
+            Kd = K if K > 0 else len(zeros)
+            if Kd <= 0 or Kd > len(zeros):
+                fail("%s: requested K=%d but list has %d ordinates"
+                     % (name, Kd, len(zeros)))
                 continue
-            T = float((zeros[Kd - 1] + zeros[Kd]).mid()) / 2
-            # certify T separates gamma_K and gamma_{K+1} with margin eps (the
-            # [C] localization half-width), so every certified interval
-            # (gamma_j - eps, gamma_j + eps), j <= K, lies strictly below T
-            if not (zeros[Kd - 1] + eps < arb(T) and arb(T) < zeros[Kd] - eps):
-                fail("%s: T=%.6f not certified between gamma_K + eps and "
-                     "gamma_{K+1} - eps" % (name, T))
-                continue
+            if Kd < len(zeros):
+                T = float((zeros[Kd - 1] + zeros[Kd]).mid()) / 2
+                # Certify separation from both stored neighboring intervals.
+                if not (zeros[Kd - 1] + eps < arb(T)
+                        and arb(T) < zeros[Kd] - eps):
+                    fail("%s: T=%.6f not certified between gamma_K + eps and "
+                         "gamma_{K+1} - eps" % (name, T))
+                    continue
+                placement = "between stored gamma_K and gamma_{K+1}"
+            else:
+                # There is no stored gamma_{K+1}.  Place the top edge above
+                # the final certified interval.  winding_number evaluates an
+                # enclosing ball for every contour segment and refuses any
+                # segment whose L-image contains zero, so success certifies
+                # the top edge (and the rest of the contour) as zero-free.
+                T = float(zeros[-1].mid()) + top_offset
+                if not (zeros[-1] + eps < arb(T)):
+                    fail("%s: --top-offset does not place T above gamma_K + eps"
+                         % name)
+                    continue
+                placement = "above the final stored ordinate"
             # ... and strictly above the bottom edge of the box
             if not (zeros[0] - eps > arb(-1) / 2):
                 fail("%s: first certified interval not above Im s = -1/2" % name)
@@ -488,6 +506,7 @@ def part_D(chars_zeros, K, eps):
             # height; %.6f would round up), plus the exact float
             print("  %s: T = %.6f (truncated; exact %r)," %
                   (name, math.floor(T * 1e6) / 1e6, T))
+            print("      placement: %s" % placement)
             print("      winding ball %s, L-evaluations %d"
                   % (w.str(10, radius=True), nev))
             if n is None:
@@ -517,12 +536,18 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--K", type=int, default=50,
                     help="zeros per character to certify; 0 = the whole list "
-                         "(completeness then runs to T between the last two "
-                         "listed ordinates)")
+                         "(completeness then runs to T above the final listed "
+                         "ordinate)")
     ap.add_argument("--prec", type=int, default=200, help="working precision (bits) for [A]-[C]")
+    ap.add_argument("--top-offset", type=float, default=0.25,
+                    help="when K reaches the end of a stored list, place the "
+                         "winding contour this far above its final ordinate")
     ap.add_argument("--skip-winding", action="store_true")
     ap.add_argument("--eps", default="1e-20", help="zero-localization half-width")
     args = ap.parse_args()
+
+    if not math.isfinite(args.top_offset) or args.top_offset <= 0:
+        ap.error("--top-offset must be a finite positive number")
 
     t_start = time.time()
     ctx.prec = args.prec
@@ -571,7 +596,7 @@ def main():
     part_C(chars_zeros, args.K, args.eps)
 
     if not args.skip_winding:
-        part_D(chars_zeros, args.K, arb(args.eps))
+        part_D(chars_zeros, args.K, arb(args.eps), args.top_offset)
     else:
         print("\n[D] skipped (--skip-winding); completeness of the ordinate lists")
         print("    is then NOT certified by this run.")
