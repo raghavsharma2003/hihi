@@ -1505,7 +1505,7 @@ large weights: under GRH, $\delta_4'(m)<0$ for every $m\ge16.82$ and
 $\delta_3'(m)<0$ for every $m\ge18.62$
 (Corollary~\ref{cor:monotone-explicit}; for $M=m+\tfrac12\ge300$ the
 proof is zero-data-free, and on the remaining explicit range it is a
-verified criterion in the rigor class of Table~\ref{tab:enclose}), and
+ball-arithmetic computer-assisted proof), and
 eventual strict decrease holds for every real primitive character with
 $L(\tfrac12,\chi)\ne0$ (Theorem~\ref{thm:monotone-large}). What
 remains open is the compact initial range:
@@ -3695,23 +3695,22 @@ variance constant),
 
 \begin{corollary}[explicit thresholds for $q=4,3$]
 \label{cor:monotone-explicit}
-Assume GRH$(\chi_4)$ resp.\ GRH$(\chi_3)$. Then, in the computational
-rigor class described in Remark~\ref{rem:monotone-rigor},
+Assume GRH$(\chi_4)$ resp.\ GRH$(\chi_3)$. Then
 \[
 \delta_4'(m)<0\ \text{ for all } m\ge16.82,
 \qquad
 \delta_3'(m)<0\ \text{ for all } m\ge18.62 ;
 \]
 i.e.\ $\delta_4$ is strictly decreasing on $[16.82,\infty)$ and
-$\delta_3$ on $[18.62,\infty)$. For $M=m+\tfrac12\ge300$ the
-conclusion is a theorem in the full sense of
-Theorem~\ref{thm:dissolution} (no zero data enters:
-Lemma~\ref{lem:analytic-leg}); on $17.32\le M\le320$ (resp.\
-$19.12\le M\le350$) it rests additionally on the certified ordinate
-lists and the evaluated criterion of
+$\delta_3$ on $[18.62,\infty)$. For $M=m+\tfrac12\ge300$ no zero
+data enters (Lemma~\ref{lem:analytic-leg}); on
+$17.32\le M\le300$ (resp.\ $19.12\le M\le300$) the conclusion is a
+computer-assisted theorem, using the complete certified ordinate
+lists and the ball-arithmetic evaluation of
 Proposition~\ref{prop:criterion-eval}. Under LI$(\chi_4)$ the same
-statements hold for the logarithmic density $\delta(m)$ of the
-weighted race itself, by Theorem~\ref{thm:interp}(ii) as in
+statement holds for the logarithmic density $\delta(m)$ of the
+weighted race itself (and likewise for $\chi_3$ under LI$(\chi_3)$),
+by Theorem~\ref{thm:interp}(ii) as in
 Corollary~\ref{cor:dissolution-race}. Combined with
 Conjecture~\ref{conj:monotone}, monotonicity is now proved on
 $[m_1,\infty)$ and open only on the bounded interval
@@ -4376,20 +4375,22 @@ lists, the geometric partition with ratios $1.05$ on
 $[\tfrac35,16]$ and $1.10$ on $[16,64]$, and per-zero cell bounds
 $b^{(j)}_{\gamma'}$ from Lemma~\ref{lem:J0env}(iv)). Then
 $\delta_q'(m)<0$ for every $M\in[M_a,M_b]$. The script
-\texttt{paper/v3/verify\_monotonicity.py} evaluates this criterion on
-a geometric grid of ratio $1.02$ and finds that it holds on every
-subinterval of
+\texttt{paper/v3/verify\_monotonicity\_arb.py} evaluates every
+quantity entering this criterion in outward-rounded FLINT/Arb ball
+arithmetic on a geometric grid of ratio $1.02$. It certifies the
+strict inequality on every subinterval of
 \[
-[\,17.317,\ 319.96\,]\quad(q=4),
+[\,17.32,\ 300\,]\quad(q=4),
 \qquad
-[\,19.119,\ 349.89\,]\quad(q=3),
+[\,19.12,\ 300\,]\quad(q=3),
 \]
-the right endpoints being $\gamma_{\max}/2$ for the respective lists;
-the worst relative margin
+using $145$ resp.\ $140$ closed subintervals. The certified zero
+completeness heights $640.1657\ldots$ and $700.0247\ldots$ exceed the
+largest ordinate cutoff $2M=600$ required here. The worst certified
+relative margin
 $(\mathrm{MAIN}-\mathrm{TAIL})/\mathrm{MAIN}$ on these ranges is
-$0.105$ ($q=4$, at the left edge) and $0.035$ ($q=3$, at the left
-edge); by $M\approx35$ the tail is below $2\times10^{-14}$ in
-absolute size, i.e.\ below $10^{-10}$ of the main term.
+$0.105567$ ($q=4$, at the left edge) and $0.035182$ ($q=3$, at the
+left edge).
 \end{proposition}
 
 \begin{proof}
@@ -4398,9 +4399,9 @@ Lemmas~\ref{lem:negstruct} and~\ref{lem:tailexp} combined with
 \eqref{eq:split}, the interval monotonicities used being: $a_\gamma(M)$
 increasing in $M$ (so the cell argument ranges are correct),
 $\sigma^2$ and $S_4$ increasing in $M$ (termwise), and the $D$
-comparison of Lemma~\ref{lem:Dprop}(ii). The evaluation is the
-script's item~[4]; its rigor class is discussed in
-Remark~\ref{rem:monotone-rigor}.
+comparison of Lemma~\ref{lem:Dprop}(ii). The remaining evaluation is
+the ball-arithmetic certificate; its construction and reproducibility
+are described in Remark~\ref{rem:monotone-rigor}.
 \end{proof}
 
 \begin{lemma}[analytic leg: $M\ge300$, no zero data]
@@ -4517,16 +4518,16 @@ stays below its value at $M=300$, which is below $1$.
 
 \begin{proof}[Proof of Corollary~\ref{cor:monotone-explicit}]
 For $q=4$: Proposition~\ref{prop:criterion-eval} gives
-$\delta_4'<0$ on $17.317\le M\le319.96$;
-Lemma~\ref{lem:analytic-leg} gives it on $M\ge300$; the union is
-$M\ge17.317$, i.e.\ $m\ge16.817$, and we round the threshold up to
-$16.82$. For $q=3$ the same with $19.119$ and $349.89$, threshold
-$18.62$. Strict negativity of the derivative on an interval implies
+$\delta_4'<0$ on $17.32\le M\le300$;
+Lemma~\ref{lem:analytic-leg} gives it on $M\ge300$; hence the union is
+$M\ge17.32$, i.e.\ $m\ge16.82$. For $q=3$ the same argument starts
+at $M=19.12$, i.e.\ $m=18.62$. Strict negativity of the derivative implies
 strict decrease. The transfer to the race under LI$(\chi_4)$ is
 Theorem~\ref{thm:interp}(ii) as in
 Corollary~\ref{cor:dissolution-race}: under LI the logarithmic
 density $\delta(m)$ \emph{equals} $\delta_4(m)$ for every $m$, so
-monotonicity of the latter is monotonicity of the former.
+monotonicity of the latter is monotonicity of the former; the same
+transfer applies to $\chi_3$ under LI$(\chi_3)$.
 \end{proof}
 
 \begin{remark}[rigor classes, and what is computer-verified]
@@ -4545,18 +4546,27 @@ explicit elementary inequalities at $M=300$ (the two evaluations
 $\mathrm{TAIL}_{\mathrm{an}}(300)<\mathrm{MAIN}_{\mathrm{an}}(300)$
 and the four logarithmic-derivative constants of
 Lemma~\ref{lem:analytic-leg}), which can be done by hand.
-(2) The range $[17.32,320]$ resp.\ $[19.12,350]$ rests on
-Proposition~\ref{prop:criterion-eval}: the criterion itself is a
-theorem, but its evaluation uses (a) the certified ordinate lists
-(25 digits; their assumed completeness below $\gamma_{\max}$ is the
-same hypothesis underlying the reference densities and
-Table~\ref{tab:enclose}), and (b) float64 evaluation of $J_0$,
-$\operatorname{erf}$, digamma and the von-Mangoldt sums, with an
-additive safety margin $10^{-9}$ on every Bessel supremum and a
-worst-case criterion margin of $3.5\%$; no interval arithmetic is
-claimed. This is the rigor class of the paper's validated enclosures,
-not of its theorems. (3) The finite differences of item~[6] of the
-script (matching $-D/(2\sqrt{2\pi}\sigma^3)$ to $1$--$2\%$ at
+(2) The finite ranges $[17.32,300]$ resp.\ $[19.12,300]$ rest on
+Proposition~\ref{prop:criterion-eval} and are computer-assisted
+theorems.  The independent script
+\texttt{paper/v3/verify\_monotonicity\_arb.py} uses FLINT/Arb balls
+at $40$ decimal digits throughout the inequality
+$\mathrm{MAIN}>\mathrm{TAIL}$.  It imports each ordinate as its
+certified $10^{-20}$ ball; the winding counts of
+Section~\ref{sec:methods} prove that these lists are complete past
+$2M=600$.  It evaluates $\sigma^2,D,S_4$ from the completed-$L$
+closed forms, bounding the two logarithmic derivatives by a finite
+von-Mangoldt series and explicit integral tails.  The positive
+$J_1$ zeros needed to maximize $|J_0|$ on every argument cell are
+isolated by interval Newton steps; endpoint conversions are directed
+and checked for containment, and all Bessel values, products,
+$\operatorname{erf}$ values, exponentials, cell integrals and the
+$t\ge64$ remainder are ball evaluations.  The SciPy zero values are
+used only as seeds for the interval-Newton certificates, not as
+trusted numerical input.  All $145$ resp.\ $140$ weight cells pass,
+with worst relative margins $10.5567\%$ and $3.5182\%$ on the first
+cells. (3) The finite differences of item~[6] of the original
+floating-point script (matching $-D/(2\sqrt{2\pi}\sigma^3)$ to $1$--$2\%$ at
 $m\in\{20,60\}$ for both moduli) are a consistency check only.
 Two further honesty notes. First, the constant $0.18$ of
 Theorem~\ref{thm:monotone-large} and the window $[0.90,1.14]$ are
@@ -4915,6 +4925,16 @@ $537\pm3\times10^{-11}$; combined with the disjoint sign-change
 intervals, this also proves that every listed zero is simple and that
 no unlisted zero occurs below those heights.  The final Gil--Pelaez quadrature remains
 floating-point with estimated error, as stated above.
+
+The same certified zero balls feed the separate monotonicity
+certificate \texttt{paper/v3/verify\_monotonicity\_arb.py}.  This
+script proves Proposition~\ref{prop:criterion-eval} on $285$ closed
+weight cells in total, including the exact decimal left endpoints
+$M=17.32$ and $19.12$, and verifies the overlap at $M=300$ with the
+zero-free analytic leg.  Unlike the density quadrature, this
+calculation is entirely in ball arithmetic; a failed interval-Newton
+inclusion, incomplete Bessel-extremum coverage, nonpositive bound, or
+overlap of the main and tail balls causes the certificate to abort.
 
 Exact races: segmented
 sieves to $10^{10}$ with exact signed $128$-bit (integer weights) or

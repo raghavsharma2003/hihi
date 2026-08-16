@@ -283,3 +283,70 @@ third-order term were:
 The common explicit dependence in the joint theorem was conservatively
 updated from `C delta^-6` to `C delta^-8` because absorbing the large-`t` tail
 at third order uses the supremum of `sigma^7 exp(-c delta^2 sigma^2)`.
+
+## 2026-08-16 - explicit monotonicity promoted to a certified theorem
+
+The remaining finite-range rigor gap has been closed by the new independent
+script `paper/v3/verify_monotonicity_arb.py`.  The old
+`verify_monotonicity.py` remains a useful fast floating-point cross-check, but
+it is no longer the evidentiary basis for the thresholds.
+
+### Certificate construction
+
+- All quantities entering `MAIN > TAIL` are outward-rounded FLINT/Arb balls at
+  40 decimal digits.
+- The 511 and 537 ordinates are imported as the already certified decimal
+  balls of radius `1e-20`; the winding certificates prove completeness beyond
+  the largest required cutoff `2M=600`.
+- `sigma^2`, `D`, and `S4` are evaluated from completed-L closed forms.  The
+  two logarithmic derivatives use a von-Mangoldt series through `N=128` plus
+  explicit absolute log-power integral tails.
+- Ninety positive J1 zeros are isolated by interval Newton.  Their indexing
+  uses the standard Bessel-zero brackets, their successive J0 extrema are
+  compared as balls, and the resulting extrema cover every argument through
+  `t=64`.  SciPy supplies seeds only and is not trusted for a bound.
+- Every conversion used for array indexing is directed and then checked for
+  containment; argument products themselves are formed first in Arb.  J0,
+  erf, exponentials, Bessel products, cell integrals, and the analytic
+  `t>=64` remainder are all ball evaluations.
+- Any failed root inclusion, missing extremum, nonpositive intermediate
+  quantity, overlapping main/tail balls, or uncovered weight cell aborts.
+
+### Full successful run
+
+The command
+
+```text
+.venv-research/Scripts/python.exe \
+  algorithms/prime-sum/paper/v3/verify_monotonicity_arb.py
+```
+
+completed successfully after the containment-hardening pass:
+
+- q=4: all 145 ratio-1.02 cells on `M in [17.32,300]`; worst relative
+  margin `0.105567` on `[17.32,17.6664]`, with
+  `MAIN=0.0004481640657874915...` and
+  `TAIL=0.0004008528804835996...`;
+- q=3: all 140 cells on `M in [19.12,300]`; worst relative margin
+  `0.035182` on `[19.12,19.5024]`, with
+  `MAIN=0.0004207701329764512...` and
+  `TAIL=0.0004059665677544904...`;
+- the zero-free analytic bridge at `M=300` was also ball-checked, with
+  `TAIL/MAIN <= 4.501347e-4` for q=4 and `2.909838e-3` for q=3.
+
+Together with the proved analytic lemma for `M>=300`, this establishes under
+GRH
+
+```text
+delta_4'(m) < 0 for every m >= 16.82,
+delta_3'(m) < 0 for every m >= 18.62.
+```
+
+These are now computer-assisted theorem statements, not floating-point
+evidence.  Under the corresponding LI hypothesis they transfer to the
+logarithmic densities of both aggregate weighted races.  The manuscript's
+proposition, corollary, proof, methods, and rigor remark have been rewritten
+accordingly.  The still-open monotonicity range is the bounded initial interval
+`(-1/2,16.82)` resp. `(-1/2,18.62)`; the final density quadrature remains a
+separate floating-point computation with estimated, not interval-certified,
+quadrature error.
