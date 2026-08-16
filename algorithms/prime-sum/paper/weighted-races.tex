@@ -152,8 +152,10 @@ computed twice: the sieve counts by fully independent implementations,
 the densities by deterministic inversion against Monte Carlo --- two
 evaluations that share the same zero data and tail model and are
 independent only in the evaluation step; the shared tail model is
-bounded rigorously by the certified enclosures of
-Section~\ref{sec:methods} (Table~\ref{tab:enclose}).
+controlled by the validated enclosures of
+Section~\ref{sec:methods} (Table~\ref{tab:enclose}: exact tail
+variance and explicit analytic error bounds, with quadrature error
+estimated rather than certified).
 
 \subsection*{Results}
 
@@ -166,8 +168,10 @@ almost-periodic form $1+\sum_{\gamma>0}2a_\gamma(m)\cos(\gamma u)$ with
 a_\gamma(m)\;=\;\frac{2m+1}{\sqrt{(m+\tfrac12)^2+\gamma^2}},
 \]
 $\gamma$ the ordinates of $L(s,\chi_4)$, and the constant $1$
-normalizing the prime-square bias term. Monte Carlo evaluation under
-LI (Section~\ref{sec:methods}) gives Table~\ref{tab:delta}. These are,
+normalizing the prime-square bias term. Deterministic Gil--Pelaez
+inversion with validated error bounds, cross-checked by Monte Carlo
+under LI (Section~\ref{sec:methods}), gives Table~\ref{tab:delta}.
+These are,
 to our knowledge, the first Rubinstein--Sarnak densities computed for a
 weighted race between primes in arithmetic progressions (for weighted
 prime sums against main terms, densities exist in the Mertens-race
@@ -175,28 +179,36 @@ literature~\cite{Lam16}; for analytic explicit-formula control of the
 log-weighted sum $\theta(x)$, cf.\ Platt--Trudgian~\cite{PT14}).
 
 \begin{table}[h]\centering
-\begin{tabular}{lccccccc}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcccccccc}
 \toprule
-$m$ & $0$ & $1$ & $2$ & $3$ & $8$ & $20$ & $100$\\
+$m$ & $0$ & $1$ & $2$ & $3$ & $8$ & $20$ & $60$ & $100$\\
 \midrule
-$\delta_4(m)$ & $0.995928$ & $0.797628$ & $0.694520$ & $0.645850$
-& $0.571869$ & $0.538455$ & $0.513778$\\
-$\delta_3(m)$ & $0.999063$ & $0.836877$ & $0.723470$ & $0.666552$
-& $0.578534$ & $0.540767$ & --- \\
+$\delta_4(m)$ & $0.995928$ & $0.797630$ & $0.694521$ & $0.645851$
+& $0.571870$ & $0.538455$ & --- & $0.513778$\\
+$\delta_3(m)$ & $0.999063$ & $0.836880^{\dagger}$ & $0.723473$ & $0.666554$
+& $0.578536$ & $0.540768$ & $0.519717^{\dagger}$ & --- \\
 \bottomrule
 \end{tabular}
 \caption{Logarithmic densities of the set where the nonresidue class
-leads, moduli $4$ and $3$: deterministic Gil--Pelaez Fourier inversion
-of the limiting distribution ($511$ resp.\ $537$ zeros computed to $25$
-digits, Gaussian tail from the zero-counting density), cross-checked by
-independent Monte Carlo with $2$--$4\times10^6$ samples per entry
-(binomial standard error $\le3.6\times10^{-4}$; largest deviation
-$2.2$ standard errors over the $14$ entries, consistent with binomial
-sampling), and at $(q,m)=(4,1)$ by a single
-$2\times10^7$-sample run, $0.797599\pm0.000090$, consistent with the
-deterministic entry ($0.3$ standard errors). The $m=0$
-column reproduces the classical values $0.995928$ and $0.999063$
-(cf.\ \cite{RS94,FM13}) to all six decimals.}
+leads, moduli $4$ and $3$: midpoints of the validated enclosures of
+Table~\ref{tab:enclose} (Section~\ref{sec:methods}), rounded to six
+decimals; dashes mark uncomputed points. The enclosure widths are
+below $3\times10^{-7}$, so every sixth decimal is determined except
+the two marked $^{\dagger}$, whose intervals straddle the rounding
+boundary: at $(3,1)$ the value is $0.836880$ or $0.836881$, at
+$(3,60)$ it is $0.519717$ or $0.519718$. The underlying computation is
+deterministic Gil--Pelaez Fourier inversion of the limiting
+distribution ($511$ resp.\ $537$ zeros computed to $25$ digits, unseen
+zeros Gaussianized with the exact tail variance of
+Remark~\ref{rem:tails}), cross-checked by independent Monte Carlo with
+$2$--$4\times10^6$ samples per entry (binomial standard error
+$\le3.6\times10^{-4}$; largest deviation $2.2$ standard errors over
+the $14$ entries, consistent with binomial sampling), and at
+$(q,m)=(4,1)$ by a single $2\times10^7$-sample run,
+$0.797599\pm0.000090$, consistent with the table entry ($0.3$ standard
+errors). The $m=0$ column reproduces the classical values $0.995928$
+and $0.999063$ (cf.\ \cite{RS94,FM13}) to all six decimals.}
 \label{tab:delta}
 \end{table}
 
@@ -234,7 +246,8 @@ $L(\tfrac12,\chi)\ne0$, and under LI$(\chi_4)$ for the logarithmic
 density of the mod-$4$ race itself
 (Corollary~\ref{cor:dissolution-race}).
 At $q=4$, $m=100$: deterministic $0.513778$, Gaussian $\Phi(1/\sigma)$
-$0.51379$, the law $0.51380$. At $q=3$, $m=60$: deterministic $0.519716$
+$0.51379$, the law $0.51380$. At $q=3$, $m=60$: deterministic
+$0.519717^{\dagger}$ (dagger as in Table~\ref{tab:delta})
 against the law's $0.51978$ --- agreement to $6\times10^{-5}$. The modulus ordering
 $\delta_3(m)>\delta_4(m)$ holds at every computed $m$. In the law it is
 a conductor effect: $\mathrm{Var}_4(m)-\mathrm{Var}_3(m)\sim
@@ -1320,9 +1333,10 @@ $\sigma_m^2=\sum_{\gamma>0}2a_\gamma(m)^2$ of the limiting variable
 $X_m$ has so far entered this paper through a truncation: $511$
 computed ordinates plus a tail estimated from the zero-counting
 density. This section removes the estimate. The variance is the value
-of an explicitly computable entire function of the weight, with three
+of an explicitly computable function of the weight, real-analytic on
+$(-\tfrac12,\infty)$, with three
 consequences: the constant $C$ of Theorem~\ref{thm:interp} acquires a
-closed form (and its printed value a correction of $3.4\times10^{-6}$);
+closed form (Corollary~\ref{cor:Cexact});
 the variance half of the dissolution law of the introduction becomes a
 theorem with an explicit constant term; and the Gaussianized tails of
 the numerical work become exactly computable quantities.
@@ -1459,12 +1473,12 @@ C\;=\;0.156029649889644884607682\ldots,\\
 \tfrac14\psi'(\tfrac34)=0.635469911917901\ldots,\qquad
 (\log L)''(\tfrac12,\chi_4)=-0.479440262028256\ldots
 \end{gather*}
-This supersedes the zero-sum estimate $C=0.156033$ of earlier drafts,
-whose excess $+3.4\times10^{-6}$ is the neglected fluctuation term
-flagged there as $O(10^{-5})$ (the unrounded zero-sum-plus-tail
-estimate is $0.1560328$, an excess of $3.2\times10^{-6}$; rounding to
-the printed six decimals accounts for the rest). All bounds stated
-with $C$ only improve.
+The cruder zero-sum estimate $0.156033$ appeared in earlier versions
+of this manuscript; its excess $+3.4\times10^{-6}$ over the closed
+form is the neglected fluctuation of the zero-counting remainder (the
+unrounded zero-sum-plus-tail estimate is $0.1560328$, an excess of
+$3.2\times10^{-6}$; rounding to six printed decimals accounts for the
+rest). All bounds stated with $C$ only improve.
 \end{corollary}
 
 \begin{proof}
@@ -1598,7 +1612,7 @@ $\delta_q(m)-\tfrac12\sim(2\pi\,\mathrm{Var}_q(m))^{-1/2}$.
 Proposition~\ref{prop:varasymp} certifies only its variance input.
 \end{remark}
 
-\begin{remark}[certified tails for the numerical densities]
+\begin{remark}[exact tail variances for the numerical densities]
 \label{rem:tails}
 The Gil--Pelaez and Monte Carlo computations of
 Sections~1 and~\ref{sec:methods} replace the unseen zeros
@@ -1618,13 +1632,19 @@ the introduction. The smoothed tail estimate used previously deviates
 from the exact tail by at most $1.5\times10^{-4}$ relative to
 $\sigma_m^2$ over the computed range (worst at $m=100$, where the tail
 carries $16.7\%$ of the variance). Re-running the Gil--Pelaez
-inversion with the exact tail variances shifts the entries of
-Table~\ref{tab:delta} by at most $3.3\times10^{-6}$ (worst at $q=3$,
-$m=1$): up to three units in their sixth printed decimal --- well
-within the $10^{-4}$ Monte Carlo cross-check, though not strictly
-below the printed resolution, so the last digit of a few entries
-moves --- and the tail-variance estimation error is now exactly
-zero. For the record, the identity also gives
+inversion with the exact tail variances moves the densities by a few
+units in their sixth decimal --- well within the $10^{-4}$ Monte
+Carlo cross-check, but not below the printed resolution: the
+six-decimal values from the earlier Gaussianized-tail computation
+deviate from the enclosure midpoints of Section~\ref{sec:methods} by
+up to $3.5\times10^{-6}$ (at $(q,m)=(3,1)$; last column of
+Table~\ref{tab:enclose}), of which the estimated tail variance
+accounts for $-3.2\times10^{-6}$ at that worst point and the coarser
+quadrature of the original inversion for the small remainder, so ten
+of the fourteen sixth decimals change by up to three units.
+Table~\ref{tab:delta} prints the corrected values (the enclosure
+midpoints rounded to six decimals), and the tail-variance estimation
+error in them is exactly zero. For the record, the identity also gives
 $\sigma_0^2=0.1555679799235859\ldots$ (the rounded $0.15557$ quoted in
 Section~\ref{sec:theorem} is unaffected).
 \end{remark}
@@ -2285,7 +2305,7 @@ $9\times10^{-7}$ at every table point. The total ---
 $9.9\times10^{-6}$ at $(q,m)=(4,100)$, less elsewhere in the table ---
 is the accuracy floor of the comparison; the $t>\tfrac18$ piece is a
 numerical evaluation, not a theorem, on the same footing as the
-reference densities themselves. The certified enclosures of Table~\ref{tab:enclose},
+reference densities themselves. The validated enclosures of Table~\ref{tab:enclose},
 computed by an independent route, contain the (unrounded) reference
 values used here at all four table points (e.g.\
 $0.51377836\in[0.5137782134,0.5137783837]$ at $(4,100)$; the table
@@ -2330,11 +2350,10 @@ difference, $2.2\times10^{-4}$, is consistent with the corollary's
 $O(1/(ML^2))=O(5.8\times10^{-4})$ --- at these heights $L\approx4.2$
 is still small, which is why the table works with (ii) rather than
 the corollary. The reference values $\delta_4(100)=0.5137784$ and
-$\delta_3(60)=0.5197175$ refine the six-decimal values of the
-introduction: $0.513778$ in Table~\ref{tab:delta}, and $0.519716$ in
-the text beside it (the $(3,60)$ point is not a table entry; its value
-shifts by $1.5\times10^{-6}$ upon replacing the estimated tail
-variance of the original computation by the exact one).
+$\delta_3(60)=0.5197175$ are seven-decimal refinements of the
+corresponding entries of Table~\ref{tab:delta}, $0.513778$ and
+$0.519717^{\dagger}$ (the dagger marking the sixth decimal left
+unresolved by the enclosure).
 \end{remark}
 
 \begin{remark}[scope, and what is not proved]\label{rem:dissolution-scope}
@@ -2359,7 +2378,7 @@ the large-$t$ bound uses only the zeros in $(M,2M]$ and is extremely
 wasteful; no attempt has been made to make $M_0(q)$ small, and at the
 heights of Table~\ref{tab:dissolution} the \emph{proved} bounds on
 the tail terms are not yet numerically dominant --- the table is a
-consistency check on the asymptotics, not a certified enclosure. (4)
+consistency check on the asymptotics, not a validated enclosure. (4)
 \emph{Uniformity.} Nothing is claimed uniformly in $q$; a uniform
 version would require the window count and
 Proposition~\ref{prop:varasymp} with explicit $q$-dependence,
@@ -2377,16 +2396,22 @@ literature.
 Zeros of $L(s,\chi_4)$ and $L(s,\chi_3)$ ($511$ resp.\ $537$ ordinates
 to $25$ digits) were computed by Hardy $Z$-scans with derived phases,
 validated by reality of $Z$ to $\sim10^{-27}$, Riemann--von Mangoldt
-counts, and the known first ordinates. \subsection*{Certified enclosures for the densities}
+counts, and the known first ordinates.
+
+\subsection*{Validated enclosures for the densities}
 \label{subsec:certified}
 
-The densities of Table~\ref{tab:delta} were produced with a tail model:
+The densities of Table~\ref{tab:delta} rest on a tail model:
 the unseen zeros $\gamma>\Gamma$ ($\Gamma=\gamma_{511}=639.9157\ldots$
-for $\chi_4$, $\gamma_{537}=699.7747\ldots$ for $\chi_3$) were replaced
-by a Gaussian whose variance was \emph{estimated} from the
-zero-counting density. This subsection replaces the estimate by a
-certified computation and states precisely which error terms are proved
-and which remain estimated. Throughout, the standing hypotheses are
+for $\chi_4$, $\gamma_{537}=699.7747\ldots$ for $\chi_3$) are replaced
+by a Gaussian whose variance was originally \emph{estimated} from the
+zero-counting density. This subsection replaces the estimate by the
+exact closed form of Proposition~\ref{prop:varid} and derives
+validated enclosures for the densities --- explicit analytic error
+bounds throughout, with quadrature error estimated rather than
+certified --- stating precisely which terms are proved and which
+remain estimated; Table~\ref{tab:delta} prints the enclosure
+midpoints. Throughout, the standing hypotheses are
 GRH$(\chi)$ + LI$(\chi)$ (as for every density in this literature)
 together with the completeness of the computed ordinate list up to
 $\Gamma$ (validated by the Hardy $Z$-scans and Riemann--von Mangoldt
@@ -2513,7 +2538,7 @@ not claim otherwise.
 \begin{tabular}{crrllcr}
 \toprule
 $q$ & $m$ & $V_T$\quad\ & $\delta_q(m)$ lower & $\delta_q(m)$ upper &
-width & Tab.~\ref{tab:delta} $-$ mid \\
+width & old $-$ mid \\
 \midrule
 $4$ & $0$   & $0.0034836$ & $0.9959278380$ & $0.9959280127$ & $1.7\times10^{-7}$ & $+0.07$ \\
 $4$ & $1$   & $0.0313527$ & $0.7976303685$ & $0.7976304296$ & $6.1\times10^{-8}$ & $-2.40$ \\
@@ -2532,55 +2557,44 @@ $3$ & $20$  & $5.2001295$ & $0.5407681867$ & $0.5407682369$ & $5.0\times10^{-8}$
 $3$ & $60$  & $45.202127$ & $0.5197174290$ & $0.5197175306$ & $1.0\times10^{-7}$ & $-1.48$ \\
 \bottomrule
 \end{tabular}
-\caption{Certified enclosures $[\delta_{\mathrm{lo}},
-\delta_{\mathrm{hi}}]$ for the logarithmic densities, under
+\caption{Validated enclosures $[\delta_{\mathrm{lo}},
+\delta_{\mathrm{hi}}]$ for the logarithmic densities --- explicit
+analytic error bounds, with quadrature error estimated by Richardson
+step-doubling rather than certified --- under
 GRH + LI and completeness of the ordinate lists to height $\Gamma$
 ($511$ ordinates for $\chi_4$, $537$ for $\chi_3$). $V_T$ is the
-certified variance of the unseen-zero tail. The last column is the
-deviation of the previously printed six-decimal value from the interval
+certified variance of the unseen-zero tail. The last column
+(``old $-$ mid'') is the deviation of the earlier Gaussianized-tail
+six-decimal value from the interval
 midpoint, in units of $10^{-6}$; entries exceeding $1$ in absolute
-value are discrepancies beyond the sixth decimal (ten of the fourteen).
+value mark a changed sixth decimal (ten of the fourteen).
+Table~\ref{tab:delta} prints the midpoints.
 All widths are below $3\times10^{-7}$, against the design target
 $5\times10^{-6}$.}
 \label{tab:enclose}
 \end{table}
 
-\emph{Corrected values, and what was wrong.} The enclosures confirm
-Table~\ref{tab:delta} at $(q,m)=(4,0)$, $(4,20)$, $(4,100)$, $(3,0)$
-and move the sixth decimal in the other ten entries by $1$--$4$ units;
-the corrected six-decimal values are
-\[
-\delta_4:\ 0.995928,\ 0.797630,\ 0.694521,\ 0.645851,\ 0.571870,\
-0.538455,\ 0.513778;
-\]
-\[
-\delta_3:\ 0.999063,\ 0.836880\,(*),\ 0.723473,\ 0.666554,\ 0.578536,\
-0.540768,\ 0.519717\,(*),
-\]
-$(*)$: two sixth decimals are \emph{not resolved} by the enclosures.
-At $(3,1)$ the interval $[0.83688043,0.83688053]$ straddles the
-rounding boundary $0.8368805$ (the value is $0.836880$ or $0.836881$;
-the midpoint $0.83688048$ sits within $2.5\times10^{-9}$ of the
-boundary, so no computation at this zero height can be expected to
-settle it). At $(3,60)$ the interval $[0.51971743,0.51971753]$
-straddles $0.5197175$ (the value is $0.519717$ or $0.519718$). All
-twelve remaining sixth decimals, including $(4,100)$, are certified by
-the enclosures. The cause of the drift is
-quantitatively identified: re-running the certified pipeline with the
-old smoothed-tail variance in place of $V_T$ reproduces the deviations
-(e.g.\ $-3.2\times10^{-6}$ of the observed $-3.5\times10^{-6}$ at
-$(3,1)$, the small remainder being the old code's coarser quadrature).
-The classical anchors are unaffected: our intervals contain
-$0.9959279\ldots$ and $0.9990632\ldots$ at $m=0$, consistent with
-\cite{RS94,FM13} to all six printed decimals.
-
-\emph{Correction to Remark~\ref{rem:tails}.} That remark asserted that
-replacing the estimated tail by the exact one moves the densities of
-Table~\ref{tab:delta} by less than their quoted precision. The
-enclosures above show this is false at the sixth decimal for ten of
-fourteen entries (largest shift $3.5\times10^{-6}$, at $(q,m)=(3,1)$);
-the remark's claim should be read as ``below $5\times10^{-6}$'', and
-Table~\ref{tab:enclose} now supersedes the affected entries.
+\emph{Enclosure-derived values.} Table~\ref{tab:delta} prints the
+midpoints of these enclosures rounded to six decimals; ten of the
+fourteen sixth decimals differ, by one to three units, from the
+earlier Gaussianized-tail computation (last column of
+Table~\ref{tab:enclose}), a drift quantitatively traced to the
+estimated tail variance that computation used: re-running the pipeline
+with the old smoothed-tail variance in place of $V_T$ reproduces the
+deviations (e.g.\ $-3.2\times10^{-6}$ of the observed
+$-3.5\times10^{-6}$ at $(3,1)$, the small remainder being the older
+code's coarser quadrature). Two sixth decimals are \emph{not resolved}
+by the enclosures and are daggered in Table~\ref{tab:delta}: at
+$(3,1)$ the interval $[0.83688043,0.83688053]$ straddles the rounding
+boundary $0.8368805$ (the value is $0.836880$ or $0.836881$; the
+midpoint $0.83688048$ sits within $2.5\times10^{-9}$ of the boundary,
+so no computation at this zero height can be expected to settle it),
+and at $(3,60)$ the interval $[0.51971743,0.51971753]$ straddles
+$0.5197175$ (the value is $0.519717$ or $0.519718$). The twelve
+remaining sixth decimals, including $(4,100)$, are determined by the
+enclosures. The classical anchors are unaffected: our intervals
+contain $0.9959279\ldots$ and $0.9990632\ldots$ at $m=0$, consistent
+with \cite{RS94,FM13} to all six printed decimals.
 
 \emph{The two computations, honestly described.} The deterministic
 Gil--Pelaez inversion and the Monte Carlo evaluation of
@@ -2702,7 +2716,10 @@ implementation. For the sieve computations the two implementations are
 independent throughout; for the densities they shared the ordinate
 lists and, prior to the enclosures above, the Gaussian tail model, so
 their agreement tested evaluation error only --- the tail model itself
-is certified by Table~\ref{tab:enclose}.
+is now controlled by the validated enclosures of
+Table~\ref{tab:enclose} (its variance exactly, by
+Proposition~\ref{prop:varid}; its non-Gaussianity by the proved bound
+$E_1$).
 
 \emph{Assumptions and limitations.} Densities are conditional on
 GRH + LI, as throughout this literature. The existence of the limiting
@@ -2712,7 +2729,8 @@ $m\in(-\tfrac12,\infty)$ in Section~\ref{sec:theorem} (the $m>0$ part
 is the routine direction of the extension: the only changes are the
 $(1+x^m)\log x$ error floor in the explicit formula and the constant
 $2\max K+1$ in the continuity argument). The dissolution law,
-heuristic in earlier drafts, is proved with an error term in
+stated in the introduction as a Gaussian-comparison prediction, is
+proved with an error term in
 Theorem~\ref{thm:dissolution} (for the density of the limiting
 variable; the transfer to the race itself uses LI and is stated for
 $q=4$). The finite-$x$ log-measure for $(q,m)=(3,2)$ shows the

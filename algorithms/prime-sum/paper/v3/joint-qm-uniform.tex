@@ -1,0 +1,701 @@
+% ============================================================================
+% joint-qm-uniform.tex  (v3, 2026-08-16)
+%
+% A JOINT (q,m)-uniform version of the dissolution law: a single estimate,
+% with constants depending on nothing but a lower-bound parameter
+% delta_0 <= M, that contains BOTH classical aspects --
+%   * the paper's weight aspect  (q fixed, m -> infinity;
+%     Theorem \ref{thm:dissolution} of dissolution-theorem.tex), and
+%   * the modulus aspect (m fixed, q -> infinity), the single-character
+%     analogue of the Fiorilli--Martin regime \cite{FM13} --
+% and their entire joint interior.  The exotic corner M -> 0 with
+% q -> infinity is EXCLUDED and discussed honestly in
+% Remark~\ref{rem:joint-corner}.
+%
+% Intended placement: \input into the v3 main file AFTER the dissolution
+% section (dissolution-theorem.tex).  Labels of other files used here:
+%   sec:dissolution, thm:dissolution, cor:secondorder
+%                                         (dissolution-theorem.tex)
+%   lem:J0facts, lem:window, lem:invert, lem:S4mom,
+%   eq:S4id, eq:S4asymp, eq:smallt, eq:decomp, tab:dissolution,
+%   rem:dissolution-numerics, rem:dissolution-scope
+%                                         (dissolution-theorem.tex)
+%   prop:varid, prop:varasymp, eq:varidq  (variance-identity.tex)
+%   thm:interp                            (main file / thm-full-range.tex)
+% Bibliography keys used: Dav00, FM13 (already in the main file) plus THREE
+% NEW keys that must be added to the main bibliography:
+%   \bibitem{MV07} H.~L. Montgomery, R.~C. Vaughan, \emph{Multiplicative
+%     Number Theory I: Classical Theory}, Cambridge Studies in Advanced
+%     Mathematics 97, Cambridge University Press, Cambridge, 2007.
+%   \bibitem{BMOR21} M.~A. Bennett, G. Martin, K. O'Bryant,
+%     A. Rechnitzer, \emph{Counting zeros of Dirichlet $L$-functions},
+%     Math. Comp. 90 (2021), 1455--1482.
+%   \bibitem{Sou00} K. Soundararajan, \emph{Nonvanishing of quadratic
+%     Dirichlet $L$-functions at $s=\frac12$}, Ann. of Math. (2) 152
+%     (2000), 447--488.
+%
+% Numerics: Table \ref{tab:joint} reuses the reference densities and the
+% closed-form values of sigma_m^2, S_4 of Table \ref{tab:dissolution}
+% (recomputed for that draft by paper/v3/verify_dissolution.py); the two
+% ratio columns are elementary arithmetic on those entries and were
+% recomputed for this draft.  No new heavy computation enters.
+% ============================================================================
+
+\section{A joint $(q,m)$-uniform dissolution law}
+\label{sec:joint-dissolution}
+
+Theorem~\ref{thm:dissolution} dissolves the bias in the weight aspect:
+$q$ fixed, $m\to\infty$, with all constants depending on $q$. The
+classical Chebyshev literature dissolves it in the modulus aspect: the
+weight fixed, $q\to\infty$, as in the asymptotic series of Fiorilli and
+Martin \cite{FM13} for the unweighted race. This section proves one
+estimate containing both aspects and their joint interior: the Gaussian
+prediction $(2\pi\sigma_{m,\chi}^2)^{-1/2}$ approximates
+$\delta_\chi(m)-\tfrac12$ with \emph{relative error
+$O(1/\sigma_{m,\chi}^2)$, uniformly over all real primitive characters
+and all weights $m$ bounded below}, with no lower bound on
+$\sigma_{m,\chi}^2$ required for the inequality itself. The mechanism
+is the observation that the Lindeberg-type ratio $S_4/\sigma^4$ obeys
+the \emph{absolute} bound $32/\sigma^2$ --- the amplitudes
+$2a_\gamma\le4$ are bounded by a constant free of $(q,m)$ --- so the
+entire small-$t$ analysis of Section~\ref{sec:dissolution} is already
+uniform; what has to be reworked is the large-$t$ decay, whose zero
+count must come from the $q$-uniform Riemann--von Mangoldt formula and
+whose window must be widened to survive small $M$.
+
+\subsection*{Setting and statement}
+
+Throughout this section, hypothesis (H) means: $\chi$ is a real
+primitive character mod $q\ge3$, GRH$(\chi)$ holds, and
+$L(\tfrac12,\chi)\ne0$. For $m>-\tfrac12$ put $M=m+\tfrac12$ and, as in
+Section~\ref{sec:dissolution},
+\[
+a_\gamma(m)=\frac{2M}{\sqrt{M^2+\gamma^2}},\qquad
+X_{m,\chi}=1+\sum_{\gamma>0}2a_\gamma(m)\cos\theta_\gamma,\qquad
+\delta_\chi(m):=\mathbb P\bigl(X_{m,\chi}>0\bigr),
+\]
+\[
+\sigma^2=\sigma_{m,\chi}^2:=\sum_{\gamma>0}2a_\gamma(m)^2
+=4M\,\frac{\xi'}{\xi}(m+1,\chi),
+\qquad
+S_4=S_4(m,\chi):=\sum_{\gamma>0}\bigl(2a_\gamma(m)\bigr)^4,
+\]
+the closed form for $\sigma^2$ being \eqref{eq:varidq}. We write
+$\delta_\chi$ rather than $\delta_q$ because a modulus can carry two
+real primitive characters (e.g.\ $q=8$); all bounds below are uniform
+over the choice, and for the moduli $3,4$ of the rest of the paper
+$\delta_\chi(m)=\delta_q(m)$. Set
+\[
+\overline M:=\max(M,1),\qquad
+\mathcal L:=\log\bigl(q\overline M\bigr)\;\ (\ge\log3).
+\]
+
+\begin{theorem}[joint uniform dissolution law]\label{thm:joint}
+For every $\delta_0\in(0,1]$ there is an effectively computable
+constant $C(\delta_0)<\infty$ such that the following holds for
+\emph{every} pair $(\chi,m)$ with (H) and $M=m+\tfrac12\ge\delta_0$.
+With $G:=(2\pi\sigma^2)^{-1/2}$:
+\begin{itemize}
+\item[(i)]
+$\displaystyle
+\Bigl|\,\delta_\chi(m)-\tfrac12-G\,\Bigr|
+\;\le\;C(\delta_0)\,\frac{G}{\sigma^{2}}\,;
+$
+\item[(ii)] more precisely,
+$\displaystyle
+\Bigl|\,\delta_\chi(m)-\tfrac12
+-G\Bigl(1-\frac{1}{6\sigma^{2}}-\frac{3S_4}{64\,\sigma^{4}}\Bigr)
+\Bigr|
+\;\le\;C(\delta_0)\,\frac{G}{\sigma^{4}}\,.
+$
+\end{itemize}
+No lower bound on $\sigma^2$ is assumed: the inequalities hold for all
+$\sigma^2>0$ and are informative once $\sigma^2$ is large, which by
+Proposition~\ref{prop:sigcomp} happens exactly when
+$\overline M\mathcal L$ is large. In particular, taking $\delta_0=1$:
+(i) and (ii) hold \emph{with absolute constants} uniformly over all
+real primitive $\chi$ satisfying (H) and all $m\ge\tfrac12$. An
+inspection of the proof shows one may take
+$C(\delta_0)\le C\,\delta_0^{-6}$ with $C$ absolute; we have not
+optimized this.
+\end{theorem}
+
+The scale of the error is calibrated by the following uniform
+comparability, proved after the theorem.
+
+\begin{proposition}[uniform size of $\sigma^2$ and $S_4$]
+\label{prop:sigcomp}
+There is an absolute constant $C_9$ such that under (H), for all
+$M>0$,
+\begin{equation}\label{eq:sigup}
+\sigma^{2}\;\le\;C_9\,\overline M\mathcal L,
+\qquad
+S_4\;\le\;C_9\,\overline M\mathcal L ,
+\end{equation}
+and there is an absolute constant $c_9>0$ such that for all
+$\delta_0\in(0,1]$ and all $M\ge\delta_0$,
+\begin{equation}\label{eq:siglow}
+\sigma^{2}\;\ge\;c_9\,\delta_0^{2}\;\overline M\mathcal L .
+\end{equation}
+Consequently, for $M\ge\delta_0$,
+\begin{equation}\label{eq:lindeberg}
+\sigma^2\asymp_{\delta_0}\overline M\mathcal L,
+\qquad\text{and}\qquad
+\frac{S_4}{\sigma^{4}}
+\;\le\;\frac{C_9}{c_9^{2}\,\delta_0^{4}}\cdot
+\frac{1}{\overline M\mathcal L}\,.
+\end{equation}
+\end{proposition}
+
+\begin{corollary}[the joint asymptotic]\label{cor:joint-asymp}
+Fix $\delta_0\in(0,1]$. Uniformly over all $(\chi,m)$ with (H) and
+$M\ge\delta_0$,
+\[
+\delta_\chi(m)-\tfrac12
+\;=\;\frac{1}{\sqrt{2\pi\sigma^{2}}}
+\Bigl(1+O_{\delta_0}\Bigl(
+\frac{1}{\overline M\log(q\overline M)}\Bigr)\Bigr).
+\]
+In particular:
+\begin{itemize}
+\item[(a)] \emph{weight aspect} ($q$ fixed, $m\to\infty$): the error is
+$O_q(1/(M\log M))$, recovering Theorem~\ref{thm:dissolution}(i) ---
+now with no threshold $M\ge M_0(q)$, since the inequality holds for
+all $M\ge\delta_0$;
+\item[(b)] \emph{modulus aspect} ($m>-\tfrac12$ fixed, $q\to\infty$
+through moduli admitting a real primitive character with (H)): taking
+$\delta_0=\min(M,1)$, the error is $O_m(1/\log q)$, so
+$\delta_\chi(m)\to\tfrac12$ at the rate $(2\pi\sigma^2)^{-1/2}
+\asymp_m(\log q)^{-1/2}$;
+\item[(c)] any joint passage: the right-hand error tends to $0$
+exactly when $q\overline M\to\infty$, i.e.\ when $q+m\to\infty$.
+\end{itemize}
+\end{corollary}
+
+\begin{corollary}[closed second order, uniform]\label{cor:joint-second}
+There is an absolute constant $C$ such that under (H), for all
+$M\ge16$ and $qM\ge2\pi e^{2}$, with $L:=\log\tfrac{qM}{2\pi}$
+$(\ge2)$,
+\[
+\Bigl|\,\delta_\chi(m)-\tfrac12
+-\frac{1}{\sqrt{2\pi\sigma^{2}}}
+\Bigl(1-\frac{11}{24\,ML}\Bigr)\Bigr|
+\;\le\;\frac{C}{\sqrt{2\pi\sigma^{2}}}\cdot\frac{1}{ML^{2}} .
+\]
+Thus the constant $-\tfrac{11}{24}$ of Corollary~\ref{cor:secondorder}
+is not a fixed-$q$ artifact: the approach to the Gaussian prediction is
+from below, by the same universal second-order coefficient, in every
+aspect at once.
+\end{corollary}
+
+\subsection*{Lemmas}
+
+The Bessel facts (J1)--(J4) of Lemma~\ref{lem:J0facts}, the inversion
+formula of Lemma~\ref{lem:invert}, and the bounds
+$S_4\le32\sigma^2$, $S_6:=\sum_\gamma(2a_\gamma)^6\le16S_4$ of
+Lemma~\ref{lem:S4mom} involve no parameter and are used as they stand;
+recall also $\sup_\gamma 2a_\gamma\le4$. The new input is
+$q$-uniformity in the zero counts, a widened window, and a rate for
+the constant $\rho(z_0)$ of (J1).
+
+\begin{lemma}[uniform Riemann--von Mangoldt]\label{lem:rvm-joint}
+Let $N_{\mathrm f}(T,\chi)$ denote the number of nontrivial zeros
+$\rho=\beta+i\gamma$ of $L(s,\chi)$ with $|\gamma|\le T$, and under (H)
+let $N_\chi(T):=\#\{\gamma\in(0,T]\}$, so that
+$N_\chi(T)=\tfrac12N_{\mathrm f}(T,\chi)$ (the ordinates are symmetric
+under $\gamma\mapsto-\gamma$ as in Proposition~\ref{prop:varid}, and
+$\gamma=0$ does not occur since $L(\tfrac12,\chi)\ne0$). There are
+absolute constants $C_R,C_R'$ such that for every primitive $\chi$ mod
+$q\ge3$:
+\begin{itemize}
+\item[(a)] for $T\ge2$,
+$\displaystyle
+\Bigl|N_{\mathrm f}(T,\chi)-\frac{T}{\pi}\log\frac{qT}{2\pi e}
+\Bigr|\le C_R\log(qT)$;
+\item[(b)] under (H), for all $T\ge1$,
+$N_\chi(T)\le C_R'\,T\log(qT)$.
+\end{itemize}
+\end{lemma}
+
+\begin{proof}
+(a) is \cite[Theorem~14.5]{MV07}, whose implied constant is absolute
+--- this uniformity in $q$ is the point of the modulus-aspect
+literature and the reason we cite \cite{MV07} rather than the
+fixed-$q$ formulation used in Lemma~\ref{lem:window}
+(cf.\ \cite[\S16]{Dav00}). It is moreover available in fully
+explicit form: for every character of conductor $q>1$ and every
+$T\ge\tfrac57$,
+$\bigl|N_{\mathrm f}(T,\chi)-\tfrac T\pi\log\tfrac{qT}{2\pi e}\bigr|
+\le0.298\log(qT)+4.358$ \cite[Corollary~1.2]{BMOR21}, so for
+$T\ge2$ and $q\ge3$ --- where $\log(qT)\ge\log6$, and
+$0.298+4.358/\log6<2.74$ --- one may take $C_R=2.8$; no estimate
+below depends on the numerical value. (b) For $T\ge2$, (a) gives
+$N_\chi(T)\le\tfrac{T}{2\pi}\log(qT)+\tfrac{C_R}2\log(qT)
+\le(\tfrac1{2\pi}+C_R)\,T\log(qT)$. For $1\le T<2$,
+$N_\chi(T)\le N_\chi(2)\le(1+C_R)\log(2q)\le2(1+C_R)\log q
+\le2(1+C_R)\,T\log(qT)$, using $\log(2q)\le2\log q$ for $q\ge2$. Take
+$C_R'=2+2C_R$.
+\end{proof}
+
+\begin{lemma}[uniform window]\label{lem:window-joint}
+There is an absolute constant $A_1\ge2$ with the following property.
+Under (H), for every $M>0$, set $A:=A_1\overline M$ and
+\[
+N_0\;:=\;N_\chi(2A)-N_\chi(A)
+\;=\;\#\{\gamma\in(A,2A]\}.
+\]
+Then
+\begin{equation}\label{eq:windowq}
+N_0\;\ge\;\frac{A_1}{8\pi}\,\overline M\mathcal L\;\ (\ge7),
+\qquad\text{and}\qquad
+a_\gamma(m)\;\ge\;\frac{2}{\sqrt5\,A_1}\,\min(M,1)
+\quad\text{for all }\gamma\in(A,2A].
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:rvm-joint}(a) at $T=A$ and $T=2A$ (both $\ge A_1\ge2$),
+\[
+2N_0=N_{\mathrm f}(2A)-N_{\mathrm f}(A)
+\ge\frac{A}{\pi}\Bigl(\log\frac{qA}{2\pi e}+2\log2\Bigr)
+-C_R\log(2qA)-C_R\log(qA)
+\ge\frac{A}{\pi}\log\frac{qA}{2\pi e}-3C_R\log(qA),
+\]
+using $\log(2qA)\le\tfrac32\log(qA)$ (valid since $qA\ge3A_1\ge4$).
+If $A_1\ge(2\pi e)^2/3$ then $qA\ge3A_1\ge(2\pi e)^2$, so
+$\log\tfrac{qA}{2\pi e}\ge\tfrac12\log(qA)$; if moreover
+$A\ge12\pi C_R$ --- guaranteed by $A_1\ge12\pi C_R$ --- then
+$\tfrac{A}{2\pi}-3C_R\ge\tfrac{A}{4\pi}$ and
+\[
+N_0\;\ge\;\frac{A}{8\pi}\log(qA)\;\ge\;\frac{A_1}{8\pi}\,
+\overline M\log(q\overline M),
+\]
+since $A=A_1\overline M\ge\overline M$ and $A_1\ge1$. Choosing
+\[
+A_1:=\max\Bigl(2,\ \tfrac{(2\pi e)^2}{3},\ 12\pi C_R,\
+\tfrac{56\pi}{\log3}\Bigr)
+\]
+also forces $N_0\ge\tfrac{A_1}{8\pi}\log3\ge7$. For the amplitudes:
+$\gamma\in(A,2A]$ and $M\le\overline M\le A$ give
+$M^2+\gamma^2\le A^2+4A^2=5A_1^2\overline M^{\,2}$, so
+$a_\gamma=2M/\sqrt{M^2+\gamma^2}
+\ge2M/(\sqrt5A_1\overline M)=\tfrac{2}{\sqrt5A_1}\min(M,1)$.
+\end{proof}
+
+\begin{lemma}[rate in (J1)]\label{lem:rho-rate}
+Let $\rho(z_0)=\sup_{z\ge z_0}|J_0(z)|$ as in (J1). There is an
+absolute constant $\kappa>0$ such that
+$\log\bigl(1/\rho(z_0)\bigr)\ge\kappa\,z_0^{2}$ for all
+$z_0\in(0,1]$.
+\end{lemma}
+
+\begin{proof}
+Split the supremum at $z=1$. On $[z_0,1]$, (J3) gives $J_0(z)\ge\tfrac34>0$
+and the alternating series bound of its proof gives
+$J_0(z)\le1-\tfrac{z^2}4+\tfrac{z^4}{64}\le1-\tfrac{z^2}8$ (the last
+step since $z^2\le8$), which is decreasing in $z$, so
+$\sup_{[z_0,1]}|J_0|\le1-\tfrac{z_0^2}8\le e^{-z_0^2/8}$. On
+$[1,\infty)$, $|J_0|\le\rho(1)<1$ by (J1). Hence
+$\log(1/\rho(z_0))\ge\min\bigl(\tfrac{z_0^2}8,\log(1/\rho(1))\bigr)
+\ge\kappa z_0^2$ with $\kappa:=\min\bigl(\tfrac18,\log(1/\rho(1))\bigr)$.
+\end{proof}
+
+\begin{lemma}[uniform superexponential tail]\label{lem:bigt-joint}
+Under (H), $\Phi_m(t)=\prod_{\gamma>0}J_0(2a_\gamma(m)t)$ is in
+$L^1(\mathbb R)$ for every $M>0$. Moreover, for every
+$\delta_0\in(0,1]$ there are constants $C_{11}(\delta_0)$ and
+$c_{10}>0$ ($c_{10}$ absolute) such that for all $(\chi,m)$ with (H)
+and $M\ge\delta_0$,
+\begin{equation}\label{eq:tailq}
+\int_{1/8}^\infty|\Phi_m(t)|\,\frac{|\sin t|}{t}\,dt
+\;\le\;C_{11}(\delta_0)\,
+\exp\bigl(-c_{10}\,\delta_0^{2}\,\sigma^{2}\bigr),
+\qquad
+C_{11}(\delta_0)\le\frac{C}{\delta_0}\ (C\text{ absolute}).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Let $F=\{\gamma\in(A,2A]\}$ be the window of
+Lemma~\ref{lem:window-joint}, $\#F=N_0\ge7$, and
+$\alpha:=\tfrac{2}{\sqrt5A_1}\min(M,1)>0$, so $a_\gamma\ge\alpha$ on
+$F$. By Lemma~\ref{lem:invert}(a),
+$|\Phi_m(t)|\le\prod_{\gamma\in F}|J_0(2a_\gamma t)|$.
+
+\emph{Moderate $t$.} For $t\ge\tfrac18$ every window argument satisfies
+$2a_\gamma t\ge\tfrac{\alpha}4=:z_0\in(0,1]$, so by (J1)
+$|\Phi_m(t)|\le\rho(z_0)^{N_0}$ for all $t\ge\tfrac18$.
+
+\emph{Large $t$.} By (J2) each window factor is at most
+$c_6t^{-1/2}$ with $c_6:=\tfrac8\pi(2\alpha)^{-1/2}$; setting
+$T_1:=\tfrac{128}{\pi^2\alpha}$ one checks $c_6T_1^{-1/2}=\tfrac12$,
+so for $t\ge T_1$ each factor is $\le\tfrac12$. Keeping seven factors
+and bounding the remaining $N_0-7$ by $2^{-(N_0-7)}$,
+\[
+\int_{T_1}^\infty|\Phi_m|\,\frac{|\sin t|}{t}\,dt
+\le2^{-(N_0-7)}c_6^{7}\int_{T_1}^\infty t^{-9/2}\,dt
+=2^{-(N_0-7)}c_6^{7}\cdot\tfrac27T_1^{-7/2}
+=\tfrac27\cdot2^{-N_0}\le2^{-N_0},
+\]
+using $c_6^{7}T_1^{-7/2}=2^{-7}$. On $[\tfrac18,T_1]$, using
+$|\sin t|/t\le1$,
+$\int_{1/8}^{T_1}|\Phi_m|\,\frac{|\sin t|}t\,dt\le T_1\rho(z_0)^{N_0}$.
+With $\tilde\rho:=\max(\rho(z_0),\tfrac12)<1$ the total is at most
+$(T_1+1)\tilde\rho^{\,N_0}$; this is finite for each fixed $(\chi,m)$
+with $M>0$, and the same bounds with $|\sin t|/t$ replaced by $1$ on
+$[\tfrac18,T_1]$ (and $|\Phi_m|\le1$ on $[0,\tfrac18]$) give
+$\Phi_m\in L^1$.
+
+\emph{Calibration.} Now let $M\ge\delta_0$, so
+$\alpha\ge\alpha_0:=\tfrac{2}{\sqrt5A_1}\delta_0$ and
+$z_0\ge\tfrac{\alpha_0}4$, whence $T_1\le C/\delta_0$ and, by
+Lemma~\ref{lem:rho-rate},
+$\log(1/\tilde\rho)\ge\min\bigl(\kappa\tfrac{\alpha_0^2}{16},\log2\bigr)
+\ge\kappa_1\delta_0^{2}$ with $\kappa_1$ absolute. By
+\eqref{eq:windowq} and the upper bound \eqref{eq:sigup} (proved below,
+independently of this lemma),
+$N_0\ge\tfrac{A_1}{8\pi}\overline M\mathcal L
+\ge\tfrac{A_1}{8\pi C_9}\,\sigma^{2}$, so
+\[
+\tilde\rho^{\,N_0}
+=\exp\bigl(-N_0\log(1/\tilde\rho)\bigr)
+\le\exp\Bigl(-\frac{A_1\kappa_1}{8\pi C_9}\,\delta_0^{2}\sigma^{2}\Bigr),
+\]
+which is \eqref{eq:tailq} with $c_{10}:=A_1\kappa_1/(8\pi C_9)$.
+\end{proof}
+
+\subsection*{Proof of Proposition~\ref{prop:sigcomp}}
+
+\begin{proof}
+\emph{Upper bounds \eqref{eq:sigup}.} Write
+$\sigma^2=\sum_{\gamma>0}8M^2/(M^2+\gamma^2)$
+(Proposition~\ref{prop:varid}, applied to $\chi$ as in
+\eqref{eq:varidq}) and split at $\overline M$. Each term is $\le8$, so
+by Lemma~\ref{lem:rvm-joint}(b) the ordinates $\gamma\le\overline M$
+contribute at most $8N_\chi(\overline M)\le8C_R'\overline M\mathcal L$.
+For $\gamma>\overline M$ use $8M^2/(M^2+\gamma^2)\le8\overline
+M^{\,2}/\gamma^2$ and partial summation: with
+$N^*(t):=N_\chi(t)-N_\chi(\overline M)\le N_\chi(t)\le
+C_R'\,t\log(qt)$,
+\[
+\sum_{\gamma>\overline M}\gamma^{-2}
+=2\int_{\overline M}^\infty N^*(t)\,t^{-3}\,dt
+\le2C_R'\int_{\overline M}^\infty t^{-2}\log(qt)\,dt
+=2C_R'\,\frac{\mathcal L+1}{\overline M}
+\le\frac{4C_R'\mathcal L}{\overline M}
+\]
+(the boundary term vanishes since $N^*(t)\ll t\log qt$, and
+$\mathcal L\ge\log3\ge1$), contributing at most
+$32C_R'\overline M\mathcal L$. For $S_4=\sum_\gamma256M^4/(M^2+\gamma^2)^2$
+the same split gives $256N_\chi(\overline M)$ from
+$\gamma\le\overline M$ and, from $\gamma>\overline M$, using
+$\int_{\overline M}^\infty t^{-4}\log(qt)\,dt
+=\tfrac{\mathcal L}{3\overline M^{3}}+\tfrac{1}{9\overline M^{3}}
+\le\tfrac{\mathcal L}{2\overline M^{3}}$,
+\[
+256\,\overline M^{\,4}\sum_{\gamma>\overline M}\gamma^{-4}
+=256\,\overline M^{\,4}\cdot4\int_{\overline M}^\infty
+N^*(t)\,t^{-5}\,dt
+\le512\,C_R'\,\overline M\mathcal L .
+\]
+Take $C_9:=768\,C_R'+40C_R'$, say.
+
+\emph{Lower bound \eqref{eq:siglow}.} Keep only the window of
+Lemma~\ref{lem:window-joint}: each $\gamma\in(A,2A]$ has
+$M^2+\gamma^2\le5A_1^2\overline M^{\,2}$, so
+\[
+\sigma^2\;\ge\;N_0\cdot\frac{8M^2}{5A_1^2\overline M^{\,2}}
+\;=\;\frac{8\min(M,1)^2}{5A_1^2}\,N_0
+\;\ge\;\frac{8\delta_0^{2}}{5A_1^2}\cdot
+\frac{A_1}{8\pi}\,\overline M\mathcal L
+\;=\;\frac{\delta_0^{2}}{5\pi A_1}\,\overline M\mathcal L ,
+\]
+using $\min(M,1)\ge\delta_0$ for $M\ge\delta_0$, $\delta_0\le1$. Take
+$c_9:=1/(5\pi A_1)$. The two displays give
+\eqref{eq:lindeberg} at once.
+\end{proof}
+
+\subsection*{Proof of Theorem~\ref{thm:joint}}
+
+\begin{proof}
+Fix $\delta_0\in(0,1]$ and $(\chi,m)$ with (H), $M\ge\delta_0$. All
+constants denoted $C$ below are absolute unless the dependence
+$(\delta_0)$ is written; we freely use
+$\sup_{x>0}x^{\beta}e^{-cx}=(\beta/(ec))^{\beta}$ for $\beta,c>0$.
+
+By Lemma~\ref{lem:bigt-joint}, $\Phi_m\in L^1$, so
+Lemma~\ref{lem:invert}(b) applies:
+\begin{equation}\label{eq:GPq}
+\delta_\chi(m)-\tfrac12
+=\frac1\pi\int_0^{1/8}\Phi_m(t)\,\frac{\sin t}t\,dt
++\Theta_{\mathrm{tail}},
+\qquad
+|\Theta_{\mathrm{tail}}|\le
+C_{11}(\delta_0)\,e^{-c_{10}\delta_0^2\sigma^2}.
+\end{equation}
+
+\emph{Small $t$: the uniform Gaussian factorization.} For
+$0\le t\le\tfrac18$ every argument satisfies $2a_\gamma t\le4t\le
+\tfrac12$, so by (J3), exactly as in \eqref{eq:smallt},
+\[
+\Phi_m(t)=\exp\Bigl(-\frac{\sigma^2t^2}2+E(t)\Bigr),
+\qquad
+|E(t)|\le\frac{t^4}{17}S_4
+\le\frac{t^2}{17}\cdot\frac{1}{64}\cdot32\sigma^2
+=\frac{\sigma^2t^2}{34},
+\]
+where the middle bound used $t^2\le\tfrac1{64}$ and the
+\emph{absolute} inequality $S_4\le32\sigma^2$ of
+Lemma~\ref{lem:S4mom}. Hence
+$|\Phi_m(t)|\le e^{-(8/17)\sigma^2t^2}$ on $[0,\tfrac18]$: every
+constant so far is free of $(q,m)$.
+
+\emph{Decomposition.} As in \eqref{eq:decomp},
+\[
+\frac1\pi\int_0^{1/8}\Phi_m\frac{\sin t}t\,dt=G-T_1-T_2+T_3,
+\]
+with $T_1=\frac1\pi\int_{1/8}^\infty e^{-\sigma^2t^2/2}dt$,
+$T_2=\frac1\pi\int_0^{1/8}e^{-\sigma^2t^2/2}(1-\tfrac{\sin t}t)dt$,
+$T_3=\frac1\pi\int_0^{1/8}e^{-\sigma^2t^2/2}(e^{E}-1)\tfrac{\sin t}t\,dt$,
+and, verbatim as in the proof of Theorem~\ref{thm:dissolution} (whose
+estimates for these three terms use no property of $(q,m)$ beyond
+$S_4\le32\sigma^2$):
+\begin{equation}\label{eq:threeterms}
+0\le T_1\le\frac{8}{\pi\sigma^2}e^{-\sigma^2/128},
+\qquad
+0\le T_2\le\frac{G}{6\sigma^2},
+\qquad
+|T_3|\le\frac{G\,S_4}{4\sigma^4}\le\frac{8G}{\sigma^2}.
+\end{equation}
+
+\emph{Part (i).} Divide by $G=(2\pi\sigma^2)^{-1/2}$. From
+\eqref{eq:threeterms},
+$T_2/G\le\tfrac1{6\sigma^2}$ and $|T_3|/G\le\tfrac8{\sigma^2}$;
+\[
+\frac{T_1}{G}\le\sqrt{2\pi}\,\frac{8}{\pi\sigma}e^{-\sigma^2/128}
+\le\frac{C}{\sigma^{2}}
+\quad\text{(as }\sigma e^{-\sigma^2/128}\le C\text{)},
+\qquad
+\frac{|\Theta_{\mathrm{tail}}|}{G}
+\le\sqrt{2\pi}\,\sigma\,C_{11}(\delta_0)e^{-c_{10}\delta_0^2\sigma^2}
+\le\frac{C(\delta_0)}{\sigma^{2}},
+\]
+the last step since
+$\sigma^{3}e^{-c_{10}\delta_0^2\sigma^2}\le C(c_{10}\delta_0^2)^{-3/2}$.
+Summing proves (i), for \emph{every} $\sigma^2>0$.
+
+\emph{Part (ii).} Refine $T_2$ and $T_3$ by one order, as in the proof
+of Theorem~\ref{thm:dissolution}(ii); we record why each constant is
+absolute. For $T_2$: $|1-\tfrac{\sin t}t-\tfrac{t^2}6|\le
+\tfrac{t^4}{120}$ on $[0,\tfrac18]$, and each extension of a moment
+integral from $[0,\tfrac18]$ to $[0,\infty)$ costs at most
+$Ce^{-\sigma^2/300}\cdot\sigma^{-k}$-type terms, all $\le CG\sigma^{-4}$
+by the supremum bound; hence
+$T_2=\tfrac{G}{6\sigma^2}+O(G\sigma^{-4})$. For $T_3$: by (J4),
+$E(t)=-\tfrac{t^4}{64}S_4+E_2(t)$ with
+$|E_2|\le\tfrac{t^6}{80}S_6\le\tfrac{t^6}{5}S_4$
+(Lemma~\ref{lem:S4mom}), and $e^E-1=E+\omega$ with
+$|\omega|\le\tfrac{E^2}2e^{|E|}\le\tfrac{t^8S_4^2}{578}
+e^{\sigma^2t^2/34}$; the moment integrals give
+\[
+T_3=-\frac{3S_4}{64}\,G\,\sigma^{-4}
++O\bigl(G\,S_4\,\sigma^{-6}\bigr)
++O\bigl(G\,S_4^{2}\,\sigma^{-8}\bigr)
+=-\frac{3S_4}{64}\,G\,\sigma^{-4}+O\bigl(G\,\sigma^{-4}\bigr),
+\]
+the final step by $S_4\le32\sigma^2$ (so $S_4\sigma^{-6}\le32\sigma^{-4}$
+and $S_4^2\sigma^{-8}\le1024\sigma^{-4}$) --- this is where the joint
+statement diverges from the fixed-$q$ proof, which at this point
+invoked $\sigma^2\asymp_qM\log M$. The exponentially small terms
+$T_1$ and $\Theta_{\mathrm{tail}}$ are $\le C(\delta_0)G\sigma^{-4}$
+by the supremum bound with $\beta=\tfrac52$. Collecting proves (ii).
+
+\emph{The constant.} Tracing the $\delta_0$-dependence:
+$C_{11}(\delta_0)\le C\delta_0^{-1}$ and
+$(c_{10}\delta_0^{2})^{-5/2}\le C\delta_0^{-5}$, all other constants
+absolute; hence $C(\delta_0)\le C\delta_0^{-6}$.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{cor:joint-asymp}]
+Combine Theorem~\ref{thm:joint}(i) with the lower bound
+\eqref{eq:siglow}: the relative error is at most
+$C(\delta_0)/\sigma^2\le C(\delta_0)/(c_9\delta_0^2\,\overline
+M\mathcal L)$. For (a), $\mathcal L\asymp_q\log M$ as $M\to\infty$; the
+absence of a threshold is because Theorem~\ref{thm:joint} holds for
+all $M\ge\delta_0$. For (b), $\overline M\mathcal L\ge\log q$. For
+(c): $\overline M\mathcal L\to\infty$ iff $q\overline M\to\infty$,
+since $\overline M\mathcal L\ge\log(q\overline M)$, while if
+$q\overline M$ stays bounded then so does $\overline M\mathcal L$.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{cor:joint-second}]
+Let $M\ge16$ and $qM\ge2\pi e^2$, so $L=\log\tfrac{qM}{2\pi}\ge2$; take
+$\delta_0=1$ in Theorem~\ref{thm:joint}(ii), so all constants below
+are absolute. The proofs of Proposition~\ref{prop:varasymp} and of
+\eqref{eq:S4asymp} in Lemma~\ref{lem:S4mom} carry absolute constants
+in the stated ranges: Stirling's series for $\psi$, $\psi'$ at
+$x=\tfrac M2+\tfrac{2a+1}4\ge\tfrac{33}4$ has absolute remainders, and
+the Dirichlet-series terms obey
+$4M|\tfrac{L'}L(m+1,\chi)|\le2.28\,M\,2^{-(M-3/2)}\le CM^{-1}$ and
+$64M^2|(\tfrac{L'}L)'(m+1,\chi)|\le CM^{2}2^{-M}\le CM^{-1}$ for
+$M\ge16$, uniformly in $q$. Hence, with absolute $O$'s,
+\[
+\sigma^2=2ML+(2a-1)+O(1/M)=2ML\bigl(1+O((ML)^{-1})\bigr),
+\qquad
+S_4=32M(L-1)+32(2a-1)+O(1/M).
+\]
+Substituting into Theorem~\ref{thm:joint}(ii):
+$\tfrac1{6\sigma^2}=\tfrac1{12ML}+O((ML)^{-2})$;
+\[
+\frac{3S_4}{64\sigma^4}
+=\frac{96M(L-1)+O(1)}{64\cdot4M^2L^2\,(1+O((ML)^{-1}))}
+=\frac{3}{8ML}-\frac{3}{8ML^2}+O\Bigl(\frac1{M^2L^2}\Bigr);
+\]
+and the error $CG\sigma^{-4}\le CG(ML)^{-2}$. Since
+$\tfrac1{12}+\tfrac38=\tfrac{11}{24}$ and both $(ML)^{-2}$ and
+$(ML^2)^{-1}\cdot M^{-1}$-type terms are $O((ML^2)^{-1})$ (as
+$M\ge16$, $L\ge2$), the corollary follows.
+\end{proof}
+
+\subsection*{The two classical aspects as boundary cases}
+
+\begin{remark}[boundary cases; relation to Fiorilli--Martin]
+\label{rem:joint-fm}
+(1) \emph{Weight aspect} ($q$ fixed). Corollary~\ref{cor:joint-asymp}(a)
+and Theorem~\ref{thm:joint}(ii) reproduce
+Theorem~\ref{thm:dissolution}(i)--(ii) with the same error scales
+($1/\sigma^2\asymp_q1/(M\log M)$ and
+$1/\sigma^4\asymp_q(M\log M)^{-2}$), so the fixed-$q$ theorem is
+literally the $q$-constant slice of Theorem~\ref{thm:joint}; in
+addition the joint form dispenses with the threshold $M_0(q)$ and
+makes the second-order constant $-\tfrac{11}{24}$ aspect-independent
+(Corollary~\ref{cor:joint-second}).
+
+(2) \emph{Modulus aspect} ($m$ fixed). Fiorilli and Martin \cite{FM13}
+prove, under GRH and LI, an asymptotic series for the classical race
+density $\delta(q;a,b)$ as $q\to\infty$, in descending powers of the
+variance of the associated limiting distribution, whose leading
+correction to $\tfrac12$ is of order (variance)$^{-1/2}$.
+Corollary~\ref{cor:joint-asymp}(b) is the exact structural analogue
+for the single-character variable $X_{m,\chi}$: leading term
+$(2\pi\sigma^2)^{-1/2}\asymp_m(\log q)^{-1/2}$, relative error
+$O_m(1/\log q)$, and a proved second-order term
+(Theorem~\ref{thm:joint}(ii)). We stress, honestly, that this is an
+\emph{analogue, not a specialization}: the Fiorilli--Martin density
+aggregates the zeros of \emph{all} non-principal characters mod $q$
+and its bias term is driven by the count of square roots of the
+residues raced, whereas $X_{m,\chi}$ carries the single real character
+$\chi$, with the constant $1$ (the squares' contribution in the
+$m$-weighted race of Theorem~\ref{thm:interp}) playing the role of the
+mean. Neither statement implies the other; Theorem~\ref{thm:joint} is
+the common roof for the one-character object only. In the modulus
+aspect the hypothesis (H) rides on $L(\tfrac12,\chi)\ne0$ for every
+$\chi$ in the family --- conjecturally always true (Chowla), known for
+a positive proportion of quadratic characters \cite{Sou00}, and
+unconditional at $q=3,4$.
+
+(3) \emph{Race interpretation.} As in
+Remark~\ref{rem:dissolution-scope}(1), for $q=4$ (and, with the
+verbatim extension recorded there, $q=3$) the conclusion transfers,
+under LI$(\chi)$, to the logarithmic density of the weighted race
+itself via Theorem~\ref{thm:interp}(ii); for all other moduli
+Theorem~\ref{thm:joint} is, in this paper, a statement about the
+limiting random variable $X_{m,\chi}$ only.
+\end{remark}
+
+\begin{remark}[the excluded corner $M\to0$, $q\to\infty$, and other
+honest limits]\label{rem:joint-corner}
+Theorem~\ref{thm:joint} is uniform on $\{M\ge\delta_0\}$ for each
+fixed $\delta_0>0$, with $C(\delta_0)\le C\delta_0^{-6}$, but it does
+\emph{not} cover the corner $M\to0$ simultaneously with $q\to\infty$,
+and we make no claim there. The corner is genuinely different, not an
+artifact of the method's bookkeeping alone. For fixed $\chi$, as
+$M\to0$ one has $\sigma^2\le8M^2\sum_\gamma\gamma^{-2}\to0$ and
+$X_{m,\chi}\to1$, so $\delta_\chi(m)\to1$: the bias \emph{saturates}
+rather than dissolves, and the Gaussian prediction
+$\tfrac12+(2\pi\sigma^2)^{-1/2}$ is not even bounded by $1$. In the
+corner the two behaviours compete: $\sigma^2$ can remain of moderate
+size with $M$ small, because a large modulus can place many ordinates
+below $1$ ($N_\chi(1)$ can be as large as $\asymp\log q$, and
+$\gamma_1\gg1/\log q$ is possible), making
+$\sigma^2\asymp M^2\sum_{\gamma\le1}\gamma^{-2}$ as large as
+$\asymp M^2(\log q)^2$; whether
+$\delta_\chi(m)-\tfrac12\sim(2\pi\sigma^2)^{-1/2}$ persists as
+$M\asymp1/\log q$, $q\to\infty$, is open. Two concrete obstructions in
+our proof: the window amplitudes degenerate ($a_\gamma\asymp M$ on any
+window at height $\gg1$), so the per-factor decay of $|\Phi_m|$ at
+$t\asymp1$ weakens to $\exp(-cM^2)$ and the tail bound
+\eqref{eq:tailq} decays only like $\exp(-c\sigma^2/\log q)$, which for
+bounded $\sigma^2$ does not decay at all; and the low-lying zeros that
+then dominate $\sigma^2$ are exactly the ones about which the
+$q$-uniform count of Lemma~\ref{lem:rvm-joint} says least. A uniform
+treatment of the corner would need control of
+$\sum_{\gamma\le1/\log q}$-type sums (low-lying-zero statistics),
+which we have not carried out.
+\end{remark}
+
+\begin{remark}[numerical sanity check]\label{rem:joint-numerics}
+Table~\ref{tab:joint} tests the uniform error scales of
+Theorem~\ref{thm:joint} at the three points of
+Table~\ref{tab:dissolution} that vary both coordinates; every input
+($\sigma_m^2$ and $S_4$ from their closed forms \eqref{eq:varidq},
+\eqref{eq:S4id}; deterministic Gil--Pelaez reference densities) is
+reused unchanged from that table, and only the ratio columns are new
+arithmetic. The observed relative deviation from $G$ times $\sigma^2$
+sits at $0.64$--$0.74$, and the residual after the second-order term
+times $\sigma^4$ sits below $1$, at three points with
+$(q,\overline M\mathcal L)$ ranging over $(4,90)$, $(3,315)$,
+$(4,603)$: both error scales of the theorem are confirmed with
+constants of order one --- far below the unoptimized proved constants
+--- and the comparability $\sigma^2/\overline M\mathcal L\in[1.17,1.39]$
+illustrates \eqref{eq:lindeberg}. (At $(4,100)$ the printed residual
+$7.0\times10^{-7}$ is below the $9.9\times10^{-6}$ modelling floor of
+the reference density discussed in
+Remark~\ref{rem:dissolution-numerics}, so its ratio $0.49$ is a bound
+consistent with zero rather than a measurement.)
+
+\begin{table}[h]\centering
+\begin{tabular}{lcccccc}
+\toprule
+$(q,m)$ & $\sigma_m^2$ & $\dfrac{\sigma_m^2}{\overline M\mathcal L}$ &
+rel.\ dev.\ from $G$ & $\sigma^2\cdot|$rel.\ dev.$|$ &
+residual after 2nd order & $\sigma^4\cdot|$residual$|$ \\
+\midrule
+$(4,20)$  & $106.3260$ & $1.18$ & $-6.05\times10^{-3}$ & $0.64$ & $-7.9\times10^{-5}$ & $0.89$ \\
+$(3,60)$  & $407.9701$ & $1.30$ & $-1.71\times10^{-3}$ & $0.70$ & $-4.9\times10^{-6}$ & $0.82$ \\
+$(4,100)$ & $836.8744$ & $1.39$ & $-8.80\times10^{-4}$ & $0.74$ & $+7.0\times10^{-7}$ & $0.49$ \\
+\bottomrule
+\end{tabular}
+\caption{Theorem~\ref{thm:joint} against the deterministic reference
+densities of Table~\ref{tab:dissolution} (columns 4 and 6 are that
+table's columns 5 and 7; $\delta_\chi(m)$ references
+$0.5384553$, $0.5197175$, $0.5137784$). Column 5 confirms the
+$C/\sigma^2$ scale of (i), column 7 the $C/\sigma^4$ scale of (ii),
+with $O(1)$ constants across a range of $(q,m)$.}
+\label{tab:joint}
+\end{table}
+\end{remark}
+
+\begin{remark}[scope, and what is not proved]\label{rem:joint-scope}
+(1) The corner $M\to0$ with $q\to\infty$ is excluded and open
+(Remark~\ref{rem:joint-corner}); on $\{M\ge\delta_0\}$ the constant
+degrades like $\delta_0^{-6}$, which we have not optimized. (2) The
+$q$-uniformity rests on the absolute constant in the Riemann--von
+Mangoldt formula: we cite \cite[Theorem~14.5]{MV07}, and,
+independently of any textbook formulation, the explicit bound of
+\cite[Corollary~1.2]{BMOR21} pins the constant ($C_R=2.8$ suffices in
+Lemma~\ref{lem:rvm-joint}); the fixed-$q$ formulation of
+\cite[\S16]{Dav00} would not suffice as cited. (3) Hypothesis (H)
+includes $L(\tfrac12,\chi)\ne0$ for every
+character in whatever family is considered; in $q$-aspect corollaries
+this is an unproved input beyond GRH (cf.\ \cite{Sou00}). (4) For
+moduli other than $3,4$ the conclusion concerns the limiting variable
+$X_{m,\chi}$, not a prime race, no LI-transfer having been stated
+(Remark~\ref{rem:joint-fm}(3)). (5) Constants are effective in
+principle but wasteful; no numerical value of $C(\delta_0)$ is
+claimed, and Table~\ref{tab:joint} is a consistency check, not a
+certified enclosure. (6) Theorem~\ref{thm:joint} makes no claim of an
+asymptotic \emph{series} beyond the second order proved in (ii); the
+Fiorilli--Martin series in the modulus aspect suggests one exists
+jointly, which we leave open.
+\end{remark}
