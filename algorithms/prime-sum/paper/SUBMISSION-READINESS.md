@@ -36,7 +36,7 @@ Every item in this table must be closed before submission.
 | Density-method consistency | **Closed internally:** both implementation defects were repaired; all 14 cases reran successfully; a second internal AI-agent audit accepted the repairs; TeX and result file are synchronized | Preserve exact source/output hashes and obtain external replication before publication |
 | Clean release build | **Closed internally:** final automatic build, log scan, 66-page visual inspection, synchronized PDF copies, and SHA-256 manifest completed | Rebuild from a clean checkout in release CI before public submission |
 | Reproducible environment | Python verification packages and Lean/mathlib are pinned; Lean CI exists. Tectonic bundle, C compiler, and full Python certificate CI are not yet independently exercised | Add clean CI for the Arb and finite-sieve checks; archive compiler/tool hashes and logs |
-| Formal-verification claim | **Narrow layer complete:** 34 declarations compile; clean pinned build and axiom audit pass; no full TeX theorem is covered | Keep every claim at declaration/fragment granularity; never call the paper fully Lean-verified |
+| Formal-verification claim | **Narrow layers complete:** 61 supporting declarations compile; clean pinned builds and axiom audits pass; no full TeX theorem is covered | Keep every claim at declaration/fragment granularity; never call the paper fully Lean-verified |
 | External numerical replication | Same repository and zero data drive the main computations | A second implementation by another person, preferably in a different language/library, independently reconstructs at least zero counts, selected density intervals, and monotonicity margins |
 | Literature/priority audit | Recent close work is now cited, but priority language remains inherently fragile | A specialist confirms the search and the final novelty wording; use "we have not located" rather than categorical "first" claims |
 | Archival package | **Partially closed:** synchronized local manifest and certificate transcripts exist; legacy instructions are marked superseded | Choose a license, add clean finite-sieve/CI logs, create a release tag, and synchronize the public archive |
@@ -61,10 +61,11 @@ Every item in this table must be closed before submission.
    use `__int128`, but measures and fractional weights use floating point, and
    neither the sieve nor overflow safety is formally verified.
 
-5. **The Lean supplement is useful but easy to oversell.** Its 34 small
-   algebraic declarations compile and pass an axiom audit, but zero complete
-   TeX theorems are covered. They do not verify the explicit formula, limiting
-   laws, Bessel/Fourier analysis, or numerical certificates.
+5. **The Lean supplement is useful but easy to oversell.** Its 61 supporting
+declarations (34 algebraic and 27 exact post-processing) compile and pass axiom
+audits, but zero complete TeX theorems are covered. They do not verify the
+explicit formula, limiting laws, Bessel/Fourier analysis, or the analytic
+source intervals behind the numerical certificates.
 
 6. **The old publishing playbook is stale.** It is now marked prominently as
    legacy/superseded and must not be treated as authorization to upload, email,

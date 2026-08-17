@@ -1,1 +1,3 @@
 import Formal.WeightedRaces
+import Formal.DensityPostprocessing
+import Formal.CanonicalHyperellipticCore

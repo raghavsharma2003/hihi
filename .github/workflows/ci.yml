@@ -71,4 +71,25 @@ jobs:
 
       - name: Record theorem axiom dependencies
         working-directory: algorithms/prime-sum/formal
-        run: lake env lean Formal/Audit.lean
+        run: |
+          lake env lean Formal/Audit.lean
+          lake env lean Formal/DensityPostprocessingAudit.lean
+          lake env lean Formal/CanonicalHyperellipticCoreAudit.lean
+
+  density-postprocessing:
+    name: Exact density post-processing and fail-closed tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify exact rational certificate
+        working-directory: algorithms/prime-sum/prototype/independent_verifier
+        run: |
+          python check_density_postprocess.py | diff -u expected_output.txt -
+          python -m unittest -v test_fail_closed.py

@@ -20,13 +20,25 @@ mathlib `v4.33.0`, and `lake build` completes successfully.  The module
 `Formal.WeightedRaces` exports 34 compiled supporting theorems covering finite
 amplitude/variance algebra, exact uniform-cosine moments, finite cumulant and
 moment bounds, critical rescaling and one-zero threshold algebra, and the
-rational coefficients in the third-order Edgeworth correction.  The full
-axiom report is reproducible with `lake env lean Formal/Audit.lean`.
+rational coefficients in the third-order Edgeworth correction.
+`Formal.DensityPostprocessing` exports 27 further theorems for exact density
+rounding, square-root enclosures, interval monotonicity, and the displayed
+leading/second-order residual enclosures.  The full axiom reports are
+reproducible with `lake env lean Formal/Audit.lean` and
+`lake env lean Formal/DensityPostprocessingAudit.lean`.
+
+The separate focused hyperelliptic project adds
+`Formal.CanonicalHyperellipticCore`, with 10 compiled theorems for the exact
+geometric-block and denominator algebra, parity-center limits, and the
+critical-amplitude hard-edge limit.  Its axiom report is reproducible with
+`lake env lean Formal/CanonicalHyperellipticCoreAudit.lean`.  These are support
+lemmas for a proposed companion theorem, not coverage of the broad manuscript.
 
 This does **not** make any complete TeX theorem Lean-verified: the analytic,
 probabilistic-limit, arithmetic, Bessel, and certificate bridges listed below
-remain open.  The current honest count is therefore 34 compiled support
-theorems and 0 fully covered manuscript theorem items.
+remain open.  The current honest count is therefore 71 compiled support
+theorems across the repository (61 for the broad manuscript and 10 for the
+focused project) and 0 fully covered manuscript theorem items.
 
 The manuscript contains mathematics that can ultimately be formalized, but
 "100% Lean verified" is not an immediate polishing step. Mathlib already has
@@ -219,7 +231,8 @@ Difficulty scale:
 - **XL**: research-scale formalization or several large upstream results.
 
 Every full TeX item in the tables below currently has status **UNFORMALIZED**;
-the 34 compiled declarations discharge only supporting algebraic obligations.
+the 61 compiled declarations discharge only supporting algebraic and exact
+post-processing obligations.
 
 ### Interpolation and the arithmetic-to-probability bridge
 
@@ -457,14 +470,15 @@ This table must be updated only from successful clean builds.
 | Layer | Exported compiled theorems | TeX items fully covered | Status |
 |---|---:|---:|---|
 | Algebraic support layer | 34 | 0 | compiled and axiom-audited |
+| Density post-processing | 27 | 0 | compiled and axiom-audited; analytic input intervals assumed |
 | Probability core | 0 | 0 | not started |
 | Bessel/Fourier | 0 | 0 | not started |
 | Critical transfer | 0 | 0 | not started |
 | Dirichlet-L bridge | 0 | 0 | not started |
 | Dissolution/joint theorem | 0 | 0 | not started |
 | Monotonicity analytic proof | 0 | 0 | not started |
-| Numerical certificate checker | 0 | 0 | not started |
-| **Total** | **34 support theorems** | **0** | **bootstrap complete; no full TeX theorem yet** |
+| Numerical analytic-certificate bridge | 0 | 0 | not started |
+| **Total** | **61 support theorems** | **0** | **support layers expanded; no full TeX theorem yet** |
 
 No future file, theorem name, or work estimate in this ledger is a proof. Only a
 successful pinned Lean build and matching `#print axioms` audit may change the

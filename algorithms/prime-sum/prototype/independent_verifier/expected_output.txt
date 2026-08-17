@@ -1,0 +1,5 @@
+certificate sha256: 68d0d759a06bc7a9e291e3fc58450a18b9bc8bdd84c9d46b6d8497697634f3e2
+rounding: PASS (12 fixed, 2 daggered, 14 widths < 2e-7)
+residual propagation: PASS (4 rows; leading/second/third)
+scaled second-order residuals: PASS (3 rows)
+trust boundary: input analytic intervals assumed; all post-processing exact

@@ -194,17 +194,20 @@ decimals; dashes mark uncomputed points. The interval widths are below
 $2\times10^{-7}$, so every sixth decimal is fixed except
 the two marked $^{\dagger}$, whose intervals straddle the rounding
 boundary: at $(3,1)$ the value is $0.836880$ or $0.836881$, at
-$(3,60)$ it is $0.519717$ or $0.519718$. The underlying computation is
-deterministic Gil--Pelaez Fourier inversion of the limiting
-distribution ($511$ resp.\ $537$ zeros computed to $25$ digits, unseen
-zeros Gaussianized with the exact tail variance of
-Remark~\ref{rem:tails}), cross-checked by independent Monte Carlo with
+$(3,60)$ it is $0.519717$ or $0.519718$.  The underlying computation is
+rigorous Arb interval evaluation of the Gil--Pelaez inversion: the finite
+Bessel product is evaluated on the $511$ resp.\ $537$ certified zero
+balls, the unseen product is enclosed from its exact tail variance and a
+quartic Rayleigh-product bound, and both finite quadrature and the infinite
+tail carry outward-rounded error bounds (Section~\ref{sec:methods}).  It is
+cross-checked by independent Monte Carlo with
 $2$--$4\times10^6$ samples per entry (binomial standard error
 $\le3.6\times10^{-4}$; largest deviation $2.2$ standard errors over
 the $14$ entries, consistent with binomial sampling), and at
 $(q,m)=(4,1)$ by a single $2\times10^7$-sample run,
 $0.797599\pm0.000090$, consistent with the table entry ($0.3$ standard
-errors). The $m=0$ column reproduces the classical values $0.995928$
+errors).  The Monte Carlo runs are cross-checks only.  The $m=0$ column reproduces
+the classical values $0.995928$
 and $0.999063$ (cf.\ \cite{RS94,FM13}) to all six decimals.}
 \label{tab:delta}
 \end{table}
@@ -1872,11 +1875,12 @@ Proposition~\ref{prop:varasymp} certifies only its variance input.
 
 \begin{remark}[exact tail variances for the numerical densities]
 \label{rem:tails}
-The Gil--Pelaez and Monte Carlo computations of
-Sections~1 and~\ref{sec:methods} replace the unseen zeros
-$\gamma>\Gamma:=\gamma_{511}=639.9157\ldots$ by a Gaussian whose
-variance was previously \emph{estimated} from the zero-counting
-density. By Proposition~\ref{prop:varid} that variance is now exact:
+Earlier Gil--Pelaez and Monte Carlo computations replaced the unseen zeros
+$\gamma>\Gamma:=\gamma_{511}=639.9157\ldots$ by a Gaussian whose variance
+was estimated from the zero-counting density.  The certified computation in
+Section~\ref{sec:methods} no longer makes that substitution: it encloses the
+unseen Bessel product directly.  Proposition~\ref{prop:varid} supplies the
+exact tail variance used in that enclosure:
 \[
 \sigma^2_{\mathrm{tail}}(\Gamma)
 \;=\;\sum_{\gamma>\Gamma}2a_\gamma(m)^2
@@ -1929,7 +1933,7 @@ column converges to $0$ like $\tfrac1{12M}$ once the constant $c_0=1$
 of Proposition~\ref{prop:varasymp} is subtracted; at small $m$ it is
 dominated by the (exponentially small in $m$, but not yet small)
 $L'/L$ term and higher Stirling corrections. The last columns show the
-exact variance of the Gaussianized tail beyond the $511$th ordinate
+exact variance of the unseen-zero tail beyond the $511$th ordinate
 and its share of $\sigma_m^2$.}
 \label{tab:varexact}
 \end{table}

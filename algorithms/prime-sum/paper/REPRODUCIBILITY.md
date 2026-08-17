@@ -210,6 +210,27 @@ does not itself prove absence of overflow. Calling the whole scan "exact" is
 therefore acceptable only with the qualifier "exact integer accumulation for
 the integer-weight difference," not as a blanket formal-verification claim.
 
+### 7. Independently verify density post-processing
+
+The following checker shares no numerical library or code path with the Arb
+density generator.  It parses every decimal as an exact rational, requires the
+exact manuscript row/claim schema, and verifies widths, six-decimal rounding,
+both dagger boundaries, and the displayed residual transformations.  Its
+mutation tests check that missing, substituted, narrowed, duplicated, and
+unknown claims fail closed.
+
+~~~powershell
+Push-Location algorithms\prime-sum\prototype\independent_verifier
+python check_density_postprocess.py
+python -m unittest -v test_fail_closed.py
+Pop-Location
+~~~
+
+The output must match `expected_output.txt`.  This layer assumes the analytic
+density, variance, `S4`, and `S6` input intervals.  It independently verifies
+their downstream arithmetic; it does not prove the Arb quadrature, zero
+completeness, GRH, or LI.
+
 ## Theorem and assumption matrix
 
 The matrix records the logical status of the headline results, not a referee's
@@ -234,10 +255,11 @@ microscopic point-process convergence and reciprocal-square tightness.
 ## Lean 4: exact present scope
 
 The standalone project is under `algorithms/prime-sum/formal`. It contains
-34 compiled theorem declarations for finite algebraic identities, cosine
-moments, finite moment inequalities, finite derivative identities,
-critical-rescaling algebra, one-zero profile algebra, and the rational
-Edgeworth coefficients. A full pinned build on Lean 4.33.0/mathlib v4.33.0
+61 compiled supporting theorem declarations: 34 for finite algebraic
+identities, cosine moments, finite moment inequalities, derivative identities,
+critical rescaling, one-zero profiles, and Edgeworth coefficients; and 27 for
+exact density-table rounding, square-root enclosures, and interval propagation.
+A full pinned build on Lean 4.33.0/mathlib v4.33.0
 (mathlib commit `db584cd6d46c92f209a44c0f1c829460d327499d`) completed
 2,718 jobs successfully. The audit
 file checks all exported declarations; a source scan found no `sorry`,
@@ -260,6 +282,7 @@ Push-Location algorithms\prime-sum\formal
 & $LAKE exe cache get
 & $LAKE build
 & $LAKE env lean Formal/Audit.lean
+& $LAKE env lean Formal/DensityPostprocessingAudit.lean
 Pop-Location
 ```
 
@@ -268,7 +291,7 @@ The exact toolchain is in `lean-toolchain`; the mathlib revision is in
 can change the dependency graph.
 
 `formal/LEAN-COVERAGE.md` is the governing gap analysis. The count of compiled
-supporting declarations is 34, while the count of **fully covered TeX theorems
+supporting declarations is 61, while the count of **fully covered TeX theorems
 remains zero**. Consequently these phrases are false:
 
 - "the paper is 100% Lean verified";
