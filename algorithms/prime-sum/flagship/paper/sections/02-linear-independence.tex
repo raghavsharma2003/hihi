@@ -12,22 +12,25 @@ For \(t\in U_g(\F_Q)\), write
  \in\mathbb Z[T]
 \]
 and form its reciprocal polynomial
-\[
+\begin{equation}
  R_{g,t}(X)=X^{2g}P_{g,t}(1/X)=\prod_{j=1}^{2g}(X-\alpha_j).
-\tag{3.1}\label{eq:reciprocal-frob-polynomial}
-\]
+\label{eq:reciprocal-frob-polynomial}
+\end{equation}
 Suppose \(Q=s^2\), with \(s\in\mathbb Z_{>0}\).  The normalized inverse roots
 \(\beta_j=\alpha_j/s\) are then the roots of
-\[
+\begin{equation}
  \widetilde R_{g,t}(X)
  :=s^{-2g}R_{g,t}(sX)=\prod_{j=1}^{2g}(X-\beta_j)
  \in\mathbb Q[X].
-\tag{3.2}\label{eq:normalized-rational-polynomial}
-\]
+\label{eq:normalized-rational-polynomial}
+\end{equation}
 Multiplication of every root by the nonzero rational number \(s^{-1}\)
 changes neither the splitting field nor the permutation action of its Galois
 group.  The roots of \eqref{eq:normalized-rational-polynomial} occur in
 reciprocal pairs \(e^{i\vartheta_j},e^{-i\vartheta_j}\).
+Write
+\(W_{2g}=(\mathbb Z/2\mathbb Z)^g\rtimes S_g\) for the signed-permutation
+Weyl group acting on these \(g\) reciprocal pairs.
 
 \begin{lemma}[Maximal Weyl group implies angle--\(\pi\) independence]
 \label{lem:maximal-galois-implies-LI}
@@ -49,10 +52,10 @@ Suppose that
 \(\sum_{j=1}^g a_j\vartheta_j+b\pi=0\) with rational coefficients.  Clearing
 denominators makes \(a_j,b\) integral.  Exponentiating twice removes the sign
 coming from \(b\pi\) and gives
-\[
+\begin{equation}
  \prod_{j=1}^g(e^{i\vartheta_j})^{2a_j}=1.
-\tag{3.3}\label{eq:angle-multiplicative-relation}
-\]
+\label{eq:angle-multiplicative-relation}
+\end{equation}
 In the ordered reciprocal pairs
 \((e^{i\vartheta_j},e^{-i\vartheta_j})\), the relation vector in
 \eqref{eq:angle-multiplicative-relation} has coordinates \((2a_j,0)\).
@@ -70,20 +73,20 @@ erratum factor would make the genus dependence false.
 \label{prop:LI-exceptional-set}
 There is an absolute constant \(A>0\) such that, whenever \(Q\) has odd
 characteristic greater than \(2g+1\),
-\[
+\begin{equation}
  \#\left\{t\in U_g(\F_Q):
    \operatorname{Gal}(R_{g,t}/\mathbb Q)\not\simeq W_{2g}\right\}
  \leq A g^2 Q^{1-\gamma_g}\log Q,
  \qquad
  \gamma_g=\frac1{4g^2+3g+5}.
-\tag{3.4}\label{eq:kowalski-exceptional}
-\]
+\label{eq:kowalski-exceptional}
+\end{equation}
 Consequently, for square \(Q\),
-\[
+\begin{equation}
  \Pr_{t\in U_g(\F_Q)}(t\text{ fails \eqref{eq:LI}})
  \ll g^2Q^{-\gamma_g}\log Q
-\tag{3.5}\label{eq:LI-probability-bound}
-\]
+\label{eq:LI-probability-bound}
+\end{equation}
 as soon as \(Q>4g\), with an absolute implied constant.
 \end{proposition}
 
@@ -106,21 +109,21 @@ Galois group \(W_{2g}\).  Divide by
 \begin{corollary}[Simultaneous density-one LI]
 \label{cor:simultaneous-LI}
 Let \(Q_g\) be odd square prime powers of characteristic \(p_g>2g+1\).  If
-\[
+\begin{equation}
  \frac{\log Q_g}{g^2\log(g+2)}\longrightarrow\infty,
-\tag{3.6}\label{eq:LI-growth-condition}
-\]
+\label{eq:LI-growth-condition}
+\end{equation}
 then a uniformly chosen \(t_g\in U_g(\F_{Q_g})\) satisfies \eqref{eq:LI}
 with probability \(1-o(1)\).
 \end{corollary}
 
 \begin{proof}
 Taking logarithms in \eqref{eq:LI-probability-bound} gives at most
-\[
+\begin{equation}
  O(\log g+\log\log Q_g)
  -\frac{\log Q_g}{4g^2+3g+5}.
-\tag{3.7}\label{eq:LI-log-bound}
-\]
+\label{eq:LI-log-bound}
+\end{equation}
 Put \(x_g=(\log Q_g)/g^2\).  Hypothesis
 \eqref{eq:LI-growth-condition} says \(x_g/\log(g+2)\to\infty\), while
 \(\log\log Q_g=\log(g^2x_g)=o(x_g)\).  The negative term in
@@ -134,11 +137,11 @@ Bertrand's postulate,
  2g+1<p_g<2(2g+1).
 \]
 The minimality of \(n_g\) gives
-\[
+\begin{equation}
  g^2\log^2(g+2)\leq\log Q_g
  <g^2\log^2(g+2)+2\log p_g.
-\tag{3.8}\label{eq:explicit-field-growth}
-\]
+\label{eq:explicit-field-growth}
+\end{equation}
 Thus \(Q_g\) is an odd square, its characteristic exceeds \(2g+1\), and
 \eqref{eq:LI-growth-condition} holds.  In particular, this completely
 specified sequence has the density-one linear independence needed to replace

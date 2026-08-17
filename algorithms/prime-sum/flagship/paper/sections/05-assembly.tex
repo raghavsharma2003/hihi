@@ -25,18 +25,9 @@ mapping theorem gives \eqref{eq:density-convergence}.  Since these masses lie in
 expectations converge as well.  The two nondegeneracy clauses follow from
 \Cref{prop:random-law-nondegenerate,prop:scalar-nondegenerate}.
 
-It remains to verify the concrete field sequence.  Bertrand's postulate gives
-\[
- 2g+1<p_g<2(2g+1).
-\]
-By minimality of \(n_g\),
-\[
- g^2\log^2(g+2)
- \le \log Q_g
- <g^2\log^2(g+2)+2\log p_g.
-\]
-Thus \eqref{eq:growth} holds, while \(Q_g\) is an odd square and its characteristic
-exceeds \(2g+1\).  This proves the final clause of \cref{thm:main}.
+This proves \cref{thm:main,cor:prime-race-densities}.  The explicit sequence in
+\cref{ex:explicit-fields} is admissible by the calculation already recorded in
+\eqref{eq:explicit-field-growth}.
 
 \paragraph{Scope.}
 The proof gives a conservative sufficient growth condition, not a practical or
@@ -44,11 +35,3 @@ optimal threshold.  More importantly, it does not establish the fixed-field
 microscopic limit, nor does it prove an analogous theorem for the full
 \(2g+1\)-parameter hyperelliptic ensemble.  The theorem is a quantitative
 large-field/large-genus bridge for the explicit pencil \eqref{eq:pencil}.
-
-\paragraph{Verification status.}
-The elementary geometric-series, parity-center, and critical-amplitude limits
-have a separate Lean~4 formalization with no project axioms or placeholders.
-That formalization does not include the imported \(\ell\)-adic monodromy,
-large-sieve, compact-group heat-kernel, or determinantal-process theorems.
-Those inputs and the new analytic bridges are proved or cited in ordinary
-mathematical form here and still require independent human expert review.

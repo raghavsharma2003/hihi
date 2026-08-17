@@ -50,15 +50,18 @@ to weak-operator convergence on \(L^2([0,\infty))\).  Local uniform convergence
 of the diagonals and the common bound in
 \eqref{eq:kernel-diagonal-envelope} also give convergence of every bounded
 local trace.  The limiting kernel is a locally trace-class orthogonal
-projection, so the determinantal process exists, and Soshnikov's operator
-criterion gives~\cite[Theorems~3 and~5]{Soshnikov2000}
+projection, so the determinantal process exists by Soshnikov's Theorem~3
+\cite{Soshnikov2000}.  His Theorem~5 gives convergence of all local
+count-cylinder laws.  The uniform first-moment estimate
+\(\E\Xi_g([0,L])\le2L\) gives tightness of the restrictions to every compact
+interval; a diagonal compact-exhaustion argument therefore upgrades the
+cylinder-law convergence to weak convergence for the vague topology:
 \begin{equation}
  \Xi_g\Longrightarrow\PiSp
  \quad\text{vaguely on }[0,\infty).
  \label{eq:closed-edge-process-convergence}
 \end{equation}
-One can also see tightness directly from
-\(\E\Xi_g([0,L])\le2L\).  In particular,
+In particular,
 \begin{equation}
  \sup_g\E\Xi_g([0,\eta])\le2\eta,
  \label{eq:no-escape-zero}
@@ -250,10 +253,10 @@ but close enough to it that
  \Pr\{\PiSp(I)\ge N\}>0.
  \label{eq:dpp-crowding}
 \end{equation}
-Indeed, the factorial-moment formula
-\cite[Definition~2 and (1.5)]{Soshnikov2000} is
+Indeed, writing \((n)_N=n(n-1)\cdots(n-N+1)\), the factorial-moment formula
+\cite[Definitions~2 and~3, equations (1.5) and (1.20)]{Soshnikov2000} is
 \[
- \E(\PiSp(I))_N
+ \E\bigl[(\PiSp(I))_N\bigr]
  =\int_{I^N}\det\bigl(K_{\mathrm{Sp}}(x_i,x_j)\bigr)_{i,j\le N}
    \,dx_1\cdots dx_N.
 \]
@@ -267,7 +270,8 @@ is positive.  This proves \eqref{eq:dpp-crowding}.
 On the event in \eqref{eq:dpp-crowding}, select the first \(N\) points of
 \(\PiSp\cap I\).  Their coefficients lie in \([a_0,4]\), and their marked
 sum has characteristic function
-\(\prod_{j=1}^N J_0(a_jt)\).  Uniformly for \(a_j\in[a_0,4]\) and
+\(\prod_{j=1}^N J_0(a_jt)\), where \(J_0\) is the Bessel function of the first
+kind of order zero.  Uniformly for \(a_j\in[a_0,4]\) and
 \(N\ge3\), Fourier inversion gives
 \begin{equation}
  \left\|p_{\sum_{j=1}^Na_j\cos\Phi_j}\right\|_\infty

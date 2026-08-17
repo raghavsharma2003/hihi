@@ -1,4 +1,5 @@
-\section{A uniform heat estimate on \(\USp(2g)\)}
+\section{\texorpdfstring{A uniform heat estimate on \(\USp(2g)\)}%
+  {A uniform heat estimate on USp(2g)}}
 \label{app:heat-trace}
 
 We prove the compact-group estimate used in \cref{sec:transfer}, including
@@ -6,11 +7,11 @@ the metric, Casimir, and Haar normalizations.  Throughout this appendix,
 \(G_g=\USp(2g)\), \(m_g^{\mathrm{Haar}}(G_g)=1\), and the metric is
 \eqref{eq:group-metric}.  If \(X_1,\ldots,X_{D_g}\) is an orthonormal basis
 of left-invariant vector fields, where \(D_g=2g^2+g\), set
-\[
+\begin{equation}
  \mathcal A_g=-\sum_{j=1}^{D_g}X_j^2,
  \qquad P_s=e^{-s\mathcal A_g}.
-\tag{A.1}\label{eq:heat-generator}
-\]
+\label{eq:heat-generator}
+\end{equation}
 Thus the Euclidean model of this generator has coordinate variance \(2s\).
 We write \(K_s(x)\) for the heat-kernel density relative to Haar
 \emph{probability} measure, not relative to unnormalized Riemannian volume;
@@ -23,22 +24,22 @@ On the standard maximal torus, write
  X(x)=\operatorname{diag}(ix_1,\ldots,ix_g,-ix_1,\ldots,-ix_g).
 \]
 Direct multiplication gives
-\[
+\begin{equation}
  -\frac12\operatorname{Tr}(X(x)X(y))=\sum_{i=1}^gx_iy_i.
-\tag{A.2}\label{eq:torus-metric}
-\]
+\label{eq:torus-metric}
+\end{equation}
 The type-\(C_g\) positive roots are therefore expressed in the Euclidean
 basis \(e_i\), and their half-sum is
 \(\varrho=(g,g-1,\ldots,1)\).  Irreducibles are indexed by partitions
 \(\gamma=(\gamma_1\ge\cdots\ge\gamma_g\ge0)\).  With the normalization
 \eqref{eq:heat-generator}, the Casimir eigenvalue is exactly
-\[
+\begin{equation}
  \kappa_\gamma
  =\|\gamma+\varrho\|^2-\|\varrho\|^2
  =\sum_{i=1}^g\gamma_i
        \bigl(\gamma_i+2(g-i+1)\bigr).
-\tag{A.3}\label{eq:casimir}
-\]
+\label{eq:casimir}
+\end{equation}
 For example, at \(g=1\) the defining representation has
 \(\kappa_{(1)}=3\), agreeing with
 \(-\sum_{j=1}^3(i\sigma_j)^2=3I\) for the orthonormal basis
@@ -47,7 +48,7 @@ two in the heat time.
 
 Let \(d_\gamma\) be the representation dimension.  The type-\(C_g\) Weyl
 formula in these coordinates is
-\[
+\begin{equation}
 \begin{split}
  d_\gamma={}&\prod_{i=1}^g
  \frac{\gamma_i+g-i+1}{g-i+1}\\
@@ -55,19 +56,19 @@ formula in these coordinates is
  \frac{\gamma_i-\gamma_j+j-i}{j-i}
  \frac{\gamma_i+\gamma_j+2g-i-j+2}{2g-i-j+2}.
 \end{split}
-\tag{A.4}\label{eq:weyl-dimension}
-\]
+\label{eq:weyl-dimension}
+\end{equation}
 
 \begin{lemma}[Uniform type-\(C\) heat trace]
 \label{lem:uniform-heat-trace}
 There is an absolute constant \(C\) such that, for \(0<s\le1\),
-\[
+\begin{equation}
  \boxed{
  K_{2s}(e)=\sum_\gamma d_\gamma^2e^{-2s\kappa_\gamma}
  \le \exp\!\bigl(Cg^2\log(g+2)\bigr)
        s^{-(2g^2+g+1)/2}.}
-\tag{A.5}\label{eq:uniform-heat-trace}
-\]
+\label{eq:uniform-heat-trace}
+\end{equation}
 The identity is for the heat-kernel density relative to Haar probability.
 \end{lemma}
 
@@ -76,18 +77,18 @@ Put \(R=\gamma_1\).  Equation \eqref{eq:casimir} gives
 \(\kappa_\gamma\ge R^2\).  Formula \eqref{eq:weyl-dimension} has exactly
 \(g^2\) factors; every denominator is at least one and every numerator is at
 most \(2(R+g+1)\).  Hence
-\[
+\begin{equation}
  d_\gamma\le[2(R+g+1)]^{g^2}.
-\tag{A.6}\label{eq:dimension-crude}
-\]
+\label{eq:dimension-crude}
+\end{equation}
 There are at most \((R+1)^g\) partitions with largest part \(R\), and
 \(R+g+1\le(g+1)(R+1)\).  With \(N=2g^2+g\), this gives
-\[
+\begin{equation}
  K_{2s}(e)
  \le[2(g+1)]^{2g^2}
      \sum_{R=0}^\infty(R+1)^Ne^{-2sR^2}.
-\tag{A.7}\label{eq:heat-shells}
-\]
+\label{eq:heat-shells}
+\end{equation}
 To bound the last sum, first use \((R+1)^N\le2^NR^N\) for \(R\ge1\).
 For a nonnegative unimodal function, its sum over positive integers is at
 most its integral plus twice its maximum.  In the present case
@@ -119,10 +120,10 @@ converted into a bound for a nonspectral test function.
 Let \(M\) be a compact \(D\)-dimensional Riemannian manifold with
 nonnegative Ricci curvature, let \(P_s=e^{s\Delta}\) be its heat semigroup,
 and let \(K_s(x,dy)\) be the corresponding transition law.  Then
-\[
+\begin{equation}
  \int_M d(x,y)^2K_s(x,dy)\le2Ds.
-\tag{A.8}\label{eq:brownian-distance}
-\]
+\label{eq:brownian-distance}
+\end{equation}
 \end{lemma}
 
 \begin{proof}
@@ -145,44 +146,44 @@ result is \eqref{eq:brownian-distance}.
 \label{prop:heat-bridge}
 Let \(\mu\) be a conjugation-invariant probability measure on \(G_g\), and
 suppose that for every nontrivial irreducible representation \(\rho\),
-\[
+\begin{equation}
  \left|\int_{G_g}\chi_\rho\,d\mu\right|
  \le\varepsilon d_\rho.
-\tag{A.9}\label{eq:abstract-character-bound}
-\]
+\label{eq:abstract-character-bound}
+\end{equation}
 If \(h\) is central, \(L\)-Lipschitz, and \(\|h\|_\infty\le1\), then for
 \(0<s\le1\),
-\[
+\begin{equation}
  \boxed{
  \left|\int h\,d\mu-\int h\,dm_g^{\mathrm{Haar}}\right|
  \le2L\sqrt{2D_gs}+\varepsilon K_{2s}(e)^{1/2}.}
-\tag{A.10}\label{eq:abstract-heat-bridge}
-\]
+\label{eq:abstract-heat-bridge}
+\end{equation}
 \end{proposition}
 
 \begin{proof}
 Under Haar probability, irreducible characters form an orthonormal basis for
 the central square-integrable functions.  The Fourier and heat expansions are
-\[
+\begin{equation}
  h=\sum_\rho\widehat h(\rho)\chi_\rho,
  \qquad
  P_sh=\sum_\rho e^{-s\kappa_\rho}
                   \widehat h(\rho)\chi_\rho,
  \qquad
  \sum_\rho|\widehat h(\rho)|^2=\|h\|_2^2.
-\tag{A.11}\label{eq:PW-expansion}
-\]
+\label{eq:PW-expansion}
+\end{equation}
 The trivial character cancels between \(\mu\) and
 \(m_g^{\mathrm{Haar}}\).  Applying
 \eqref{eq:abstract-character-bound}, Cauchy--Schwarz, and
 \(\|h\|_2\le\|h\|_\infty\) therefore gives
-\[
+\begin{equation}
  \left|\int P_sh\,d(\mu-m_g^{\mathrm{Haar}})\right|
  \le\varepsilon
  \left(\sum_\rho d_\rho^2e^{-2s\kappa_\rho}\right)^{1/2}
  =\varepsilon K_{2s}(e)^{1/2}.
-\tag{A.12}\label{eq:PW-CS}
-\]
+\label{eq:PW-CS}
+\end{equation}
 The last equality is exact: relative to Haar probability, an irreducible of
 dimension \(d_\rho\) contributes its \(d_\rho^2\) matrix coefficients to the
 full heat kernel.  In particular, the quantity in \eqref{eq:PW-CS} is

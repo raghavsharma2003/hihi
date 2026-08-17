@@ -5,12 +5,14 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage[nameinlink,noabbrev]{cleveref}
 \setlength{\emergencystretch}{3em}
+\numberwithin{equation}{section}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
 \theoremstyle{definition}
 \newtheorem{definition}[theorem]{Definition}
 
@@ -27,13 +29,20 @@
 \newcommand{\eps}{\varepsilon}
 \newcommand{\1}{\mathbf 1}
 
-\title{A simultaneous hard-edge limit for weighted hyperelliptic prime races}
-\author{Raghav Sharma\thanks{Draft of August 2026, not yet submitted or
-externally peer reviewed.  Anthropic Claude and OpenAI Codex assisted with
-derivations, source discovery, formalization, and exposition.  The author is
-responsible for independently checking the final manuscript and for the
-complete content.}}
+\title{A simultaneous quenched hard-edge limit for weighted hyperelliptic
+prime races}
+\author{Raghav Sharma}
 \date{August 2026}
+
+\hypersetup{
+  pdftitle={A simultaneous quenched hard-edge limit for weighted
+    hyperelliptic prime races},
+  pdfauthor={Raghav Sharma},
+  pdfsubject={Weighted prime races over finite fields and symplectic
+    hard-edge limits},
+  pdfkeywords={prime races, hyperelliptic curves, hard edge, symplectic
+    random matrices, determinantal processes, Wasserstein convergence}
+}
 
 \begin{document}
 \maketitle
@@ -47,6 +56,13 @@ complete content.}}
 \appendix
 \input{sections/A-heat-trace}
 \input{sections/B-marked-laws}
+
+\section*{Declaration of generative-AI assistance}
+Anthropic Claude and OpenAI Codex were used during preparation for exploratory
+derivations, source discovery, Lean formalization of elementary sublemmas, and
+language editing.  These systems are not authors.  The mathematical claims,
+source checks, and final text remain the responsibility of the human author;
+this draft is not a substitute for independent specialist review.
 
 \bibliographystyle{abbrv}
 \bibliography{references}

@@ -3,11 +3,11 @@
 
 In this section \(g,Q,t\) are fixed, and we suppress them from the notation.
 Put
-\[
+\begin{equation}
  d=2g+1,\qquad M=m+\frac12=\frac{\lambda}{d\log Q},
  \qquad r=Q^M=e^{\lambda/d}>1.
-\tag{2.1}\label{eq:local-parameters}
-\]
+\label{eq:local-parameters}
+\end{equation}
 The endpoint \(N\) tends to infinity before either \(g\) or \(Q\) varies.
 This order is important: all the error estimates below may depend on the
 fixed curve, but the limiting law that they identify is exact.
@@ -15,23 +15,23 @@ fixed curve, but the limiting law that they identify is exact.
 Write \(D_{g,t}(x)=f_g(x)(x-t)\).  The associated quadratic character is
 understood to vanish on polynomials not coprime to \(D_{g,t}\).  Its
 \(L\)-polynomial has the factorization
-\[
+\begin{equation}
  L(u,\chi_{g,t})=\prod_{j=1}^{2g}(1-\alpha_j u),
  \qquad
  \alpha_j=Q^{1/2}e^{i\vartheta_j},\quad
  \alpha_{g+j}=Q^{1/2}e^{-i\vartheta_j}
-\tag{2.2}\label{eq:frob-factorization}
-\]
+\label{eq:frob-factorization}
+\end{equation}
 after a suitable ordering, where \(0\leq\vartheta_j\leq\pi\).  For a monic
 polynomial \(F\), write \(\Lambda(F)=\deg P\) if \(F=P^a\) for a monic
 irreducible \(P\), and \(\Lambda(F)=0\) otherwise.  Logarithmic
 differentiation of the Euler product and of \eqref{eq:frob-factorization}
 gives, coefficient by coefficient,
-\[
+\begin{equation}
  \Psi(k):=\sum_{\deg F=k}\Lambda(F)\chi_{g,t}(F)
  =-\sum_{j=1}^{2g}\alpha_j^k.
-\tag{2.3}\label{eq:psi-explicit}
-\]
+\label{eq:psi-explicit}
+\end{equation}
 There are no omitted local terms here: at a prime dividing \(D_{g,t}\) the
 quadratic Euler symbol is zero, and the corresponding Euler factor is one.
 
@@ -44,7 +44,7 @@ Separating the first powers in the von Mangoldt sum yields the exact identity
 \begin{align}
  -A(N)
  &=\sum_{k\leq N}\sum_{j=1}^{2g}(\alpha_jQ^m)^k+R_2(N)+R_{\geq3}(N),
- \tag{2.4}\label{eq:exact-prime-decomposition}\\
+ \label{eq:exact-prime-decomposition}\\
  R_2(N)
  &:=\sum_{\substack{P\\2\deg P\leq N}}
        (\deg P)\chi_{g,t}(P)^2Q^{2m\deg P},
@@ -61,29 +61,29 @@ heuristically; its sign is forced by subtracting the higher prime powers from
 \begin{lemma}[Endpoint decomposition]
 \label{lem:endpoint-decomposition}
 For \(\epsilon\in\{0,1\}\), set
-\[
+\begin{equation}
  c_{g,\lambda}^{(0)}=\frac{2r}{r+1},\qquad
  c_{g,\lambda}^{(1)}=\frac{2}{r+1},
-\tag{2.5}\label{eq:parity-centers}
-\]
+\label{eq:parity-centers}
+\end{equation}
 and, for \(0\leq\vartheta\leq\pi\), set
-\[
+\begin{equation}
  b_{g,\lambda}(\vartheta)
  =\frac{4(1-r^{-1})}
  {\lvert1-r^{-1}e^{-i\vartheta}\rvert}
  =\frac{4(1-e^{-\lambda/d})}
  {\sqrt{1+e^{-2\lambda/d}-2e^{-\lambda/d}\cos\vartheta}}.
-\tag{2.6}\label{eq:finite-amplitude}
-\]
+\label{eq:finite-amplitude}
+\end{equation}
 There are fixed phase shifts \(\eta_j\), depending only on the Frobenius
 angles, such that
-\[
+\begin{equation}
  \mathcal E_{g,t,\lambda}(N)
  =c_{g,\lambda}^{(N\bmod2)}
   +\sum_{j=1}^g b_{g,\lambda}(\vartheta_j)
        \cos(N\vartheta_j+\eta_j)+o_{g,Q,t,\lambda}(1).
-\tag{2.7}\label{eq:endpoint-cosine}
-\]
+\label{eq:endpoint-cosine}
+\end{equation}
 In particular, no prime powers of exponent at least three and no ramified
 prime contribute to the endpoint limit.
 \end{lemma}
@@ -93,14 +93,14 @@ Since \(\alpha_jQ^m=re^{\pm i\vartheta_j}\), the contribution of one
 conjugate pair to the first term of
 \eqref{eq:exact-prime-decomposition}, after multiplication by the normalising
 factor \(2(1-r^{-1})r^{-N}\), is
-\[
+\begin{equation}
  4(1-r^{-1})
  \operatorname{Re}\left(
    \frac{e^{iN\vartheta}-r^{-N}}
         {1-r^{-1}e^{-i\vartheta}}
  \right).
-\tag{2.8}\label{eq:one-pair-geometric}
-\]
+\label{eq:one-pair-geometric}
+\end{equation}
 The term containing \(r^{-N}\) tends to zero.  Writing the argument of the
 fixed denominator into the phase gives exactly the amplitude
 \eqref{eq:finite-amplitude}.
@@ -109,17 +109,17 @@ It remains to treat the prime powers without discarding their endpoint
 dependence.  If \(\pi_Q(\ell)\) is the number of monic irreducibles of degree
 \(\ell\), the elementary identity
 \(Q^\ell=\sum_{a\mid\ell}a\pi_Q(a)\) implies
-\[
+\begin{equation}
  \ell\pi_Q(\ell)=Q^\ell+O(\ell Q^{\ell/2}).
-\tag{2.9}\label{eq:prime-polynomial}
-\]
+\label{eq:prime-polynomial}
+\end{equation}
 The finite ramified prime polynomials are precisely the \(d\) distinct linear factors of
 \(D_{g,t}\).  Hence
-\[
+\begin{equation}
  \sum_{\deg P=\ell}(\deg P)\chi_{g,t}(P)^2
  =Q^\ell+O(\ell Q^{\ell/2}+d\,\mathbf1_{\ell=1}).
-\tag{2.10}\label{eq:unramified-square-count}
-\]
+\label{eq:unramified-square-count}
+\end{equation}
 The main term in \(R_2(N)\) is therefore
 \(\sum_{\ell\leq N/2}r^{2\ell}\).  If \(N=2L\), its normalised limit is
 \[
@@ -140,10 +140,10 @@ ramified linear factors, is \(o(1)\).
 Finally use \(\ell\pi_Q(\ell)\leq Q^\ell\) in absolute value for
 \(R_{\geq3}(N)\).  A term with \(a\ell\leq N\) has, after normalisation,
 base-\(Q\) exponent
-\[
+\begin{equation}
  \ell+am\ell-MN.
-\tag{2.11}\label{eq:higher-power-exponent}
-\]
+\label{eq:higher-power-exponent}
+\end{equation}
 If \(m\geq0\), this is at most
 \(\ell+mN-MN\leq-N/6\), because \(\ell\leq N/3\).  If \(m<0\) and
 \(1+3m\geq0\), it is again at most \(-N/6\); if \(1+3m<0\), it is at
@@ -155,11 +155,11 @@ most \(-MN+O_M(1)\).  Summing the \(O(N^2)\) possible pairs
 
 We now pass from the deterministic endpoint sequence to its limiting law.
 The precise independence condition needed below is
-\[
+\begin{equation*}
  \vartheta_1,\ldots,\vartheta_g,\pi
  \quad\hbox{linearly independent over }\mathbb Q.
-\tag{LI}\label{eq:LI}
-\]
+ \tag{LI}\label{eq:LI}
+\end{equation*}
 
 Even without \eqref{eq:LI}, the endpoint empirical law is genuine rather than
 conventional.  Indeed, let \(H_t\) be the closure in
@@ -185,26 +185,26 @@ Assume \eqref{eq:LI}.  The endpoint empirical measures of
    \delta_{\mathcal E_{g,t,\lambda}(N)},
 \]
 converge in \(W_2\) to
-\[
+\begin{equation}
  \nu_{g,t,\lambda}
  =\frac12\sum_{\epsilon=0}^1
  \Law_{\Phi}\left(
    c_{g,\lambda}^{(\epsilon)}+
    \sum_{j=1}^g b_{g,\lambda}(\vartheta_j)\cos\Phi_j
  \right),
-\tag{2.12}\label{eq:finite-quenched-law}
-\]
+\label{eq:finite-quenched-law}
+\end{equation}
 where the \(\Phi_j\) are independent and uniform on \([0,2\pi]\).
 Consequently the natural density of positive endpoints exists and equals
-\[
+\begin{equation}
  \nu_{g,t,\lambda}((0,\infty))
  =\frac12\sum_{\epsilon=0}^1
  \Pr_{\Phi}\left(
    c_{g,\lambda}^{(\epsilon)}+
    \sum_{j=1}^g b_{g,\lambda}(\vartheta_j)\cos\Phi_j>0
  \right).
-\tag{2.13}\label{eq:finite-density-functional}
-\]
+\label{eq:finite-density-functional}
+\end{equation}
 \end{proposition}
 
 \begin{proof}
@@ -228,11 +228,11 @@ At the critical scaling, \(r=e^{\lambda/d}\), so both centers in
 \eqref{eq:parity-centers} tend to \(1\).  If
 \(\vartheta=2\pi y/d\) with \(y\) in a fixed compact subset of
 \([0,\infty)\), then directly from \eqref{eq:finite-amplitude}
-\[
+\begin{equation}
  b_{g,\lambda}(2\pi y/d)
  \longrightarrow
  \frac{4\lambda}{\sqrt{\lambda^2+(2\pi y)^2}}
-\tag{2.14}\label{eq:critical-amplitude-limit}
-\]
+\label{eq:critical-amplitude-limit}
+\end{equation}
 locally uniformly in \(y\).  This is the coefficient appearing in the
 hard-edge law \eqref{eq:quenched-limit-law}.
