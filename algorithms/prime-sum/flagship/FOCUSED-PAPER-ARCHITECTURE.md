@@ -162,7 +162,7 @@ flowchart TD
   I0["I0: Weil/Frobenius explicit formula"]
   N1["N1: prime-power decomposition, amplitudes, parity centers"]
   I1["I1: Kronecker--Weyl"]
-  N2["N2: under LI, endpoint law equals nu_g(Theta)"]
+  N2["N2: genuine orbit-Haar law for all t; full phase law under LI"]
 
   I2["I2: Kowalski large sieve + erratum"]
   I3["I3: Kowalski relation-space classification"]
@@ -170,8 +170,8 @@ flowchart TD
   N4["N4: non-LI probability tends to zero"]
 
   I4["I4: Katz--Sarnak monodromy and tameness"]
-  N5["N5: mod-3 cover has C_g <= (2g+1)3^(4g^2)"]
-  I5["I5: Katz--Sarnak character estimate"]
+  N5["N5: direct GOS gives dim Hc1 = (2g-1) dim rho"]
+  I5["I5: trace formula + Deligne weight bound"]
   N6["N6: Theta to nu_g(Theta) is O_lambda(g)-Lipschitz in W2"]
   N7["N7: uniform USp heat-trace lemma"]
   N8["N8: arithmetic-to-Haar bound for laws on P2"]
@@ -238,13 +238,13 @@ The logical spine is only four arrows:
 | ID | Statement to prove in the paper | Inputs | Quantitative output used later |
 |---|---|---|---|
 | N1 | Exact prime/von-Mangoldt decomposition and endpoint limit | D1, I0, prime-polynomial theorem | amplitude \(b_{g,\lambda}\); centers \(2r/(r+1),2/(r+1)\); powers \(a\geq3\) vanish for \(M<1/6\) |
-| N2 | LI representation of the endpoint law | N1, I1 | \(\nu_{g,t,\lambda}=\nu_{g,\lambda}(\Theta_{g,t})\), including the half-half parity mixture; the density is its mass on \((0,\infty)\) |
+| N2 | Genuine endpoint law and its LI specialization | N1, I1 | orbit-Haar empirical law for every \(t\); under LI, \(\nu_{g,t,\lambda}=\nu_{g,\lambda}(\Theta_{g,t})\), including the half-half parity mixture, and its mass on \((0,\infty)\) is the natural race density |
 | N3 | Square-field Galois criterion | I3 and \(Q=s^2\) | maximal \(W_{2g}\Rightarrow\{\vartheta_1,\ldots,\vartheta_g,\pi\}\) is \(\mathbb Q\)-LI |
 | N4 | Exceptional-set estimate | I2, N3 | \(\Pr(\mathrm{non\mbox{-}LI})\ll g^2Q^{-1/(4g^2+3g+5)}\log Q=o(1)\) |
-| N5 | Explicit level-cover complexity | I4, tame Euler characteristic | \(C_g\leq(2g+1)3^{4g^2}\) |
+| N5 | Direct character-cohomology bound | I4, absence of invariants, tame GOS, trace formula, Deligne | \(\dim H_c^1=(2g-1)\dim\rho\), hence character-average error at most \(2(2g-1)\dim\rho/\sqrt Q\) for \(Q>4g\) |
 | N6 | Regularity of the quenched-law functional | couple the same parity and phases, then use eigenangle matching | \(W_2(\nu_{g,\lambda}(\vartheta),\nu_{g,\lambda}(\varphi))^2\leq\tfrac12\sum_j|b(\vartheta_j)-b(\varphi_j)|^2\), hence Lipschitz constant \(O_\lambda(g)\) |
 | N7 | Heat-trace estimate with fixed metric | Peter--Weyl, type-\(C_g\) dimensions, Casimir bound | \(K_{2s}(e)=\sum_\rho d_\rho^2e^{-2s\kappa_\rho}\leq e^{Cg^2\log(g+2)}s^{-Cg^2}\), relative to Haar probability, \(0<s\leq1\) |
-| N8 | Arithmetic-to-Haar transfer for the random measure | apply heat smoothing to bounded 1-Lipschitz tests on \((\mathcal P_2,W_2)\), using I5 and N5--N7 | bounded-Lipschitz distance between the arithmetic and Haar laws on \(\mathcal P_2\) is at most \(C_\lambda g^{-2}+Q^{-1/2}e^{C_\lambda g^2\log(g+2)}\) when \(s=g^{-8}\) |
+| N8 | Arithmetic-to-Haar transfer for the random measure | apply heat smoothing to bounded 1-Lipschitz tests on \((\mathcal P_2,W_2)\), using N5--N7 | bounded-Lipschitz distance between the arithmetic and Haar laws on \(\mathcal P_2\) is at most \(C_\lambda g^{-2}+Q^{-1/2}e^{C_\lambda g^2\log(g+2)}\) when \(s=g^{-8}\) |
 | N9 | Haar microscopic limit | Weyl integration formula | local kernel convergence to \(K_{\rm Sp}\) and diagonal bound \(<2\) |
 | N10 | Tail control for marked coefficients | N9 and the \(O_\lambda(y^{-1})\) envelope | \(\ell^2\)-tails vanish uniformly in probability |
 | N11 | Stability of conditional marked laws | point processes on \([0,\infty)\), Borel enumeration, local kernel convergence through zero, uniform \(\ell^2\)-tails, and same-phase coupling | no points escape through zero; convergence in \(W_2\) of the conditional laws; finite counts near zero and infinitude give a first point, so one arcsine convolution gives absolute continuity |
@@ -295,14 +295,15 @@ a verbatim-hypothesis check. The list below is the minimum import set.
 | Kowalski, *The large sieve, monodromy and zeta functions of curves*, Theorem 6.2, corrected by erratum item 3 | \(g\geq1\); \(q=p^k\), \(p\neq2\); \(f\in\mathbb F_q[X]\) monic of degree \(2g\) with distinct roots in \(\mathbb F_q\); \(U\) is the complement of those roots; pencil \(y^2=f(x)(x-u)\), completed at infinity | the number of \(u\in U(\mathbb F_q)\) for which \(P_u\) is reducible or its splitting field has degree below \(|W_{2g}|=2^gg!\) is \(O(g^2q^{1-\gamma_g}\log q)\), \(\gamma_g=(4g^2+3g+5)^{-1}\), with absolute implied constant | \(p_g>2g+1\) makes \(1,\ldots,2g\) distinct; the erratum's factor \(g^2\) must never be dropped |
 | Kowalski, *The large sieve ... II: independence of the zeros*, Proposition 2.4(2), with one polynomial | \(g\geq2\); the degree-\(2g\) polynomial over a subfield of \(\mathbb C\) has splitting group \(W_{2g}\) acting on reciprocal pairs; pair products are a fixed positive rational \(m\); for the low-genus conclusion one needs \(m=1\) | for \(m=1\), the rational multiplicative-relation space is \(\mathbf1\oplus G(M)\), equivalently coefficient vectors are constant on each reciprocal pair | since \(Q=s^2\), the normalized roots are roots of \(s^{-2g}R(sX)\in\mathbb Q[X]\), have pair product one, and retain the original splitting field |
 | Katz--Sarnak, *Random Matrices, Frobenius Eigenvalues, and Monodromy*, Theorem 10.1.16 | odd characteristic; \(f\) has degree \(2g\) and distinct roots; the base is the complement of the roots for the pencil \(y^2=f(X)(X-T)\) | geometric monodromy of \(R^1\pi_*\mathbb Q_\ell\) is \(\operatorname{Sp}(2g)\) | use \(\ell=3\); the chosen characteristic is greater than \(2g+1\), hence is neither 2 nor 3 |
-| Katz--Sarnak, Lemma 10.1.12 | the same one-parameter pencil in odd characteristic | the rank-\(2g\) local system is tame at every boundary point of \(U\) | needed to turn the mod-3 kernel cover into the explicit Euler-characteristic bound N5 |
-| Katz--Sarnak, Theorem 9.2.6(4)--(5) | \(X/k\) smooth and geometrically connected, dimension \(d>0\); \(\ell\) invertible in \(k\); \(\mathcal F\) lisse of rank \(r>1\), pure of weight zero; its full arithmetic representation lies in its geometric monodromy group; \(K\) is a maximal compact subgroup; the test character comes from a nontrivial irreducible algebraic representation; \(|E|>4A(X)^2\); a finite etale Galois cover \(Y\) trivializes a chosen residual form of \(\mathcal F\) | normalized nontrivial-character average at most \(2\dim(\rho)C(X,\mathcal F)/\sqrt{|E|}\), where \(C\) can be the total residual compact-support Betti number of \(Y\) | base-change to \(\mathbb F_Q\), apply the constant half-Tate twist available because \(Q=s^2\), verify \(A(U_g)=2g\), and use \(Q>16g^2\) |
-| Tame Euler-characteristic multiplicativity / tame Riemann--Hurwitz | finite etale cover of a smooth affine curve, tamely ramified over every point of the smooth compactification's boundary | \(\chi_c(Y)=\deg(Y/U)\chi_c(U)\), componentwise if disconnected | the kernel of the mod-3 representation gives a cover of degree at most \(|\mathrm{GL}(2g,\mathbb F_3)|<3^{4g^2}\); affineness gives \(H_c^0=0\) and duality gives \(b_c^2\) equal to the component count |
+| Katz--Sarnak, Lemma 10.1.12 | the same one-parameter pencil in odd characteristic | the rank-\(2g\) local system is tame at every boundary point of \(U\) | every algebraic representation of the twisted sheaf has Swan conductor zero |
+| Tame Grothendieck--Ogg--Shafarevich / Katz--Sarnak, Theorem 9.2.5 | lisse tame sheaf on the affine curve \(U_g\); no geometric invariants | \(H_c^0=H_c^2=0\) and \(\dim H_c^1=-(1-2g)\dim\rho=(2g-1)\dim\rho\) | full geometric \(\operatorname{Sp}(2g)\) monodromy gives no invariants for nontrivial irreducible \(\rho\) |
+| Grothendieck--Lefschetz trace formula and Deligne's weight bound | \(\rho(\mathcal F_g)\) is pure of weight zero | the Frobenius trace on \(H_c^1\) is at most \((2g-1)\dim\rho\sqrt Q\) | divide by \(|U_g(\mathbb F_Q)|=Q-2g\) to obtain the direct character estimate |
 
 The half-Tate twist is not a slogan: the proof must specify the constant
-\(\mathbb Q_3\)-character sending arithmetic Frobenius over \(\mathbb F_Q\)
-to \(s^{-1}\), state the Frobenius convention, and verify that the twisted full
-arithmetic image lies in \(\operatorname{Sp}(2g)\).
+\(\mathbb Q_3\)-character sending geometric Frobenius to \(s^{-1}\),
+equivalently arithmetic Frobenius to \(s\).  The character has weight \(-1\),
+the twisted sheaf has weight zero, and the twisted full arithmetic image lies
+in \(\operatorname{Sp}(2g)\).
 
 ### Classical analytic and probabilistic imports
 
@@ -372,8 +373,8 @@ checks from being misrepresented as verification of deep arithmetic geometry.
 
 - Keep the exact square-prime centers. They validate the constant `1` in the
   limit and protect the sign normalization.
-- Keep the mod-3 cover calculation in the main text. It is the reason the
-  genus dependence is explicit.
+- Keep the direct GOS calculation in the main text.  It gives the exact and
+  easily checked genus dependence \((2g-1)\dim\rho\) without a residual cover.
 - Keep the square-field normalization and the coefficient-by-coefficient
   relation argument. A sentence saying `maximal Galois group implies LI` is
   not sufficient.
@@ -462,9 +463,9 @@ The introduction should make four moves and stop.
    edge. The density theorem follows from this stronger statement. State the
    theorem before surveying technique.
 3. **Mechanism.** Square fields turn maximal Frobenius Galois group into the
-   exact angle-plus-\(\pi\) independence needed by the race. The punctured-line
-   base gives a controllable mod-3 level cover, while heat smoothing converts
-   all-character equidistribution into a bound for the
+   exact angle-plus-\(\pi\) independence needed by the race. Tame cohomology on
+   the punctured-line base gives the exact character-average dimension, while
+   heat smoothing converts all-character equidistribution into a bound for the
    probability-measure-valued functional. Direct \(W_2\) coupling and a
    determinantal-kernel argument supply the hard-edge limit and prove that the
    limiting random measure is nonconstant.

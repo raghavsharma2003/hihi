@@ -1,0 +1,148 @@
+\section{Closed-hard-edge stability of marked laws}
+\label{app:marked-laws}
+
+This appendix records the measurability and coupling statement used in
+\cref{sec:hard-edge}.  Its state space is the space
+\(\mathcal N([0,\infty))\) of locally finite integer-valued measures on the
+closed half-line, with the vague topology.  The closed endpoint prevents the
+loss of a critical coefficient when a point approaches zero.
+
+For \(u=(u_j)_{j\ge1}\in\ell^2\) and \(c\in\R\), put
+\[
+ \mathcal L(c,u)
+ =\Law_\Phi\left(c+\sum_{j\ge1}u_j\cos\Phi_j\right).
+\]
+Orthogonality makes the partial sums Cauchy in \(L^2\).  Moreover,
+Kolmogorov's maximal inequality gives
+\[
+ \Pr\left\{\sup_{n\ge N}\left|\sum_{j=N}^n
+ u_j\cos\Phi_j\right|>\epsilon\right\}
+ \le\frac1{2\epsilon^2}\sum_{j\ge N}u_j^2.
+\]
+Choosing a subsequence of \(N\)'s for which the right side is summable and
+using Borel--Cantelli proves almost-sure convergence of the series.  If the
+same phases are
+used for two vectors, then the exact mean-square cost of this displayed
+coupling is
+\begin{equation}
+ \E_\Phi\left|
+ (c-d)+\sum_{j\ge1}(u_j-v_j)\cos\Phi_j\right|^2
+ =|c-d|^2+\frac12\|u-v\|_2^2.
+ \label{eq:basic-shared-phase-cost}
+\end{equation}
+It follows that
+\begin{equation}
+ \Wtwo^2\bigl(\mathcal L(c,u),\mathcal L(d,v)\bigr)
+ \le |c-d|^2+\frac12\|u-v\|_2^2.
+ \label{eq:basic-w2-bound}
+\end{equation}
+Thus \(\mathcal L:\R\times\ell^2\to\Ptwo\) is continuous.  We emphasize
+that \eqref{eq:basic-shared-phase-cost} is the exact cost of the chosen
+coupling; \eqref{eq:basic-w2-bound} need not be equality for the optimal
+Wasserstein coupling.
+
+We next make the conditional-law map globally Borel.  Enumerate the atoms of
+\(\xi\in\mathcal N([0,\infty))\) increasingly, with multiplicity, as
+\(e_1(\xi),e_2(\xi),\ldots\), padding a finite configuration by
+\(\infty\).  These coordinates are Borel; for example, each is recovered
+from the counting maps \(\xi\mapsto\xi([0,r])\) with rational \(r\).  Set
+\(a_\lambda(\infty)=0\) and
+\[
+ A_\lambda(\xi)=\bigl(a_\lambda(e_j(\xi))\bigr)_{j\ge1},
+ \qquad
+ \mathcal D_\lambda=
+ \left\{\xi:\sum_{j\ge1}a_\lambda(e_j(\xi))^2<\infty\right\}.
+\]
+The domain \(\mathcal D_\lambda\) is Borel, and \(A_\lambda\) is a Borel
+map from it to the separable Hilbert space \(\ell^2\).  Therefore
+\begin{equation}
+ \xi\longmapsto
+ \begin{cases}
+  \mathcal L(1,A_\lambda(\xi)),&\xi\in\mathcal D_\lambda,\\
+  \delta_1,&\xi\notin\mathcal D_\lambda
+ \end{cases}
+ \label{eq:borel-conditional-law}
+\end{equation}
+is a globally Borel \(\Ptwo\)-valued map.  On \(\mathcal D_\lambda\), its
+mean is one and its centered second moment is
+\(\|A_\lambda(\xi)\|_2^2/2\).
+
+\begin{proposition}[Closed-hard-edge marked-law stability]
+\label{prop:marked-stability}
+Let \(\Xi_n,\Xi\) be random simple locally finite point measures on
+\([0,\infty)\), and suppose \(\Xi_n\Rightarrow\Xi\) vaguely and
+\(\Xi(\{0\})=0\) almost surely.  Let \(a_n,a\) be continuous on the closed
+half-line, with \(a_n\to a\) locally uniformly, and assume that, for every
+\(\eta>0\),
+\[
+ \sum_{x\in\Xi_n}a_n(x)^2<\infty\quad\text{a.s. for every }n,
+ \qquad
+ \sum_{x\in\Xi}a(x)^2<\infty\quad\text{a.s.},
+\]
+and
+\begin{equation}
+ \lim_{R\to\infty}\sup_n
+ \Pr\left\{\sum_{x\in\Xi_n,\ x>R}a_n(x)^2>\eta\right\}=0.
+ \label{eq:abstract-tail-hypothesis}
+\end{equation}
+Enumerate increasingly and pad finite coefficient vectors by zero.  Then,
+on a Skorokhod realization,
+\begin{equation}
+ \sum_{j\ge1}
+ \bigl|a_n(e_j(\Xi_n))-a(e_j(\Xi))\bigr|^2
+ \longrightarrow0
+ \quad\text{in probability}.
+ \label{eq:closed-edge-l2-matching}
+\end{equation}
+
+If \(c_n^{(0)},c_n^{(1)}\to c\), then the random probability measures
+\[
+ \frac12\sum_{\epsilon=0}^1
+ \mathcal L\bigl(c_n^{(\epsilon)},A_n(\Xi_n)\bigr)
+ \quad\Longrightarrow\quad
+ \mathcal L\bigl(c,A(\Xi)\bigr)
+\]
+in \((\Ptwo,\Wtwo)\), where \(A_n,A\) are the corresponding ordered
+coefficient vectors.  The exact cost of the coupling using one uniform
+parity variable and shared phases is
+\begin{equation}
+ \frac12\sum_{\epsilon=0}^1|c_n^{(\epsilon)}-c|^2
+ +\frac12\|A_n(\Xi_n)-A(\Xi)\|_2^2.
+ \label{eq:parity-shared-coupling-cost}
+\end{equation}
+Finally, if \(\Xi\) has a least atom \(x_1\) almost surely and
+\(a(x_1)\ne0\), then the limiting conditional law is almost surely
+absolutely continuous.
+\end{proposition}
+
+\begin{proof}
+The space of locally finite point measures is Polish, so Skorokhod's theorem
+applies.  Choose a deterministic \(R>0\) for which
+\(\Xi(\{R\})=0\) almost surely; almost every \(R\) has this property.
+Because the limiting measure is simple and has no atom at either endpoint of
+\([0,R]\), vague convergence on the closed half-line implies that the
+points in \([0,R]\) eventually have the same cardinality and match in
+increasing order.  Local uniform convergence of \(a_n\) then makes the
+finite squared coefficient difference on \([0,R]\) tend to zero almost
+surely.
+
+After both remaining tails are padded by zeros, their matching cost is at
+most
+\begin{equation}
+ 2\sum_{x\in\Xi_n,\ x>R}a_n(x)^2
+ +2\sum_{x\in\Xi,\ x>R}a(x)^2.
+ \label{eq:two-tail-matching-bound}
+\end{equation}
+First let \(R\) grow.  The first term is uniformly small in probability by
+\eqref{eq:abstract-tail-hypothesis}; the second is small in probability by
+almost-sure square summability.  Then let \(n\to\infty\).  This proves
+\eqref{eq:closed-edge-l2-matching}.  Applying the parity-and-phase coupling
+gives exactly \eqref{eq:parity-shared-coupling-cost}, because all cross terms
+have zero phase expectation.  The convergence assertion follows.
+
+For the last statement, split off the least atom.  Conditional on \(\Xi\),
+the variable \(a(x_1)\cos\Phi_1\) has an absolutely continuous arcsine law.
+It is independent of the remainder, which converges almost surely and in
+\(L^2\) by square summability.  Convolution with the arcsine law makes the
+full conditional law absolutely continuous.
+\end{proof}

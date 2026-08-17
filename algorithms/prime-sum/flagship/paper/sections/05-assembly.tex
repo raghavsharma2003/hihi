@@ -1,0 +1,54 @@
+\section{Assembly, the explicit sequence, and limitations}
+\label{sec:assembly}
+
+Let \(\mu_{g,Q_g}\) be the empirical Frobenius measure of the pencil and let
+\(m_g^{\mathrm{Haar}}\) be Haar probability measure on \(\USp(2g)\).
+The preceding sections establish three comparisons:
+\begin{align*}
+ &\Pr(t_g\text{ is non-LI})=o(1),\\
+ &d_{\mathrm{BL}}
+ \bigl((T_{g,\lambda})_*\mu_{g,Q_g},
+       (T_{g,\lambda})_*m_g^{\mathrm{Haar}}\bigr)=o(1),\\
+ &T_{g,\lambda}(\mathsf U_g)\Longrightarrow\nu_\lambda(\PiSp)
+ \quad(\mathsf U_g\text{ Haar}).
+\end{align*}
+Here the bounded--Lipschitz distance is taken on the Polish space
+\((\Ptwo,\Wtwo)\).  Replacing the model law by the actual endpoint law changes
+the expectation of every bounded--Lipschitz test by at most twice the first
+probability.  The triangle inequality
+therefore proves \eqref{eq:main-convergence}.
+
+The limiting conditional law is almost surely absolutely continuous by
+\Cref{prop:marked-stability}.  Hence evaluation on \((0,\infty)\) is almost
+surely a continuity point for weak convergence of measures.  The continuous
+mapping theorem gives \eqref{eq:density-convergence}.  Since these masses lie in \([0,1]\), their
+expectations converge as well.  The two nondegeneracy clauses follow from
+\Cref{prop:random-law-nondegenerate,prop:scalar-nondegenerate}.
+
+It remains to verify the concrete field sequence.  Bertrand's postulate gives
+\[
+ 2g+1<p_g<2(2g+1).
+\]
+By minimality of \(n_g\),
+\[
+ g^2\log^2(g+2)
+ \le \log Q_g
+ <g^2\log^2(g+2)+2\log p_g.
+\]
+Thus \eqref{eq:growth} holds, while \(Q_g\) is an odd square and its characteristic
+exceeds \(2g+1\).  This proves the final clause of \cref{thm:main}.
+
+\paragraph{Scope.}
+The proof gives a conservative sufficient growth condition, not a practical or
+optimal threshold.  More importantly, it does not establish the fixed-field
+microscopic limit, nor does it prove an analogous theorem for the full
+\(2g+1\)-parameter hyperelliptic ensemble.  The theorem is a quantitative
+large-field/large-genus bridge for the explicit pencil \eqref{eq:pencil}.
+
+\paragraph{Verification status.}
+The elementary geometric-series, parity-center, and critical-amplitude limits
+have a separate Lean~4 formalization with no project axioms or placeholders.
+That formalization does not include the imported \(\ell\)-adic monodromy,
+large-sieve, compact-group heat-kernel, or determinantal-process theorems.
+Those inputs and the new analytic bridges are proved or cited in ordinary
+mathematical form here and still require independent human expert review.

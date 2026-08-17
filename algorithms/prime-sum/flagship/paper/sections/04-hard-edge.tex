@@ -1,0 +1,313 @@
+\section{The Haar hard edge and the quenched law}
+\label{sec:hard-edge}
+
+Let \(\mathsf U_g\) be Haar distributed in \(\USp(2g)\), and write its positive
+eigenangles as
+\(0<\vartheta_1<\cdots<\vartheta_g<\pi\).  With \(d=2g+1\), set
+\[
+ \Xi_g=\sum_{j=1}^g\delta_{d\vartheta_j/(2\pi)},
+\]
+regarded as a point measure on the \emph{closed} half-line
+\([0,\infty)\).  Keeping the endpoint is important: vague convergence on
+\((0,\infty)\) would not see a point moving to zero.
+
+\subsection{The finite kernel and its closed-edge limit}
+
+Weyl integration, followed by the change of variables
+\(y=d\vartheta/(2\pi)\), gives the projection kernel
+\begin{equation}
+ \widetilde K_g(x,y)=\frac4d\sum_{k=1}^g
+   \sin\frac{2\pi kx}{d}\sin\frac{2\pi ky}{d},
+ \qquad 0\le x,y\le \frac d2 .
+ \label{eq:finite-sp-kernel}
+\end{equation}
+Indeed, before rescaling the orthonormal system is
+\((2/\pi)^{1/2}\sin(k\vartheta)\), \(1\le k\le g\).  Thus no
+normalizing constant is hidden in \eqref{eq:finite-sp-kernel}.  For every
+fixed \(L\), the right side is a Riemann sum, uniformly on
+\([0,L]^2\), and
+\begin{equation}
+ \widetilde K_g(x,y)\longrightarrow
+ \frac2\pi\int_0^\pi\sin(tx)\sin(ty)\,dt
+ =K_{\mathrm{Sp}}(x,y).
+ \label{eq:kernel-riemann-limit}
+\end{equation}
+This convergence includes \(x=0\) and \(y=0\).  Moreover,
+\begin{equation}
+ 0\le \widetilde K_g(y,y)\le \frac{4g}{2g+1}<2,
+ \qquad
+ K_{\mathrm{Sp}}(y,y)
+ =1-\frac{\sin(2\pi y)}{2\pi y}<2,
+ \label{eq:kernel-diagonal-envelope}
+\end{equation}
+where the last expression has value zero at \(y=0\).
+
+Extend each finite kernel by zero off \([0,d/2]\).  Local uniform convergence
+first gives convergence of the corresponding operators on compactly
+supported \(L^2\) test functions.  Because all the finite operators and the
+limit are orthogonal projections, hence contractions, density upgrades this
+to weak-operator convergence on \(L^2([0,\infty))\).  Local uniform convergence
+of the diagonals and the common bound in
+\eqref{eq:kernel-diagonal-envelope} also give convergence of every bounded
+local trace.  The limiting kernel is a locally trace-class orthogonal
+projection, so the determinantal process exists, and Soshnikov's operator
+criterion gives~\cite[Theorems~3 and~5]{Soshnikov2000}
+\begin{equation}
+ \Xi_g\Longrightarrow\PiSp
+ \quad\text{vaguely on }[0,\infty).
+ \label{eq:closed-edge-process-convergence}
+\end{equation}
+One can also see tightness directly from
+\(\E\Xi_g([0,L])\le2L\).  In particular,
+\begin{equation}
+ \sup_g\E\Xi_g([0,\eta])\le2\eta,
+ \label{eq:no-escape-zero}
+\end{equation}
+which records explicitly that mass cannot be lost through the hard edge.
+The limit has no point at zero, since its intensity there is zero.
+
+\subsection{Critical coefficients and their tails}
+
+For a rescaled angle \(y\in[0,d/2]\), the coefficient in the finite
+random-phase law is exactly
+\begin{align}
+ a_{g,\lambda}(y)
+ &=\frac{4(1-e^{-\lambda/d})}
+ {\sqrt{(1-e^{-\lambda/d})^2
+       +4e^{-\lambda/d}\sin^2(\pi y/d)}} \notag\\
+ &=\frac{4\sinh(\lambda/(2d))}
+ {\sqrt{\sinh^2(\lambda/(2d))+\sin^2(\pi y/d)}}.
+ \label{eq:finite-critical-coefficient}
+\end{align}
+On every compact subset of the closed half-line,
+\begin{equation}
+ a_{g,\lambda}(y)\longrightarrow
+ a_\lambda(y)=\frac{4\lambda}
+ {\sqrt{\lambda^2+(2\pi y)^2}}
+ \label{eq:coefficient-local-limit}
+\end{equation}
+uniformly.  There is also a uniform global envelope.  Since
+\(\sin(\pi y/d)\ge2y/d\) for \(0\le y\le d/2\), and \(d\ge5\),
+\begin{equation}
+ a_{g,\lambda}(y)\le
+ \min\left\{4,\frac{A_\lambda}{y}\right\},
+ \qquad A_\lambda:=\lambda e^{\lambda/10},
+ \label{eq:coefficient-envelope}
+\end{equation}
+for \(y>0\).  The limiting coefficient obeys the same bound (in fact
+\(a_\lambda(y)\le2\lambda/(\pi y)\)).  Combining
+\eqref{eq:kernel-diagonal-envelope} and
+\eqref{eq:coefficient-envelope}, for every \(R>0\),
+\begin{equation}
+ \sup_g\E\sum_{y\in\Xi_g,\ y>R}a_{g,\lambda}(y)^2
+ \le \frac{2A_\lambda^2}{R},
+ \qquad
+ \E\sum_{y\in\PiSp,\ y>R}a_\lambda(y)^2
+ \le \frac{2A_\lambda^2}{R}.
+ \label{eq:coefficient-tail}
+\end{equation}
+Here and below a sum over a point measure counts multiplicity.  Notice also
+that
+\[
+ \int_0^\infty a_\lambda(y)^2\,dy=4\lambda.
+\]
+Consequently the limiting squared coefficient sum is finite almost surely,
+and Markov's inequality turns the first bound in
+\eqref{eq:coefficient-tail} into the uniform probability estimate
+\(2A_\lambda^2/(\eta R)\) at threshold \(\eta>0\).
+
+We now apply the closed-hard-edge stability result proved in
+\cref{app:marked-laws}.  Extend \(a_{g,\lambda}\) continuously beyond
+\(d/2\) in any way; this does not change its values on \(\Xi_g\).  The
+local limit \eqref{eq:coefficient-local-limit} and the tail estimate
+\eqref{eq:coefficient-tail} are precisely the two coefficient hypotheses of
+\cref{prop:marked-stability}.  Coupling the same parity variable and the same
+phases gives
+\begin{equation}
+ \Wtwo^2\bigl(T_{g,\lambda}(\mathsf U_g),\nu_\lambda(\PiSp)\bigr)
+ \le \frac12\sum_{\epsilon=0}^1
+       |c_{g,\lambda}^{(\epsilon)}-1|^2
+     +\frac12\sum_{j\ge1}|u_{g,j}-u_j|^2
+ \label{eq:haar-shared-coupling}
+\end{equation}
+on a Skorokhod coupling, where the two coefficient vectors are matched in
+increasing point order and padded by zeros.  The right side tends to zero in
+probability.  This proves
+\begin{proposition}[Haar quenched limit]
+\label{prop:haar-quenched-limit}
+For Haar \(\mathsf U_g\in\USp(2g)\),
+\[
+ T_{g,\lambda}(\mathsf U_g)\Longrightarrow\nu_\lambda(\PiSp)
+ \quad\text{in }(\Ptwo,\Wtwo).
+\]
+The random measure on the right is Borel measurable and almost surely
+absolutely continuous.
+\end{proposition}
+
+For clarity, the last assertion does not rest only on the formal stability
+lemma.  The limiting process is locally finite and has no point at zero.  It
+is also infinite almost surely.  If
+\(N_L=\PiSp([0,L])\), the determinantal count identities give
+\[
+ \E N_L=L+O(1),
+ \qquad \Var N_L\le \E N_L.
+\]
+For each fixed integer \(k\), Chebyshev's inequality yields
+\(\Pr(N_L\le k)\to0\).  Monotonicity in \(L\) proves infinitude.  The
+configuration therefore has a first point \(y_1>0\).  Conditional on the
+configuration, the series in \eqref{eq:quenched-limit-law} converges almost
+surely and in \(L^2\); its first summand has a nonzero arcsine density and is
+independent of the convergent remainder.  Their convolution is absolutely
+continuous.
+
+\subsection{Two distinct nondegeneracy statements}
+
+We first prove that the random \emph{probability measure} is not deterministic.
+Every conditional law has mean one and conditional variance
+\begin{equation}
+ V_\lambda(\xi)=\frac12\sum_{y\in\xi}a_\lambda(y)^2
+ =\sum_{y\in\xi} f_\lambda(y),
+ \qquad
+ f_\lambda(y)=\frac{8\lambda^2}{\lambda^2+4\pi^2y^2}.
+ \label{eq:conditional-variance-statistic}
+\end{equation}
+The representation in \eqref{eq:kernel-riemann-limit} identifies
+\(K_{\mathrm{Sp}}\) as the orthogonal projection, under the unitary sine
+transform, onto frequencies in \([0,\pi]\).  Hence
+\begin{equation}
+ \int_0^\infty|K_{\mathrm{Sp}}(x,y)|^2\,dy
+ =K_{\mathrm{Sp}}(x,x).
+ \label{eq:projection-kernel-identity}
+\end{equation}
+Since \(f_\lambda\in L^1(0,\infty)\cap L^2(0,\infty)\), compactly
+supported approximation in the standard determinantal covariance identity
+is legitimate~\cite[Definition~3 and (1.20)]{Soshnikov2000}.  Explicitly,
+using \(K_{\mathrm{Sp}}(x,x)<2\) and
+\(\rho_2(x,y)\le K_{\mathrm{Sp}}(x,x)K_{\mathrm{Sp}}(y,y)<4\),
+\[
+ \E\left(\sum_{y\in\PiSp,\ y>R}f_\lambda(y)\right)^2
+ \le 2\int_R^\infty f_\lambda(y)^2\,dy
+    +4\left(\int_R^\infty f_\lambda(y)\,dy\right)^2
+ \longrightarrow0.
+\]
+Passing to the limit from compact truncations therefore gives
+\begin{equation}
+ \Var V_\lambda(\PiSp)
+ =\frac12\int_0^\infty\!\int_0^\infty
+   (f_\lambda(x)-f_\lambda(y))^2
+   |K_{\mathrm{Sp}}(x,y)|^2\,dx\,dy.
+ \label{eq:projection-dpp-variance}
+\end{equation}
+All factors in this formula are essential, including \(1/2\).  The integral
+is finite because it is at most
+\(2\int f_\lambda(x)^2K_{\mathrm{Sp}}(x,x)\,dx\).  It is strictly
+positive: \(f_\lambda\) is strictly decreasing on \((0,\infty)\), while
+the real-analytic kernel is nonzero on an open set off the diagonal.  We have
+proved the following.
+
+\begin{proposition}[Nondegeneracy of the quenched measure]
+\label{prop:random-law-nondegenerate}
+The random element \(\nu_\lambda(\PiSp)\) of \(\Ptwo\) is not almost surely
+constant.
+\end{proposition}
+
+Indeed, if that conditional law were fixed, then its variance would be
+fixed, contrary to \eqref{eq:projection-dpp-variance}.  This argument says
+nothing by itself about the single scalar
+\(\nu_\lambda(\PiSp)((0,\infty))\); we prove that assertion separately.
+
+\begin{proposition}[Nondegeneracy of the half-line mass]
+\label{prop:scalar-nondegenerate}
+The random variable
+\[
+ F_\lambda(\PiSp):=\nu_\lambda(\PiSp)((0,\infty))
+\]
+is not almost surely constant.
+\end{proposition}
+
+\begin{proof}
+For a fixed nonempty square-summable configuration, write
+\(S_\xi=\sum_{y\in\xi}a_\lambda(y)\cos\Phi_y\).  Its law is symmetric and,
+by splitting off the first summand, absolutely continuous.  Moreover
+\begin{equation}
+ \Pr_\Phi(|S_\xi|<1)>0.
+ \label{eq:positive-small-ball}
+\end{equation}
+To see this, choose a finite head so that the tail variance is small enough
+ that \(\Pr(|S_{\mathrm{tail}}|<1/2)>0\), and then require all the finitely many
+head cosines to be sufficiently close to zero.  Symmetry and absolute
+continuity now give
+\begin{equation}
+ F_\lambda(\xi)
+ =\frac12\left(1+\Pr_\Phi(|S_\xi|<1)\right)>\frac12.
+ \label{eq:scalar-strict-half}
+\end{equation}
+
+Choose a compact interval \(I\subset(0,\infty)\), bounded away from zero
+but close enough to it that
+\(a_\lambda(y)\ge a_0>2\) on \(I\).  For every integer \(N\),
+\begin{equation}
+ \Pr\{\PiSp(I)\ge N\}>0.
+ \label{eq:dpp-crowding}
+\end{equation}
+Indeed, the factorial-moment formula
+\cite[Definition~2 and (1.5)]{Soshnikov2000} is
+\[
+ \E(\PiSp(I))_N
+ =\int_{I^N}\det\bigl(K_{\mathrm{Sp}}(x_i,x_j)\bigr)_{i,j\le N}
+   \,dx_1\cdots dx_N.
+\]
+For distinct positive \(x_i\), the determinant is the Gram determinant in
+\(L^2(0,\pi)\) of the functions
+\(t\mapsto(2/\pi)^{1/2}\sin(tx_i)\).  These functions are linearly independent:
+differentiate an identity \(\sum_i c_i\sin(tx_i)=0\) at zero and use the
+Vandermonde matrix in \(x_i^2\).  The determinant, hence the factorial moment,
+is positive.  This proves \eqref{eq:dpp-crowding}.
+
+On the event in \eqref{eq:dpp-crowding}, select the first \(N\) points of
+\(\PiSp\cap I\).  Their coefficients lie in \([a_0,4]\), and their marked
+sum has characteristic function
+\(\prod_{j=1}^N J_0(a_jt)\).  Uniformly for \(a_j\in[a_0,4]\) and
+\(N\ge3\), Fourier inversion gives
+\begin{equation}
+ \left\|p_{\sum_{j=1}^Na_j\cos\Phi_j}\right\|_\infty
+ \le \frac{C_{\lambda,I}}{\sqrt N}.
+ \label{eq:uniform-bessel-concentration}
+\end{equation}
+Here are the constants and the inversion step.  Uniformly for
+\(a\in[a_0,4]\), the power series at zero supplies \(c,\delta>0\) such that
+\(|J_0(at)|\le e^{-ct^2}\) for \(|t|\le\delta\).  The strict inequality
+\(|J_0(x)|<1\) for \(x\ne0\) gives
+\[
+ r:=\sup_{a\in[a_0,4],\ \delta\le|t|\le T}|J_0(at)|<1
+\]
+for every fixed \(T>\delta\).  Finally choose an absolute \(B\) and then
+\(T\) large enough that the standard large-argument bound
+\(|J_0(x)|\le Bx^{-1/2}\) applies for \(x\ge a_0T\) and
+\(q:=B/\sqrt{a_0T}<1\).  On the positive half-line,
+\begin{align*}
+ \int_0^\delta e^{-cNt^2}\,dt
+   &\le\frac{\sqrt\pi}{2\sqrt{cN}},\\
+ \int_\delta^T r^N\,dt&\le Tr^N,\\
+ \int_T^\infty\left(\frac{B}{\sqrt{a_0t}}\right)^Ndt
+   &=\frac{T}{N/2-1}q^N \qquad(N>2).
+\end{align*}
+Doubling these bounds proves that the characteristic function is in
+\(L^1(\mathbb R)\), with norm \(O_{\lambda,I}(N^{-1/2})\).  Fourier inversion
+therefore gives a continuous density bounded by
+\((2\pi)^{-1}\) times that norm, proving
+\eqref{eq:uniform-bessel-concentration}.
+
+Convolving with the independent contribution of all other points cannot
+increase the density norm.  Hence, on the positive-probability crowding
+event,
+\begin{equation}
+ \frac12<F_\lambda(\PiSp)
+ \le\frac12+\frac{C_{\lambda,I}}{\sqrt N}.
+ \label{eq:crowding-upper-bound}
+\end{equation}
+If \(F_\lambda(\PiSp)=c\) almost surely, then
+\eqref{eq:scalar-strict-half} gives \(c>1/2\).  Choosing \(N\) so large
+that the right side of \eqref{eq:crowding-upper-bound} is smaller than
+\(c\) contradicts \eqref{eq:dpp-crowding}.  Thus the scalar is nonconstant.
+\end{proof}

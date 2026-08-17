@@ -1,0 +1,53 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.12in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\setlength{\emergencystretch}{3em}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\newcommand{\F}{\mathbb F}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Ptwo}{\mathcal P_2(\R)}
+\newcommand{\USp}{\mathrm{USp}}
+\newcommand{\Sp}{\mathrm{Sp}}
+\newcommand{\Law}{\operatorname{Law}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Wtwo}{W_2}
+\newcommand{\PiSp}{\Pi_{\mathrm{Sp}}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\1}{\mathbf 1}
+
+\title{A simultaneous hard-edge limit for weighted hyperelliptic prime races}
+\author{Raghav Sharma\thanks{Draft of August 2026, not yet submitted or
+externally peer reviewed.  Anthropic Claude and OpenAI Codex assisted with
+derivations, source discovery, formalization, and exposition.  The author is
+responsible for independently checking the final manuscript and for the
+complete content.}}
+\date{August 2026}
+
+\begin{document}
+\maketitle
+
+\input{sections/00-introduction}
+\input{sections/01-race-law}
+\input{sections/02-linear-independence}
+\input{sections/03-transfer}
+\input{sections/04-hard-edge}
+\input{sections/05-assembly}
+\appendix
+\input{sections/A-heat-trace}
+\input{sections/B-marked-laws}
+
+\bibliographystyle{abbrv}
+\bibliography{references}
+\end{document}

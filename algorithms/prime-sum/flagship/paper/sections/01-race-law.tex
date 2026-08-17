@@ -1,0 +1,238 @@
+\section{From the prime race to a quenched cosine law}
+\label{sec:race-law}
+
+In this section \(g,Q,t\) are fixed, and we suppress them from the notation.
+Put
+\[
+ d=2g+1,\qquad M=m+\frac12=\frac{\lambda}{d\log Q},
+ \qquad r=Q^M=e^{\lambda/d}>1.
+\tag{2.1}\label{eq:local-parameters}
+\]
+The endpoint \(N\) tends to infinity before either \(g\) or \(Q\) varies.
+This order is important: all the error estimates below may depend on the
+fixed curve, but the limiting law that they identify is exact.
+
+Write \(D_{g,t}(x)=f_g(x)(x-t)\).  The associated quadratic character is
+understood to vanish on polynomials not coprime to \(D_{g,t}\).  Its
+\(L\)-polynomial has the factorization
+\[
+ L(u,\chi_{g,t})=\prod_{j=1}^{2g}(1-\alpha_j u),
+ \qquad
+ \alpha_j=Q^{1/2}e^{i\vartheta_j},\quad
+ \alpha_{g+j}=Q^{1/2}e^{-i\vartheta_j}
+\tag{2.2}\label{eq:frob-factorization}
+\]
+after a suitable ordering, where \(0\leq\vartheta_j\leq\pi\).  For a monic
+polynomial \(F\), write \(\Lambda(F)=\deg P\) if \(F=P^a\) for a monic
+irreducible \(P\), and \(\Lambda(F)=0\) otherwise.  Logarithmic
+differentiation of the Euler product and of \eqref{eq:frob-factorization}
+gives, coefficient by coefficient,
+\[
+ \Psi(k):=\sum_{\deg F=k}\Lambda(F)\chi_{g,t}(F)
+ =-\sum_{j=1}^{2g}\alpha_j^k.
+\tag{2.3}\label{eq:psi-explicit}
+\]
+There are no omitted local terms here: at a prime dividing \(D_{g,t}\) the
+quadratic Euler symbol is zero, and the corresponding Euler factor is one.
+
+Define the unnormalised prime sum
+\[
+ A(N):=\sum_{\substack{P\ \mathrm{monic\ irreducible}\\ \deg P\leq N}}
+       (\deg P)\chi_{g,t}(P)Q^{m\deg P}.
+\]
+Separating the first powers in the von Mangoldt sum yields the exact identity
+\begin{align}
+ -A(N)
+ &=\sum_{k\leq N}\sum_{j=1}^{2g}(\alpha_jQ^m)^k+R_2(N)+R_{\geq3}(N),
+ \tag{2.4}\label{eq:exact-prime-decomposition}\\
+ R_2(N)
+ &:=\sum_{\substack{P\\2\deg P\leq N}}
+       (\deg P)\chi_{g,t}(P)^2Q^{2m\deg P},
+ \nonumber\\
+ R_{\geq3}(N)
+ &:=\sum_{\substack{P,\ a\geq3\\a\deg P\leq N}}
+       (\deg P)\chi_{g,t}(P)^aQ^{ma\deg P}.
+ \nonumber
+\end{align}
+Thus the positive square term in the inert-minus-split race is not inserted
+heuristically; its sign is forced by subtracting the higher prime powers from
+\eqref{eq:psi-explicit}.
+
+\begin{lemma}[Endpoint decomposition]
+\label{lem:endpoint-decomposition}
+For \(\epsilon\in\{0,1\}\), set
+\[
+ c_{g,\lambda}^{(0)}=\frac{2r}{r+1},\qquad
+ c_{g,\lambda}^{(1)}=\frac{2}{r+1},
+\tag{2.5}\label{eq:parity-centers}
+\]
+and, for \(0\leq\vartheta\leq\pi\), set
+\[
+ b_{g,\lambda}(\vartheta)
+ =\frac{4(1-r^{-1})}
+ {\lvert1-r^{-1}e^{-i\vartheta}\rvert}
+ =\frac{4(1-e^{-\lambda/d})}
+ {\sqrt{1+e^{-2\lambda/d}-2e^{-\lambda/d}\cos\vartheta}}.
+\tag{2.6}\label{eq:finite-amplitude}
+\]
+There are fixed phase shifts \(\eta_j\), depending only on the Frobenius
+angles, such that
+\[
+ \mathcal E_{g,t,\lambda}(N)
+ =c_{g,\lambda}^{(N\bmod2)}
+  +\sum_{j=1}^g b_{g,\lambda}(\vartheta_j)
+       \cos(N\vartheta_j+\eta_j)+o_{g,Q,t,\lambda}(1).
+\tag{2.7}\label{eq:endpoint-cosine}
+\]
+In particular, no prime powers of exponent at least three and no ramified
+prime contribute to the endpoint limit.
+\end{lemma}
+
+\begin{proof}
+Since \(\alpha_jQ^m=re^{\pm i\vartheta_j}\), the contribution of one
+conjugate pair to the first term of
+\eqref{eq:exact-prime-decomposition}, after multiplication by the normalising
+factor \(2(1-r^{-1})r^{-N}\), is
+\[
+ 4(1-r^{-1})
+ \operatorname{Re}\left(
+   \frac{e^{iN\vartheta}-r^{-N}}
+        {1-r^{-1}e^{-i\vartheta}}
+ \right).
+\tag{2.8}\label{eq:one-pair-geometric}
+\]
+The term containing \(r^{-N}\) tends to zero.  Writing the argument of the
+fixed denominator into the phase gives exactly the amplitude
+\eqref{eq:finite-amplitude}.
+
+It remains to treat the prime powers without discarding their endpoint
+dependence.  If \(\pi_Q(\ell)\) is the number of monic irreducibles of degree
+\(\ell\), the elementary identity
+\(Q^\ell=\sum_{a\mid\ell}a\pi_Q(a)\) implies
+\[
+ \ell\pi_Q(\ell)=Q^\ell+O(\ell Q^{\ell/2}).
+\tag{2.9}\label{eq:prime-polynomial}
+\]
+The finite ramified prime polynomials are precisely the \(d\) distinct linear factors of
+\(D_{g,t}\).  Hence
+\[
+ \sum_{\deg P=\ell}(\deg P)\chi_{g,t}(P)^2
+ =Q^\ell+O(\ell Q^{\ell/2}+d\,\mathbf1_{\ell=1}).
+\tag{2.10}\label{eq:unramified-square-count}
+\]
+The main term in \(R_2(N)\) is therefore
+\(\sum_{\ell\leq N/2}r^{2\ell}\).  If \(N=2L\), its normalised limit is
+\[
+ \lim_{L\to\infty}2(1-r^{-1})r^{-2L}
+       \sum_{\ell=1}^{L}r^{2\ell}=\frac{2r}{r+1};
+\]
+if \(N=2L+1\), the additional factor \(r^{-1}\) gives \(2/(r+1)\).
+For the error in \eqref{eq:unramified-square-count}, the exponent after
+normalisation is
+\[
+ (2M-\tfrac12)\ell-MN,\qquad \ell\leq N/2.
+\]
+Its maximum is at most
+\(-\min(M,1/4)N+O_{Q,M}(1)\).  The polynomial number of summands is
+harmless, so the complete square-counting error, including the missing
+ramified linear factors, is \(o(1)\).
+
+Finally use \(\ell\pi_Q(\ell)\leq Q^\ell\) in absolute value for
+\(R_{\geq3}(N)\).  A term with \(a\ell\leq N\) has, after normalisation,
+base-\(Q\) exponent
+\[
+ \ell+am\ell-MN.
+\tag{2.11}\label{eq:higher-power-exponent}
+\]
+If \(m\geq0\), this is at most
+\(\ell+mN-MN\leq-N/6\), because \(\ell\leq N/3\).  If \(m<0\) and
+\(1+3m\geq0\), it is again at most \(-N/6\); if \(1+3m<0\), it is at
+most \(-MN+O_M(1)\).  Summing the \(O(N^2)\) possible pairs
+\((a,\ell)\) proves that the normalised \(R_{\geq3}(N)\) is
+\(O_{Q,M}(N^2Q^{-\min(M,1/6)N})=o(1)\).  Combining these estimates with
+\eqref{eq:one-pair-geometric} proves the lemma.
+\end{proof}
+
+We now pass from the deterministic endpoint sequence to its limiting law.
+The precise independence condition needed below is
+\[
+ \vartheta_1,\ldots,\vartheta_g,\pi
+ \quad\hbox{linearly independent over }\mathbb Q.
+\tag{LI}\label{eq:LI}
+\]
+
+Even without \eqref{eq:LI}, the endpoint empirical law is genuine rather than
+conventional.  Indeed, let \(H_t\) be the closure in
+\(\mathbb T^g\times\mathbb Z/2\mathbb Z\) of the cyclic subgroup generated by
+\[
+ \bigl(e^{i\vartheta_1},\ldots,e^{i\vartheta_g},1\bigr).
+\]
+The powers of this generator are equidistributed in \(H_t\) with respect to
+Haar probability: this is the character criterion for a compact monothetic
+group.  Push that Haar measure forward by the continuous cosine-and-center
+function in \eqref{eq:endpoint-cosine}.  The \(o(1)\) remainder has vanishing
+Cesaro mean square, so the empirical measures converge in \(W_2\).  This
+defines the actual law \(\nu_{g,t,\lambda}\) for every \(t\).  Under
+\eqref{eq:LI}, the subgroup \(H_t\) is the full product, which yields the
+independent-phase formula below.
+
+\begin{proposition}[Exact quenched endpoint law]
+\label{prop:exact-quenched-law}
+Assume \eqref{eq:LI}.  The endpoint empirical measures of
+\(\mathcal E_{g,t,\lambda}(N)\),
+\[
+ \frac1X\sum_{1\leq N\leq X}
+   \delta_{\mathcal E_{g,t,\lambda}(N)},
+\]
+converge in \(W_2\) to
+\[
+ \nu_{g,t,\lambda}
+ =\frac12\sum_{\epsilon=0}^1
+ \Law_{\Phi}\left(
+   c_{g,\lambda}^{(\epsilon)}+
+   \sum_{j=1}^g b_{g,\lambda}(\vartheta_j)\cos\Phi_j
+ \right),
+\tag{2.12}\label{eq:finite-quenched-law}
+\]
+where the \(\Phi_j\) are independent and uniform on \([0,2\pi]\).
+Consequently the natural density of positive endpoints exists and equals
+\[
+ \nu_{g,t,\lambda}((0,\infty))
+ =\frac12\sum_{\epsilon=0}^1
+ \Pr_{\Phi}\left(
+   c_{g,\lambda}^{(\epsilon)}+
+   \sum_{j=1}^g b_{g,\lambda}(\vartheta_j)\cos\Phi_j>0
+ \right).
+\tag{2.13}\label{eq:finite-density-functional}
+\]
+\end{proposition}
+
+\begin{proof}
+Condition \eqref{eq:LI} says equivalently that
+\(1,\vartheta_1/\pi,\ldots,\vartheta_g/\pi\) are rationally independent.
+Kronecker--Weyl applied separately to \(N=2n\) and \(N=2n+1\) therefore
+makes the phase vector \(N(\vartheta_1,\ldots,\vartheta_g)\) equidistributed
+on the \(g\)-torus along each parity class.  The fixed shifts \(\eta_j\) do
+not change Haar measure, and the two parity classes each have natural density
+\(1/2\).  Formula \eqref{eq:endpoint-cosine} gives
+\eqref{eq:finite-quenched-law}; because all variables are bounded for fixed
+\(g\), the convergence also holds in \(W_2\), not merely weakly.  Each
+nonzero arcsine summand has an absolutely continuous law, so the limiting
+finite sum has no atom at zero.  The portmanteau theorem then gives
+\eqref{eq:finite-density-functional}.  This is the standard discrete
+Kronecker--Weyl mechanism behind function-field race laws
+\cite{Cha2008,Bailleul2022}, with the parity coordinate retained explicitly.
+\end{proof}
+
+At the critical scaling, \(r=e^{\lambda/d}\), so both centers in
+\eqref{eq:parity-centers} tend to \(1\).  If
+\(\vartheta=2\pi y/d\) with \(y\) in a fixed compact subset of
+\([0,\infty)\), then directly from \eqref{eq:finite-amplitude}
+\[
+ b_{g,\lambda}(2\pi y/d)
+ \longrightarrow
+ \frac{4\lambda}{\sqrt{\lambda^2+(2\pi y)^2}}
+\tag{2.14}\label{eq:critical-amplitude-limit}
+\]
+locally uniformly in \(y\).  This is the coefficient appearing in the
+hard-edge law \eqref{eq:quenched-limit-law}.

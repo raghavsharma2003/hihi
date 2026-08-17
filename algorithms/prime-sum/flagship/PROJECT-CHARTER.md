@@ -173,3 +173,23 @@ weaken the standard merely to produce a manuscript quickly.
   supplied the missing Borel/`P_2` lemma.  It also proved scalar-density
   nonconstancy separately by DPP crowding and a uniform Bessel concentration
   bound.  These internal gates now pass; external specialist review remains.
+- 2026-08-17: drafted the complete focused manuscript under `flagship/paper/`
+  and ran an end-to-end hostile integration audit plus a separate primary-source
+  audit.  The source audit caught an arithmetic/geometric Frobenius reversal in
+  the half-Tate wording; it is now corrected exactly.  The manuscript also
+  replaced the source-sensitive residual-cover bound by the direct identity
+  `dim H_c^1=(2g-1) dim(rho)` from GOS and Deligne, defined the genuine
+  orbit-Haar endpoint law on every parameter, expanded the Soshnikov, Brownian,
+  quotient-metric, and Bessel bridges, and corrected the exceptional-set BL
+  factor from one to two.
+- 2026-08-17: Tectonic 0.17.0 completed an automatic three-pass TeX/BibTeX
+  auxiliary build with exit code zero, and the 10-theorem focused Lean scaling
+  core rebuilt with a clean axiom report.  This is not a rendered-PDF check and
+  not an end-to-end formalization of the headline theorem.  External arithmetic
+  geometry and DPP review remain mandatory before submission.
+- 2026-08-17: a fresh post-repair audit rederived the current manuscript rather
+  than inheriting the earlier verdict.  It found no fatal or high-priority
+  mathematical error and requested no further TeX correction.  Status is
+  `CONDITIONAL MATHEMATICAL PASS; NOT YET RELEASE-CLEARED`: exact source-page
+  inspection, rendered-PDF QA, current novelty search, and independent human
+  arithmetic-geometry/DPP review are still required.
