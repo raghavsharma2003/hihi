@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What We Actually Found · Weighted Prime Races</title>
+<meta name="description" content="Weighted prime number races: how Chebyshev's 170-year-old bias dissolves when bigger primes count for more.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Roboto+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --paper:#f5f5f7; --card:#ffffff; --rule:#e0e0e6; --rule-2:#c9c9d3;
+  --ink:#16161c; --ink-2:#4e4e5a; --ink-3:#7c7c8a;
+  --done:#1668c4; --open:#b5600f; --accent:#a3327d;
+  --done-w:rgba(22,104,196,.09); --open-w:rgba(181,96,15,.10); --accent-w:rgba(163,50,125,.09);
+  --lift:0 1px 2px rgba(22,22,28,.05), 0 12px 28px -18px rgba(22,22,28,.28);
+  --disp:Archivo,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --text:Newsreader,Georgia,"Times New Roman",serif;
+  --mono:"Roboto Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#131318; --card:#1b1b22; --rule:#2b2b35; --rule-2:#3d3d4a;
+    --ink:#eeeef4; --ink-2:#a8a8b6; --ink-3:#7a7a88;
+    --done:#4d93e2; --open:#b8782a; --accent:#c964aa;
+    --done-w:rgba(77,147,226,.14); --open-w:rgba(184,120,42,.15); --accent-w:rgba(201,100,170,.13);
+    --lift:0 1px 2px rgba(0,0,0,.5), 0 12px 28px -18px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#131318; --card:#1b1b22; --rule:#2b2b35; --rule-2:#3d3d4a;
+  --ink:#eeeef4; --ink-2:#a8a8b6; --ink-3:#7a7a88;
+  --done:#4d93e2; --open:#b8782a; --accent:#c964aa;
+  --done-w:rgba(77,147,226,.14); --open-w:rgba(184,120,42,.15); --accent-w:rgba(201,100,170,.13);
+  --lift:0 1px 2px rgba(0,0,0,.5), 0 12px 28px -18px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--text); font-size:18px; line-height:1.62; -webkit-font-smoothing:antialiased}
+.wrap{max-width:1140px; margin:0 auto; padding:0 22px}
+.col{max-width:650px; margin:0 auto}
+
+header.top{padding:66px 0 30px}
+.kick{font-family:var(--mono); font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3)}
+h1{font-family:var(--disp); font-weight:700; font-size:clamp(38px,6.6vw,62px); line-height:1;
+  letter-spacing:-.028em; margin:14px 0 0; text-wrap:balance}
+.deck{font-size:20.5px; line-height:1.5; color:var(--ink-2); margin:18px 0 0; text-wrap:pretty}
+.hr{height:1px; background:var(--rule); margin:32px auto 0; max-width:650px}
+
+section{padding:50px 0 0}
+.hd{display:flex; gap:15px; align-items:baseline}
+.hn{font-family:var(--mono); font-size:11.5px; font-weight:500; color:var(--accent); width:22px; flex:none; padding-top:5px}
+h2{font-family:var(--disp); font-weight:600; font-size:clamp(25px,3.5vw,32px); line-height:1.14;
+  letter-spacing:-.018em; margin:0; text-wrap:balance}
+h3{font-family:var(--disp); font-weight:600; font-size:19px; letter-spacing:-.01em; margin:0}
+.bd{margin-left:37px}
+@media(max-width:620px){.bd{margin-left:0}}
+p{margin:14px 0 0; text-wrap:pretty}
+strong{font-weight:500}
+.n,code{font-family:var(--mono); font-size:.87em; font-variant-numeric:tabular-nums}
+a{color:var(--done)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent); outline-offset:3px}
+
+/* ---- finding cards ---- */
+.find{background:var(--card); border:1px solid var(--rule); border-radius:3px;
+  box-shadow:var(--lift); margin:22px auto 0; padding:22px 24px 20px; max-width:900px}
+.find-top{display:flex; gap:14px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap}
+.chip{font-family:var(--mono); font-size:10.5px; letter-spacing:.11em; text-transform:uppercase;
+  padding:4px 9px; border-radius:2px; border:1px solid; white-space:nowrap; font-weight:500}
+.chip.proved{background:var(--done-w); color:var(--done); border-color:var(--done)}
+.chip.computed{background:transparent; color:var(--done); border-color:var(--done)}
+.chip.conj{background:var(--open-w); color:var(--open); border-color:var(--open); border-style:dashed}
+.chip.open{background:transparent; color:var(--ink-3); border-color:var(--rule-2)}
+.ba{display:grid; grid-template-columns:1fr 1fr; gap:0; margin-top:17px; border-top:1px solid var(--rule)}
+@media(max-width:640px){.ba{grid-template-columns:1fr}}
+.ba > div{padding:14px 16px 12px}
+.ba > div:first-child{border-right:1px solid var(--rule); background:var(--paper)}
+@media(max-width:640px){.ba > div:first-child{border-right:none; border-bottom:1px solid var(--rule)}}
+.ba .lab{font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--ink-3); display:block; margin-bottom:6px}
+.ba .lab.new{color:var(--accent)}
+.ba p{margin:0; font-size:16px; line-height:1.5}
+.why{margin-top:14px; font-size:15.5px; line-height:1.55; color:var(--ink-2);
+  padding-left:14px; border-left:2px solid var(--rule-2)}
+.why b{color:var(--ink); font-weight:500}
+
+/* ---- ladder ---- */
+.ladder{max-width:900px; margin:26px auto 0; display:grid; gap:3px}
+.rung{display:grid; grid-template-columns:38px 1fr; gap:14px; align-items:center;
+  padding:12px 15px; background:var(--card); border:1px solid var(--rule)}
+.rung .lv{font-family:var(--mono); font-size:13px; color:var(--ink-3); font-variant-numeric:tabular-nums}
+.rung .tx{font-size:16px; line-height:1.45}
+.rung .tx b{font-weight:500}
+.rung.here{border-color:var(--accent); background:var(--accent-w); box-shadow:var(--lift)}
+.rung.here .lv{color:var(--accent); font-weight:500}
+.rung .tag{font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); display:block; margin-top:4px}
+
+/* ---- tables ---- */
+.scroll{overflow-x:auto}
+table{border-collapse:collapse; width:100%; font-family:var(--mono); font-size:13.5px;
+  font-variant-numeric:tabular-nums; white-space:nowrap}
+th,td{padding:8px 11px; text-align:right; border-bottom:1px solid var(--rule)}
+th:first-child,td:first-child{text-align:left}
+thead th{font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3);
+  font-weight:500; border-bottom:1px solid var(--rule-2)}
+tbody tr:last-child td{border-bottom:none}
+.cap{font-family:var(--mono); font-size:12px; line-height:1.55; color:var(--ink-3); margin:13px 0 0}
+
+/* ---- calculator ---- */
+.calc{background:var(--card); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--lift);
+  max-width:900px; margin:24px auto 0; padding:24px}
+.ctrl{display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:20px}
+@media(max-width:640px){.ctrl{grid-template-columns:1fr}}
+label{font-family:var(--mono); font-size:11px; letter-spacing:.11em; text-transform:uppercase;
+  color:var(--ink-3); display:block; margin-bottom:7px}
+input[type=number],select{width:100%; font-family:var(--mono); font-size:16px; padding:9px 11px;
+  background:var(--paper); color:var(--ink); border:1px solid var(--rule-2); border-radius:2px}
+.out{display:grid; grid-template-columns:1fr 1fr; gap:2px; background:var(--rule); border:1px solid var(--rule)}
+@media(max-width:640px){.out{grid-template-columns:1fr}}
+.cell{background:var(--card); padding:16px 17px}
+.cell .k{font-family:var(--mono); font-size:10.5px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-3)}
+.cell .v{font-family:var(--mono); font-size:clamp(17px,2.6vw,21px); font-weight:500; margin-top:6px;
+  font-variant-numeric:tabular-nums; word-break:break-all; line-height:1.25}
+.cell.t3 .v{color:var(--done)} .cell.t1 .v{color:var(--open)}
+.verdict{margin-top:2px; background:var(--card); padding:17px; text-align:center;
+  font-family:var(--mono); font-size:clamp(14px,2.3vw,17px); font-weight:500}
+.verdict .em{font-size:1.15em}
+.note{font-family:var(--mono); font-size:12px; color:var(--ink-3); margin-top:14px; line-height:1.55}
+
+/* ---- site plan ---- */
+.plan{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; max-width:900px; margin:22px auto 0}
+.tile{background:var(--card); border:1px solid var(--rule); border-radius:3px; padding:18px 19px; box-shadow:var(--lift)}
+.tile h4{font-family:var(--disp); font-size:16.5px; font-weight:600; margin:0 0 7px; letter-spacing:-.008em}
+.tile p{margin:0; font-size:15px; line-height:1.5; color:var(--ink-2)}
+.tile .t{font-family:var(--mono); font-size:10.5px; letter-spacing:.11em; text-transform:uppercase;
+  color:var(--accent); display:block; margin-bottom:9px}
+
+.callout{max-width:650px; margin:24px auto 0; padding:17px 20px; background:var(--card);
+  border:1px solid var(--rule); border-left:3px solid var(--accent); font-size:16.5px; line-height:1.55}
+.callout .lab{font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--accent); display:block; margin-bottom:7px}
+
+footer{margin-top:60px; border-top:1px solid var(--rule); padding:26px 0 70px}
+footer p{font-family:var(--mono); font-size:12.5px; color:var(--ink-3); line-height:1.7; margin:0}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.sitenav{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:baseline;justify-content:space-between;
+  max-width:1140px;margin:0 auto;padding:16px 22px;border-bottom:1px solid var(--rule,#ddd);
+  font-family:var(--mono,ui-monospace,monospace);font-size:12.5px}
+.sitenav .brand{font-weight:600;color:var(--ink,#222);text-decoration:none;letter-spacing:-.01em}
+.sitenav .links{display:flex;flex-wrap:wrap;gap:8px 18px}
+.sitenav a{color:var(--ink-3,#777);text-decoration:none}
+.sitenav a:hover{color:var(--ink,#222)}
+.sitenav a[aria-current]{color:var(--ink,#222);font-weight:600}
+</style>
+</head>
+<body>
+<nav class="sitenav">
+  <a class="brand" href="/">Weighted Prime Races</a>
+  <div class="links">
+    <a href="/by-hand">By hand</a>
+    <a href="/dial">The dial</a>
+    <a href="/findings" aria-current="page">Findings</a>
+    <a href="https://doi.org/10.5281/zenodo.21947101" rel="noopener">Paper</a>
+    <a href="https://github.com/raghavs1729/weighted-prime-races" rel="noopener">Code</a>
+  </div>
+</nav>
+
+<div class="wrap">
+<header class="top">
+  <div class="col">
+    <div class="kick">Findings, standing, and what comes next</div>
+    <h1>What We Actually Found</h1>
+    <p class="deck">Nine results, each with what existed before it, what we added,
+      and an honest read on how much it moves. Plus where the whole thing sits on
+      the scale of mathematical advances — including the ceiling it can't pass.</p>
+  </div>
+  <div class="hr"></div>
+</header>
+
+<section>
+  <div class="col">
+    <div class="hd"><div class="hn">01</div><h2>The short version</h2></div>
+    <div class="bd">
+      <p>There is one object: a race between two teams of primes, where you get
+        to choose how much each prime is worth. Turning that weight knob moves
+        you continuously between two research literatures that nobody had
+        connected.</p>
+      <p>We produced <strong>four theorems</strong>, <strong>five computational
+        firsts</strong>, and a complete map of what the race does at every
+        weight. Everything about the percentages assumes the Riemann Hypothesis
+        and a standard independence property — as does every paper in this
+        field, including the 1994 one that started it.</p>
+      <p>The honest summary: a solid, publishable contribution to a specialist
+        subfield, with one result (the unified law) that's stronger than the
+        rest. Not a breakthrough, not a solved famous problem. Section 4 puts a
+        number on that.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="hd"><div class="hn">02</div><h2>The computations</h2></div>
+    <div class="bd">
+      <p>These are things nobody had calculated. They're real but modest — new
+        numbers, not new mathematics.</p>
+    </div>
+  </div>
+
+  <div class="find">
+    <div class="find-top"><h3>The densities themselves</h3><span class="chip computed">Computed</span></div>
+    <div class="ba">
+      <div><span class="lab">Before</span>
+        <p>Rubinstein and Sarnak computed one number in 1994: with plain counting,
+          Team 3 leads <span class="n">99.59%</span> of the time. That single
+          figure has been quoted for thirty years.</p></div>
+      <div><span class="lab new">Ours</span>
+        <p>The same kind of number for <em>every</em> weight:
+          <span class="n">79.76%</span> at weight 1, <span class="n">69.45%</span>
+          at 2, <span class="n">64.59%</span> at 3, down to
+          <span class="n">51.38%</span> at weight 100 — for two different number
+          systems.</p></div>
+    </div>
+    <p class="why"><b>Why it matters:</b> it turns a famous isolated fact into a
+      curve. Our value at weight 0 reproduces Rubinstein–Sarnak to six decimals,
+      which is what tells you the rest of the curve is trustworthy.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-top"><h3>The growing-weight territory</h3><span class="chip computed">Computed</span></div>
+    <div class="ba">
+      <div><span class="lab">Before</span>
+        <p>The entire literature studied weights that make primes worth
+          <em>less</em> as they grow. The other direction — bigger primes worth
+          more — appears in no paper we or three adversarial searches could find.</p></div>
+      <div><span class="lab new">Ours</span>
+        <p>That whole half of the map, verified by counting every prime up to ten
+          billion. Team 1's first lead comes at <span class="n">26,861</span>
+          when counting, but at the prime <span class="n">5</span> for any
+          growing weight; lead changes jump from <span class="n">3,082</span> to
+          <span class="n">199,540</span>.</p></div>
+    </div>
+    <p class="why"><b>Why it matters:</b> it's genuinely unexplored ground, and
+      it's where the bias visibly dies. The dissolution only becomes a phenomenon
+      once you look here.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-top"><h3>Exact prime sums from the zeros</h3><span class="chip computed">Computed</span></div>
+    <div class="ba">
+      <div><span class="lab">Before</span>
+        <p>Reconstructing the <em>count</em> of primes from the zeta zeros is
+          classical and was implemented in 2017. The <em>sum</em> had not been
+          done.</p></div>
+      <div><span class="lab new">Ours</span>
+        <p>The exact sum of every prime below a billion —
+          <span class="n">24,739,512,092,254,535</span> — from 2,000 zeta zeros
+          and one thin sieved window. Also squares, cubes, reciprocals, and sums
+          restricted to one team.</p></div>
+    </div>
+    <p class="why"><b>Why it matters:</b> honestly, mostly as engineering — it is
+      not faster than a sieve, and the paper says so. Its real value was internal:
+      building it produced the formula that made the whole race computation
+      possible.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-top"><h3>Machine-certified numerics</h3><span class="chip proved">Proved</span></div>
+    <div class="ba">
+      <div><span class="lab">Before</span>
+        <p>Our own first drafts called the numbers "certified" when the
+          arithmetic underneath was ordinary floating point. A reviewer caught
+          it. That criticism was correct.</p></div>
+      <div><span class="lab new">Ours</span>
+        <p>Real ball arithmetic (FLINT/Arb): the key constant proved to 30
+          decimal places, all 14 variances proved, both central values proved
+          positive, all 1,048 zero locations certified, and the zero lists proved
+          <em>complete</em> up to explicit heights by contour counting.</p></div>
+    </div>
+    <p class="why"><b>Why it matters:</b> this is the difference between "our
+      program printed this" and "this is true, and here is the interval it lives
+      in." Only the final integration step remains ordinary floating point, and
+      the paper states that plainly.</p>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="hd"><div class="hn">03</div><h2>The theorems</h2></div>
+    <div class="bd">
+      <p>These are statements proved for <em>all</em> weights at once, not just
+        the ones we could compute. This is where the real weight of the work sits.</p>
+    </div>
+  </div>
+
+  <div class="find">
+    <div class="find-top"><h3>Theorem 1 — the curve is real and smooth</h3><span class="chip proved">Proved</span></div>
+    <div class="ba">
+      <div><span class="lab">Before</span>
+        <p>Nobody knew the percentage was even <em>well-defined</em> at
+          arbitrary weights, let alone how it behaved between the points you can
+          compute. A table of numbers with unknown gaps between them.</p></div>
+      <div><span class="lab new">Ours</span>
+        <p>At every weight above −½ the percentage exists, sits strictly between
+          50% and 100%, and <strong>moves smoothly</strong> as you slide the
+          weight — no jumps. Plus a formula bounding how fast it reaches total
+          bias at the low end.</p></div>
+    </div>
+    <p class="why"><b>Why it matters:</b> smoothness is what converts a table into
+      a curve — it means the values between our computed points behave. It's also
+      what lets the two rival definitions of the bias be described as two ends of
+      one family. <b>Honest limit:</b> the method is adapted from Humphries's 2013
+      work on a related object; what's new is the prime-race statement, the
+      smoothness, and the explicit constant.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-top"><h3>Theorem 2 — the dissolution law</h3><span class="chip proved">Proved</span></div>
+    <div class="ba">
+      <div><span class="lab">Before</span>
+        <p>We had measured how fast the bias fades and fitted a formula. A
+          reviewer flagged exactly this: a headline claim resting on a pattern,
+          not a proof.</p></div>
+      <div><span class="lab new">Ours</span>
+        <p>The formula is now a theorem with an error term, and a second-order
+          correction on top of it. It says precisely how the bias decays toward a
+          coin flip as the weight grows.</p></div>
+    </div>
+    <p class="why"><b>Why it matters:</b> it's the weight-side twin of a known
+      result about number systems (Fiorilli–Martin). Turning our own heuristic
+      into a theorem was the single biggest upgrade in the project, and it came
+      from an unexpected place — an exact formula for the variance that collapses
+      an infinite sum over the zeros into one closed expression.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-top"><h3>Theorem 3 — two fades are one fade</h3><span class="chip proved">Proved</span></div>
+    <div class="ba">
+      <div><span class="lab">Before</span>
+        <p>Two separate research lines. One: the bias weakens if you change the
+          number system you work in (studied since 2013). Two: the bias weakens
+          if you change the weight (ours). Nobody had put them in one statement.</p></div>
+      <div><span class="lab new">Ours</span>
+        <p>A single law covering <em>every</em> number system and <em>every</em>
+          weight simultaneously, with effective constants. Both earlier results
+          fall out as the two edges of it.</p></div>
+    </div>
+    <p class="why"><b>Why it matters:</b> this is the strongest result in the
+      paper. Unifying two literatures is worth more than adding a result to
+      either. <b>Honest limit:</b> one corner — where both knobs move at once in
+      opposite extremes — is genuinely different mathematics and we state it as
+      open.</p>
+  </div>
+
+  <div class="find">
+    <div class="find-top"><h3>Theorem 4 — it only ever decreases</h3><span class="chip proved">Proved</span><span class="chip conj">Partly conjectured</span></div>
+    <div class="ba">
+      <div><span class="lab">Before</span>
+        <p>Nobody had asked whether the fade is steady. From a table of values you
+          cannot tell if the curve dips and rises somewhere between your points.</p></div>
+      <div><span class="lab new">Ours</span>
+        <p>Past weight <span class="n">16.82</span> (and <span class="n">18.62</span>
+          in the other number system) the percentage is <strong>strictly
+          decreasing</strong> — it can never wobble back up. Below that it stays a
+          conjecture, supported by 30 computed points.</p></div>
+    </div>
+    <p class="why"><b>Why it matters:</b> it upgrades "dissolves" from a
+      description to a mechanism. The proof rests on a pretty fact — every term in
+      a certain expansion has the same sign — which is why it works at all.</p>
+  </div>
+
+  <div class="callout">
+    <span class="lab">The one thing to be careful about</span>
+    None of this "solves" the open problem it relates to (Problem 12 of a 2024
+    problem list). That problem asks for a logical relationship between two
+    definitions; we supply a structural one — they're the two ends of one family
+    — under assumptions. The paper's abstract says exactly that, and you should
+    too. It's still the reason a specialist would read the paper.
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="hd"><div class="hn">04</div><h2>How big is this, really?</h2></div>
+    <div class="bd">
+      <p>You asked for a comparison, so here's a blunt one. Mathematical results
+        sit on a rough scale. Two independent AI reviews put this work at
+        6.5–6.8 out of 10 before the final round of theorems, with a ceiling
+        around 8.6–8.8 after. On the human scale below, that's level 4, reaching
+        into 5.</p>
+    </div>
+  </div>
+
+  <div class="ladder">
+    <div class="rung"><span class="lv">1</span><span class="tx"><b>Coursework.</b> Reproducing results that are already in textbooks.</span></div>
+    <div class="rung"><span class="lv">2</span><span class="tx"><b>Student project.</b> A careful computation of something known, or a small original observation.</span></div>
+    <div class="rung"><span class="lv">3</span><span class="tx"><b>Publishable note.</b> Genuinely new numbers or a small new statement, using standard methods. Gets into a specialist journal.</span></div>
+    <div class="rung here"><span class="lv">4</span><span class="tx"><b>Specialist paper.</b> Several new results, at least one requiring real technique, useful to the few hundred people in the subfield. Cited by them, invisible outside.
+      <span class="tag">← this work sits here</span></span></div>
+    <div class="rung"><span class="lv">5</span><span class="tx"><b>Strong specialist paper.</b> Unifies or reframes a subfield; other researchers build on it directly. The unified law reaches toward this.</span></div>
+    <div class="rung"><span class="lv">6</span><span class="tx"><b>Major paper.</b> Results that mathematicians in other areas care about. Top general journals.</span></div>
+    <div class="rung"><span class="lv">7</span><span class="tx"><b>Breakthrough.</b> Settles a named open problem — proving the bias without assuming anything, or a real advance on the Riemann Hypothesis itself.</span></div>
+    <div class="rung"><span class="lv">8</span><span class="tx"><b>Field-defining.</b> Changes what the subject is. Fields Medal territory.</span></div>
+  </div>
+
+  <div class="col">
+    <div class="bd">
+      <p>Two things cap this work's level by construction, and both are worth
+        understanding clearly.</p>
+      <p><strong>It's conditional.</strong> Every percentage assumes the Riemann
+        Hypothesis holds for these functions, plus an independence property of the
+        zeros. Nobody has proved either. This isn't a flaw in our work — the
+        entire subfield runs on the same two assumptions — but conditional results
+        cannot be level 6.</p>
+      <p><strong>The methods are largely known.</strong> We combined existing
+        machinery in a new configuration and pushed it somewhere nobody had
+        pushed it. That's a real contribution. It is not the invention of a new
+        technique, which is what separates level 5 from level 6.</p>
+      <p>What would raise it: proving monotonicity everywhere rather than past
+        weight 17; removing the independence assumption; or the short-interval
+        direction below, which could be a stronger second paper.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="hd"><div class="hn">05</div><h2>What's still open</h2></div>
+    <div class="bd">
+      <p>Stated plainly in the paper, and worth knowing before anyone asks you.</p>
+    </div>
+  </div>
+  <div class="find">
+    <div class="find-top"><h3>Four honest gaps</h3><span class="chip open">Open</span></div>
+    <div class="ba" style="grid-template-columns:1fr">
+      <div style="border-right:none;background:transparent">
+        <p><strong>1. Monotonicity below weight 17.</strong> Proved above; a
+          conjecture below, with 30 computed points agreeing. The proof method
+          runs out of room when too few zeros are in play.</p>
+        <p style="margin-top:11px"><strong>2. The far corner.</strong> When the
+          number system grows huge <em>and</em> the weight approaches its critical
+          value at the same time, two effects fight and our control fails. Likely
+          genuinely different mathematics.</p>
+        <p style="margin-top:11px"><strong>3. How fast the finite answers
+          converge.</strong> Our ten-billion measurement agrees with the infinite
+          prediction to about four parts in a thousand — but we can't yet prove a
+          rate. Recent 2026 work on convergence rates might be adaptable.</p>
+        <p style="margin-top:11px"><strong>4. The independence assumption.</strong>
+          Some results need it, some don't. Recent work does related things under
+          much weaker hypotheses. How much of ours survives is a real question.</p>
+      </div>
+    </div>
+    <p class="why"><b>And one direction that could be its own paper:</b> if the
+      weight grows <em>as</em> you extend the range, the heavy weighting
+      concentrates the race into a shrinking window near the top. A weighted race
+      then quietly becomes a race among primes in a short interval — a different,
+      well-studied subject. Nobody has mapped that transition.</p>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="hd"><div class="hn">06</div><h2>Try it yourself</h2></div>
+    <div class="bd">
+      <p>Everything above rests on one small idea you can operate directly. Pick a
+        cut-off and a weight; this runs the actual race, exactly, in your browser.</p>
+    </div>
+  </div>
+
+  <div class="calc">
+    <div class="ctrl">
+      <div>
+        <label for="lim">Count primes up to</label>
+        <input type="number" id="lim" value="1000" min="10" max="500000" step="10">
+      </div>
+      <div>
+        <label for="wt">Weight — each prime <em>p</em> scores</label>
+        <select id="wt">
+          <option value="0">p⁰ = 1 point each (counting)</option>
+          <option value="1" selected>p¹ = the prime itself</option>
+          <option value="2">p² = its square</option>
+          <option value="3">p³ = its cube</option>
+          <option value="4">p⁴</option>
+          <option value="6">p⁶</option>
+        </select>
+      </div>
+    </div>
+    <div class="out">
+      <div class="cell t3"><div class="k">Team 3 — primes 3, 7, 11, 19…</div><div class="v" id="s3">—</div></div>
+      <div class="cell t1"><div class="k">Team 1 — primes 5, 13, 17, 29…</div><div class="v" id="s1">—</div></div>
+    </div>
+    <div class="verdict" id="vd">—</div>
+    <p class="note" id="nt"></p>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="hd"><div class="hn">07</div><h2>If this becomes a site</h2></div>
+    <div class="bd">
+      <p>You mentioned building a site around this. The calculator above is the
+        seed — here is what else the material can actually support, roughly in
+        order of how much they'd teach a visitor per unit of effort.</p>
+    </div>
+  </div>
+
+  <div class="plan">
+    <div class="tile"><span class="t">Core</span><h4>The race, live</h4>
+      <p>The calculator above, extended: watch the lead flip back and forth as the
+        cut-off climbs, with the lead changes marked. This is the single most
+        convincing thing on the site.</p></div>
+    <div class="tile"><span class="t">Core</span><h4>The weight dial</h4>
+      <p>One slider from −½ to 100 showing the percentage falling from 100% to
+        50%, with the four regimes labelled. Already built — reuse it.</p></div>
+    <div class="tile"><span class="t">Core</span><h4>Tilt versus wobble</h4>
+      <p>The animation of the steady lean against the growing waves — the one
+        picture that explains <em>why</em> weight kills the bias. Already built.</p></div>
+    <div class="tile"><span class="t">Deeper</span><h4>Build the wave</h4>
+      <p>Add zeros one at a time and watch the prime-counting curve assemble
+        itself. The best demonstration in all of analytic number theory, and your
+        zero data is already there.</p></div>
+    <div class="tile"><span class="t">Deeper</span><h4>Sort your own prime</h4>
+      <p>Type any number; it tells you if it's prime, which team, and why —
+        with the division shown. Trivial to build, surprisingly sticky.</p></div>
+    <div class="tile"><span class="t">Deeper</span><h4>The phase map</h4>
+      <p>An interactive version of the four regimes, where clicking a regime shows
+        a real race from that range and who proved what about it.</p></div>
+    <div class="tile"><span class="t">Editorial</span><h4>The three explainers</h4>
+      <p>The by-hand walkthrough, the dial, and this findings page — as the site's
+        reading path, from "what is this" to "what did we prove".</p></div>
+    <div class="tile"><span class="t">Editorial</span><h4>The honest record</h4>
+      <p>What was claimed, what got demoted, what the reviewers caught. Almost
+        nobody publishes this, and it's the most trust-building page you could
+        have.</p></div>
+  </div>
+
+  <div class="callout">
+    <span class="lab">One suggestion on sequencing</span>
+    Build the three core pieces first and ship. They already exist in some form,
+    they carry the whole story, and a small finished site beats a large unfinished
+    one. The paper, the DOI and the code repository are the anchors everything
+    links back to — the site is the front door, not a replacement.
+  </div>
+</section>
+
+<footer>
+  <div class="col">
+    <p>Every figure here is drawn from the paper's verified tables. Percentages are
+      conditional on the standard hypotheses of the field; the sieve computations
+      and the by-hand arithmetic assume nothing.<br>
+      Paper, code, data: <a href="https://doi.org/10.5281/zenodo.21947101">doi:10.5281/zenodo.21947101</a></p>
+  </div>
+</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var lim=document.getElementById("lim"), wt=document.getElementById("wt"),
+      s3=document.getElementById("s3"), s1=document.getElementById("s1"),
+      vd=document.getElementById("vd"), nt=document.getElementById("nt");
+
+  function sieve(n){
+    var f=new Uint8Array(n+1), out=[], i, j;
+    for(i=2;i*i<=n;i++) if(!f[i]) for(j=i*i;j<=n;j+=i) f[j]=1;
+    for(i=3;i<=n;i+=2) if(!f[i]) out.push(i);
+    return out;
+  }
+  function group(x){ // thousands separators on a BigInt
+    var s=x.toString(), neg=s[0]==="-"; if(neg) s=s.slice(1);
+    return (neg?"-":"")+s.replace(/\B(?=(\d{3})+(?!\d))/g,",");
+  }
+  function run(){
+    var n=Math.max(10, Math.min(500000, parseInt(lim.value,10)||1000));
+    var m=parseInt(wt.value,10);
+    var ps=sieve(n), a=0n, b=0n, na=0, nb=0, big3=[], big1=[];
+    for(var i=0;i<ps.length;i++){
+      var p=BigInt(ps[i]), v=p**BigInt(m);
+      if(ps[i]%4===3){ a+=v; na++; } else { b+=v; nb++; }
+    }
+    s3.textContent=group(a); s1.textContent=group(b);
+    var d=a-b, lead = d>0n ? "Team 3" : d<0n ? "Team 1" : "nobody";
+    var cls = d>0n ? "var(--done)" : d<0n ? "var(--open)" : "var(--ink-3)";
+    vd.innerHTML = d===0n
+      ? '<span class="em">Dead tie.</span>'
+      : '<span class="em" style="color:'+cls+'">'+lead+' leads</span> by '+group(d>0n?d:-d);
+    // count-vs-weight comparison
+    var cd = na-nb, cw = d>0n?1:d<0n?-1:0, cc = cd>0?1:cd<0?-1:0;
+    var msg = na+" primes on Team 3, "+nb+" on Team 1 (counting margin "+(cd>0?"+":"")+cd+"). ";
+    msg += (m===0) ? "At weight 0 the score is just the count."
+      : (cw===cc && cw!==0) ? "Counting and weighting agree here."
+      : "Counting and weighting DISAGREE here — the weighted race is led by "+(cw>0?"Team 3":cw<0?"Team 1":"neither")+".";
+    nt.textContent=msg;
+  }
+  lim.addEventListener("input",run); wt.addEventListener("change",run); run();
+})();
+</script>
+</body>
+</html>

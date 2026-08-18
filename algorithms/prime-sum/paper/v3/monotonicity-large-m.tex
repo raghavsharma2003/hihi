@@ -1,0 +1,1114 @@
+% ============================================================================
+% monotonicity-large-m.tex  (v3, 2026-08-16)
+%
+% PARTIAL MONOTONICITY, PROVED: under GRH(chi) and L(1/2,chi) != 0 for a real
+% primitive character chi mod q, the density delta_q(m) = P(X_{m,chi} > 0) of
+% the limiting variable is STRICTLY DECREASING in the weight for all
+% sufficiently large m, with an effectively computable threshold
+% (Theorem \ref{thm:monotone-large}); and for q = 4 and q = 3 the threshold is
+% made explicit (Corollary \ref{cor:monotone-explicit}):
+%     q = 4:  delta_4 strictly decreasing on  [16.82, infty)   (M >= 17.32),
+%     q = 3:  delta_3 strictly decreasing on  [18.62, infty)   (M >= 19.12).
+% This upgrades Conjecture \ref{conj:monotone} of the main paper to
+% theorem-on-[m_1,infty) + conjecture-on-(-1/2,m_1), the compact remainder
+% being covered numerically by the certified 30-point grid.
+%
+% Intended placement: \input into the v3 main file AFTER the dissolution
+% section (dissolution-theorem.tex); it uses these labels of earlier sections:
+%   thm:interp, conj:monotone, subsec:monotone      (main file)
+%   prop:varid, eq:varidq, prop:varasymp            (variance-identity.tex)
+%   lem:J0facts (J1)-(J4), lem:window, lem:S4mom, lem:invert, lem:bigt,
+%   thm:dissolution, cor:dissolution-race           (dissolution-theorem.tex)
+% Bibliography: TWO NEW keys must be added to the main bibliography:
+%   \bibitem{Wat44} G.~N. Watson, \emph{A Treatise on the Theory of Bessel
+%     Functions}, 2nd ed., Cambridge University Press, Cambridge, 1944.
+%   \bibitem{WW27} E.~T. Whittaker, G.~N. Watson, \emph{A Course of Modern
+%     Analysis}, 4th ed., Cambridge University Press, Cambridge, 1927.
+% (Fel71 is already added by dissolution-theorem.tex.)
+%
+% Every numerical constant of this section (the Bessel constants of Lemmas
+% \ref{lem:phi}-\ref{lem:J0env}, the closed forms of sigma^2, D, S4, the
+% window-count checks, the evaluated criterion of Proposition
+% \ref{prop:criterion-eval} with its achieved thresholds, and the analytic
+% large-M leg of Lemma \ref{lem:analytic-leg}) was computed/verified by
+%   paper/v3/verify_monotonicity.py        (numpy/scipy/fractions; see header)
+% Achieved thresholds from that script:  M_1 = 17.317 (q=4), 19.119 (q=3);
+% list-based criterion verified on [M_1, gamma_max/2] = [17.317, 319.96] resp.
+% [19.119, 349.89]; analytic leg (no zero data) covers M >= 300 for both.
+%
+% Rigor classes are stated explicitly in Remark \ref{rem:monotone-rigor}:
+% the analytic leg (M >= 300) is a theorem in the same sense as
+% Theorem \ref{thm:dissolution}; the finite range [M_1, 300] additionally
+% relies on the certified ordinate lists and float64 evaluation with stated
+% safety margins -- the same computational rigor class as Table
+% \ref{tab:enclose} (no interval arithmetic is claimed).
+%
+% A string-anchored replacement block for the main paper's monotonicity
+% subsection is appended at the END of this file as a comment.
+% ============================================================================
+
+\section{Monotonicity in the weight for large $m$}
+\label{sec:monotone-large}
+
+Conjecture~\ref{conj:monotone} asserts that $m\mapsto\delta_q(m)$ is
+strictly decreasing on all of $(-\tfrac12,\infty)$. This section proves
+the large-$m$ half. The mechanism is the one the conjecture's
+heuristic suggests: every amplitude $a_\gamma(m)$ grows with the
+weight, and through the Gil--Pelaez integral of
+Lemma~\ref{lem:invert} this pointwise growth of the noise can be
+differentiated. The key structural fact --- which replaces the
+peakedness comparisons that fail for arcsine components --- is that
+the logarithmic derivative of the Bessel factor,
+\[
+\varphi(z)\;:=\;-\frac{J_0'(z)}{J_0(z)}\;=\;\frac{J_1(z)}{J_0(z)},
+\]
+has \emph{all Taylor coefficients positive} on $(0,j_{0,1})$, where
+$j_{0,1}=2.4048\ldots$ is the first zero of $J_0$
+(Lemma~\ref{lem:phi}). Consequently the differentiated integrand is
+\emph{pointwise negative} on the entire initial segment
+$0<t\le\tfrac35$ of the inversion integral --- no cancellation has to
+be tracked there --- and only the superexponentially damped range
+$t>\tfrac35$ has to be beaten. Throughout, notation is that of
+Section~\ref{sec:dissolution}: $\chi$ is a real primitive character
+mod $q$, GRH$(\chi)$ and $L(\tfrac12,\chi)\ne0$ are assumed,
+$M=m+\tfrac12$, $a_\gamma=2M/\sqrt{M^2+\gamma^2}$,
+$\Phi_m(t)=\prod_{\gamma>0}J_0(2a_\gamma t)$,
+$\delta_q(m)=\mathbb P(X_{m,\chi}>0)$, and $\sigma_m^2$, $S_4(m)$ are
+as in Theorem~\ref{thm:dissolution}. Derivatives in the weight are
+taken with respect to $M$; since $M=m+\tfrac12$, $d/dm=d/dM$ and we
+write $'$ for either. We abbreviate
+\[
+L_M\;:=\;\log\frac{qM}{2\pi},
+\qquad
+D(M)\;:=\;\sum_{\gamma>0}\frac{16M\gamma^2}{(M^2+\gamma^2)^2},
+\]
+the latter being, as Lemma~\ref{lem:Dprop} shows, the derivative of
+the variance: $D=(\sigma_m^2)'$.
+
+\subsection*{Statements}
+
+\begin{theorem}[partial monotonicity]\label{thm:monotone-large}
+Let $\chi$ be a real primitive character mod $q$; assume GRH$(\chi)$
+and $L(\tfrac12,\chi)\ne0$. Then there is an effectively computable
+$M_1=M_1(\chi)$ such that for every $m$ with $M=m+\tfrac12\ge M_1$ the
+function $\delta_q$ is differentiable at $m$ with
+\[
+\delta_q'(m)\;\le\;-\,0.18\,\frac{D(M)}{\sigma_m^{3}}\;<\;0 .
+\]
+In particular $m\mapsto\delta_q(m)$ is strictly decreasing on
+$[M_1-\tfrac12,\infty)$. Moreover there is $M_2(\chi)\ge M_1(\chi)$
+such that
+\[
+-\delta_q'(m)\;=\;\theta(m)\,\frac{D(M)}{2\sqrt{2\pi}\,\sigma_m^{3}},
+\qquad \theta(m)\in[0.90,\,1.14]\quad(M\ge M_2(\chi)),
+\]
+and by Lemma~\ref{lem:Dprop}(iii) (for $q\in\{3,4\}$; the general
+real primitive case is identical with $2a-1$ in place of $+1$ in the
+variance constant),
+\[
+-\delta_q'(m)\;\asymp\;\frac{2L_M+2}{2\sqrt{2\pi}\,(2ML_M)^{3/2}}
+\;\asymp_q\;\frac{1}{M^{3/2}(\log M)^{1/2}}
+\qquad(m\to\infty).
+\]
+\end{theorem}
+
+\begin{corollary}[explicit thresholds for $q=4,3$]
+\label{cor:monotone-explicit}
+Assume GRH$(\chi_4)$ resp.\ GRH$(\chi_3)$. Then, in the computational
+rigor class described in Remark~\ref{rem:monotone-rigor},
+\[
+\delta_4'(m)<0\ \text{ for all } m\ge16.82,
+\qquad
+\delta_3'(m)<0\ \text{ for all } m\ge18.62 ;
+\]
+i.e.\ $\delta_4$ is strictly decreasing on $[16.82,\infty)$ and
+$\delta_3$ on $[18.62,\infty)$. For $M=m+\tfrac12\ge300$ the
+conclusion is a theorem in the full sense of
+Theorem~\ref{thm:dissolution} (no zero data enters:
+Lemma~\ref{lem:analytic-leg}); on $17.32\le M\le320$ (resp.\
+$19.12\le M\le350$) it rests additionally on the certified ordinate
+lists and the evaluated criterion of
+Proposition~\ref{prop:criterion-eval}. Under LI$(\chi_4)$ the same
+statements hold for the logarithmic density $\delta(m)$ of the
+weighted race itself, by Theorem~\ref{thm:interp}(ii) as in
+Corollary~\ref{cor:dissolution-race}. Combined with
+Conjecture~\ref{conj:monotone}, monotonicity is now proved on
+$[m_1,\infty)$ and open only on the bounded interval
+$(-\tfrac12,m_1)$, $m_1=16.82$ resp.\ $18.62$, where the certified
+grid of Section~\ref{subsec:monotone} supports it numerically.
+\end{corollary}
+
+The proof occupies the rest of the section: Bessel structure
+(Lemmas~\ref{lem:phi}, \ref{lem:J0env}), digamma and zero-counting
+inputs (Lemmas~\ref{lem:binet}--\ref{lem:Nlow}), the variance
+derivative (Lemma~\ref{lem:Dprop}), differentiation under the
+integral (Lemma~\ref{lem:diffint}), the sign structure and the main
+term (Lemma~\ref{lem:negstruct}), the tail (Lemma~\ref{lem:tailexp}),
+and the assembly (proof of Theorem~\ref{thm:monotone-large},
+Proposition~\ref{prop:criterion-eval},
+Lemma~\ref{lem:analytic-leg}).
+
+\subsection*{Bessel structure}
+
+\begin{lemma}[positivity of the Bessel log-derivative]\label{lem:phi}
+Let $j_{0,1}<j_{0,2}<\cdots$ be the positive zeros of $J_0$ (all
+real). Then:
+\begin{itemize}
+\item[(i)] $J_0(z)=\prod_{k\ge1}\bigl(1-z^2/j_{0,k}^2\bigr)$, locally
+uniformly on $\mathbb C$, and for $|z|<j_{0,1}$,
+\[
+-\log J_0(z)\;=\;\sum_{n\ge1}\frac{\lambda_n}{n}\,z^{2n},
+\qquad
+\lambda_n:=\sum_{k\ge1}j_{0,k}^{-2n}\;>\;0,
+\]
+with $\lambda_1=\tfrac14$, $\lambda_2=\tfrac1{32}$,
+$\lambda_3=\tfrac1{192}$. In particular
+$\varphi(z)=-J_0'(z)/J_0(z)=\sum_{n\ge1}2\lambda_nz^{2n-1}$ has all
+coefficients positive, so $\varphi>0$ on $(0,j_{0,1})$ and
+$\varphi(z)\ge\tfrac z2$ there.
+\item[(ii)] For $0\le z\le\tfrac12$:
+\[
+\frac z2+\frac{z^3}{16}\;\le\;\varphi(z)\;\le\;
+\frac z2+\frac{z^3}{16}+\frac{z^5}{90}\;\le\;0.517\,z .
+\]
+\item[(iii)] $j_{0,1}>2.4$.
+\end{itemize}
+\end{lemma}
+
+\begin{proof}
+(i) $J_0$ is entire, even, $J_0(0)=1$, and of order $1$
+($|J_0(z)|\le\sum|z|^{2k}/(4^k(k!)^2)\le e^{|z|}$ from the series,
+and $J_0$ is unbounded on the imaginary axis). All its zeros are real
+--- classical \cite[Ch.~XV]{Wat44} --- hence they are the
+$\pm j_{0,k}$, and $\sum j_{0,k}^{-2}<\infty$ since an order-$1$
+entire function has convergence exponent $\le1$ for its zeros. Exactly
+as in Step~3 of the proof of Proposition~\ref{prop:varid}, Hadamard's
+factorization plus pairing $\pm j_{0,k}$ cancels the exponential
+factors, evenness kills the linear exponent, and $J_0(0)=1$ fixes the
+constant, giving the product (also stated directly in
+\cite[Ch.~XV]{Wat44}). For $|z|<j_{0,1}$ each factor lies in the disc
+$|w-1|<1$, so
+$-\log J_0(z)=\sum_k-\log(1-z^2/j_{0,k}^2)
+=\sum_k\sum_n(z^2/j_{0,k}^2)^n/n$, absolutely convergent, and
+rearrangement gives the double-series form with the Rayleigh sums
+$\lambda_n>0$. Their first three values follow by matching with the
+directly computed expansion of $-\log J_0$: writing $J_0=1-w$,
+$w=\tfrac{z^2}4-\tfrac{z^4}{64}+\tfrac{z^6}{2304}-\cdots$, one gets
+$-\log J_0=w+\tfrac{w^2}2+\tfrac{w^3}3+\cdots
+=\tfrac{z^2}4+\tfrac{z^4}{64}+\bigl(\tfrac1{2304}-\tfrac1{256}
++\tfrac1{192}\bigr)z^6+\cdots$ and
+$\tfrac1{2304}-\tfrac1{256}+\tfrac1{192}=\tfrac{4}{2304}
+=\tfrac1{576}$; hence $\lambda_1=\tfrac14$,
+$\lambda_2=2\cdot\tfrac1{64}=\tfrac1{32}$,
+$\lambda_3=3\cdot\tfrac1{576}=\tfrac1{192}$ (the $z^2$ and $z^4$
+coefficients are those of Lemma~\ref{lem:J0facts}(J4)).
+Term-by-term differentiation of the power series gives $\varphi$.
+
+(ii) The lower bound is positivity of the coefficients with $n\ge3$
+dropped. For the upper: since $J_0(z)\ge1-\tfrac{z^2}4>0$ for $z<2$,
+we have $j_{0,1}>2$, so $\lambda_n\le j_{0,1}^{-2(n-3)}\lambda_3
+\le4^{-(n-3)}\lambda_3$ for $n\ge3$, and for $z\le\tfrac12$
+\[
+\sum_{n\ge3}2\lambda_nz^{2n-1}
+\;\le\;2\lambda_3z^5\sum_{j\ge0}\Bigl(\frac{z^2}4\Bigr)^{j}
+\;\le\;\frac{2z^5}{192}\cdot\frac{16}{15}\;=\;\frac{z^5}{90}.
+\]
+Finally $\tfrac12+\tfrac{z^2}{16}+\tfrac{z^4}{90}
+\le\tfrac12+\tfrac1{64}+\tfrac1{1440}<0.517$ at $z\le\tfrac12$.
+
+(iii) In the series $J_0(2.4)=\sum_k(-1)^kc_k$,
+$c_k=(1.44)^k/(k!)^2$, the terms decrease strictly from $k=1$ on
+($c_{k+1}/c_k=1.44/(k+1)^2\le0.36$), so the alternating remainder
+after $c_6$ is at most $c_7<6\times10^{-7}$, and
+\[
+J_0(2.4)\;\ge\;1-1.44+0.5184-0.082945+0.0074650-0.000430-10^{-6}
+\;>\;0.0024\;>\;0 .
+\]
+Since $J_0>0$ on $[0,2]$ as well (by $1-\tfrac{z^2}4+\cdots$
+alternating) and $J_0$ is continuous, and since $J_0$ is strictly
+decreasing on $[0,2\sqrt2]$ by Lemma~\ref{lem:J0env}(i) below, $J_0>0$
+on $[0,2.4]$, i.e.\ $j_{0,1}>2.4$.
+\end{proof}
+
+\begin{lemma}[envelopes of $J_0$]\label{lem:J0env}
+Let $P(z):=J_0(z)^2+J_1(z)^2$. Then:
+\begin{itemize}
+\item[(i)] $J_0'=-J_1$, $(zJ_1)'=zJ_0$, and $P'(z)=-2J_1(z)^2/z\le0$:
+$P$ is decreasing on $(0,\infty)$, $P\le P(0)=1$; in particular
+$|J_1|\le1$ everywhere, and by the alternating series
+$0<J_1(z)\le z/2$ on $(0,2\sqrt2\,]$, so
+\[
+|J_1(z)|\le\min\bigl(1,\tfrac z2\bigr)\quad(z\ge0),
+\qquad
+J_0\ \text{is strictly decreasing on }[0,2\sqrt2\,].
+\]
+\item[(ii)] $\sup_{z\ge2\sqrt2}|J_0(z)|\le\sqrt{P(2\sqrt2)}\le0.446$.
+\item[(iii)] $\sup_{z\ge z_0}|J_0(z)|\le\max\bigl(J_0(z_0),0.446\bigr)$
+for $0<z_0\le2\sqrt2$; in particular
+$\displaystyle\rho_1:=\sup_{z\ge1.0733}|J_0(z)|\le0.733$.
+\item[(iv)] On any $[z_{\mathrm{lo}},z_{\mathrm{hi}}]\subset(0,\infty)$,
+\[
+\sup_{[z_{\mathrm{lo}},z_{\mathrm{hi}}]}|J_0|
+=\max\Bigl(|J_0(z_{\mathrm{lo}})|,\,|J_0(z_{\mathrm{hi}})|,\,
+\max_{j_{1,k}\in(z_{\mathrm{lo}},z_{\mathrm{hi}})}|J_0(j_{1,k})|\Bigr),
+\]
+where $j_{1,k}$ are the positive zeros of $J_1$ (the critical points
+of $J_0$), and $|J_0(j_{1,k})|=\sqrt{P(j_{1,k})}$ is decreasing in
+$k$, so the inner maximum is attained at the smallest $j_{1,k}$ in the
+interval.
+\end{itemize}
+\end{lemma}
+
+\begin{proof}
+(i) $J_0'=-J_1$ and $(zJ_1)'=zJ_0$ are termwise identities of the
+defining series (for the first,
+$\frac{d}{dz}\sum_k(-1)^k\frac{(z/2)^{2k}}{(k!)^2}
+=-\frac z2\sum_{k\ge1}(-1)^{k-1}\frac{(z^2/4)^{k-1}}{(k-1)!\,k!}
+=-J_1$; the second is the same computation for $zJ_1$). Hence
+$P'=2J_0J_0'+2J_1J_1'=-2J_0J_1+2J_1\bigl(J_0-\tfrac{J_1}z\bigr)
+=-\tfrac{2J_1^2}z\le0$. The series
+$J_1(z)=\sum_k(-1)^k(z/2)^{2k+1}/(k!(k+1)!)$ has terms decreasing in
+modulus for $z\le2\sqrt2$ (ratio $z^2/(4(k+1)(k+2))\le z^2/8\le1$),
+so its partial sums bracket it: $0\le J_1\le\tfrac z2$ there, with
+$J_1>0$ on $(0,2\sqrt2]$ (at $z=2\sqrt2$ the bracketing from the
+third term on gives $J_1\ge c_2-c_3>0$). So $J_0'=-J_1<0$ on
+$(0,2\sqrt2]$.
+
+(ii) For $z\ge2\sqrt2$, $|J_0(z)|\le\sqrt{P(z)}\le\sqrt{P(2\sqrt2)}$.
+At $z=2\sqrt2$, $z^2=8$ exactly, and the alternating tails of both
+series (decreasing from $k=2$ on) give the enclosures
+$J_0(2\sqrt2)\in[-0.19655,-0.19654]$,
+$J_1(2\sqrt2)\in[0.40019,0.40020]$ (twelve terms; the script computes
+the partial sums in exact rational arithmetic), whence
+$P(2\sqrt2)\le0.19655^2+0.40020^2<0.19880$ and
+$\sqrt{P(2\sqrt2)}<0.44587<0.446$.
+
+(iii) On $[z_0,2\sqrt2]$, $J_0$ decreases from $J_0(z_0)$ to
+$J_0(2\sqrt2)\in(-0.197,-0.196)$, so $|J_0|\le\max(J_0(z_0),0.197)$
+there; beyond, (ii) applies. For $z_0=1.0733$ the alternating upper
+bound gives $J_0(1.0733)\le1-\tfrac{z_0^2}4+\tfrac{z_0^4}{64}
+<0.7328<0.733\;(>0.446)$.
+
+(iv) $|J_0|$ can attain an interior maximum only at a critical point
+of $J_0$, i.e.\ a zero of $J_1$; at such points $J_1=0$, so
+$|J_0(j_{1,k})|=\sqrt{P(j_{1,k})}$, decreasing in $k$ since $P$ is
+decreasing.
+\end{proof}
+
+\subsection*{Digamma and counting inputs}
+
+\begin{lemma}[Binet bounds]\label{lem:binet}
+For $x>0$,
+\[
+\log x-\frac1{2x}-\frac1{12x^2}\;\le\;\psi(x)\;\le\;\log x-\frac1{2x},
+\qquad
+\frac1x+\frac1{2x^2}\;\le\;\psi'(x)\;\le\;\frac1x+\frac1{2x^2}
++\frac1{6x^3}.
+\]
+\end{lemma}
+
+\begin{proof}
+Binet's first formula \cite[Ch.~XII]{WW27}:
+$\psi(x)=\log x-\tfrac1{2x}-2\int_0^\infty
+\frac{t\,dt}{(t^2+x^2)(e^{2\pi t}-1)}$. The integral is positive and,
+using $t^2+x^2\ge x^2$ and
+$\int_0^\infty\frac{t\,dt}{e^{2\pi t}-1}
+=\frac{\zeta(2)}{(2\pi)^2}=\frac1{24}$, at most $\frac1{24x^2}$;
+doubling gives the $\psi$ bounds. Differentiating under the integral
+(dominated convergence; the differentiated integrand is
+$\le2t\cdot2x\,x^{-4}/(e^{2\pi t}-1)$ locally uniformly) yields
+$\psi'(x)=\frac1x+\frac1{2x^2}+4x\int_0^\infty
+\frac{t\,dt}{(t^2+x^2)^2(e^{2\pi t}-1)}$, and the last integral lies
+in $[0,\tfrac1{24}x^{-4}]$.
+\end{proof}
+
+\begin{lemma}[explicit upper zero count]\label{lem:Nplus}
+Assume GRH$(\chi)$ and $L(\tfrac12,\chi)\ne0$, $\chi$ real primitive
+mod $q$, odd ($a=1$; this covers $q=3,4$). Then for $T\ge\tfrac32$,
+\[
+N_\chi(T)\;\le\;N^+(T):=\frac T2\log\frac{q(T+2)}{2\pi}\;+\;0.57\,T .
+\]
+\end{lemma}
+
+\begin{proof}
+Apply the variance identity \eqref{eq:varidq} at weight $M=T$: every
+zero with $\gamma\le T$ contributes
+$\frac{8T^2}{T^2+\gamma^2}\ge4$ to the (positive-termed) sum
+$4T\,\frac{\xi'}{\xi}(T+\tfrac12,\chi)
+=\sum_\gamma\frac{8T^2}{T^2+\gamma^2}$, so
+$N_\chi(T)\le T\,\frac{\xi'}{\xi}(T+\tfrac12,\chi)$. At
+$s=T+\tfrac12\ge2$,
+\[
+\frac{\xi'}{\xi}(s,\chi)
+=\tfrac12\log\tfrac q\pi+\tfrac12\psi\Bigl(\tfrac{s+1}2\Bigr)
++\frac{L'}{L}(s,\chi)
+\le\tfrac12\log\tfrac q\pi+\tfrac12\log\tfrac{T+\frac32}2+0.5700,
+\]
+by Lemma~\ref{lem:binet} and
+$|L'/L(s,\chi)|\le\sum_n\Lambda(n)n^{-2}
+=-\tfrac{\zeta'}\zeta(2)=0.56996\ldots$ (as in the proof of
+Proposition~\ref{prop:varasymp}). Since
+$\tfrac q\pi\cdot\tfrac{T+3/2}2\le\tfrac{q(T+2)}{2\pi}$, the claim
+follows.
+\end{proof}
+
+\begin{lemma}[self-contained lower zero count]\label{lem:Nlow}
+Under the hypotheses of Lemma~\ref{lem:Nplus}, for every $Y>0$,
+\begin{equation}\label{eq:Nlow}
+N_\chi\bigl(\sqrt3\,Y\bigr)\;\ge\;
+\frac1{32}\Bigl(\frac{S_4(Y)}{8}-\sigma^2(Y)\Bigr),
+\end{equation}
+where $\sigma^2(Y)$, $S_4(Y)$ denote the closed forms
+\eqref{eq:varidq}, \eqref{eq:S4id} evaluated at weight $M=Y$.
+Moreover, for $q\in\{3,4\}$ and $Y\ge20$, with
+$\ell_Y:=\log\frac{qY}{2\pi}$,
+\begin{equation}\label{eq:Nlowexp}
+N_\chi\bigl(\sqrt3\,Y\bigr)\;\ge\;\frac{Y(\ell_Y-2)}{16}-\frac12 .
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Write $u_\gamma=Y^2/(Y^2+\gamma^2)\in(0,1)$, so
+$\sigma^2(Y)=\sum_\gamma8u_\gamma$ and
+$S_4(Y)=\sum_\gamma256u_\gamma^2$. Then
+$\tfrac{S_4}8-\sigma^2=\sum_\gamma8u_\gamma(4u_\gamma-1)$, and
+$8u(4u-1)$ is negative for $u<\tfrac14$ (i.e.\ $\gamma>\sqrt3Y$) and
+at most $24\le32$ for $u\le1$. Dropping the negative terms and
+bounding the rest,
+$\tfrac{S_4}8-\sigma^2\le32\,N_\chi(\sqrt3Y)$, which is
+\eqref{eq:Nlow}.
+
+For \eqref{eq:Nlowexp} we need explicit bounds at weight $Y$, from
+\eqref{eq:varidq}, \eqref{eq:S4id} with $x=\tfrac Y2+\tfrac34$ and
+Lemma~\ref{lem:binet} (all for $q\in\{3,4\}$, $Y\ge20$; the script
+checks each step):
+\[
+\sigma^2(Y)\le2Y\ell_Y+1+\frac3Y+4Y\,|L'/L|\le2Y\ell_Y+1.4,
+\qquad
+\sigma^2(Y)\ge2Y\ell_Y
+\]
+(upper: $2Y\psi(x)\le2Y\log x-\tfrac Yx$,
+$2Y\log(1+\tfrac3{2Y})\le3$, $-\tfrac Yx\le-2+\tfrac3Y$, and
+$4Y|L'/L(Y+\tfrac12)|\le2.28\,Y\,2^{-(Y-\frac32)}\le0.1$;
+lower: the same expansions with the $-\tfrac1{12x^2}$ and
+$-\tfrac{u^2}2$ remainders, which total $\ge-1$ for $Y\ge10$); and,
+using $\psi'$ of Lemma~\ref{lem:binet} in
+$S_4=16\sigma^2-64Y^2\bigl(\tfrac14\psi'(x)+(L'/L)'\bigr)$ together
+with $16Y^2/x\le32Y$, $8Y^2/x^2\le32$,
+$\tfrac{8}{3}Y^2/x^3\le\tfrac{64}{3Y}$, and
+$|(L'/L)'(Y+\tfrac12)|\le0.89\cdot2^{-(Y-\frac32)}$
+(from $\sum_n\Lambda(n)(\log n)n^{-2}\le0.89$, verified by the
+script),
+\[
+S_4(Y)\;\ge\;16\cdot2Y\ell_Y-32Y-34 .
+\]
+Hence
+$\tfrac{S_4}8-\sigma^2\ge4Y\ell_Y-4Y-4.3-2Y\ell_Y-1.4
+\ge2Y(\ell_Y-2)-6$, and division by $32$ gives
+\eqref{eq:Nlowexp}.
+\end{proof}
+
+\subsection*{The variance derivative}
+
+\begin{lemma}[derivative of the variance]\label{lem:Dprop}
+Under GRH$(\chi)$ and $L(\tfrac12,\chi)\ne0$:
+\begin{itemize}
+\item[(i)] $a_\gamma'(M)=\dfrac{2\gamma^2}{(M^2+\gamma^2)^{3/2}}>0$,
+$\ \sum_\gamma a_\gamma a_\gamma'=\dfrac D4<\infty$, and on $(0,\infty)$
+\[
+(\sigma_m^2)'\;=\;D(M)\;=\;\sum_{\gamma>0}
+\frac{16M\gamma^2}{(M^2+\gamma^2)^2}
+\;=\;4\,\frac{\xi'}{\xi}(m+1,\chi)+4M\,(\log\xi)''(m+1,\chi)\;>\;0 .
+\]
+\item[(ii)] $D$ is differentiable with $|D'(M)|\le3D(M)/M$; hence for
+$0<M_a\le M\le M_b$,
+\[
+\max\bigl(D(M_a),D(M_b)\bigr)\Bigl(\frac{M_a}{M_b}\Bigr)^{3}
+\;\le\;D(M)\;\le\;
+\min\bigl(D(M_a),D(M_b)\bigr)\Bigl(\frac{M_b}{M_a}\Bigr)^{3}.
+\]
+\item[(iii)] For $q\in\{3,4\}$ and $M\ge10$:
+$\bigl|D(M)-2L_M-2\bigr|\le8/M$ and $2ML_M\le\sigma_m^2\le2ML_M+3.1$;
+for $M\ge20$ also $S_4(m)\le32M(L_M-1)+100$.
+\end{itemize}
+\end{lemma}
+
+\begin{proof}
+(i) The formula for $a_\gamma'$ is a direct computation, and
+$4a_\gamma a_\gamma'=16M\gamma^2/(M^2+\gamma^2)^2$. The series for
+$\sigma_m^2=\sum_\gamma8M^2/(M^2+\gamma^2)$ may be differentiated
+termwise: the differentiated terms are dominated on $M\le A$ by
+$16A/\gamma^2$, so the derivative series converges uniformly on
+compacts and the standard theorem applies, exactly as in the proofs of
+Proposition~\ref{prop:varid} and Corollary~\ref{cor:Cexact}. The
+closed form follows from
+$\sigma_m^2=4M(\log\Xi)'(M)$ and the termwise-differentiated series
+for $(\log\Xi)'$, $(\log\Xi)''$ established there:
+$4(\log\Xi)'(M)+4M(\log\Xi)''(M)
+=\sum_\gamma\bigl[\tfrac{8M}{M^2+\gamma^2}
++\tfrac{8M(\gamma^2-M^2)}{(M^2+\gamma^2)^2}\bigr]
+=\sum_\gamma\tfrac{16M\gamma^2}{(M^2+\gamma^2)^2}$. Positivity is
+termwise.
+
+(ii) Termwise again (domination as before),
+$D'(M)=\sum_\gamma16\gamma^2\frac{\gamma^2-3M^2}{(M^2+\gamma^2)^3}$,
+and $|\gamma^2-3M^2|\le3(\gamma^2+M^2)$ gives
+$|D'|\le\sum48\gamma^2/(M^2+\gamma^2)^2=3D/M$. Integrating
+$|(\log D)'|\le3/M$ from either endpoint of $[M_a,M_b]$ gives the
+two-sided comparison.
+
+(iii) With $x=\tfrac M2+\tfrac34$, $u=\tfrac3{2M}$,
+\[
+D=2\log\tfrac q\pi+2\psi(x)+M\psi'(x)
++4\tfrac{L'}{L}(m+1)+4M\bigl(\tfrac{L'}{L}\bigr)'(m+1) .
+\]
+Lemma~\ref{lem:binet} plus $2\log x=2\log\tfrac M2+2\log(1+u)$,
+$2\log(1+u)\in[2u-u^2,2u]$, $\tfrac Mx=\tfrac2{1+u}$, and the
+$L$-bounds $|4L'/L|+|4M(L'/L)'|\le(2.28+3.56M)2^{-(M-\frac32)}
+\le1.1/M$ ($M\ge10$) give, after collecting the $1/M$ terms (which
+cancel to first order),
+$|D-2L_M-2|\le4.3/M+9/M^2\le8/M$. The $\sigma^2$ and $S_4$ bounds are
+those derived in the proof of Lemma~\ref{lem:Nlow} (with the $S_4$
+upper bound using the lower $\psi'$ estimate:
+$S_4\le16(2ML_M+1.4)-32M+48-27+0.1\le32M(L_M-1)+100$).
+\end{proof}
+
+\subsection*{Differentiating the inversion integral}
+
+\begin{lemma}[differentiation under the integral]\label{lem:diffint}
+Let $0<M_a\le M_b$ and suppose at least $8$ ordinates satisfy
+$\gamma\le2M_a$. Then:
+\begin{itemize}
+\item[(a)] for every $t\ge0$ and $M\in[M_a,M_b]$ the function
+$M\mapsto\Phi_m(t)$ is differentiable, with
+\begin{equation}\label{eq:dPhi}
+\partial_M\Phi_m(t)\;=\;\sum_{\gamma>0}
+J_0'\bigl(2a_\gamma t\bigr)\,2a_\gamma'(M)\,t
+\prod_{\gamma'\ne\gamma}J_0\bigl(2a_{\gamma'}t\bigr),
+\end{equation}
+the series converging absolutely, uniformly on
+$[M_a,M_b]\times[0,T]$ for each $T$; for $4t<j_{0,1}$ equivalently
+\begin{equation}\label{eq:dPhiLog}
+\partial_M\Phi_m(t)\;=\;-\,\Phi_m(t)\,B(t),
+\qquad
+B(t):=\sum_{\gamma>0}\varphi\bigl(2a_\gamma t\bigr)\,2a_\gamma'(M)\,t
+\;\ge\;0 .
+\end{equation}
+\item[(b)] With
+$A(t):=\sum_\gamma\min\bigl(1,a_\gamma t\bigr)2a_\gamma'(M)t$ one has,
+for all $t>0$,
+\begin{equation}\label{eq:Abound}
+|\partial_M\Phi_m(t)|\;\le\;A(t)\cdot
+\sup_{\gamma}\prod_{\gamma'\in S,\ \gamma'\ne\gamma}
+\bigl|J_0(2a_{\gamma'}t)\bigr|,
+\qquad
+A(t)\;\le\;\frac{D(M)\,t^2}{2}+\frac{4t}{M}\,N_\chi(2Mt),
+\end{equation}
+for any finite set $S$ of ordinates.
+\item[(c)] $\delta_q$ is differentiable on the corresponding
+$m$-interval, and
+\[
+\delta_q'(m)\;=\;\frac1\pi\int_0^\infty
+\partial_M\Phi_m(t)\,\frac{\sin t}{t}\,dt .
+\]
+\end{itemize}
+\end{lemma}
+
+\begin{proof}
+(a) Fix $T$ and let $N_1$ be so large that
+$a_\gamma(M_b)\,T\le\tfrac14$ for all but the first $N_1$ ordinates
+(possible since $a_\gamma(M_b)\le2M_b/\gamma\to0$). Split
+$\Phi_m=P\cdot R$ with $P$ the product over the first $N_1$ ordinates
+and $R$ the tail. On the tail every argument is $\le\tfrac12$, each
+factor is $\ge\tfrac34$ by (J3), and
+$R=\exp\bigl(\sum_{\mathrm{tail}}\log J_0(2a_\gamma t)\bigr)$; the
+termwise $M$-derivatives $-\varphi(2a_\gamma t)2a_\gamma't$ are
+bounded by $0.517\cdot4a_\gamma a_\gamma't^2$
+(Lemma~\ref{lem:phi}(ii)), whose sum converges uniformly on
+$[M_a,M_b]$ by Lemma~\ref{lem:Dprop}(i)--(ii) (with $D\le D_{\max}$
+on the interval). Hence $R$ is differentiable with the termwise
+log-derivative; $P$ is a finite product of differentiable factors;
+the product rule gives \eqref{eq:dPhi}, absolutely and locally
+uniformly (each summand of the tail part carries the convergent
+majorant above, each of the finitely many head summands is
+continuous). For $4t<j_{0,1}$ every factor is positive
+(all arguments are $\le4t<j_{0,1}$ since $a_\gamma\le2$), so the
+product form can be rewritten as \eqref{eq:dPhiLog}, and $B\ge0$
+because $\varphi\ge0$ on $[0,j_{0,1})$ and $a_\gamma'>0$.
+
+(b) In \eqref{eq:dPhi} bound the differentiated factor by
+$|J_0'(2a_\gamma t)|=|J_1(2a_\gamma t)|\le\min(1,a_\gamma t)$
+(Lemma~\ref{lem:J0env}(i)), all factors outside $S\setminus\{\gamma\}$
+by $1$ (J1). For the bound on $A$: terms with $a_\gamma t\le1$
+contribute at most $\sum2a_\gamma a_\gamma't^2\le\tfrac D2t^2$; terms
+with $a_\gamma t>1$ force $\gamma<2Mt$ and contribute at most
+$2a_\gamma't\le\tfrac{4t}M$ each, since $a_\gamma'\le
+2/\sqrt{M^2+\gamma^2}\le2/M$.
+
+(c) Integrability of a dominant: on $[0,\tfrac18]$,
+\eqref{eq:dPhiLog} with $B\le0.517D_{\max}t^2$ and
+$|\Phi_m|\le1$; on $[\tfrac18,16]$, \eqref{eq:Abound} with the
+trivial product bound $1$ and
+$A(t)\le\tfrac{D_{\max}}2t^2+\tfrac{4t}{M_a}N^+(2M_bt)$
+(Lemma~\ref{lem:Nplus}), a fixed continuous function; on
+$[16,\infty)$, take $S=\{\gamma\le2M_a\}$ ($|S|=n\ge8$): each factor
+obeys (J2) with $2a_\gamma t\ge\tfrac4{\sqrt5}t$, so the product over
+any $n-1$ of them is $\le(c_3/\sqrt t)^{\,n-1}\le c_3^{7}t^{-7/2}$,
+and the integrand is $\ll t^{2}\log t\cdot t^{-1}\cdot t^{-7/2}$,
+integrable. Every bound is uniform for $M\in[M_a,M_b]$. Since
+$\Phi_m\in L^1$ (same bounds), Lemma~\ref{lem:invert}(b) gives the
+inversion formula for each such $m$, and the standard
+differentiation-under-the-integral theorem (pointwise
+differentiability in $M$ plus an integrable uniform dominant for
+$\partial_M\Phi\cdot\sin t/t$) yields (c).
+\end{proof}
+
+\subsection*{Sign structure, main term, tail}
+
+\begin{lemma}[{negativity on $[0,\frac35]$, and the main term}]
+\label{lem:negstruct}
+In the setting of Lemma~\ref{lem:diffint}, for $0\le t\le\tfrac35$
+every factor of $\Phi_m(t)$ is positive and
+$-\partial_M\Phi_m(t)=\Phi_m(t)B(t)\ge0$; since also
+$\sin t/t>0$ there,
+\begin{equation}\label{eq:split}
+-\,\delta_q'(m)\;\ge\;
+\underbrace{\frac1\pi\int_0^{1/8}\Phi_m(t)B(t)\frac{\sin t}t\,dt}
+_{=:\ \mathrm{MAIN}}
+\;-\;
+\underbrace{\frac1\pi\int_{3/5}^{\infty}\bigl|\partial_M\Phi_m(t)\bigr|
+\frac{|\sin t|}t\,dt}_{=:\ \mathrm{TAIL}} ,
+\end{equation}
+and, with $\beta:=\dfrac{\sigma_m^2}2+\dfrac{S_4(m)}{1088}$,
+\begin{equation}\label{eq:mainlb}
+\mathrm{MAIN}\;\ge\;\frac{0.9973}{\pi}\cdot\frac{D(M)}2
+\Bigl[\frac{\sqrt\pi}{4\beta^{3/2}}\,
+\operatorname{erf}\Bigl(\frac{\sqrt\beta}8\Bigr)
+-\frac{e^{-\beta/64}}{16\beta}\Bigr].
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+For $t\le\tfrac35$ all arguments satisfy
+$2a_\gamma t\le4t\le\tfrac{12}5<j_{0,1}$
+(Lemma~\ref{lem:phi}(iii)), so every factor is positive and
+\eqref{eq:dPhiLog} applies with $B\ge0$; the integrand of
+$-\delta_q'$ is therefore nonnegative on $[0,\tfrac35]$
+($t<\pi$ keeps $\sin t/t>0$), and discarding the part on
+$(\tfrac18,\tfrac35]$ and bounding the rest in absolute value gives
+\eqref{eq:split}.
+
+On $[0,\tfrac18]$: by (J3),
+$\log J_0(z)\ge-\tfrac{z^2}4-\tfrac{z^4}{17}$ for $z\le\tfrac12$, so
+\[
+\Phi_m(t)\ge\exp\Bigl(-\frac{\sigma_m^2t^2}2-\frac{t^4S_4}{17}\Bigr)
+\ge e^{-\beta t^2},
+\]
+using $t^4\le t^2/64$ and $\tfrac1{64\cdot17}\le\tfrac1{1088}$. By
+Lemma~\ref{lem:phi}(ii), $B(t)\ge\sum_\gamma a_\gamma t\cdot
+2a_\gamma't=\tfrac D2t^2$; and $\tfrac{\sin t}t\ge1-\tfrac{t^2}6
+\ge1-\tfrac1{384}>0.9973$. Finally
+$\int_0^{1/8}t^2e^{-\beta t^2}dt
+=\frac{\sqrt\pi}{4\beta^{3/2}}\operatorname{erf}(\tfrac{\sqrt\beta}8)
+-\frac1{16\beta}e^{-\beta/64}$ (integrate by parts), giving
+\eqref{eq:mainlb}.
+\end{proof}
+
+\begin{lemma}[explicit tail bound]\label{lem:tailexp}
+In the setting of Lemma~\ref{lem:diffint}, let
+$S\subseteq\{\gamma\le2M_a\}$ be a set of $n\ge12$ ordinates, let
+$\tfrac35=t_0<t_1<\cdots<t_K=64$ be any partition, and for a cell
+$[t_j,t_{j+1}]$ and $\gamma'\in S$ set
+\[
+b_{\gamma'}^{(j)}\;:=\;\min\Bigl(1,\;
+\sup\Bigl\{|J_0(z)|:\ 2a_{\gamma'}(M_a)t_j\le z\le
+2a_{\gamma'}(M_b)t_{j+1}\Bigr\}\Bigr),
+\]
+evaluated via Lemma~\ref{lem:J0env}(iv). Then, uniformly for
+$M\in[M_a,M_b]$,
+\begin{align}
+\mathrm{TAIL}
+&\le\frac1\pi\sum_{j<K}
+\Bigl[\frac{D_{\max}t_{j+1}^2}2
++\frac{4t_{j+1}}{M_a}\,\nu_j\Bigr]
+\min\Bigl(1,\frac1{t_j}\Bigr)
+\Bigl(\prod_{\gamma'\in S}b^{(j)}_{\gamma'}\Bigr)
+\Big/\min_{\gamma'\in S}b^{(j)}_{\gamma'}
+\;(t_{j+1}-t_j)
+\notag\\[2pt]
+&\qquad+\frac1\pi\Bigl(\prod_{i=2}^{n'+1}\kappa_{(i)}\Bigr)
+\Bigl[\frac{D_{\max}}2\,I_1+\frac{4M_b}{M_a}\bigl(\ell_0I_1+I_2\bigr)
+\Bigr],
+\label{eq:tailexp}
+\end{align}
+where $D_{\max}$ is the interval bound of
+Lemma~\ref{lem:Dprop}(ii);
+$\nu_j$ is any upper bound for
+$N_\chi\bigl(M_b\sqrt{4t_{j+1}^2-1}\bigr)$ (the certified list count
+when the threshold is below the list height, $N^+$ of
+Lemma~\ref{lem:Nplus} otherwise);
+$\kappa_{(1)}\le\kappa_{(2)}\le\cdots$ are the sorted values of
+$\kappa_{\gamma'}=\tfrac8\pi(2a_{\gamma'}(M_a))^{-1/2}$,
+$n'=\min(n-1,62)$;
+$\ell_0=\log\tfrac{q(2M_b+2)}{2\pi}+1.14$; and, with
+$p=\tfrac{n'}2-1$,
+\[
+I_1=\frac{64^{\,1-p}}{p-1},\qquad
+I_2=\frac{64^{\,1-p}\bigl((p-1)\log64+1\bigr)}{(p-1)^2}.
+\]
+\end{lemma}
+
+\begin{proof}
+By \eqref{eq:Abound} with the given $S$: on a cell, every factor with
+index in $S\setminus\{\gamma\}$ is bounded by $b^{(j)}_{\gamma'}$
+(the argument $2a_{\gamma'}(M)t$ is increasing in both $M$ and $t$,
+hence lies in the stated range), and the product over
+$S\setminus\{\gamma\}$, whatever $\gamma$ is, is at most the product
+over $S$ divided by its smallest factor. The count in $A(t)$ uses
+$a_\gamma t>1\iff\gamma<M\sqrt{4t^2-1}\le M_b\sqrt{4t_{j+1}^2-1}$,
+$D(M)\le D_{\max}$, $t\le t_{j+1}$, and $|\sin t|/t\le\min(1,1/t_j)$;
+the cell integral is at most the sup of the integrand times the cell
+length.
+
+For $t\ge64$: by (J2), $b_{\gamma'}(t)\le\kappa_{\gamma'}t^{-1/2}$
+with $\kappa_{\gamma'}\le c_3<1.905$ (since
+$a_{\gamma'}(M_a)\ge\tfrac2{\sqrt5}$ for $\gamma'\le2M_a$), so each
+such bound is $<1$ for $t\ge64$. For arbitrary $\gamma$, the product
+over $S\setminus\{\gamma\}$ is at most the product over any
+$n'$-element subset $U\subseteq S\setminus\{\gamma\}$ of these
+bounds; choosing $U$ among the $(n'+1)$ smallest-$\kappa$ indices and
+allowing for the worst case that $\gamma$ is the smallest of them
+leaves $\prod_{i=2}^{n'+1}\kappa_{(i)}\cdot t^{-n'/2}$. With
+$A(t)/t\le\tfrac{D_{\max}}2t+\tfrac4{M_a}N^+(2M_bt)$ and
+$N^+(2M_bt)\le M_bt\bigl(\ell_0+\log t\bigr)$ for $t\ge1$ (since
+$2M_bt+2\le(2M_b+2)t$), the remainder is at most
+\[
+\frac1\pi\prod_{i=2}^{n'+1}\kappa_{(i)}
+\int_{64}^\infty\Bigl[\frac{D_{\max}}2t
++\frac{4M_b}{M_a}t(\ell_0+\log t)\Bigr]t^{-n'/2}\,dt ,
+\]
+and $\int_{64}^\infty t^{-p}dt=I_1$,
+$\int_{64}^\infty t^{-p}\log t\,dt=I_2$ with $p=\tfrac{n'}2-1\ge2$
+evaluate to the stated closed forms.
+\end{proof}
+
+\subsection*{Proof of Theorem~\ref{thm:monotone-large}}
+
+\begin{proof}
+Take $M_1(\chi)\ge M_0(q)$ (Lemma~\ref{lem:window}) large enough that
+the window $(M,2M]$ contains $N_0\ge\tfrac M{4\pi}\log M\ge14$ zeros;
+Lemma~\ref{lem:diffint} then applies on a neighbourhood of any
+$M\ge M_1$ (its hypothesis needs only $8$ zeros below $2M$), so
+$\delta_q'$ exists and \eqref{eq:split} holds.
+
+\emph{Main term.} By \eqref{eq:S4asymp} and
+Proposition~\ref{prop:varasymp}, $S_4/\sigma_m^2\to16$, so
+$S_4\le17\sigma_m^2$ for $M$ large, whence
+$\beta\le\tfrac{\sigma_m^2}2\bigl(1+\tfrac1{32}\bigr)$ and
+$\beta\to\infty$; the bracket in \eqref{eq:mainlb} is
+$\ge\tfrac{\sqrt\pi}{4}\beta^{-3/2}(1-o(1))$ and
+\[
+\mathrm{MAIN}\;\ge\;(1-o(1))\,
+\frac{0.9973}{\pi}\cdot\frac D2\cdot\frac{\sqrt\pi}4
+\Bigl(\frac2{\sigma_m^2}\Bigr)^{3/2}
+\Bigl(\frac{33}{32}\Bigr)^{-3/2}
+\;\ge\;0.189\,(1-o(1))\,\frac D{\sigma_m^3},
+\]
+since $\frac1\pi\cdot\frac12\cdot\frac{\sqrt\pi}4\cdot2^{3/2}
+=\frac1{2\sqrt{2\pi}}=0.19947$ and
+$0.9973\cdot0.9548\cdot0.19947>0.189$.
+
+\emph{Tail.} For $t\ge\tfrac35$, every window zero
+$\gamma\in(M,2M]$ has $2a_\gamma t\ge\tfrac4{\sqrt5}\cdot\tfrac35
+=\tfrac{12}{5\sqrt5}>1.0733$, so by Lemma~\ref{lem:J0env}(iii) its
+factor is $\le\rho_1\le0.733$. Take $S=$ the window in
+Lemma~\ref{lem:tailexp} (a one-cell version suffices): on
+$[\tfrac35,64]$ the product over $S$ minus one factor is
+$\le\rho_1^{N_0-1}$, and with
+$A(t)\le\tfrac D2t^2+\tfrac{4t}MN^+(2Mt)\ll_q t^2\log(qMt)$,
+\[
+\mathrm{TAIL}\;\ll_q\;\rho_1^{\,N_0-1}\,\log M
+\;+\;c_3^{12}\,2^{-(N_0-13)}
+\;\ll_q\;e^{-c\,M\log M}
+\]
+with $c=\tfrac{\log(1/0.733)}{4\pi}-\varepsilon$, by
+$N_0\ge\tfrac M{4\pi}\log M$ (the $t\ge64$ remainder keeps $12$
+decaying factors and bounds the rest by
+$(c_3/\sqrt t)\le\tfrac12$, exactly as in Lemma~\ref{lem:bigt}).
+Since $\mathrm{MAIN}\gg_q M^{-3/2}(\log M)^{-1/2}$ decays only
+polynomially, enlarging $M_1(\chi)$ makes
+$\mathrm{TAIL}\le0.005\,D\sigma_m^{-3}$ and the $o(1)$ above at most
+$0.02$, and \eqref{eq:split} gives
+$-\delta_q'\ge(0.189\cdot0.98-0.005)\,D\sigma_m^{-3}
+\ge0.18\,D\sigma_m^{-3}>0$. All steps are effective: $M_1(\chi)$ is
+determined by $M_0(q)$ of Lemma~\ref{lem:window} and the displayed
+comparisons.
+
+\emph{The sandwich.} For the upper bound write
+$-\delta_q'=\frac1\pi\bigl(\int_0^{1/8}+\int_{1/8}^{3/5}\bigr)
+(-\partial_M\Phi_m)\frac{\sin t}t\,dt+O(\mathrm{TAIL})$. On
+$[0,\tfrac18]$ all arguments are $\le\tfrac12$, so
+$B(t)\le0.517\,Dt^2$ (Lemma~\ref{lem:phi}(ii)) and, by
+\eqref{eq:smallt}--\eqref{eq:Eunif},
+$\Phi_m(t)\le e^{-(8/17)\sigma^2t^2}$; hence
+\[
+\frac1\pi\int_0^{1/8}\Phi_mB\,\frac{\sin t}t\,dt
+\;\le\;\frac{0.517\,D}\pi\int_0^\infty t^2e^{-(8/17)\sigma^2t^2}dt
+\;=\;\frac{0.517\,D}{4\sqrt\pi}
+\Bigl(\frac{17}{8\sigma^2}\Bigr)^{3/2}
+\;\le\;0.226\,\frac D{\sigma^3}\;=\;1.133\cdot
+\frac D{2\sqrt{2\pi}\,\sigma^3}\,.
+\]
+On $[\tfrac18,\tfrac35]$ every window argument is
+$\ge\tfrac4{\sqrt5}\cdot\tfrac18=0.447$, so each window factor is
+$\le J_0(0.447)\le0.9510$ (alternating series), and by
+\eqref{eq:Abound} the integrand is
+$\le A(t)\cdot0.951^{\,N_0-1}\ll_q\log M\cdot0.951^{\,N_0}$ ---
+superexponentially small. Hence
+$-\delta_q'\le1.14\,\frac D{2\sqrt{2\pi}\sigma^3}$ for
+$M\ge M_2(\chi)$. For the matching lower constant: once
+$\sigma_m^2\ge900$ the bracket of \eqref{eq:mainlb} is
+$\ge0.996\,\tfrac{\sqrt\pi}4\beta^{-3/2}$
+($\operatorname{erf}(\sqrt\beta/8)\ge\operatorname{erf}(2.65)
+\ge0.9998$, and the subtracted term is below
+$0.003\,\tfrac{\sqrt\pi}4\beta^{-3/2}$), so the main-term
+computation above gives
+$-\delta_q'\ge(0.9973\cdot0.9548\cdot0.996-o(1))
+\frac D{2\sqrt{2\pi}\sigma^3}-\mathrm{TAIL}
+\ge0.90\,\frac D{2\sqrt{2\pi}\sigma^3}$ for $M\ge M_2(\chi)$.
+Finally the closed form $D=2L_M+2+O(1/M)$
+(Lemma~\ref{lem:Dprop}(iii)) and
+$\sigma_m^2=2ML_M+O(1)$ give the last display of the theorem.
+\end{proof}
+
+\subsection*{The explicit criterion and the two moduli}
+
+\begin{proposition}[evaluated criterion, $q=4$ and $q=3$]
+\label{prop:criterion-eval}
+Let $q\in\{3,4\}$ and let $[M_a,M_b]$ be an interval on which the
+right-hand side of \eqref{eq:mainlb} (evaluated with
+$D_{\min}=\max(D(M_a),D(M_b))(M_a/M_b)^3$,
+$\beta=\tfrac{\sigma^2(M_b)}2+\tfrac{S_4(M_b)}{1088}$, all closed
+forms) strictly exceeds the right-hand side of \eqref{eq:tailexp}
+(evaluated with $S=\{\gamma\le2M_a\}$ from the certified ordinate
+lists, the geometric partition with ratios $1.05$ on
+$[\tfrac35,16]$ and $1.10$ on $[16,64]$, and per-zero cell bounds
+$b^{(j)}_{\gamma'}$ from Lemma~\ref{lem:J0env}(iv)). Then
+$\delta_q'(m)<0$ for every $M\in[M_a,M_b]$. The script
+\texttt{paper/v3/verify\_monotonicity.py} evaluates this criterion on
+a geometric grid of ratio $1.02$ and finds that it holds on every
+subinterval of
+\[
+[\,17.317,\ 319.96\,]\quad(q=4),
+\qquad
+[\,19.119,\ 349.89\,]\quad(q=3),
+\]
+the right endpoints being $\gamma_{\max}/2$ for the respective lists;
+the worst relative margin
+$(\mathrm{MAIN}-\mathrm{TAIL})/\mathrm{MAIN}$ on these ranges is
+$0.105$ ($q=4$, at the left edge) and $0.035$ ($q=3$, at the left
+edge); by $M\approx35$ the tail is below $2\times10^{-14}$ in
+absolute size, i.e.\ below $10^{-10}$ of the main term.
+\end{proposition}
+
+\begin{proof}
+The claim of the first sentence is
+Lemmas~\ref{lem:negstruct} and~\ref{lem:tailexp} combined with
+\eqref{eq:split}, the interval monotonicities used being: $a_\gamma(M)$
+increasing in $M$ (so the cell argument ranges are correct),
+$\sigma^2$ and $S_4$ increasing in $M$ (termwise), and the $D$
+comparison of Lemma~\ref{lem:Dprop}(ii). The evaluation is the
+script's item~[4]; its rigor class is discussed in
+Remark~\ref{rem:monotone-rigor}.
+\end{proof}
+
+\begin{lemma}[analytic leg: $M\ge300$, no zero data]
+\label{lem:analytic-leg}
+Let $q\in\{3,4\}$ and $M\ge300$. With $\ell=L_M$,
+$Y_1=M/\sqrt3$, $Y_2=2M/\sqrt3$,
+\[
+n_1=\frac{Y_1(\ell_{Y_1}-2)}{16}-\frac12,\qquad
+n_2=\frac{Y_2(\ell_{Y_2}-2)}{16}-\frac12,\qquad
+\ell_0=\log\frac{q(2M+2)}{2\pi}+1.14,
+\]
+$D_{\pm}=2\ell+2\pm\tfrac8M$, one has $N_\chi(M)\ge n_1$,
+$N_\chi(2M)\ge n_2$ (Lemma~\ref{lem:Nlow}) and
+\begin{align*}
+\mathrm{TAIL}\;\le\;\mathrm{TAIL}_{\mathrm{an}}(M)
+:=\;&\frac{1}{0.447\,\pi}\,
+\bigl(64D_++512\ell_0+1165\bigr)\,
+\Bigl(\frac{0.447}{0.733}\Bigr)^{n_1}(0.733)^{n_2}\\
+&+\frac{c_3^{\,9}}\pi\Bigl(\frac{D_+}2I_1'+4(\ell_0I_1'+I_2')\Bigr)
+(0.733)^{n_2-10},
+\end{align*}
+with $I_1'=\tfrac{16^{-2.5}}{2.5}$,
+$I_2'=\tfrac{16^{-2.5}(2.5\log16+1)}{6.25}$, while
+\[
+\mathrm{MAIN}\;\ge\;\mathrm{MAIN}_{\mathrm{an}}(M)
+:=\frac{0.9973}\pi\cdot\frac{D_-}2
+\Bigl[\frac{\sqrt\pi}{4\beta_+^{3/2}}
+\operatorname{erf}\Bigl(\frac{\sqrt{\beta_+}}8\Bigr)
+-\frac{e^{-\beta_+/64}}{16\beta_+}\Bigr],
+\quad
+\beta_+=M\ell+1.55+\frac{32M(\ell-1)+100}{1088}.
+\]
+Then $\mathrm{TAIL}_{\mathrm{an}}(300)<
+\mathrm{MAIN}_{\mathrm{an}}(300)$ for both moduli (ratios
+$<5\times10^{-4}$ for $q=4$ and $<3\times10^{-3}$ for $q=3$; the
+script's item~[5], which further weakens $n_i$ to $n_i-\tfrac92$,
+still finds $1.9\times10^{-3}$ resp.\ $1.2\times10^{-2}$), and on
+$[300,\infty)$ the two summands of
+$\mathrm{TAIL}_{\mathrm{an}}/\mathrm{MAIN}_{\mathrm{an}}$ have
+logarithmic derivatives $\le-0.14$ and $\le-0.08$ respectively, so
+the ratio is decreasing there; hence
+$\delta_q'(m)<0$ for all $M\ge300$.
+\end{lemma}
+
+\begin{proof}
+The tail bound is Lemma~\ref{lem:tailexp} degraded to zone form. On
+$[\tfrac35,16]$: all $N_\chi(2M)$ zeros below $2M$ have
+$2a_\gamma t\ge\tfrac{12}{5\sqrt5}>1.0733$, factor $\le0.733$; those
+below $M$ have $a_\gamma\ge\sqrt2$, hence arguments
+$\ge2\sqrt2\,t\ge2\sqrt2\cdot\tfrac35>1.697$, and
+$\sup_{z\ge1.697}|J_0|\le\max\bigl(J_0(1.697),\,0.446\bigr)
+\le0.447$ by Lemma~\ref{lem:J0env}(iii), since the alternating
+series gives $J_0(1.697)\le1-\tfrac{(1.697)^2}4
++\tfrac{(1.697)^4}{64}\le0.410$.
+The product over all zeros $\le2M$ except one is then at most
+$0.447^{N_\chi(M)}\,0.733^{N_\chi(2M)-N_\chi(M)}/0.447
+\le(0.447/0.733)^{n_1}\,0.733^{n_2}/0.447$, decreasing in the true
+counts, so the lower bounds $n_1,n_2$ may be inserted. The
+$A$-integral: by \eqref{eq:Abound} and Lemma~\ref{lem:Nplus},
+$\int_{3/5}^{16}A(t)\min(1,\tfrac1t)\,dt
+\le\int_{3/5}^{16}\bigl[\tfrac{D_+}2t+\tfrac4MN^+(2Mt)\bigr]dt
+\le64D_++512\ell_0+1165$, using
+$N^+(2Mt)\le Mt(\ell_0-1.14)+1.14Mt=Mt\,\ell_0$ for $t\le1$ and
+$N^+(2Mt)\le Mt(\ell_0+\log t)$ for $t\ge1$, plus
+$\int_{3/5}^{16}t\,dt\le127.9$ and $\int_1^{16}t\log t\,dt\le291.2$.
+For $t\ge16$: any $9$ of the zeros below $2M$ carry
+$(c_3/\sqrt t)\le0.48$, one factor is dropped, the remaining
+$\ge n_2-10$ keep $0.733$; the integral closed forms are as in
+Lemma~\ref{lem:tailexp} with $n'=9$, $p=3.5$, $T=16$. The main-term
+bound is \eqref{eq:mainlb} with Lemma~\ref{lem:Dprop}(iii)
+($D\ge D_-$, $\sigma^2\le2M\ell+3.1$, $S_4\le32M(\ell-1)+100$).
+
+The two evaluations at $M=300$ are the script's item~[5] (which
+further weakens $n_i$ to $n_i-\tfrac92$; the ratios quoted in the
+statement for the formulas as displayed are smaller). For the
+log-derivative, $\tfrac d{dM}n_i=\tfrac{\ell_{Y_i}-1}{16\sqrt3/i}$,
+and the two summands of $\mathrm{TAIL}_{\mathrm{an}}$ must be treated
+separately, since the second --- which carries only the factor
+$(0.733)^{n_2-10}$ --- dominates the first by three to four orders of
+magnitude at $M=300$. For the first summand,
+\[
+\frac d{dM}\log(\text{first})
+\le-\log\tfrac{0.733}{0.447}\cdot\frac{\ell_{Y_1}-1}{27.8}
+-\log\tfrac1{0.733}\cdot\frac{\ell_{Y_2}-1}{13.9}
++\frac{640}{M\,(64D_++512\ell_0+1165)}
+\le-0.15
+\]
+for $M\ge300$, $q\ge3$ (then $\ell_{Y_1}\ge4.4$,
+$\ell_{Y_2}\ge5.1$, and both $\ell_{Y_i}$ increase in $M$ and $q$).
+For the second summand the prefactor grows at rate
+$\tfrac d{dM}\log\bigl(\tfrac{D_+}2I_1'+4(\ell_0I_1'+I_2')\bigr)
+\le\tfrac{5}{M(D_+/2+4\ell_0)}\le0.001$
+(using $D_+'\le2/M$, $\ell_0'\le1/M$), so
+\[
+\frac d{dM}\log(\text{second})
+\le-\log\tfrac1{0.733}\cdot\frac{\ell_{Y_2}-1}{13.9}+0.001
+\le-0.09 .
+\]
+Meanwhile
+$\frac d{dM}\log\mathrm{MAIN}_{\mathrm{an}}
+\ge-\tfrac32\cdot\tfrac{d\beta_+/dM}{\beta_+}
+\cdot\bigl(1-\tfrac{0.003}{1}\bigr)^{-1}
+\ge-\tfrac32\cdot\tfrac{1.03\ell+1}{M\ell}\cdot1.004\ge-0.007$
+($D_-$ is increasing, the erf factor and the subtracted term of the
+bracket vary favourably, and the subtracted term is at most $0.003$
+of the first, as in the proof of
+Theorem~\ref{thm:monotone-large}). Hence each summand's ratio to
+$\mathrm{MAIN}_{\mathrm{an}}$ has logarithmic derivative
+$\le-0.15+0.007=-0.143\le-0.14$ resp.\
+$\le-0.09+0.007\le-0.08$; both ratios decrease on $[300,\infty)$,
+so their sum $\mathrm{TAIL}_{\mathrm{an}}/\mathrm{MAIN}_{\mathrm{an}}$
+stays below its value at $M=300$, which is below $1$.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{cor:monotone-explicit}]
+For $q=4$: Proposition~\ref{prop:criterion-eval} gives
+$\delta_4'<0$ on $17.317\le M\le319.96$;
+Lemma~\ref{lem:analytic-leg} gives it on $M\ge300$; the union is
+$M\ge17.317$, i.e.\ $m\ge16.817$, and we round the threshold up to
+$16.82$. For $q=3$ the same with $19.119$ and $349.89$, threshold
+$18.62$. Strict negativity of the derivative on an interval implies
+strict decrease. The transfer to the race under LI$(\chi_4)$ is
+Theorem~\ref{thm:interp}(ii) as in
+Corollary~\ref{cor:dissolution-race}: under LI the logarithmic
+density $\delta(m)$ \emph{equals} $\delta_4(m)$ for every $m$, so
+monotonicity of the latter is monotonicity of the former.
+\end{proof}
+
+\begin{remark}[rigor classes, and what is computer-verified]
+\label{rem:monotone-rigor}
+Three classes of statement coexist above, and we distinguish them
+explicitly. (1) Theorem~\ref{thm:monotone-large},
+Lemmas~\ref{lem:phi}--\ref{lem:tailexp} and
+Lemma~\ref{lem:analytic-leg} are proved; their numerical constants
+($0.446$, $0.733$, $\tfrac1{90}$, $0.517$, $j_{0,1}>2.4$, the Binet
+constants, $0.57$, $0.89$, the closed-form integrals) are established
+by alternating-series or integral arguments in the proofs, and the
+script re-verifies each (items [1]--[3], [5]). In particular the
+range $M\ge300$ of Corollary~\ref{cor:monotone-explicit} uses no zero
+data and no floating-point evaluation beyond checking finitely many
+explicit elementary inequalities at $M=300$ (the two evaluations
+$\mathrm{TAIL}_{\mathrm{an}}(300)<\mathrm{MAIN}_{\mathrm{an}}(300)$
+and the four logarithmic-derivative constants of
+Lemma~\ref{lem:analytic-leg}), which can be done by hand.
+(2) The range $[17.32,320]$ resp.\ $[19.12,350]$ rests on
+Proposition~\ref{prop:criterion-eval}: the criterion itself is a
+theorem, but its evaluation uses (a) the certified ordinate lists
+(25 digits; their assumed completeness below $\gamma_{\max}$ is the
+same hypothesis underlying the reference densities and
+Table~\ref{tab:enclose}), and (b) float64 evaluation of $J_0$,
+$\operatorname{erf}$, digamma and the von-Mangoldt sums, with an
+additive safety margin $10^{-9}$ on every Bessel supremum and a
+worst-case criterion margin of $3.5\%$; no interval arithmetic is
+claimed. This is the rigor class of the paper's certified enclosures,
+not of its theorems. (3) The finite differences of item~[6] of the
+script (matching $-D/(2\sqrt{2\pi}\sigma^3)$ to $1$--$2\%$ at
+$m\in\{20,60\}$ for both moduli) are a consistency check only.
+Two further honesty notes. First, the constant $0.18$ of
+Theorem~\ref{thm:monotone-large} and the window $[0.90,1.14]$ are
+far from optimal; the truth is
+$-\delta'\sim D/(2\sqrt{2\pi}\sigma^3)$, i.e.\ $\theta\to1$, as the
+second-order machinery of Theorem~\ref{thm:dissolution}(ii) would
+show if pushed through the differentiated integral --- we have not
+done so. Second, nothing here says anything about
+$(-\tfrac12,m_1)$: the positivity structure of
+Lemma~\ref{lem:negstruct} holds there too, but the tail of the
+differentiated integral is no longer dominated by our bounds when
+fewer than a dozen zeros sit below $2M$; on that range the
+monotonicity remains Conjecture~\ref{conj:monotone}, supported by the
+certified grid (whose points $m=15$ and $m=20$ bracket both
+thresholds, with decreasing, pairwise disjoint enclosures across
+them).
+\end{remark}
+
+\begin{remark}[what the theorem adds to the dissolution law]
+Theorem~\ref{thm:dissolution} says $\delta_q(m)\to\tfrac12$ at the
+rate $(2\pi\sigma_m^2)^{-1/2}$; it does not exclude oscillation
+around that envelope. Theorem~\ref{thm:monotone-large} and its
+corollary exclude it: the approach to $\tfrac12$ is eventually
+monotone --- ultimately because each Bessel factor of the
+characteristic function loses mass at every frequency
+simultaneously as the weight grows
+($\partial_M\log J_0(2a_\gamma t)=-\varphi(2a_\gamma t)\,
+2a_\gamma't<0$ for $0<4t<j_{0,1}$), a differentiated form of the
+peakedness heuristic of Section~\ref{subsec:monotone} that, unlike
+Birnbaum--Proschan peakedness, survives the arcsine components'
+bimodality.
+\end{remark}
+
+% ============================================================================
+% REPLACEMENT BLOCK for weighted-races.tex, subsection "Monotonicity in the
+% weight" (\label{subsec:monotone}).
+%
+% ANCHOR (start): the paragraph beginning
+%   "Every computed value in this note is consistent with a strict"
+% ANCHOR (end): the end of remark (c), i.e. the sentence ending
+%   "...controls the difference $\delta(m)-\delta(m')$ at nearby weights."
+% Replace everything between and including these anchors with the block
+% between the BEGIN/END markers below (the \subsection* line itself is kept).
+% ----------------------------------------------------------------------------
+% BEGIN REPLACEMENT
+% Every computed value in this note is consistent with a strict
+% monotonicity that the dissolution asymptotics alone do not give, and
+% Section~\ref{sec:monotone-large} now proves it for all sufficiently
+% large weights: under GRH, $\delta_4'(m)<0$ for every $m\ge16.82$ and
+% $\delta_3'(m)<0$ for every $m\ge18.62$
+% (Corollary~\ref{cor:monotone-explicit}; for $M=m+\tfrac12\ge300$ the
+% proof is zero-data-free, and on the remaining explicit range it is a
+% verified criterion in the rigor class of Table~\ref{tab:enclose}), and
+% eventual strict decrease holds for every real primitive character with
+% $L(\tfrac12,\chi)\ne0$ (Theorem~\ref{thm:monotone-large}). What
+% remains open is the compact initial range:
+%
+% \begin{conjecture}\label{conj:monotone}
+% For $q\in\{3,4\}$ the map $m\mapsto\delta_q(m)$ is strictly decreasing
+% on all of $(-\tfrac12,\infty)$; equivalently (given
+% Corollary~\ref{cor:monotone-explicit}), on $(-\tfrac12,\,m_1]$ with
+% $m_1=16.82$ resp.\ $18.62$.
+% \end{conjecture}
+%
+% Three remarks on its status. \emph{(a) Numerical evidence.}
+% Deterministic Gil--Pelaez inversion with certified enclosures --- the
+% unseen-zero tail variance evaluated in closed form from the completed
+% $L$-function (the Hadamard-product identity behind the evaluation of
+% $C$), the tail's departure from Gaussianity bounded by a proved
+% quartic estimate, truncation and quadrature budgeted into the interval
+% radius; every enclosure width below $5\times10^{-7}$ --- on the
+% $30$-point grid
+% \[
+% m\in\{-0.2,\,-0.15,\,-0.1,\,-0.05,\,0,\,0.25,\,0.5,\,0.75,\,1,\,1.25,
+% \,1.5,\,2,\,2.5,\,3,\,4,\,5,\,6,\,8,\,10,\,12,\,15,\,20,\,25,\,30,
+% \,40,\,50,\,60,\,75,\,90,\,100\}
+% \]
+% yields enclosures that are pairwise disjoint and decreasing at all
+% $29$ consecutive pairs, for both moduli; the smallest gap between
+% adjacent enclosures is $2.9\times10^{-5}$ for modulus $4$ and
+% $8.6\times10^{-7}$ for modulus $3$ (both at the leftmost pair). In
+% particular the grid covers the conjectural range
+% $(-0.2\le m\le m_1)$ densely, and its last points overlap the proved
+% range. The enclosures are rigorous modulo the stated computational
+% budget (IEEE-double quadrature with step-doubling control; $40$-digit
+% floating-point evaluation of the closed-form variance; no interval
+% arithmetic is claimed). Left of the grid the inversion loses
+% resolution: at $m=-0.2$ itself the enclosures give
+% $1-\delta_4\in[4.8,\,7.7]\times10^{-7}$ and
+% $1-\delta_3\le2.5\times10^{-7}$, and on $(-\tfrac12,-0.2)$ the only
+% control we have is the Chernoff bound of Theorem~\ref{thm:interp}(iii)
+% (stated for $\chi_4$; the same argument applies verbatim mod $3$), a
+% monotone upper envelope for $1-\delta$ which is consistent with ---
+% but does not imply --- monotonicity of $\delta$ itself.
+%
+% \emph{(b) Why the conjecture is plausible --- now a proof mechanism
+% for large $m$.} With $M=m+\tfrac12$, every amplitude is strictly
+% increasing in the weight:
+% \[
+% \frac{\partial a_\gamma}{\partial M}
+% \;=\;\frac{2\gamma^2}{(M^2+\gamma^2)^{3/2}}\;>\;0 ,
+% \]
+% so as $m$ grows each noise component of
+% $X_m=1+\sum_{\gamma>0}2a_\gamma\cos\theta_\gamma$ strictly grows while
+% the mean stays fixed at $1$. Section~\ref{sec:monotone-large} turns
+% exactly this into a theorem for $m\ge m_1$, by differentiating the
+% Gil--Pelaez integral: the logarithmic derivative of each Bessel factor
+% of the characteristic function is negative at every frequency
+% $t<j_{0,1}/4$ (all Taylor coefficients of $-\log J_0$ are positive ---
+% a Rayleigh-sum fact that replaces peakedness), and the frequencies
+% beyond are superexponentially damped once enough zeros lie below
+% $2M$.
+%
+% \emph{(c) Why the remaining range is genuinely open.} If the family
+% were a dilation, $V_{m}=c(m)V$ with $c$ increasing, monotonicity would
+% be immediate; it is not --- the ratio $a_\gamma(m')/a_\gamma(m)$
+% depends on $\gamma$ (low zeros saturate near $2$, high zeros still
+% grow linearly in $M$). The natural tool is a peakedness ordering: for
+% the symmetric variable $V_m=X_m-1$ one has
+% $\delta(m)=1-\tfrac12\,\mathbb P(|V_m|\ge1)$, so it would suffice that
+% $V_{m'}$ is more peaked than $V_m$ for $m'<m$ in the sense of
+% Birnbaum~\cite{Bir48}. Scaling up a single component always makes
+% that component less peaked, but the classical results that push such
+% comparisons through convolution --- Birnbaum's lemma~\cite{Bir48} and
+% Proschan's theorem on convex combinations~\cite{Pro65} --- require
+% symmetric \emph{unimodal} summands (Proschan's in the stronger
+% log-concave form), and the arcsine components
+% $2a_\gamma\cos\theta_\gamma$ are symmetric but not unimodal (their
+% density is U-shaped and diverges at the endpoints). The
+% large-$m$ proof does not help here: its tail control collapses when
+% fewer than a dozen zeros lie below $2M$, precisely the regime
+% $m<m_1$; and neither the Chernoff envelope near $m=-\tfrac12$ nor the
+% dissolution asymptotics controls $\delta(m)-\delta(m')$ at nearby
+% small weights.
+% END REPLACEMENT
+% ============================================================================

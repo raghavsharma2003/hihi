@@ -1,0 +1,375 @@
+% ---------------------------------------------------------------------
+% v3 section: The variance in closed form.
+%
+% Every numeric in this section was recomputed for this draft by
+%   paper/v3/verify_variance_identity.py
+% (absolute path in this repository:
+%   /home/user/hihi/algorithms/prime-sum/paper/v3/verify_variance_identity.py;
+% run with python3; mpmath 1.4.1 at 50 working digits, with 80 guard
+% digits inside the Hurwitz-zeta representation of L(s,chi_4) -- the two
+% Hurwitz zetas share a pole at s=1 and their difference cancels
+% catastrophically under numerical differentiation without guard digits).
+% The script checks: the Gauss sum and root number of chi_4; the evenness
+% of Xi(z)=Lambda(1/2+z) (to 4e-51); L(1/2,chi_4)>0; the identity
+% sigma_m^2 = 4M (log Lambda)'(m+1) against the 511-ordinate zero sum
+% plus Riemann--von Mangoldt tail at m=0,1,2,3,8,20,100; the Hadamard
+% product against the ordinate list; the closed form for C to 38 agreeing
+% digits by two routes; the asymptotic constant c_0=1 (and -1 for the
+% even character mod 5), including M(sigma_m^2-law-1) -> 1/12; every
+% table entry below; and (check I, via the Gil-Pelaez code of
+% race_density_exact.py) the <= 3.3e-6 density shift quoted in the
+% certified-tails remark, spot-checked at (q,m) = (4,1), (4,100), (3,1).
+%
+% Intended to be \input into the v3 main file after the theorem section.
+% Requires only amsmath/amssymb/amsthm/booktabs and the theorem
+% environments and bibliography keys (Dav00, RS94, FM13, ANS14) of the
+% main file.  Notation as in Section~\ref{sec:theorem}: chi=chi_4,
+% gamma runs over positive ordinates of L(s,chi_4),
+% a_gamma(m)=(2m+1)/sqrt((m+1/2)^2+gamma^2), M=m+1/2,
+% sigma_m^2=sum 2 a_gamma(m)^2, C=sum 2/gamma^2.
+% ---------------------------------------------------------------------
+
+\section{The variance in closed form}\label{sec:variance}
+
+The variance
+$\sigma_m^2=\sum_{\gamma>0}2a_\gamma(m)^2$ of the limiting variable
+$X_m$ has so far entered this paper through a truncation: $511$
+computed ordinates plus a tail estimated from the zero-counting
+density. This section removes the estimate. The variance is the value
+of an explicitly computable entire function of the weight, with three
+consequences: the constant $C$ of Theorem~\ref{thm:interp} acquires a
+closed form (and its printed value a correction of $3.4\times10^{-6}$);
+the variance half of the dissolution law of the introduction becomes a
+theorem with an explicit constant term; and the Gaussianized tails of
+the numerical work become exactly computable quantities.
+
+Throughout, $\Lambda(s):=(4/\pi)^{(s+1)/2}\,\Gamma\!\bigl(\tfrac{s+1}2\bigr)
+L(s,\chi_4)$ denotes the completed $L$-function and
+$\Xi(z):=\Lambda(\tfrac12+z)$.
+
+\begin{proposition}[variance identity]\label{prop:varid}
+Assume GRH$(\chi_4)$. For every real $m>-\tfrac12$, with $M=m+\tfrac12$,
+\begin{equation}\label{eq:varid}
+\sigma_m^2\;=\;\sum_{\gamma>0}2a_\gamma(m)^2
+\;=\;8M^2\sum_{\gamma>0}\frac{1}{M^2+\gamma^2}
+\;=\;4M\,\frac{\Lambda'}{\Lambda}(m+1).
+\end{equation}
+GRH enters only by placing the zeros on the critical line, so that the
+ordinates $\gamma$ are real; no linear-independence hypothesis is
+involved.
+\end{proposition}
+
+\begin{proof}
+The first equality in \eqref{eq:varid} is the definition together with
+$a_\gamma(m)^2=(2M)^2/(M^2+\gamma^2)$. The content is the last
+equality.
+
+\emph{Step 1: $\Xi$ is entire of order $1$ and even.} Since $\chi_4$ is
+primitive and nonprincipal, $\Lambda$ is entire of order $1$
+\cite[Chs.~9, 12]{Dav00}. For a primitive character $\chi$ mod $q$ with
+$\chi(-1)=(-1)^a$, the functional equation reads
+$\Lambda(1-s,\bar\chi)=\bigl(i^a\sqrt q/\tau(\chi)\bigr)\Lambda(s,\chi)$
+with $\tau(\chi)=\sum_{n\ (q)}\chi(n)e^{2\pi in/q}$ \cite[Ch.~9]{Dav00}.
+Here $q=4$, $a=1$ (as $\chi_4(-1)=\chi_4(3)=-1$), $\bar\chi_4=\chi_4$,
+and the Gauss sum is a two-term computation:
+\[
+\tau(\chi_4)\;=\;e^{2\pi i/4}-e^{2\pi i\cdot3/4}\;=\;i-(-i)\;=\;2i,
+\qquad\text{so}\qquad
+\frac{i^a\sqrt q}{\tau(\chi_4)}=\frac{2i}{2i}=1,
+\]
+i.e.\ the root number is $+1$ and $\Lambda(s)=\Lambda(1-s)$. Hence
+$\Xi(z)=\Xi(-z)$. (The script verifies the evenness numerically to
+$4\times10^{-51}$ relative at several complex points.)
+
+\emph{Step 2: no central zero.} $L(\tfrac12,\chi_4)
+=\sum_{k\ge0}(-1)^k(2k+1)^{-1/2}>0$ by the alternating series test
+(terms strictly decreasing to $0$); numerically
+$L(\tfrac12,\chi_4)=0.667691457\ldots$ So $\Xi(0)=\Lambda(\tfrac12)>0$
+(each factor of $\Lambda(\tfrac12)$ is positive), and no zero of $\Xi$
+sits at the origin.
+
+\emph{Step 3: Hadamard product.} The zeros of $\Xi$ are exactly
+$z_\rho=\rho-\tfrac12$ over the nontrivial zeros $\rho$ of
+$L(s,\chi_4)$; under GRH and Step 2 they are $\pm i\gamma$ with
+$\gamma>0$ real, and the multiset of ordinates is symmetric under
+$\gamma\mapsto-\gamma$ because $\Lambda$ is real on the real axis. By
+the Riemann--von Mangoldt formula $N(T,\chi_4)\ll T\log T$
+\cite[\S16]{Dav00}, $\sum_{\gamma>0}\gamma^{-2}<\infty$. Hadamard's
+factorization for the order-$1$ function $\Xi$ gives
+\[
+\Xi(z)\;=\;e^{A+Bz}\prod_{\rho}\Bigl(1-\frac{z}{z_\rho}\Bigr)e^{z/z_\rho},
+\]
+the product converging absolutely and locally uniformly (indeed
+$\sum|z/z_\rho|^2=|z|^2\sum\gamma^{-2}<\infty$ locally uniformly, and
+$|\log\{(1-w)e^{w}\}|\le|w|^2$ for $|w|\le\tfrac12$), so its factors
+may be grouped at will. Grouping $\pm i\gamma$ cancels the exponential
+factors pairwise:
+\[
+\Xi(z)\;=\;e^{A+Bz}\prod_{\gamma>0}\Bigl(1+\frac{z^2}{\gamma^2}\Bigr).
+\]
+The paired product is even in $z$; evenness of $\Xi$ then forces
+$e^{Bz}=e^{-Bz}$, i.e.\ $B=0$ (alternatively, $\Xi'(0)=0$ since $\Xi$
+is even and analytic, and the paired product has vanishing derivative
+at $0$). Setting $z=0$ identifies $e^A=\Xi(0)\ne0$:
+\begin{equation}\label{eq:hadamard}
+\frac{\Xi(z)}{\Xi(0)}\;=\;\prod_{\gamma>0}
+\Bigl(1+\frac{z^2}{\gamma^2}\Bigr).
+\end{equation}
+
+\emph{Step 4: logarithmic differentiation on the real axis.} Under GRH
+all zeros of $\Xi$ are purely imaginary and nonzero, so $\Xi>0$ on
+$\mathbb R$ (it is real there, positive at $0$, and nonvanishing).
+Taking logarithms in \eqref{eq:hadamard} at real $z=x$,
+\[
+\log\frac{\Xi(x)}{\Xi(0)}\;=\;\sum_{\gamma>0}
+\log\Bigl(1+\frac{x^2}{\gamma^2}\Bigr),
+\]
+a series of nonnegative terms dominated on $|x|\le A$ by
+$A^2/\gamma^2$; the termwise-differentiated series
+$\sum_\gamma 2x/(x^2+\gamma^2)$ is dominated on $|x|\le A$ by
+$2A/\gamma^2$. Both therefore converge uniformly on compact subsets of
+$\mathbb R$, and the standard theorem on differentiation of series
+(pointwise convergence plus locally uniform convergence of the
+derivative series) yields, for every real $x$,
+\[
+\frac{\Xi'}{\Xi}(x)\;=\;\sum_{\gamma>0}\frac{2x}{x^2+\gamma^2}.
+\]
+At $x=M>0$, since $\Xi'/\Xi(M)=(\Lambda'/\Lambda)(M+\tfrac12)
+=(\Lambda'/\Lambda)(m+1)$,
+\[
+4M\,\frac{\Lambda'}{\Lambda}(m+1)
+\;=\;8M^2\sum_{\gamma>0}\frac1{M^2+\gamma^2}\;=\;\sigma_m^2. \qedhere
+\]
+\end{proof}
+
+\begin{remark}\label{rem:varid-numerics}
+The right-hand side of \eqref{eq:varid} is computable to arbitrary
+precision with \emph{no} zero data:
+$(\Lambda'/\Lambda)(s)=\tfrac12\log\tfrac4\pi
++\tfrac12\psi\bigl(\tfrac{s+1}2\bigr)+(L'/L)(s,\chi_4)$, with
+$L(s,\chi_4)=4^{-s}\bigl(\zeta(s,\tfrac14)-\zeta(s,\tfrac34)\bigr)$.
+As a consistency check on both the identity and our ordinate list, the
+truncated zero sum $\sum_{\gamma\le\gamma_{511}}2a_\gamma^2$ plus the
+Riemann--von Mangoldt tail integral reproduces \eqref{eq:varid} at
+$m\in\{0,1,2,3,8,20,100\}$ within the expected fluctuation of the
+zero-counting remainder ($3.2\times10^{-6}$ at $m=0$, growing to
+$0.13$ absolute --- $1.5\times10^{-4}$ relative --- at $m=100$), and
+$\log(\Xi(z)/\Xi(0))-\sum_{\gamma\le\gamma_{511}}\log(1+z^2/\gamma^2)$
+matches the corresponding tail integral
+$\int_{\gamma_{511}}^\infty\log(1+z^2/t^2)\,dN(t)$ to
+$1.6\times10^{-6}$ at $z=1$.
+\end{remark}
+
+\begin{corollary}[the constant $C$ in closed form]\label{cor:Cexact}
+Assume GRH$(\chi_4)$. With $G$ Catalan's constant,
+\[
+C\;=\;\sum_{\gamma>0}\frac{2}{\gamma^2}
+\;=\;(\log\Lambda)''(\tfrac12)
+\;=\;\tfrac14\psi'(\tfrac34)\;+\;(\log L)''(\tfrac12,\chi_4),
+\qquad
+\psi'(\tfrac34)=\pi^2-8G,
+\]
+and numerically
+\begin{gather*}
+C\;=\;0.156029649889644884607682\ldots,\\
+\tfrac14\psi'(\tfrac34)=0.635469911917901\ldots,\qquad
+(\log L)''(\tfrac12,\chi_4)=-0.479440262028256\ldots
+\end{gather*}
+This supersedes the zero-sum estimate $C=0.156033$ used in
+Theorem~\ref{thm:interp} and in the residual discussion of the
+introduction, whose excess $+3.4\times10^{-6}$ is the neglected
+fluctuation term flagged there as $O(10^{-5})$ (the unrounded
+zero-sum-plus-tail estimate is $0.1560328$, an excess of
+$3.2\times10^{-6}$; rounding to the printed six decimals accounts for
+the rest); occurrences
+of $0.156033$ should now read $0.156030$. All bounds stated with $C$
+only improve.
+\end{corollary}
+
+\begin{proof}
+Differentiating $\sum_\gamma 2x/(x^2+\gamma^2)$ termwise once more is
+legitimate on $|x|\le1$: the differentiated terms
+$2(\gamma^2-x^2)/(\gamma^2+x^2)^2$ are bounded there by $2/\gamma^2$
+(numerator at most $\gamma^2$, denominator at least $\gamma^4$; recall
+$\gamma_1>6$), giving uniform convergence. Evaluating at $x=0$ yields
+$(\log\Xi)''(0)=\sum_{\gamma>0}2/\gamma^2=C$, and
+$(\log\Xi)''(0)=(\log\Lambda)''(\tfrac12)$. Since the linear factor of
+$\log\Lambda(s)=\tfrac{s+1}2\log\tfrac4\pi+\log\Gamma(\tfrac{s+1}2)
++\log L(s,\chi_4)$ has vanishing second derivative,
+$(\log\Lambda)''(\tfrac12)=\tfrac14\psi'(\tfrac34)
++(\log L)''(\tfrac12,\chi_4)$; the argument $\tfrac34$ is
+$(s+1)/2$ at $s=\tfrac12$, and $\log L$ is well defined near
+$s=\tfrac12$ by Step 2 above. Finally
+$\psi'(\tfrac14)+\psi'(\tfrac34)=\pi^2/\sin^2(\pi/4)=2\pi^2$
+(reflection) and, writing $\psi'(x)=\sum_{n\ge0}(n+x)^{-2}$,
+$\psi'(\tfrac14)-\psi'(\tfrac34)
+=16\sum_{n\ge0}\bigl[(4n+1)^{-2}-(4n+3)^{-2}\bigr]=16\beta(2)=16G$,
+whence $\psi'(\tfrac34)=\pi^2-8G$.
+
+On the numerical claim, an honesty note: the closed form is exact, and
+its decimal evaluation is a routine high-precision computation (mpmath
+at $50$ digits with guard digits; the routes
+$\tfrac14\psi'(\tfrac34)+(\log L)''(\tfrac12)$ and direct numerical
+$(\log\Lambda)''(\tfrac12)$ agree to $38$ digits, stably under
+doubling of the working precision). We have not run certified interval
+arithmetic; the quantities are derivatives of entire functions
+evaluated far from any singularity.
+\end{proof}
+
+\begin{proposition}[rigorous variance asymptotic]\label{prop:varasymp}
+Assume GRH$(\chi_4)$. As $m\to\infty$,
+\begin{equation}\label{eq:varasymp4}
+\sigma_m^2\;=\;2M\log\frac{4M}{2\pi}\;+\;1\;+\;\frac{1}{12M}
+\;+\;O\Bigl(\frac{1}{M^2}\Bigr).
+\end{equation}
+More generally, let $\chi$ be a real primitive character mod $q$ with
+$\chi(-1)=(-1)^a$, $a\in\{0,1\}$, assume GRH$(\chi)$ and
+$L(\tfrac12,\chi)\ne0$, and set
+$\mathrm{Var}_q(m)=\sum_{\gamma_\chi>0}2a_{\gamma}(m)^2$ over the
+ordinates of $L(s,\chi)$. Then
+\begin{equation}\label{eq:varasympq}
+\mathrm{Var}_q(m)\;=\;2M\log\frac{qM}{2\pi}\;+\;(2a-1)
+\;+\;\frac{1}{12M}\;+\;O\Bigl(\frac{1}{M^2}\Bigr),
+\end{equation}
+with an absolute implied constant. In particular the constant term of
+the dissolution law of the introduction is $+1$ for odd real
+characters ($q=3,4$ included) and $-1$ for even ones.
+\end{proposition}
+
+\begin{proof}
+Proposition~\ref{prop:varid} and its proof apply verbatim to $\chi$:
+the completed function
+$\xi(s,\chi)=(q/\pi)^{(s+a)/2}\Gamma\bigl(\tfrac{s+a}2\bigr)L(s,\chi)$
+is entire of order $1$; a real primitive character has root number
+$+1$ --- Gauss's evaluation of the sign of the quadratic Gauss sum,
+$\tau(\chi)=\sqrt q$ for $a=0$ and $i\sqrt q$ for $a=1$ (see
+\cite[Ch.~2]{Dav00} for prime modulus; the script evaluates
+$\tau$ directly for the moduli $3,4,5$ used in this paper) --- so
+$\xi(s,\chi)=\xi(1-s,\chi)$; the hypothesis
+$L(\tfrac12,\chi)\ne0$ replaces Step 2 (for $q=3,4$ it holds
+unconditionally by grouping the Dirichlet series at $s=\tfrac12$ into
+positive blocks); and
+\begin{equation}\label{eq:varidq}
+\mathrm{Var}_q(m)\;=\;4M\,\frac{\xi'}{\xi}(m+1,\chi)
+\;=\;4M\Bigl[\tfrac12\log\tfrac q\pi
++\tfrac12\psi\Bigl(\tfrac{m+1+a}2\Bigr)+\frac{L'}{L}(m+1,\chi)\Bigr].
+\end{equation}
+
+\emph{Digamma term.} Stirling's series
+$\psi(x)=\log x-\tfrac1{2x}-\tfrac1{12x^2}+O(x^{-4})$, $x\to\infty$,
+at $x=\tfrac{m+1+a}2=\tfrac M2+\tfrac{2a+1}4$. For $a=1$,
+$x=\tfrac M2\bigl(1+\tfrac3{2M}\bigr)$ and, expanding each ingredient
+to two orders,
+\[
+\log x=\log\tfrac M2+\tfrac3{2M}-\tfrac9{8M^2}+O(M^{-3}),\quad
+\tfrac1{2x}=\tfrac1M-\tfrac3{2M^2}+O(M^{-3}),\quad
+\tfrac1{12x^2}=\tfrac1{3M^2}+O(M^{-3}),
+\]
+so that, with $-\tfrac98+\tfrac32-\tfrac13=\tfrac1{24}$,
+\[
+\psi\Bigl(\tfrac{m+2}2\Bigr)=\log\tfrac M2+\frac1{2M}
++\frac{1}{24M^2}+O(M^{-3}).
+\]
+For $a=0$, $x=\tfrac M2\bigl(1+\tfrac1{2M}\bigr)$ and the same
+computation ($-\tfrac18+\tfrac12-\tfrac13=\tfrac1{24}$ again) gives
+$\psi\bigl(\tfrac{m+1}2\bigr)=\log\tfrac M2-\tfrac1{2M}
++\tfrac1{24M^2}+O(M^{-3})$. Multiplying by $4M\cdot\tfrac12$ and adding
+$2M\log\tfrac q\pi$,
+\[
+4M\Bigl[\tfrac12\log\tfrac q\pi+\tfrac12\psi\Bigl(\tfrac{m+1+a}2\Bigr)\Bigr]
+\;=\;2M\log\frac{qM}{2\pi}\;+\;(2a-1)\;+\;\frac1{12M}\;+\;O(M^{-2}),
+\]
+using $\tfrac q\pi\cdot\tfrac M2=\tfrac{qM}{2\pi}$; the sign of the
+$\pm\tfrac1{2M}$ term is the sole source of the parity-dependent
+constant $2a-1$.
+
+\emph{The $L'/L$ term is exponentially small.} For $m\ge1$,
+\[
+\Bigl|\frac{L'}{L}(m+1,\chi)\Bigr|
+=\Bigl|\sum_{n\ge2}\Lambda(n)\chi(n)n^{-(m+1)}\Bigr|
+\le2^{-(m-1)}\sum_{n\ge2}\Lambda(n)\,n^{-2}
+\le0.57\cdot2^{-(m-1)}
+\]
+(using $n^{-(m+1)}\le n^{-2}\cdot2^{-(m-1)}$ for $n\ge2$ and
+$\sum_n\Lambda(n)n^{-2}=-\tfrac{\zeta'}{\zeta}(2)=0.56996\ldots$),
+so $4M|L'/L(m+1,\chi)|\ll M2^{-m}$, absorbed into $O(M^{-2})$ (with an
+absolute constant, uniformly in $q$). For $\chi_4$ the decay is in fact
+$3^{-(m+1)}\log3\,(1+o(1))$, since $\chi_4(2^k)=0$ and the leading
+surviving term is $n=3$ with $\chi_4(3)=-1$; the script confirms
+$|L'/L(21,\chi_4)|=1.050\times10^{-10}=3^{-21}\log3$ to three digits.
+Combining the three displays proves \eqref{eq:varasympq}, and $q=4$,
+$a=1$ gives \eqref{eq:varasymp4}.
+\end{proof}
+
+\begin{remark}\label{rem:varasymp-numerics}
+(1) Numerically, $M\bigl(\sigma_m^2-2M\log\tfrac{4M}{2\pi}-1\bigr)$
+equals $0.080845$, $0.082709$, $0.083083$ at $m=100$, $400$, $1000$,
+converging to $\tfrac1{12}=0.08333\ldots$ exactly as
+\eqref{eq:varasymp4} requires; for the even real character mod $5$
+(where $L(\tfrac12,\chi_5)=0.23175\ldots\ne0$ numerically), the same
+computation gives
+$\mathrm{Var}_5(m)-2M\log\tfrac{5M}{2\pi}\to-1$, confirming
+$c_0(q,0)=-1$. (2) The law is asymptotic, not a bound: at $m=1$ the
+main term $2M\log\tfrac{4M}{2\pi}=-0.138$ is negative and useless
+(Table~\ref{tab:varexact}). (3) What is \emph{not} proved in this
+section: the density half of the dissolution law,
+$\delta_q(m)-\tfrac12\sim(2\pi\,\mathrm{Var}_q(m))^{-1/2}$.
+Proposition~\ref{prop:varasymp} certifies only its variance input.
+\end{remark}
+
+\begin{remark}[certified tails for the numerical densities]
+\label{rem:tails}
+The Gil--Pelaez and Monte Carlo computations of
+Sections~1 and~\ref{sec:methods} replace the unseen zeros
+$\gamma>\Gamma:=\gamma_{511}=639.9157\ldots$ by a Gaussian whose
+variance was previously \emph{estimated} from the zero-counting
+density. By Proposition~\ref{prop:varid} that variance is now exact:
+\[
+\sigma^2_{\mathrm{tail}}(\Gamma)
+\;=\;\sum_{\gamma>\Gamma}2a_\gamma(m)^2
+\;=\;4M\,\frac{\Lambda'}{\Lambda}(m+1)
+-\sum_{\gamma\le\Gamma}2a_\gamma(m)^2 ,
+\]
+the subtracted sum being exact up to the $25$-digit accuracy of the
+computed ordinates (the resulting uncertainty is below $10^{-20}$).
+Table~\ref{tab:varexact} gives the exact variances against the law of
+the introduction. The smoothed tail estimate used previously deviates
+from the exact tail by at most $1.5\times10^{-4}$ relative to
+$\sigma_m^2$ over the computed range (worst at $m=100$, where the tail
+carries $16.7\%$ of the variance). Re-running the Gil--Pelaez
+inversion with the exact tail variances shifts the entries of
+Table~\ref{tab:delta} by at most $3.3\times10^{-6}$ (worst at $q=3$,
+$m=1$): up to three units in their sixth printed decimal --- well
+within the $10^{-4}$ Monte Carlo cross-check, though not strictly
+below the printed resolution, so the last digit of a few entries
+moves --- and the tail-variance estimation error is now exactly
+zero. For the record, the identity also gives
+$\sigma_0^2=0.1555679799235859\ldots$ (the rounded $0.15557$ quoted in
+Section~\ref{sec:theorem} is unaffected).
+\end{remark}
+
+\begin{table}[h]\centering
+\begin{tabular}{cccccc}
+\toprule
+$m$ & $\sigma_m^2$ (exact, \eqref{eq:varid}) &
+$2M\log\frac{4M}{2\pi}$ &
+$\sigma_m^2-2M\log\frac{4M}{2\pi}-1$ &
+$\sigma^2_{\mathrm{tail}}(\gamma_{511})$ & tail share\\
+\midrule
+$1$   & $1.368555$   & $-0.138353$  & $0.506908$ & $0.031353$   & $2.3\%$\\
+$3$   & $6.776846$   & $5.608262$   & $0.168585$ & $0.170697$   & $2.5\%$\\
+$8$   & $29.712468$  & $28.704219$  & $0.008249$ & $1.006718$   & $3.4\%$\\
+$20$  & $106.326000$ & $105.322529$ & $0.003470$ & $5.854189$   & $5.5\%$\\
+$100$ & $836.874384$ & $835.873579$ & $0.000804$ & $139.712453$ & $16.7\%$\\
+\bottomrule
+\end{tabular}
+\caption{Exact variances from the identity \eqref{eq:varid} against
+the paper's dissolution-law main term, modulus $4$. The residual
+column converges to $0$ like $\tfrac1{12M}$ once the constant $c_0=1$
+of Proposition~\ref{prop:varasymp} is subtracted; at small $m$ it is
+dominated by the (exponentially small in $m$, but not yet small)
+$L'/L$ term and higher Stirling corrections. The last columns show the
+exact variance of the Gaussianized tail beyond the $511$th ordinate
+and its share of $\sigma_m^2$.}
+\label{tab:varexact}
+\end{table}

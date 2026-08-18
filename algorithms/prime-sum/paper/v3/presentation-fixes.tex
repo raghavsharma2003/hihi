@@ -1,0 +1,629 @@
+% ============================================================================
+% presentation-fixes.tex  (v3, 2026-08-15)
+%
+% Numbered surgical edits to paper/weighted-races.tex (the 881-line draft of
+% 2026-08-15; all line numbers refer to that draft).  Each edit gives the
+% EXACT current text (OLD, every line prefixed "%OLD%", including original
+% line breaks) and the EXACT replacement LaTeX (NEW, between the markers
+% "%---NEW--->" and "%<---NEW---", uncommented so it can be copied verbatim).
+% Edits marked [A]/[B] are alternatives contingent on whether a parallel v3
+% draft lands; apply exactly one.
+%
+% COORDINATION MAP (parallel v3 drafts referenced below):
+%  * v3/certified-numerics.tex: its subsection (label subsec:certified) is
+%    \input into Section~\ref{sec:methods}; its Blocks R1/R2 coincide with
+%    Edits 7A/8A below (apply once, not twice).  The task brief asked for the
+%    reference "Section~\ref{sec:certified}"; the draft actually defines
+%    \label{subsec:certified} on a STARRED subsection, so \ref would print
+%    the number of the enclosing section -- Edits 7A/8A therefore reference
+%    Section~\ref{sec:methods} and Table~\ref{tab:enclose}, exactly as
+%    Blocks R1/R2 do.  If the certified subsection becomes a numbered
+%    section labelled sec:certified, change the references accordingly.
+%  * v3/thm-full-range.tex: its Block A replaces lines 229-262 (owns the C
+%    display and its justification: our Edit 15 is the FALLBACK if Block A
+%    does not land); its Block M is identical to our Edit 14 (apply once).
+%  * v3/dissolution-theorem.tex: provides \label{sec:dissolution},
+%    Theorem~\ref{thm:dissolution}, Corollary~\ref{cor:dissolution-race}.
+%    Edits 12/13 have [A] variants only if it lands.
+%  * CROSS-DRAFT FLAG (referee pass): certified-numerics.tex's sentence
+%    "Their mutual agreement to $\le10^{-4}$ therefore validated only the
+%    evaluation step" inherits the OLD caption's false 1e-4 figure; the
+%    actual max MC-vs-deterministic deviation on the repo's logs is
+%    5.5e-4 (= 2.2 binomial s.e., at (3,60), race3_results.txt).  If that
+%    draft lands alongside corrected Edit 1, its clause should read
+%    "within $2.2$ binomial standard errors ($\le6\times10^{-4}$)".
+%    That file is owned by the certified-numerics draft; not edited here.
+%
+% VERIFICATION performed for this file (2026-08-15), amended by a hostile
+% referee pass the same day (changes marked "REFEREE CORRECTION" / "second
+% pass" below; all 18 OLD snippets re-verified verbatim-unique against the
+% 881-line draft, and the full edit set re-compiled in both A and B
+% variants after the corrections -- variant B resolves every reference,
+% variant A leaves exactly the four owned by the parallel drafts):
+%  * C = (1/4)psi'(3/4) + (log L)''(1/2,chi_4) recomputed independently with
+%    mpmath at 30 dps: 0.156029649889644884607682...; psi'(3/4) = pi^2 - 8G
+%    checked to 30 digits.  Agrees with v3/variance-identity.tex line 172
+%    and v3/certified-numerics.tex.
+%  * 30-point monotonicity grid (Edit 10), SECOND PASS: the paper claim is
+%    now anchored to CERTIFIED enclosures (race_mono_grid_certified.py
+%    driving race_density_certified.py at all 30 grid points; log
+%    race_mono_grid_certified_results.txt): enclosures pairwise disjoint and
+%    decreasing at all 29 consecutive pairs for BOTH q=4 and q=3; minimum
+%    adjacent-enclosure gap 2.937e-5 (q=4) and 8.629e-7 (q=3), both at the
+%    pair (-0.2,-0.15); maximum enclosure width 4.76e-7; at m=-0.2 the
+%    enclosures give 1-delta_4 in [4.825e-7, 7.726e-7] and 1-delta_3 <=
+%    2.451e-7.  The original smoothed-tail grid (race_mono_grid.py,
+%    race_mono_grid_results.txt; min decrements 2.96e-5 / 1.31e-6 at the
+%    same pair; quadrature converged to <1e-15 under n x4 / T x2
+%    refinement) is kept as a fast cross-check only: its Gaussianized-RvM
+%    tail model is biased by up to 2.2e-6 (measured against the certified
+%    enclosures at the 14 anchor points), which would have undercut the
+%    mod-3 minimum decrement as evidence.
+%  * Monte Carlo counts (Edit 1): repo evidence is race_density.py NS
+%    default 4e6, race_curve.py 2e6, race_mod3.py 4e6, logged runs in
+%    race3_results.txt at 4e6 with a 2e6 independent-seed re-check; no 2e7
+%    table run exists.  The single 2e7 run quoted in Edit 1 is the audit
+%    agent's verbatim replication of race_density.py's m=1 branch (seed
+%    20260815, NS=2e7): delta_MC(4,1)=0.797599 +/- 0.000090.
+%  * New bibliography entries (Edit 9): Yam25, Hay26, BHU26, Leung24, MN20
+%    were verified by the literature agent (existence, content, and the
+%    one-clause distinctions used in Edit 6); Bir48 and Pro65 verified for
+%    this file against Project Euclid (Ann. Math. Statist. 19 (1948),
+%    76-81; 36 (1965), 1703-1706).
+% ============================================================================
+
+
+% ============================================================================
+% EDIT 1  [task item 1: Monte Carlo sample count -- Table 1 caption, l. 143-144]
+% The caption claimed a 2e7-sample run to <=1e-4; no such table run exists
+% (binomial s.e. at the actual 2-4e6 counts is 2.0-3.6e-4).  The replacement
+% states the real counts and quotes the one genuine 2e7 run (at (4,1)).
+% Methods line 797 ("$2$--$4\times10^6$ samples") already matches the code
+% and needs no edit (and is replaced wholesale by certified-numerics.tex).
+% REFEREE CORRECTIONS (2026-08-15, this file's second pass):
+%  * s.e. bound: the (4,8),(4,20),(4,100) checks are race_curve.py runs at
+%    2e6 samples, where sqrt(.5138*.4862/2e6) = 3.53e-4 > 3.5e-4; the
+%    correct uniform bound is 3.6e-4.
+%  * "agreement within one standard error" was FALSE on the repo's own log:
+%    race3_results.txt has (3,60) MC 0.51917 +/- 0.00025 vs deterministic
+%    0.519716, a 2.2-s.e. deviation, and (3,3) at 1.7 s.e.  Seeded reruns of
+%    race_density.py (4e6) and race_curve.py (2e6), seed 20260815, confirm
+%    all mod-4 deviations are smaller (max 1.6 s.e., at (4,1) in the 4e6
+%    run; all race_curve entries <= 0.9 except an independent (4,0) sample
+%    at 1.8).  The caption now states the actual maximum; 2.2 s.e. as the
+%    largest of 14 binomial z-scores is unremarkable (expected max ~2).
+% ============================================================================
+%OLD% cross-checked by
+%OLD% independent $2\times10^7$-sample Monte Carlo to $\le10^{-4}$.
+%---NEW--->
+cross-checked by
+independent Monte Carlo with $2$--$4\times10^6$ samples per entry
+(binomial standard error $\le3.6\times10^{-4}$; largest deviation
+$2.2$ standard errors over the $14$ entries, consistent with binomial
+sampling), and at $(q,m)=(4,1)$ by a single
+$2\times10^7$-sample run, $0.797599\pm0.000090$, consistent with the
+deterministic entry ($0.3$ standard errors).
+%<---NEW---
+
+
+% ============================================================================
+% EDIT 2  [task item 2: finite-x measure defined where the numbers appear,
+%          Results item 2, l. 154-157]
+% The sieve scans normalize by log(X/3) (mod 4, race tracked from p=3) and
+% log(X/2) (mod 3, from p=2), NOT by log X: race_scan.c:56,84-87,120 and
+% race_scan3.c:68,129-130.  At X=1e10 the lower endpoint changes the
+% normalization by log3/logX ~ 4.8%, so the definition must be printed.
+% ============================================================================
+%OLD% the
+%OLD% finite-$x$ logarithmic measures at $10^{10}$ are $0.79380$, $0.69275$,
+%OLD% $0.64900$ for $m=1,2,3$, within $\lesssim4\times10^{-3}$ of
+%OLD% Table~\ref{tab:delta}.
+%---NEW--->
+the
+finite-$x$ logarithmic measures at $X=10^{10}$ --- here and throughout,
+the finite-$x$ logarithmic measure of the leading set is
+$(\log(X/3))^{-1}\int_3^X\mathbf 1[D_m(t)>0]\,\frac{dt}{t}$ for modulus
+$4$ and $(\log(X/2))^{-1}\int_2^X\mathbf 1[D_m(t)>0]\,\frac{dt}{t}$ for
+modulus $3$, the race being tracked from its first participating prime
+($3$, resp.\ $2$; conventions in Section~\ref{sec:methods}) --- are
+$0.79380$, $0.69275$, $0.64900$ for $m=1,2,3$, within
+$\lesssim4\times10^{-3}$ of Table~\ref{tab:delta}.
+%<---NEW---
+
+
+% ============================================================================
+% EDIT 3  [task item 2 continued: the same definition in Methods, l. 805]
+% Adds the precise definition, the tie convention actually implemented
+% (race_scan.c:91-98: the leader changes only on a nonzero sign, so
+% intervals with D_m = 0 are assigned to the previous leader), and the
+% reason the convention must be stated.
+% ============================================================================
+%OLD% below $10^{10}$) reproduce the classical values. The density kernel is
+%---NEW--->
+below $10^{10}$) reproduce the classical values. The finite-$x$
+logarithmic measure of a set $S$ reported in the introduction is
+$(\log(X/3))^{-1}\int_3^X\mathbf 1_S(t)\,dt/t$ for modulus $4$ (the
+race is tracked from the first odd prime) and
+$(\log(X/2))^{-1}\int_2^X\mathbf 1_S(t)\,dt/t$ for modulus $3$ (the
+race starts at $p=2$); intervals on which $D_m=0$ are assigned to the
+previous leader. The convention is not cosmetic: at $X=10^{10}$ the
+choice of lower endpoint alone shifts the normalization by
+$\log 3/\log X\approx4.8\%$. The density kernel is
+%<---NEW---
+
+
+% ============================================================================
+% EDIT 4  [task item 3: the delta_3 > delta_4 ordering, l. 174-177]
+% The asymptotic law knows only the conductor q, not gamma_1.  Computed from
+% the zeros files plus the Riemann-von Mangoldt tail: Var_4 - Var_3 = 4.846
+% (m=8), 11.793 (m=20), 34.796 (m=60) against the conductor term
+% 2M log(4/3) = 4.891, 11.795, 34.810 (100-101% of the gap); the
+% first-zero contribution 2a_{gamma_1}^2 difference is 23% (m=8), 4%
+% (m=20), 0.2% (m=60); at m = 0..3 the first zero carries 24-36% of the
+% total variance.  (Audit numbers, re-verified for this file's second pass:
+% gaps 4.846/11.793/34.796 vs conductor term 4.891/11.795/34.810 =
+% 100.9/100.0/100.0%; first-zero share of the gap 22.8/3.7/0.2%; first-zero
+% share of total variance at m=0..3: q=4 35.2/34.2/32.3/29.8%, q=3
+% 27.2/26.7/25.8/24.5% -- note 24.5% at (3,3), so the earlier "25-36%"
+% was corrected to "24-36%".)
+% ============================================================================
+%OLD% The modulus ordering
+%OLD% $\delta_3(m)>\delta_4(m)$ predicted by the law (through
+%OLD% $\gamma_1(\chi_3)=8.04>\gamma_1(\chi_4)=6.02$) holds at every computed
+%OLD% $m$.
+%---NEW--->
+The modulus ordering
+$\delta_3(m)>\delta_4(m)$ holds at every computed $m$. In the law it is
+a conductor effect: $\mathrm{Var}_4(m)-\mathrm{Var}_3(m)\sim
+2(m+\tfrac12)\log\tfrac43$, and from the zero data this conductor term
+accounts for the entire variance gap at $m=8,20,60$
+($100$--$101\%$). The larger first zero
+$\gamma_1(\chi_3)=8.04>\gamma_1(\chi_4)=6.02$ pushes in the same
+direction but is not the mechanism of the law: it contributes $23\%$ of
+the gap at $m=8$ and $0.2\%$ at $m=60$; only at small $m$ ($0\le m\le3$,
+where the first zero carries $24$--$36\%$ of the total variance) is it
+a comparable driver of the ordering.
+%<---NEW---
+
+
+% ============================================================================
+% EDIT 5  [task item 4: "two independent routes", l. 106-108 -- variant A]
+% APPLY [A] IF v3/certified-numerics.tex lands (it is byte-identical to that
+% file's Block R1 -- apply once, not twice); otherwise apply [B].
+% ============================================================================
+%OLD% , and every headline number was
+%OLD% computed by two independent routes.
+%
+% --- EDIT 5[A] ---
+%---NEW--->
+. Every headline number was
+computed twice: the sieve counts by fully independent implementations,
+the densities by deterministic inversion against Monte Carlo --- two
+evaluations that share the same zero data and tail model and are
+independent only in the evaluation step; the shared tail model is
+bounded rigorously by the certified enclosures of
+Section~\ref{sec:methods} (Table~\ref{tab:enclose}).
+%<---NEW---
+%
+% --- EDIT 5[B] (certified-numerics does NOT land) ---
+%---NEW--->
+. Every headline number was
+computed twice: the sieve counts by fully independent implementations,
+the densities by deterministic inversion against Monte Carlo --- two
+evaluations that share the same zero data and Gaussian tail model and
+are independent only in the evaluation step, so their agreement tests
+evaluation error, not the tail model; the tail model's effect on the
+densities is estimated at $O(10^{-5})$ but is not certified here.
+%<---NEW---
+
+
+% ============================================================================
+% EDIT 6  [task item 5: new "Related work" paragraph, inserted after l. 93
+%          (between "...logarithmic-density formulation." and "This note
+%          treats...")]
+% Only literature verified to exist is cited; each entry carries the
+% distinction established by the verification (Yam25: sigma>1 convergent
+% regime, unconditional, no densities; Hay26: alpha>=0 prime-ideal races,
+% sign/asymptotic statements, no densities, no growing weights; BHU26:
+% unweighted races, Wasserstein rates; MN20: unweighted, weak-LI
+% inclusivity; Leung24: short-interval smoothing, not p^m weights).
+% NOTE: requires the bibitems of Edit 9.  The reference
+% Theorem~\ref{thm:interp} resolves in the main file; the closing sentence
+% is the narrowed novelty claim required by the audit.
+% ============================================================================
+%OLD% logarithmic-density formulation.
+%OLD%
+%OLD% This note treats
+%---NEW--->
+logarithmic-density formulation.
+
+\medskip\noindent\textbf{Related work.} The weighted-race literature
+just cited concerns constant or decaying weights, and recent activity
+stays on that side of the boundary. In the absolutely convergent regime
+(weights $p^{-\sigma}$, $\sigma>1$; $m=-\sigma<-1$ in our
+normalization) Yamamuro~\cite{Yam25}, following Aymone~\cite{Aym22},
+proves unconditional two-sided bounds on the tails
+$\sum_{n>x}\Lambda(n)\chi(n)n^{-\sigma}/\log n$ through infinitely
+divisible distributions of Riemann-zeta type --- no GRH, no LI, and no
+logarithmic densities enter. Hayani~\cite{Hay26} generalizes the
+Aoki--Koyama threshold $\tfrac12$ to higher roots in prime
+\emph{ideal} races, for weights $(\mathrm N\mathfrak p)^{-\alpha}$
+with $\alpha\ge0$, under GRH and partly unconditionally --- asymptotic
+and sign statements, not Rubinstein--Sarnak densities, and only
+nonincreasing weights. For unweighted races, Bailleul, Hayani and
+Untrau~\cite{BHU26} prove a quantitative Kronecker--Weyl theorem in
+the $1$-Wasserstein metric under GRH and an effective
+linear-independence hypothesis, with rates of convergence to the
+limiting distributions and conditional bounds for generalized Skewes
+numbers; an effective, Wasserstein-quantified version of the
+interpolation theorem below is a natural question we do not pursue.
+Martin and Ng~\cite{MN20} obtain inclusivity of classical races under
+GRH plus the existence of sufficiently many self-sufficient zeros, a
+hypothesis substantially weaker than full LI; it is plausible that the
+qualitative parts of Theorem~\ref{thm:interp} (existence of the
+limiting distribution and $\tfrac12<\delta(m)<1$) survive a weakening
+of LI in their direction, but we do not prove this. Finally,
+Leung~\cite{Leung24} proves, under RH and a quantitative form of LI,
+multivariate Gaussian limit laws with weak negative correlations for
+smoothed counts of primes in multiple short intervals, with
+short-interval race applications; the weights there are smoothings in
+the interval aspect, not powers $p^m$, and the contact point with this
+note is the outlook at the end of Section~\ref{sec:methods}. In all of
+this literature the weight is constant or decaying; we are not aware
+of prior Rubinstein--Sarnak density computations, or weight-aspect
+density asymptotics, for growing weights $p^{\,m}$, $m>0$.
+
+This note treats
+%<---NEW---
+
+
+% ============================================================================
+% EDIT 7  [task item 5 continued: narrowed novelty claim in the abstract,
+%          l. 46-47]
+% ============================================================================
+%OLD% (ii) the
+%OLD% growing-weight regime $m>0$, previously untouched, with exact sieve
+%---NEW--->
+(ii) the
+growing-weight regime $m>0$ (we are not aware of prior
+Rubinstein--Sarnak density computations or weight-aspect density
+asymptotics for growing weights $p^{\,m}$, $m>0$), with exact sieve
+%<---NEW---
+
+
+% ============================================================================
+% EDIT 8  [task item 5 continued: narrowed novelty claim at l. 104]
+% ============================================================================
+%OLD% we allow $m>0$, which appears not to have been considered.
+%---NEW--->
+we allow $m>0$; the related work reviewed above contains, to our
+knowledge, no prior treatment of the race with growing weights.
+%<---NEW---
+
+
+% ============================================================================
+% EDIT 9  [task items 5+6: new bibliography entries, inserted immediately
+%          before \end{thebibliography}, l. 879]
+% Yam25/Hay26/BHU26/Leung24/MN20 verified by the literature agent; Bir48 and
+% Pro65 verified against Project Euclid for this file.  (Fel71, required by
+% v3/dissolution-theorem.tex, is that draft's responsibility -- add it there.)
+% ============================================================================
+%OLD% \end{thebibliography}
+%---NEW--->
+\bibitem{Yam25} K. Yamamuro, \emph{A weighted prime number race through
+some perspective of probability theory}, Ann.\ Univ.\ Sci.\ Budapest.\
+Sect.\ Comput.\ \textbf{58} (2025), 299--313.
+\bibitem{Hay26} M. Hayani, \emph{On the role of higher roots in prime
+ideal races}, arXiv:2607.23150 (2026).
+\bibitem{BHU26} A. Bailleul, M. Hayani, T. Untrau, \emph{A Wasserstein
+metric approach to generalized Skewes' numbers. I. Prime number races},
+arXiv:2603.20093 (2026).
+\bibitem{Leung24} S.-K. Leung, \emph{Joint distribution of primes in
+multiple short intervals}, arXiv:2401.04000 (2024).
+\bibitem{MN20} G. Martin, N. Ng, \emph{Inclusive prime number races},
+Trans.\ Amer.\ Math.\ Soc.\ \textbf{373} (2020), no.\ 5, 3561--3607.
+arXiv:1710.00088.
+\bibitem{Bir48} Z.~W. Birnbaum, \emph{On random variables with
+comparable peakedness}, Ann.\ Math.\ Statist.\ \textbf{19} (1948),
+76--81.
+\bibitem{Pro65} F. Proschan, \emph{Peakedness of distributions of
+convex combinations}, Ann.\ Math.\ Statist.\ \textbf{36} (1965),
+1703--1706.
+\end{thebibliography}
+%<---NEW---
+
+
+% ============================================================================
+% EDIT 10  [task item 6: Monotonicity subsection]
+% 10a: the preamble needs a conjecture environment (l. 11).
+% 10b: subsection inserted immediately BEFORE
+%      "\section{Methods and verification}\label{sec:methods}" (l. 791),
+%      i.e.\ appended to the end of the theorem section without touching any
+%      existing theorem-section text (the parallel drafts own that text).
+% The 30-point grid was computed FOR THIS EDIT (see header).  REFEREE
+% CORRECTION (second pass): the evidence paragraph is now anchored to the
+% CERTIFIED enclosures (prototype/explore/race_mono_grid_certified.py,
+% race_mono_grid_certified_results.txt, driving race_density_certified.py
+% at the 30 grid points), because the original smoothed-tail grid
+% (race_mono_grid.py, kept as a fast cross-check) carries the Gaussianized
+% RvM tail-model bias that certified-numerics.tex measures at up to
+% 2.2e-6 -- larger than the mod-3 minimum decrement 1.3e-6, so "against
+% ~1e-8 inversion error" was not an honest error statement (the ~1e-8
+% referred to quadrature only; quadrature is in fact converged to <1e-15,
+% verified by n x4 / T x2 refinement).  The certified enclosures remove the
+% issue: all 29 adjacent pairs are disjoint-decreasing for both moduli,
+% min gaps 2.937e-5 (q=4) and 8.629e-7 (q=3), max width 4.76e-7.
+% ============================================================================
+% --- EDIT 10a ---
+%OLD% \newtheorem{remark}{Remark}
+%---NEW--->
+\newtheorem{remark}{Remark}
+\newtheorem{conjecture}{Conjecture}
+%<---NEW---
+%
+% --- EDIT 10b ---
+%OLD% \section{Methods and verification}\label{sec:methods}
+%---NEW--->
+\subsection*{Monotonicity in the weight}\label{subsec:monotone}
+
+Every computed value in this note is consistent with a strict
+monotonicity that the dissolution asymptotics alone do not give:
+
+\begin{conjecture}\label{conj:monotone}
+For $q\in\{3,4\}$ the map $m\mapsto\delta_q(m)$ is strictly decreasing
+on $(-\tfrac12,\infty)$.
+\end{conjecture}
+
+Three remarks on its status. \emph{(a) Numerical evidence.}
+Deterministic Gil--Pelaez inversion with certified enclosures --- the
+unseen-zero tail variance evaluated in closed form from the completed
+$L$-function (the Hadamard-product identity behind the evaluation of
+$C$), the tail's departure from Gaussianity bounded by a proved
+quartic estimate, truncation and quadrature budgeted into the interval
+radius; every enclosure width below $5\times10^{-7}$ --- on the
+$30$-point grid
+\[
+m\in\{-0.2,\,-0.15,\,-0.1,\,-0.05,\,0,\,0.25,\,0.5,\,0.75,\,1,\,1.25,
+\,1.5,\,2,\,2.5,\,3,\,4,\,5,\,6,\,8,\,10,\,12,\,15,\,20,\,25,\,30,
+\,40,\,50,\,60,\,75,\,90,\,100\}
+\]
+yields enclosures that are pairwise disjoint and decreasing at all
+$29$ consecutive pairs, for both moduli; the smallest gap between
+adjacent enclosures is $2.9\times10^{-5}$ for modulus $4$ and
+$8.6\times10^{-7}$ for modulus $3$ (both at the leftmost pair). The
+enclosures are rigorous modulo the stated computational budget
+(IEEE-double quadrature with step-doubling control; $40$-digit
+floating-point evaluation of the closed-form variance; no interval
+arithmetic is claimed). Left of the grid the inversion loses
+resolution: at $m=-0.2$ itself the enclosures give
+$1-\delta_4\in[4.8,\,7.7]\times10^{-7}$ and
+$1-\delta_3\le2.5\times10^{-7}$, and on $(-\tfrac12,-0.2)$ the only
+control we have is the Chernoff bound of Theorem~\ref{thm:interp}(iii)
+(stated for $\chi_4$; the same argument applies verbatim mod $3$), a
+monotone upper envelope for $1-\delta$ which is consistent with ---
+but does not imply --- monotonicity of $\delta$ itself.
+
+\emph{(b) Why the conjecture is plausible.} With $M=m+\tfrac12$, every
+amplitude is strictly increasing in the weight:
+\[
+\frac{\partial a_\gamma}{\partial M}
+\;=\;\frac{2\gamma^2}{(M^2+\gamma^2)^{3/2}}\;>\;0 ,
+\]
+so as $m$ grows each noise component of
+$X_m=1+\sum_{\gamma>0}2a_\gamma\cos\theta_\gamma$ strictly grows while
+the mean stays fixed at $1$; the conjecture asserts that this pointwise
+growth of the noise always lowers $\mathbb P(X_m>0)$.
+
+\emph{(c) Why it is not a theorem.} If the family were a dilation,
+$V_{m}=c(m)V$ with $c$ increasing, monotonicity would be immediate; it
+is not --- the ratio $a_\gamma(m')/a_\gamma(m)$ depends on $\gamma$
+(low zeros saturate near $2$, high zeros still grow linearly in $M$).
+The natural tool is a peakedness ordering: for the symmetric variable
+$V_m=X_m-1$ one has $\delta(m)=1-\tfrac12\,\mathbb P(|V_m|\ge1)$, so it
+would suffice that $V_{m'}$ is more peaked than $V_m$ for $m'<m$ in the
+sense of Birnbaum~\cite{Bir48}. Scaling up a single component always
+makes that component less peaked, but the classical results that push
+such comparisons through convolution --- Birnbaum's
+lemma~\cite{Bir48} and Proschan's theorem on convex
+combinations~\cite{Pro65} --- require symmetric \emph{unimodal}
+summands (Proschan's in the stronger log-concave form), and the
+arcsine components $2a_\gamma\cos\theta_\gamma$ are symmetric but not
+unimodal (their density is U-shaped and diverges at the endpoints). We know of no peakedness comparison valid for arcsine
+components, and the conjecture remains open: neither the Chernoff
+envelope near $m=-\tfrac12$ nor the large-$m$ dissolution asymptotics
+controls the difference $\delta(m)-\delta(m')$ at nearby weights.
+
+\section{Methods and verification}\label{sec:methods}
+%<---NEW---
+
+
+% ============================================================================
+% EDIT 11  [task item 7: closing "Outlook" paragraph, appended to the end of
+%          the "Assumptions and limitations" paragraph, l. 826, i.e.\ at the
+%          end of Section sec:methods just before the bibliography]
+% Direction only; no claims.  Cites Leung24 (verified; see Edit 9).
+% ============================================================================
+%OLD% slow almost-periodic phase; we flag it rather than explain it.
+%---NEW--->
+slow almost-periodic phase; we flag it rather than explain it.
+
+\emph{Outlook: growing weights and short intervals.} Everything in
+this note keeps $m$ fixed as $x\to\infty$. In the joint limit
+$m=m(x)\to\infty$ the weight localizes the race: writing $p=x(1-u)$,
+the weight $p^{\,m}=x^{\,m}e^{m\log(1-u)}$ is within a bounded factor
+of its maximum only for $u\ll1/m$, so the fluctuating part of
+$\sum_{p\le x}\chi(p)p^{\,m}\log p$ is dominated by the primes in the
+short window $x-p\ll x/m$. A growing-weight race is in this sense a
+smoothed race between primes in a short interval at the edge of the
+range, and the weight aspect should connect to the extensively studied
+statistics of primes in short intervals --- in particular to the
+Gaussian limit laws, under RH and a quantitative form of LI, of
+Leung~\cite{Leung24} for primes in multiple short intervals, which
+include short-interval race applications. We state this only as a
+direction: we prove nothing in any joint regime $m=m(x)\to\infty$, and
+even the existence of a limiting distribution there is open.
+%<---NEW---
+
+
+% ============================================================================
+% EDIT 12  [task item 8: abstract, status of the dissolution law, l. 49-53]
+% APPLY EXACTLY ONE VARIANT:
+%   [A] if v3/dissolution-theorem.tex lands (Theorem thm:dissolution proved:
+%       GRH(chi) + L(1/2,chi) != 0 give delta_q(m)-1/2 =
+%       (2 pi sigma_m^2)^{-1/2}(1+O_q(1/(M log M))) for the limiting
+%       variable, with transfer to the race for q=4 under LI, Cor.
+%       cor:dissolution-race).
+%   [B] if it does not land (the law stays heuristic and must say so).
+% ============================================================================
+%OLD% (iii) an asymptotic dissolution law in the weight
+%OLD% aspect, $\delta_q(m)-\tfrac12\sim(2\pi\cdot
+%OLD% 2(m+\tfrac12)\log\tfrac{q(m+1/2)}{2\pi})^{-1/2}$, an analogue of the
+%OLD% Fiorilli--Martin density asymptotics, verified numerically in moduli
+%OLD% $3$ and $4$.
+%
+% --- EDIT 12[A] (dissolution theorem lands) ---
+%---NEW--->
+(iii) an asymptotic dissolution law in the weight
+aspect, $\delta_q(m)-\tfrac12\sim(2\pi\cdot
+2(m+\tfrac12)\log\tfrac{q(m+1/2)}{2\pi})^{-1/2}$, an analogue of the
+Fiorilli--Martin density asymptotics, proved here with an error term
+for the density of the limiting distribution of any real primitive
+character under GRH and $L(\tfrac12,\chi)\neq0$ --- under LI it applies
+to the logarithmic density of the mod-$4$ race itself --- and verified
+numerically in moduli $3$ and $4$.
+%<---NEW---
+%
+% --- EDIT 12[B] (dissolution theorem does NOT land) ---
+%---NEW--->
+(iii) an asymptotic dissolution law in the weight
+aspect, $\delta_q(m)-\tfrac12\sim(2\pi\cdot
+2(m+\tfrac12)\log\tfrac{q(m+1/2)}{2\pi})^{-1/2}$, an analogue of the
+Fiorilli--Martin density asymptotics, derived heuristically from the
+zero-counting density --- we do not prove it --- and verified
+numerically in moduli $3$ and $4$.
+%<---NEW---
+
+
+% ============================================================================
+% EDIT 13  [task item 8 continued: the same status, stated consistently in
+%          Results item 3 (l. 170-171) and in "Assumptions and limitations"
+%          (l. 821-824)]
+% Variant letters as in Edit 12.  13a[A] follows the placement suggested in
+% the header of v3/dissolution-theorem.tex.
+% ============================================================================
+% --- EDIT 13a: Results item 3, l. 170-171 ---
+%OLD% a weight-aspect analogue of the Fiorilli--Martin density
+%OLD% asymptotics~\cite{FM13} (cf.\ Meng~\cite{Meng18} for the $k$-aspect).
+%
+% --- EDIT 13a[A] ---
+%---NEW--->
+a weight-aspect analogue of the Fiorilli--Martin density
+asymptotics~\cite{FM13} (cf.\ Meng~\cite{Meng18} for the $k$-aspect),
+now a theorem: Section~\ref{sec:dissolution} proves it with error term
+$O(1/(M\log M))$ and a second-order refinement for the density of the
+limiting variable of any real primitive character under GRH and
+$L(\tfrac12,\chi)\ne0$, and under LI$(\chi_4)$ for the logarithmic
+density of the mod-$4$ race itself
+(Corollary~\ref{cor:dissolution-race}).
+%<---NEW---
+%
+% --- EDIT 13a[B] ---
+%---NEW--->
+a weight-aspect analogue of the Fiorilli--Martin density
+asymptotics~\cite{FM13} (cf.\ Meng~\cite{Meng18} for the $k$-aspect).
+The law is a heuristic supported by the numerics below; we do not
+prove it.
+%<---NEW---
+%
+% --- EDIT 13b: Assumptions and limitations, l. 821-824 ---
+%OLD% the dissolution law is
+%OLD% derived at the level of rigor of \cite{FM13}'s heuristic term plus
+%OLD% numerical confirmation, and a fully rigorous proof (with error term)
+%OLD% is left open.
+%
+% --- EDIT 13b[A] ---
+%---NEW--->
+the dissolution law, heuristic in earlier drafts, is proved with an
+error term in Theorem~\ref{thm:dissolution} (for the density of the
+limiting variable; the transfer to the race itself uses LI and is
+stated for $q=4$).
+%<---NEW---
+%
+% --- EDIT 13b[B]: leave the OLD text unchanged (it is already honest).
+
+
+% ============================================================================
+% EDIT 14  [task item 9: C = 0.156033 occurrences.  Full list in the 881-line
+%          draft: l. 187, l. 210, l. 257 (definition; justification at
+%          l. 259-262).  NOT changed: l. 60 "$0.156\ldots$", l. 653
+%          "$\min(0.156,\,e^{-1/(2C)}=0.0406)$" and l. 787 "$0.15603$" ---
+%          all correct roundings of 0.15602964988964488.
+%          Certified value, independently recomputed for this file:
+%          C = (1/4)psi'(3/4) + (log L)''(1/2,chi_4), psi'(3/4)=pi^2-8G,
+%          = 0.15602964988964488...  (0.1560296 is an exact truncation.)]
+% --- EDIT 14a: l. 187 (Results item 4).  IDENTICAL to thm-full-range.tex
+%     Block M -- apply once, not twice.
+% ============================================================================
+%OLD% $\sqrt{\Sigma}/\log x$ with $\Sigma=\sum_\gamma2/\gamma^2=0.156033$,
+%---NEW--->
+$\sqrt{\Sigma}/\log x$ with $\Sigma=\sum_\gamma2/\gamma^2=0.1560296$,
+%<---NEW---
+%
+% --- EDIT 14b: l. 210 (Results item 5 display) ---
+%OLD% C=\sum_{\gamma>0}\frac{2}{\gamma^2}=0.156033\ldots,
+%---NEW--->
+C=\sum_{\gamma>0}\frac{2}{\gamma^2}=0.1560296\ldots,
+%<---NEW---
+
+
+% ============================================================================
+% EDIT 15  [task item 9 continued: the C definition at l. 257 and its
+%          justification at l. 259-262]
+% FALLBACK ONLY: these lines lie inside Block A of v3/thm-full-range.tex
+% (which replaces l. 229-262 and already prints the corrected C with the
+% exact completed-L evaluation).  Apply this edit ONLY if that Block A does
+% not land; otherwise skip -- the parallel draft owns this text.
+% ============================================================================
+%OLD% C\;:=\;\sum_{\gamma>0}\frac{2}{\gamma^2}\;=\;0.156033\ldots
+%OLD% \]
+%OLD% (numerically: $0.152546$ from the first $511$ ordinates plus the
+%OLD% Riemann--von Mangoldt tail $\int_{\gamma_{511}}^\infty 2t^{-2}\,dN(t)
+%OLD% =0.003487$ with $dN(t)=(2\pi)^{-1}\log(2t/\pi)\,dt$; the neglected
+%OLD% fluctuation of the zero-counting remainder contributes $O(10^{-5})$).
+%---NEW--->
+C\;:=\;\sum_{\gamma>0}\frac{2}{\gamma^2}\;=\;0.15602964988964488\ldots
+\]
+(exactly: under GRH$(\chi_4)$, with
+$\Lambda(s)=(4/\pi)^{(s+1)/2}\Gamma(\tfrac{s+1}2)L(s,\chi_4)$ and
+$\Xi(z)=\Lambda(\tfrac12+z)$ even, the Hadamard product
+$\Xi(z)/\Xi(0)=\prod_{\gamma>0}(1+z^2/\gamma^2)$ gives
+$C=(\log\Lambda)''(\tfrac12)
+=\tfrac14\psi'(\tfrac34)+(\log L)''(\tfrac12,\chi_4)$ with
+$\psi'(\tfrac34)=\pi^2-8G$, $G$ Catalan's constant, evaluated at $40$
+digits; the zeros-plus-tail route --- $0.152546$ from the first $511$
+ordinates plus the smoothed Riemann--von Mangoldt tail
+$\int_{\gamma_{511}}^\infty2t^{-2}\,dN(t)=0.003487$ with
+$dN(t)=(2\pi)^{-1}\log(2t/\pi)\,dt$ --- gives $0.156033$ and is kept
+only as an independent cross-check, its $\approx3\times10^{-6}$ excess
+being the neglected fluctuation of the zero-counting remainder).
+%<---NEW---
+
+% ============================================================================
+% END OF EDITS.
+%
+% Known interactions, restated:  Edit 5[A] = certified-numerics Block R1 and
+% the analogous Methods sentence replacement (their Block R2, l. 814-815) is
+% owned by certified-numerics.tex, so it is NOT duplicated here; if
+% certified-numerics does not land, apply Edit 5[B] and additionally replace
+% l. 814-815
+%   "Every headline number in this note was
+%    re-computed independently of the code that first produced it."
+% with
+%   "Every headline number in this note was re-computed by a second
+%    implementation; for the densities the two implementations share the
+%    ordinate lists and the Gaussian tail model, so their agreement tests
+%    evaluation error only."
+% Abstract range "(-1/2, 0]" (l. 55-58) and Results item 5 range statements
+% must be updated when thm-full-range.tex lands -- flagged as that draft's
+% own gap, not duplicated here.
+% ============================================================================

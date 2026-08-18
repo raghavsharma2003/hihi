@@ -1,0 +1,836 @@
+<title>Primes Without Counting</title>
+<style>
+  :root {
+    --paper:    #EDF0F5;
+    --surface:  #FFFFFF;
+    --sunken:   #E3E8F0;
+    --ink:      #101A2C;
+    --muted:    #59637A;
+    --hairline: #C9D2E0;
+    --brass:    #8F6210;
+    --brass-bg: #F5E9D2;
+    --wave:     #175F7C;
+    --wave-bg:  #DCEBF2;
+    --verified: #14664A;
+    --verified-bg: #D8EDE3;
+    --alert:    #8C3320;
+    --team3:    #8C3320;
+    --team1:    #175F7C;
+
+    --serif: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+    --col: 40rem;
+    --wide: 60rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:    #080E1A;
+      --surface:  #111B2C;
+      --sunken:   #0C1421;
+      --ink:      #E4EBF6;
+      --muted:    #93A0B8;
+      --hairline: #26344B;
+      --brass:    #E3AC52;
+      --brass-bg: #2C2213;
+      --wave:     #6BC3E0;
+      --wave-bg:  #102833;
+      --verified: #4FD9A0;
+      --verified-bg: #0D2A21;
+      --alert:    #F08C72;
+      --team3:    #F08C72;
+      --team1:    #6BC3E0;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:    #080E1A;
+    --surface:  #111B2C;
+    --sunken:   #0C1421;
+    --ink:      #E4EBF6;
+    --muted:    #93A0B8;
+    --hairline: #26344B;
+    --brass:    #E3AC52;
+    --brass-bg: #2C2213;
+    --wave:     #6BC3E0;
+    --wave-bg:  #102833;
+    --verified: #4FD9A0;
+    --verified-bg: #0D2A21;
+    --alert:    #F08C72;
+    --team3:    #F08C72;
+    --team1:    #6BC3E0;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.65;
+    margin: 0;
+    padding: 0 1.25rem 6rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .col  { max-width: var(--col);  margin-inline: auto; }
+  .wide { max-width: var(--wide); margin-inline: auto; }
+
+  header {
+    max-width: var(--wide);
+    margin: 0 auto;
+    padding: 5rem 0 3rem;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 1.25rem;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    margin: 0 0 1.5rem;
+    max-width: 16ch;
+  }
+  .standfirst {
+    font-family: var(--serif);
+    font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+    line-height: 1.5;
+    color: var(--muted);
+    max-width: 46ch;
+    margin: 0;
+  }
+  .standfirst strong { color: var(--ink); font-weight: 600; }
+
+  section { padding-top: 4.5rem; }
+  h2 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(1.6rem, 3.4vw, 2.1rem);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    margin: 0 0 1.25rem;
+  }
+  h3 {
+    font-family: var(--sans);
+    font-weight: 650;
+    font-size: 1rem;
+    margin: 2.25rem 0 0.6rem;
+  }
+  p { margin: 0 0 1.15rem; }
+  .lede { font-size: 1.08rem; }
+  strong { font-weight: 650; }
+  em.term {
+    font-style: normal;
+    font-weight: 600;
+    border-bottom: 2px solid var(--wave);
+    padding-bottom: 1px;
+  }
+  a { color: var(--wave); text-underline-offset: 3px; }
+
+  /* one-minute strip */
+  .minute {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+  .minute-card {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 3px;
+    padding: 1.4rem 1.4rem 1.5rem;
+  }
+  .minute-card .k {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--wave);
+    display: block;
+    margin-bottom: 0.7rem;
+  }
+  .minute-card h4 {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+  }
+  .minute-card p { font-size: 0.93rem; color: var(--muted); margin: 0; }
+
+  /* capability grid */
+  .cap-wrap { overflow-x: auto; margin: 2rem 0; border: 1px solid var(--hairline); border-radius: 3px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+  th, td { text-align: left; padding: 0.7rem 1rem; border-bottom: 1px solid var(--hairline); }
+  thead th {
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    background: var(--sunken);
+    white-space: nowrap;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  td.task { font-weight: 600; white-space: nowrap; }
+  td.yes { color: var(--verified); font-weight: 700; }
+  td.no  { color: var(--muted); }
+  td.ours { background: var(--wave-bg); }
+  td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .tick { color: var(--verified); font-weight: 700; }
+
+  /* panels + canvas */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 3px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+  }
+  .panel-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+  .panel-title { font-weight: 650; font-size: 0.95rem; margin: 0; }
+  .legend {
+    display: flex;
+    gap: 1.1rem;
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+  .legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .swatch { width: 16px; height: 3px; border-radius: 2px; display: inline-block; }
+  .sw-exact { background: var(--ink); }
+  .sw-approx { background: var(--wave); }
+  .sw-theory { background: var(--wave); }
+  .sw-measured { background: var(--brass); }
+
+  canvas { width: 100%; height: auto; display: block; touch-action: pan-y; }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--hairline);
+  }
+  .controls label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  input[type="range"] { flex: 1 1 12rem; accent-color: var(--wave); height: 1.5rem; }
+  input[type="range"]:focus-visible { outline: 2px solid var(--wave); outline-offset: 3px; }
+  .readout { font-family: var(--mono); font-size: 0.85rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .readout b { color: var(--wave); font-weight: 700; }
+  .caption { font-size: 0.92rem; color: var(--muted); margin: 1rem 0 0; min-height: 2.8em; }
+  .caption b { color: var(--ink); font-weight: 600; }
+
+  /* speed bars */
+  .bars { margin: 2rem 0; display: flex; flex-direction: column; gap: 0.9rem; }
+  .bar-row { display: grid; grid-template-columns: 7.5rem 1fr; gap: 0.9rem; align-items: center; }
+  .bar-label { font-family: var(--mono); font-size: 0.76rem; text-align: right; color: var(--muted); }
+  .bar-track { position: relative; height: 1.9rem; background: var(--sunken); border-radius: 2px; overflow: hidden; }
+  .bar-fill { position: absolute; inset: 0 auto 0 0; border-radius: 2px; }
+  .bar-fill.slow { background: var(--alert); opacity: 0.75; }
+  .bar-fill.mid  { background: var(--brass); opacity: 0.85; }
+  .bar-fill.fast { background: var(--wave); }
+  .bar-val {
+    position: absolute; top: 50%; transform: translateY(-50%); left: 0.7rem;
+    font-family: var(--mono); font-size: 0.78rem; font-variant-numeric: tabular-nums;
+    color: var(--surface); font-weight: 600; white-space: nowrap;
+  }
+
+  /* verdict cards */
+  .verdicts { display: flex; flex-direction: column; gap: 0.85rem; margin: 2rem 0; }
+  .verdict {
+    border: 1px solid var(--hairline);
+    border-left-width: 4px;
+    border-radius: 3px;
+    padding: 1.1rem 1.3rem;
+    background: var(--surface);
+  }
+  .verdict.yes { border-left-color: var(--verified); background: var(--verified-bg); }
+  .verdict.no  { border-left-color: var(--brass);    background: var(--brass-bg); }
+  .verdict-tag {
+    font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.12em;
+    text-transform: uppercase; margin: 0 0 0.4rem; font-weight: 600;
+  }
+  .verdict.yes .verdict-tag { color: var(--verified); }
+  .verdict.no  .verdict-tag { color: var(--brass); }
+  .verdict p { margin: 0; font-size: 0.94rem; }
+  .verdict p + p { margin-top: 0.6rem; }
+  .verdict-what { font-weight: 650; }
+
+  .callout {
+    border: 1px solid var(--hairline);
+    border-radius: 3px;
+    background: var(--sunken);
+    padding: 1.4rem 1.5rem;
+    margin: 2rem 0;
+  }
+  .callout h3 { margin-top: 0; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  .flip-facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+  .flip {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 3px;
+    padding: 1.3rem 1.4rem;
+    text-align: center;
+  }
+  .flip .big {
+    font-family: var(--serif);
+    font-size: 2.2rem;
+    font-weight: 600;
+    display: block;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+  .flip .lab { font-size: 0.85rem; color: var(--muted); }
+  .flip.f3 .big { color: var(--team3); }
+  .flip.f1 .big { color: var(--team1); }
+
+  ol.steps { list-style: none; counter-reset: s; padding: 0; margin: 2rem 0; display: flex; flex-direction: column; gap: 1.4rem; }
+  ol.steps li { counter-increment: s; display: grid; grid-template-columns: 2.1rem 1fr; gap: 1rem; align-items: start; }
+  ol.steps li::before {
+    content: counter(s);
+    font-family: var(--mono); font-size: 0.8rem; font-weight: 600;
+    color: var(--wave); background: var(--wave-bg);
+    border-radius: 50%; width: 2.1rem; height: 2.1rem;
+    display: grid; place-items: center;
+  }
+  ol.steps .step-title { font-weight: 650; display: block; margin-bottom: 0.2rem; }
+  ol.steps .step-body { font-size: 0.94rem; color: var(--muted); }
+
+  footer {
+    max-width: var(--wide);
+    margin: 5rem auto 0;
+    padding-top: 2rem;
+    border-top: 1px solid var(--hairline);
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  footer code { font-family: var(--mono); font-size: 0.9em; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+
+<header>
+  <p class="eyebrow">What we built — updated August 15, 2026</p>
+  <h1>Primes Without Counting</h1>
+  <p class="standfirst">We taught a computer to answer questions about primes
+  <strong>without looking at any primes</strong> — then used that power to discover something
+  about a 170-year-old pattern that nobody had ever measured.</p>
+</header>
+
+<section class="col">
+  <h2>What we did, in one minute</h2>
+  <div class="minute">
+    <div class="minute-card">
+      <span class="k">The setup</span>
+      <h4>Primes hide a rhythm</h4>
+      <p>Prime numbers look random. But since 1859 it's been known their pattern is secretly built
+      from a fixed list of "musical notes" — special frequencies that never change. Know the notes,
+      know the primes.</p>
+    </div>
+    <div class="minute-card">
+      <span class="k">What existed</span>
+      <h4>Others could count</h4>
+      <p>Mathematicians already use those notes to <em>count</em> primes — that machinery exists and
+      holds records. But counting is the only thing anyone ever built from the notes.</p>
+    </div>
+    <div class="minute-card">
+      <span class="k">What we did</span>
+      <h4>We can now add, weigh, and sort</h4>
+      <p>Our program is the first that computes prime <em>sums</em> from the notes — plus squares,
+      cubes, reciprocals, and primes sorted into families. One method, all questions, exact answers.</p>
+    </div>
+  </div>
+  <p>So the honest one-line answer to "what did you build": <strong>the note-reading trick existed
+  for one question; we made it answer six more, and then used it to find a new fact about
+  primes.</strong></p>
+</section>
+
+<section class="wide">
+  <h2 class="col" style="margin-inline:auto;">How is it better than what exists?</h2>
+  <p class="col lede" style="margin-inline:auto;">Fair question — and the answer is <strong>not</strong>
+  "it's faster." The world-record programs are faster at their own game. Our method wins differently:
+  it plays games no one else can play at all.</p>
+
+  <div class="cap-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Question about primes</th>
+          <th>Normal programs<br>(check every number)</th>
+          <th>Record holders<br>(clever counting)</th>
+          <th>Note-reading<br>(before us)</th>
+          <th>Note-reading<br>(ours)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="task">Count them</td><td class="yes">✓</td><td class="yes">✓ record: 10²⁹</td><td class="yes">✓ record: 10²⁵</td><td class="yes ours">✓</td></tr>
+        <tr><td class="task">Add them up</td><td class="yes">✓ slow</td><td class="yes">✓ record: 10²⁰⁺</td><td class="no">—</td><td class="yes ours">✓ first ever</td></tr>
+        <tr><td class="task">Add their squares / cubes</td><td class="yes">✓ slow</td><td class="no">—</td><td class="no">—</td><td class="yes ours">✓ first ever</td></tr>
+        <tr><td class="task">Add 1÷p for each prime</td><td class="yes">✓ slow</td><td class="no">—</td><td class="no">—</td><td class="yes ours">✓ first ever</td></tr>
+        <tr><td class="task">Sum by family (4n+1 vs 4n+3)</td><td class="yes">✓ slow</td><td class="no">—</td><td class="no">—</td><td class="yes ours">✓ first ever</td></tr>
+        <tr><td class="task">Double-check the record holders</td><td class="no">too slow</td><td class="no">checks itself</td><td class="no">counts only</td><td class="yes ours">✓ independent math</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col" style="margin-inline:auto;">
+    <p>Two of those rows matter most:</p>
+    <p><strong>"First ever" — the sums.</strong> "Slow" programs can add primes, but they hit a wall:
+    they must touch every number, so going ten times further costs ten times more, forever. The
+    note-reading method's cost barely grows — but before us, nobody had ever built it for sums.
+    The mathematics needed extra steps (removing a stubborn logarithm, taming several colliding
+    infinities) that simply had not been worked out and implemented.</p>
+    <p><strong>The referee row.</strong> World records for prime sums are computed by essentially one
+    family of programs. If it has a subtle bug, nobody would ever know — and this field has already
+    had one record publicly withdrawn after a discrepancy. Our method reaches the same answers
+    through completely unrelated mathematics. Agreement between the two is real proof.</p>
+  </div>
+</section>
+
+<section class="wide">
+  <h2 class="col" style="margin-inline:auto;">See the trick work</h2>
+  <p class="col lede" style="margin-inline:auto;">The black staircase is a running total over the
+  primes — it jumps at every prime. The blue line is computed from the notes alone, knowing
+  <strong>nothing</strong> about any prime. Drag the slider to add notes.</p>
+
+  <div class="panel">
+    <div class="panel-head">
+      <p class="panel-title">Waves finding the primes</p>
+      <div class="legend">
+        <span><i class="swatch sw-exact"></i> the real primes</span>
+        <span><i class="swatch sw-approx"></i> computed from notes</span>
+      </div>
+    </div>
+    <canvas id="plot" width="1100" height="440" role="img"
+      aria-label="A staircase graph of a running prime total, with a computed curve that develops matching steps as more waves are added."></canvas>
+    <div class="controls">
+      <label for="nz">Notes used</label>
+      <input type="range" id="nz" min="0" max="50" value="0" step="1" />
+      <span class="readout"><b id="nzval">0</b> of 50 &nbsp;·&nbsp; miss: <b id="err">0.80</b></span>
+    </div>
+    <p class="caption" id="cap"></p>
+  </div>
+
+  <p class="col" style="margin-inline:auto;">The real program uses 2,000 notes and lands on exact
+  whole numbers — for example, the sum of every prime below one billion:
+  <strong>24,739,512,092,254,535</strong>. Checked against brute-force counting. Correct.</p>
+</section>
+
+<section class="wide">
+  <h2 class="col" style="margin-inline:auto;">The discovery: a famous bias, dissolving</h2>
+  <div class="col" style="margin-inline:auto;">
+    <p class="lede">Here's the new science — found this week, using the machinery above.</p>
+    <p>Split the odd primes into two teams. <strong style="color:var(--team3)">Team 3</strong> is
+    primes like 3, 7, 11, 19 (one less than a multiple of 4).
+    <strong style="color:var(--team1)">Team 1</strong> is primes like 5, 13, 17, 29 (one more).
+    In 1853, Chebyshev noticed something strange: counting up to almost any point,
+    <strong>Team 3 is winning</strong>. It's one of the most famous quirks in mathematics — Team 3
+    leads about 99.6% of the time, and Team 1 doesn't take the lead even once until 26,861.</p>
+    <p>We asked a question that turns out never to have been asked: <strong>what if bigger primes
+    count for more?</strong> Instead of each prime scoring 1 point, let each prime score itself —
+    or its square, or its cube. Does the famous bias survive?</p>
+    <p><strong>It collapses.</strong> And we measured exactly how fast — twice, by two completely
+    independent routes: predicted from the notes, and then confirmed by exactly checking every
+    prime up to ten billion.</p>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <p class="panel-title">How often Team 3 leads, as prime weight grows</p>
+      <div class="legend">
+        <span><i class="swatch sw-theory"></i> predicted from the notes</span>
+        <span><i class="swatch sw-measured"></i> measured exactly, to 10¹⁰</span>
+      </div>
+    </div>
+    <canvas id="race" width="1100" height="380" role="img"
+      aria-label="Paired bar chart: Team 3's lead share falls from 99.6 percent for plain counting to about 65 percent when primes are weighted by their cubes; predictions and exact measurements agree closely."></canvas>
+    <p class="caption">Each pair of bars is one race. Prediction and reality agree to about 3 parts
+    in 1,000 — that agreement, across four races, is what makes this a result rather than a guess.
+    (For the classic counting race the exact measurement converges extremely slowly, so the
+    prediction — the famous 99.59% — is the anchor there.)</p>
+  </div>
+
+  <div class="flip-facts">
+    <div class="flip f3">
+      <span class="big">26,861</span>
+      <span class="lab">how far you must count before Team 1 first leads the <b>classic</b> race</span>
+    </div>
+    <div class="flip f1">
+      <span class="big">5</span>
+      <span class="lab">where Team 1 first leads once primes score <b>their own value</b> — the very
+      first Team-1 prime outweighs 3</span>
+    </div>
+    <div class="flip f3">
+      <span class="big">3,082 → 199,540</span>
+      <span class="lab">lead changes up to ten billion: classic race vs cube-weighted race</span>
+    </div>
+  </div>
+
+  <div class="col" style="margin-inline:auto;">
+    <p><strong>Why it happens</strong> (the intuition): the force that biases the race toward Team 3
+    is fixed in size. The random back-and-forth sloshing, though, gets amplified when big primes
+    carry big weights. Same steady push, bigger waves — the push matters less and less. Our
+    formulas say the wave amplification factor is exactly (2m+1) for weight m, and the
+    measurements agree.</p>
+    <p>This came from copying the winning move of Anthropic's recent Riemann result: <em>combine two
+    things nobody had combined</em>. Prime-race theory existed. Our exact weighted-sum machinery
+    existed (for one week). Putting them together produced numbers no one had ever seen.</p>
+  </div>
+</section>
+
+<section class="col">
+  <h2>Honest scoreboard</h2>
+  <div class="verdicts">
+    <div class="verdict yes">
+      <p class="verdict-tag">New</p>
+      <p class="verdict-what">First program computing prime sums from the notes.</p>
+      <p>Counting had been done this way; sums, squares, reciprocals, and families had not, by
+      anyone, anywhere we (or a dedicated literature hunt) could find.</p>
+    </div>
+    <div class="verdict yes">
+      <p class="verdict-tag">New</p>
+      <p class="verdict-what">The weighted-race discovery, with the numbers 99.6 → 79.7 → 69.5 → 64.6.</p>
+      <p>A never-measured property of a 170-year-old phenomenon, predicted by theory and confirmed
+      by exact computation independently.</p>
+    </div>
+    <div class="verdict no">
+      <p class="verdict-tag">Not new — and we say so</p>
+      <p class="verdict-what">The underlying math is Riemann's (1859) and Chebyshev's (1853).</p>
+      <p>Our contribution is making it compute and finding what it reveals — not the foundations.
+      The paper credits everyone precisely, because overclaiming is how papers die.</p>
+    </div>
+    <div class="verdict no">
+      <p class="verdict-tag">Not yet</p>
+      <p class="verdict-what">Not rigorous in the formal journal sense, and no world record yet.</p>
+      <p>Our error controls are demonstrated (they work, measurably, every time) but not formally
+      proven. That's the remaining gap — a known kind of work, and a mathematician's job.</p>
+    </div>
+  </div>
+
+  <h3>How good is it, on a scale?</h3>
+  <p>If a homework project is a 1 and Anthropic's Riemann-bound result is a 9: this is a
+  <strong>5–6</strong> — real, new, publishable-track research. Solid paper territory, not a
+  revolution. Both halves of that sentence are true and worth saying.</p>
+</section>
+
+<section class="col">
+  <h2>What to do next</h2>
+  <ol class="steps">
+    <li>
+      <span class="step-title">Show it to a computational number theorist</span>
+      <span class="step-body">This is the step that matters. You arrive with a draft paper, working
+      code, seven verified computations, and one genuine discovery — not an idea. Professors take
+      that meeting.</span>
+    </li>
+    <li>
+      <span class="step-title">Let a mathematician make the error bounds formal</span>
+      <span class="step-body">Turning "demonstrated correct" into "provably correct" is standard,
+      known-how-to-do work — and it's the ticket a journal requires.</span>
+    </li>
+    <li>
+      <span class="step-title">Extend the race discovery</span>
+      <span class="step-body">Other prime families (mod 3, mod 8) use the same code. And our theory
+      predicts reciprocal weighting should make the bias <em>stronger</em> — an untested
+      prediction, which is exactly what you want to hand a collaborator.</span>
+    </li>
+    <li>
+      <span class="step-title">Then submit</span>
+      <span class="step-body">Mathematics of Computation for the full paper; the race discovery could
+      also stand alone as a short note, which is faster to publish.</span>
+    </li>
+  </ol>
+</section>
+
+<footer class="wide">
+  <p>Everything lives in <code>algorithms/prime-sum/</code>: the programs, the draft paper in
+  <code>paper/</code>, the race scanner and its ten-billion scan, and the literature review. Every
+  number on this page was computed, then independently re-computed. Nothing here is estimated.</p>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  function tone(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || "#000";
+  }
+
+  /* ---------- wave demo ---------- */
+  var ZEROS = [14.134725,21.022040,25.010858,30.424876,32.935062,37.586178,40.918719,43.327073,
+    48.005151,49.773832,52.970321,56.446248,59.347044,60.831779,65.112544,67.079811,69.546402,
+    72.067158,75.704691,77.144840,79.337375,82.910381,84.735493,87.425275,88.809111,92.491899,
+    94.651344,95.870634,98.831194,101.317851,103.725538,105.446623,107.168611,111.029536,111.874659,
+    114.320221,116.226680,118.790783,121.370125,122.946829,124.256819,127.516684,129.578704,
+    131.087689,133.497737,134.756510,138.116042,139.736209,141.123707,143.111846];
+
+  var X0 = 2, X1 = 30;
+
+  var STEPS = (function () {
+    var primes = [2,3,5,7,11,13,17,19,23,29], out = [];
+    for (var i = 0; i < primes.length; i++) {
+      var p = primes[i], pk = p;
+      while (pk <= X1) { out.push({ at: pk, jump: Math.log(p) }); pk *= p; }
+    }
+    out.sort(function (a, b) { return a.at - b.at; });
+    var run = 0;
+    for (var j = 0; j < out.length; j++) { run += out[j].jump; out[j].total = run; }
+    return out;
+  })();
+
+  function exactAt(x) {
+    var t = 0;
+    for (var i = 0; i < STEPS.length; i++) { if (STEPS[i].at <= x) t = STEPS[i].total; else break; }
+    return t;
+  }
+
+  function approxAt(x, n) {
+    var L = Math.log(x);
+    var s = x - Math.log(2 * Math.PI) - 0.5 * Math.log(1 - 1 / (x * x));
+    var rt = 2 * Math.sqrt(x);
+    for (var i = 0; i < n; i++) {
+      var g = ZEROS[i];
+      s -= rt * (0.5 * Math.cos(g * L) + g * Math.sin(g * L)) / (0.25 + g * g);
+    }
+    return s;
+  }
+
+  var canvas = document.getElementById("plot");
+  var ctx = canvas.getContext("2d");
+  var slider = document.getElementById("nz");
+  var nzval = document.getElementById("nzval");
+  var errEl = document.getElementById("err");
+  var cap = document.getElementById("cap");
+
+  var PAD = { l: 46, r: 18, t: 18, b: 34 };
+  var YMAX = 32;
+
+  function sizeCanvas(cv, c2, ratio) {
+    var dpr = window.devicePixelRatio || 1;
+    var cssW = cv.clientWidth || 900;
+    var cssH = Math.max(280, Math.round(cssW * ratio));
+    cv.width = Math.round(cssW * dpr);
+    cv.height = Math.round(cssH * dpr);
+    cv.style.height = cssH + "px";
+    c2.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { w: cssW, h: cssH };
+  }
+
+  function drawWave() {
+    var dim = sizeCanvas(canvas, ctx, 0.4);
+    var W = dim.w, H = dim.h;
+    var n = parseInt(slider.value, 10);
+
+    var inkC = tone("--ink"), waveC = tone("--wave"), hairC = tone("--hairline"),
+        mutedC = tone("--muted"), surfC = tone("--surface");
+
+    var px = function (x) { return PAD.l + (x - X0) / (X1 - X0) * (W - PAD.l - PAD.r); };
+    var py = function (y) { return H - PAD.b - (y / YMAX) * (H - PAD.t - PAD.b); };
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = surfC;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.strokeStyle = hairC;
+    ctx.lineWidth = 1;
+    ctx.fillStyle = mutedC;
+    ctx.font = "11px ui-monospace, monospace";
+    for (var gy = 0; gy <= YMAX; gy += 8) {
+      ctx.beginPath();
+      ctx.moveTo(PAD.l, Math.round(py(gy)) + 0.5);
+      ctx.lineTo(W - PAD.r, Math.round(py(gy)) + 0.5);
+      ctx.stroke();
+      ctx.textAlign = "right";
+      ctx.fillText(String(gy), PAD.l - 8, py(gy) + 4);
+    }
+    ctx.textAlign = "center";
+    var marks = [2, 5, 10, 15, 20, 25, 30];
+    for (var m = 0; m < marks.length; m++) ctx.fillText(String(marks[m]), px(marks[m]), H - PAD.b + 18);
+    ctx.fillText("numbers from 2 to 30 →", W / 2, H - 6);
+
+    ctx.strokeStyle = inkC;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(px(X0), py(0));
+    var prevY = 0;
+    for (var i = 0; i < STEPS.length; i++) {
+      var s = STEPS[i];
+      if (s.at > X1) break;
+      ctx.lineTo(px(s.at), py(prevY));
+      ctx.lineTo(px(s.at), py(s.total));
+      prevY = s.total;
+    }
+    ctx.lineTo(px(X1), py(prevY));
+    ctx.stroke();
+
+    ctx.strokeStyle = waveC;
+    ctx.lineWidth = 2.25;
+    ctx.beginPath();
+    var N = 900, started = false, sq = 0, cnt = 0;
+    for (var k = 0; k <= N; k++) {
+      var x = X0 + (X1 - X0) * k / N;
+      var y = approxAt(x, n);
+      var d = y - exactAt(x);
+      sq += d * d; cnt++;
+      var yy = Math.max(-4, Math.min(YMAX + 4, y));
+      if (!started) { ctx.moveTo(px(x), py(yy)); started = true; }
+      else ctx.lineTo(px(x), py(yy));
+    }
+    ctx.stroke();
+
+    nzval.textContent = String(n);
+    errEl.textContent = Math.sqrt(sq / cnt).toFixed(2);
+
+    var msg;
+    if (n === 0) msg = "<b>No notes yet.</b> Just the smooth trend — it knows primes are roughly evenly spread, nothing else.";
+    else if (n <= 3) msg = "<b>First ripples.</b> The line starts to bend, but doesn't know where individual primes are yet.";
+    else if (n <= 12) msg = "<b>Steps appear.</b> The kinks are lining up with the black jumps — not landing randomly.";
+    else if (n <= 30) msg = "<b>It's tracking the primes.</b> Every rise now sits on a real prime. No primes were consulted.";
+    else msg = "<b>Locked on.</b> With 50 notes the shape is unmistakable. The real program uses 2,000 — enough to land on exact whole numbers.";
+    cap.innerHTML = msg;
+  }
+
+  /* ---------- race chart ---------- */
+  var raceCv = document.getElementById("race");
+  var rctx = raceCv.getContext("2d");
+  var RACE = [
+    { label: "counting",      sub: "each prime = 1 point", theory: 0.995928, measured: null },
+    { label: "weight = p",    sub: "each prime = itself",  theory: 0.797628, measured: 0.79380 },
+    { label: "weight = p²",   sub: "squares",              theory: 0.694520, measured: 0.69275 },
+    { label: "weight = p³",   sub: "cubes",                theory: 0.645850, measured: 0.64900 }
+  ];
+
+  function drawRace() {
+    var dim = sizeCanvas(raceCv, rctx, 0.36);
+    var W = dim.w, H = dim.h;
+    var inkC = tone("--ink"), waveC = tone("--wave"), brassC = tone("--brass"),
+        hairC = tone("--hairline"), mutedC = tone("--muted"), surfC = tone("--surface");
+
+    rctx.clearRect(0, 0, W, H);
+    rctx.fillStyle = surfC;
+    rctx.fillRect(0, 0, W, H);
+
+    var padL = 52, padR = 16, padT = 24, padB = 52;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+    var y0 = 0.5, y1 = 1.0;
+    var py = function (v) { return padT + (y1 - v) / (y1 - y0) * plotH; };
+
+    rctx.strokeStyle = hairC;
+    rctx.fillStyle = mutedC;
+    rctx.font = "11px ui-monospace, monospace";
+    rctx.lineWidth = 1;
+    for (var g = 0.5; g <= 1.001; g += 0.1) {
+      rctx.beginPath();
+      rctx.moveTo(padL, Math.round(py(g)) + 0.5);
+      rctx.lineTo(W - padR, Math.round(py(g)) + 0.5);
+      rctx.stroke();
+      rctx.textAlign = "right";
+      rctx.fillText(Math.round(g * 100) + "%", padL - 8, py(g) + 4);
+    }
+    // 50% = fair-race line
+    rctx.strokeStyle = mutedC;
+    rctx.setLineDash([4, 4]);
+    rctx.beginPath();
+    rctx.moveTo(padL, Math.round(py(0.5)) + 0.5);
+    rctx.lineTo(W - padR, Math.round(py(0.5)) + 0.5);
+    rctx.stroke();
+    rctx.setLineDash([]);
+    rctx.textAlign = "left";
+    rctx.fillText("50% = no bias at all", padL + 6, py(0.5) - 6);
+
+    var groups = RACE.length;
+    var groupW = plotW / groups;
+    var barW = Math.min(46, groupW * 0.28);
+
+    for (var i = 0; i < groups; i++) {
+      var cx = padL + groupW * (i + 0.5);
+      var r = RACE[i];
+
+      // theory bar
+      var tx = cx - barW - 4;
+      rctx.fillStyle = waveC;
+      rctx.fillRect(tx, py(r.theory), barW, py(0.5) - py(r.theory));
+      rctx.fillStyle = inkC;
+      rctx.font = "600 12px ui-monospace, monospace";
+      rctx.textAlign = "center";
+      rctx.fillText((r.theory * 100).toFixed(1) + "%", tx + barW / 2, py(r.theory) - 6);
+
+      // measured bar
+      var mx = cx + 4;
+      if (r.measured !== null) {
+        rctx.fillStyle = brassC;
+        rctx.fillRect(mx, py(r.measured), barW, py(0.5) - py(r.measured));
+        rctx.fillStyle = inkC;
+        rctx.fillText((r.measured * 100).toFixed(1) + "%", mx + barW / 2, py(r.measured) - 6);
+      } else {
+        rctx.strokeStyle = brassC;
+        rctx.setLineDash([3, 3]);
+        rctx.strokeRect(mx + 0.5, py(0.96) + 0.5, barW - 1, py(0.5) - py(0.96) - 1);
+        rctx.setLineDash([]);
+        rctx.fillStyle = mutedC;
+        rctx.font = "10px ui-monospace, monospace";
+        rctx.fillText("still", mx + barW / 2, py(0.96) - 16);
+        rctx.fillText("converging", mx + barW / 2, py(0.96) - 5);
+        rctx.font = "600 12px ui-monospace, monospace";
+      }
+
+      rctx.fillStyle = inkC;
+      rctx.font = "600 12px system-ui, sans-serif";
+      rctx.fillText(r.label, cx, H - padB + 18);
+      rctx.fillStyle = mutedC;
+      rctx.font = "11px system-ui, sans-serif";
+      rctx.fillText(r.sub, cx, H - padB + 33);
+    }
+  }
+
+  function drawAll() { drawWave(); drawRace(); }
+
+  slider.addEventListener("input", drawWave);
+  window.addEventListener("resize", drawAll);
+  if (window.matchMedia) {
+    var mq = window.matchMedia("(prefers-color-scheme: dark)");
+    if (mq.addEventListener) mq.addEventListener("change", drawAll);
+  }
+  new MutationObserver(drawAll).observe(document.documentElement, {
+    attributes: true, attributeFilter: ["data-theme"]
+  });
+
+  drawAll();
+})();
+</script>

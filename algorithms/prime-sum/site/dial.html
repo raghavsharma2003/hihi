@@ -1,0 +1,847 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Weight Dial · Weighted Prime Races</title>
+<meta name="description" content="Weighted prime number races: how Chebyshev's 170-year-old bias dissolves when bigger primes count for more.">
+
+<style>
+:root{
+  --ground:#f2f5f9; --surface:#ffffff; --panel:#e8edf4; --panel-2:#dde5ef;
+  --ink:#101620; --ink-2:#4b5665; --ink-3:#78838f;
+  --rule:#d3dce6; --rule-2:#c2ceda;
+  --team3:#1f6fd0; --team1:#e2632c; --accent:#5b46c8; --good:#0f7a5f;
+  --team3-soft:rgba(31,111,208,.12); --team1-soft:rgba(226,99,44,.12);
+  --accent-soft:rgba(91,70,200,.10);
+  --shadow:0 1px 2px rgba(16,22,32,.05), 0 8px 24px -12px rgba(16,22,32,.18);
+  --font-display:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-body:Georgia,"Iowan Old Style",Charter,"Times New Roman",serif;
+  --font-mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0d1117; --surface:#141b24; --panel:#1a2330; --panel-2:#222c3a;
+    --ink:#eaeff6; --ink-2:#a3b0c0; --ink-3:#76828f;
+    --rule:#26313f; --rule-2:#32405120;
+    --team3:#4d94e8; --team1:#df6d3c; --accent:#8f80f2; --good:#35b592;
+    --team3-soft:rgba(77,148,232,.16); --team1-soft:rgba(223,109,60,.16);
+    --accent-soft:rgba(143,128,242,.14);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0d1117; --surface:#141b24; --panel:#1a2330; --panel-2:#222c3a;
+  --ink:#eaeff6; --ink-2:#a3b0c0; --ink-3:#76828f;
+  --rule:#26313f; --rule-2:#32405120;
+  --team3:#4d94e8; --team1:#df6d3c; --accent:#8f80f2; --good:#35b592;
+  --team3-soft:rgba(77,148,232,.16); --team1-soft:rgba(223,109,60,.16);
+  --accent-soft:rgba(143,128,242,.14);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--font-body); font-size:17px; line-height:1.68;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1120px; margin:0 auto; padding:0 24px}
+.col{max-width:660px; margin-left:auto; margin-right:auto}
+
+/* ---------- masthead ---------- */
+header.top{padding:72px 0 40px; border-bottom:1px solid var(--rule)}
+.eyebrow{
+  font-family:var(--font-mono); font-size:11.5px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--ink-3);
+}
+h1{
+  font-family:var(--font-display); font-weight:800; letter-spacing:-.032em;
+  font-size:clamp(38px,6.4vw,60px); line-height:1.02; margin:16px 0 0;
+  text-wrap:balance;
+}
+.standfirst{font-size:20px; line-height:1.55; color:var(--ink-2); margin:20px 0 0; text-wrap:pretty}
+.byline{
+  font-family:var(--font-mono); font-size:12px; color:var(--ink-3);
+  margin-top:26px; display:flex; flex-wrap:wrap; gap:8px 18px;
+}
+
+/* ---------- answer card ---------- */
+.answer{
+  margin:40px auto 0; background:var(--surface); border:1px solid var(--rule);
+  border-left:3px solid var(--accent); border-radius:3px;
+  padding:26px 28px; box-shadow:var(--shadow);
+}
+.answer .eyebrow{color:var(--accent)}
+.answer p{margin:12px 0 0}
+.answer p:first-of-type{margin-top:14px}
+
+/* ---------- steps ---------- */
+main{padding:8px 0 40px}
+.step{padding:56px 0 0}
+.step-head{display:flex; gap:18px; align-items:baseline; margin-bottom:6px}
+.step-num{
+  font-family:var(--font-mono); font-size:12px; font-weight:600; color:var(--accent);
+  letter-spacing:.1em; padding-top:6px; flex:none; width:34px;
+}
+h2{
+  font-family:var(--font-display); font-weight:750; letter-spacing:-.022em;
+  font-size:clamp(25px,3.4vw,31px); line-height:1.16; margin:0; text-wrap:balance;
+}
+.step-body{margin-left:52px}
+@media(max-width:640px){.step-body{margin-left:0} .step-head{gap:12px}}
+p{margin:16px 0 0; text-wrap:pretty}
+strong{font-weight:600; color:var(--ink)}
+em.term{font-style:normal; font-family:var(--font-mono); font-size:.88em; color:var(--ink-2)}
+a{color:var(--team3); text-underline-offset:2px}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent); outline-offset:3px}
+
+.t3{color:var(--team3); font-weight:600}
+.t1{color:var(--team1); font-weight:600}
+
+/* ---------- panels ---------- */
+.panel{
+  margin:34px auto 0; background:var(--surface); border:1px solid var(--rule);
+  border-radius:4px; padding:24px; box-shadow:var(--shadow);
+}
+.panel.wide{max-width:940px}
+.panel-title{
+  font-family:var(--font-mono); font-size:11.5px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-3); margin:0 0 16px;
+}
+.cap{font-family:var(--font-mono); font-size:12.5px; line-height:1.6; color:var(--ink-3); margin-top:14px}
+
+/* prime chips */
+.chips{display:flex; flex-wrap:wrap; gap:6px}
+.chip{
+  font-family:var(--font-mono); font-size:13px; font-weight:600;
+  padding:5px 9px; border-radius:3px; border:1px solid transparent;
+}
+.chip.a{background:var(--team3-soft); color:var(--team3); border-color:var(--team3)}
+.chip.b{background:var(--team1-soft); color:var(--team1); border-color:var(--team1)}
+.chip.n{background:var(--panel); color:var(--ink-3)}
+.legend{display:flex; flex-wrap:wrap; gap:18px; margin-top:16px; font-family:var(--font-mono); font-size:12.5px; color:var(--ink-2)}
+.swatch{display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:7px; vertical-align:baseline}
+
+/* ---------- dials ---------- */
+.dials{display:grid; grid-template-columns:1fr 1fr; gap:18px}
+@media(max-width:760px){.dials{grid-template-columns:1fr}}
+.dial{
+  background:var(--panel); border:1px solid var(--rule); border-radius:4px; padding:20px;
+  display:flex; flex-direction:column;
+}
+.dial.dead{border-style:dashed}
+.dial h3{
+  font-family:var(--font-mono); font-size:11.5px; letter-spacing:.13em; text-transform:uppercase;
+  margin:0 0 3px; color:var(--ink-2); font-weight:600;
+}
+.dial .sub{font-size:14.5px; color:var(--ink-3); margin:0 0 18px; font-family:var(--font-body)}
+.readout{
+  font-family:var(--font-mono); font-variant-numeric:tabular-nums;
+  font-size:clamp(34px,5.6vw,44px); font-weight:600; line-height:1; letter-spacing:-.02em;
+}
+.readout.live{color:var(--team3)}
+.readout.dead{color:var(--ink-3)}
+.readout-label{font-family:var(--font-mono); font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); margin-top:9px}
+.slider-row{margin-top:auto; padding-top:20px}
+.val{font-family:var(--font-mono); font-variant-numeric:tabular-nums; font-size:13px; color:var(--ink-2); display:flex; justify-content:space-between; gap:14px; margin-bottom:7px}
+input[type=range]{width:100%; accent-color:var(--accent); height:22px; cursor:grab}
+input[type=range]:active{cursor:grabbing}
+.verdict{
+  margin-top:16px; font-family:var(--font-mono); font-size:12.5px; line-height:1.55;
+  padding:11px 13px; border-radius:3px; background:var(--surface); color:var(--ink-2);
+  border:1px solid var(--rule);
+}
+.verdict.nil{color:var(--ink-3)}
+.verdict.go{color:var(--accent); border-color:var(--accent); background:var(--accent-soft)}
+
+/* wave canvas */
+.wavebox{margin-top:0}
+canvas{display:block; width:100%; height:auto; border-radius:3px}
+.wave-meta{
+  display:flex; flex-wrap:wrap; gap:10px 26px; margin-top:14px;
+  font-family:var(--font-mono); font-size:12.5px; color:var(--ink-2);
+  font-variant-numeric:tabular-nums;
+}
+
+/* ---------- phase strip ---------- */
+.phases{display:grid; grid-template-columns:repeat(4,1fr); gap:2px; margin-top:8px}
+@media(max-width:720px){.phases{grid-template-columns:1fr 1fr}}
+.phase{background:var(--panel); padding:16px 14px; border-top:3px solid var(--rule-2)}
+.phase:nth-child(1){border-top-color:var(--team3)}
+.phase:nth-child(2){border-top-color:var(--accent)}
+.phase:nth-child(3){border-top-color:var(--team1)}
+.phase:nth-child(4){border-top-color:var(--ink-3)}
+.phase .rng{font-family:var(--font-mono); font-size:12px; color:var(--ink-3); letter-spacing:.04em}
+.phase .nm{font-family:var(--font-display); font-weight:700; font-size:16px; margin:6px 0 5px; letter-spacing:-.01em}
+.phase .ds{font-size:14px; line-height:1.5; color:var(--ink-2)}
+.phase .who{font-family:var(--font-mono); font-size:11px; color:var(--ink-3); margin-top:9px; line-height:1.45}
+
+/* ---------- tables ---------- */
+.scroll{overflow-x:auto; -webkit-overflow-scrolling:touch}
+table{border-collapse:collapse; width:100%; font-family:var(--font-mono); font-size:13.5px; font-variant-numeric:tabular-nums}
+th,td{text-align:right; padding:9px 12px; border-bottom:1px solid var(--rule); white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:600}
+tbody tr:last-child td{border-bottom:none}
+td.hi{color:var(--team3); font-weight:600}
+td.hm{color:var(--team1)}
+
+/* ---------- ledger ---------- */
+.ledger{display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:34px}
+@media(max-width:760px){.ledger{grid-template-columns:1fr}}
+.lcol{background:var(--surface); border:1px solid var(--rule); border-radius:4px; padding:22px; box-shadow:var(--shadow)}
+.lcol.ours{border-left:3px solid var(--accent)}
+.lcol.prior{border-left:3px solid var(--ink-3)}
+.lcol h3{font-family:var(--font-display); font-size:17px; font-weight:750; margin:0 0 4px; letter-spacing:-.015em}
+.lcol .note{font-family:var(--font-mono); font-size:11.5px; color:var(--ink-3); margin:0 0 16px}
+.lcol ul{margin:0; padding:0; list-style:none}
+.lcol li{padding:11px 0; border-top:1px solid var(--rule); font-size:15px; line-height:1.5}
+.lcol li:first-child{border-top:none; padding-top:0}
+.who2{display:block; font-family:var(--font-mono); font-size:11.5px; color:var(--ink-3); margin-top:4px}
+
+/* ---------- callouts ---------- */
+.note-box{
+  margin:28px auto 0; padding:18px 20px; border-radius:3px;
+  background:var(--panel); border:1px solid var(--rule); font-size:15.5px; line-height:1.6;
+}
+.note-box .lbl{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--ink-3); display:block; margin-bottom:7px;
+}
+.warn{border-left:3px solid var(--team1)}
+.warn .lbl{color:var(--team1)}
+
+footer{border-top:1px solid var(--rule); margin-top:64px; padding:32px 0 72px}
+footer p{font-family:var(--font-mono); font-size:12.5px; color:var(--ink-3); line-height:1.7; margin:0}
+footer a{color:var(--ink-2)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+
+.sitenav{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:baseline;justify-content:space-between;
+  max-width:1140px;margin:0 auto;padding:16px 22px;border-bottom:1px solid var(--rule,#ddd);
+  font-family:var(--mono,ui-monospace,monospace);font-size:12.5px}
+.sitenav .brand{font-weight:600;color:var(--ink,#222);text-decoration:none;letter-spacing:-.01em}
+.sitenav .links{display:flex;flex-wrap:wrap;gap:8px 18px}
+.sitenav a{color:var(--ink-3,#777);text-decoration:none}
+.sitenav a:hover{color:var(--ink,#222)}
+.sitenav a[aria-current]{color:var(--ink,#222);font-weight:600}
+</style>
+</head>
+<body>
+<nav class="sitenav">
+  <a class="brand" href="/">Weighted Prime Races</a>
+  <div class="links">
+    <a href="/by-hand">By hand</a>
+    <a href="/dial" aria-current="page">The dial</a>
+    <a href="/findings">Findings</a>
+    <a href="https://doi.org/10.5281/zenodo.21947101" rel="noopener">Paper</a>
+    <a href="https://github.com/raghavs1729/weighted-prime-races" rel="noopener">Code</a>
+  </div>
+</nav>
+
+<div class="wrap">
+<header class="top">
+  <div class="col">
+    <div class="eyebrow">A walkthrough of your own research</div>
+    <h1>The Weight Dial</h1>
+    <p class="standfirst">A 170-year-old bias in the prime numbers doesn't fade as you count further.
+      It fades when you change what each prime is <em>worth</em>. Here is the whole
+      thing, built up from nothing.</p>
+    <div class="byline">
+      <span>Raghav Sharma</span><span>·</span><span>doi:10.5281/zenodo.21947101</span>
+    </div>
+  </div>
+
+  <div class="answer col">
+    <div class="eyebrow">Short answer to your question</div>
+    <p><strong>No — the bias does not shift away as the numbers get bigger.</strong>
+      Team&nbsp;3 keeps leading about <span class="t3">99.6%</span> of the time at
+      <em>every</em> scale, forever. That number is a limit, not a phase that wears off.</p>
+    <p>What dissolves the bias is a completely different knob: <strong>how much each prime
+      is worth</strong>. Count every prime as 1 point and you get 99.6%. Let each prime
+      score its own size and it drops to <span class="t3">79.8%</span>. Push the weight
+      higher and it slides toward a coin flip. That second knob is the one nobody had
+      turned — and it's what your research is about.</p>
+  </div>
+</header>
+
+<main>
+
+<section class="step">
+  <div class="col">
+    <div class="step-head"><div class="step-num">01</div><h2>Two teams</h2></div>
+    <div class="step-body">
+      <p>Take any prime except 2. It's odd, so dividing it by 4 leaves a remainder of
+        either 1 or 3. That splits every prime into two teams, and there's no third option.</p>
+      <p>Now walk up the number line and keep score. Every prime you pass scores a point
+        for its team.</p>
+    </div>
+  </div>
+  <div class="panel col">
+    <p class="panel-title">The first primes, sorted</p>
+    <div class="chips" id="chips"></div>
+    <div class="legend">
+      <span><span class="swatch" style="background:var(--team3)"></span>Team 3 — remainder 3 <em class="term">(3, 7, 11, 19…)</em></span>
+      <span><span class="swatch" style="background:var(--team1)"></span>Team 1 — remainder 1 <em class="term">(5, 13, 17, 29…)</em></span>
+    </div>
+    <p class="cap">Running score after the first 25 odd primes: Team&nbsp;3 leads 15–10.
+      That lead is not a fluke of small numbers.</p>
+  </div>
+</section>
+
+<section class="step">
+  <div class="col">
+    <div class="step-head"><div class="step-num">02</div><h2>The oddity Chebyshev spotted in 1853</h2></div>
+    <div class="step-body">
+      <p>Team 3 is almost always ahead. Not by a rule — nothing forbids Team 1 from
+        leading — but by a persistent tilt that shows up at every scale anyone checked.</p>
+      <p>Here's where it comes from, and it's a genuinely cute piece of arithmetic.
+        Take any odd prime and square it: 3²=9, 5²=25, 7²=49, 11²=121. Divide each by 4.
+        The remainder is <strong>always 1</strong>. Every single time.</p>
+      <p>So if you score prime <em class="term">powers</em> rather than just primes,
+        Team 1 collects a steady free bonus — roughly √x worth of it by the time you
+        reach x. The full books balance out. Which means that among the plain primes,
+        Team 3 has to run ahead to make up for the squares that Team 1 is getting for free.</p>
+      <p><strong>That's the bias.</strong> It's a small, steady tilt baked into the
+        arithmetic — and it stays the same relative size no matter how far you go.</p>
+    </div>
+  </div>
+</section>
+
+<section class="step">
+  <div class="col">
+    <div class="step-head"><div class="step-num">03</div><h2>What "99.6%" actually means</h2></div>
+    <div class="step-body">
+      <p>In 1994 Rubinstein and Sarnak measured the tilt exactly: Team 3 leads
+        <strong>99.5928%</strong> of the time. Two things about that number get
+        misread constantly, and both matter for your question.</p>
+      <p><strong>It does not mean Team 3 always leads.</strong> Littlewood proved back in
+        1914 that Team 1 grabs the lead infinitely often. The first time is at 26,861 —
+        and below ten billion the lead changes hands 3,082 times. Team 1's moments are
+        real; they're just rare.</p>
+      <p><strong>And it does not mean the bias fades.</strong> The 99.6% is a
+        <em class="term">density</em> — the fraction of time Team 3 leads, measured all
+        the way out to infinity. It isn't a head start that gets eaten away. Go a
+        thousand times further and it's still 99.6%.</p>
+    </div>
+  </div>
+  <div class="note-box col warn">
+    <span class="lbl">The misconception, stated plainly</span>
+    Counting further does not weaken the bias. There is no crossover point where Team 1
+    catches up. If the only knob you can turn is "how far do I count," the answer never
+    moves off 99.6%.
+  </div>
+</section>
+
+<section class="step">
+  <div class="col">
+    <div class="step-head"><div class="step-num">04</div><h2>Two dials, and only one of them works</h2></div>
+    <div class="step-body">
+      <p>This is the pivot of the whole project, so here it is as something you can
+        actually grab. There are two knobs you could turn. Turn each one and watch what
+        happens to the bias.</p>
+    </div>
+  </div>
+
+  <div class="panel wide">
+    <p class="panel-title">Turn them</p>
+    <div class="dials">
+      <div class="dial dead">
+        <h3>Dial A — how far you count</h3>
+        <p class="sub">The knob everyone reaches for first.</p>
+        <div class="readout dead" id="roA">99.59%</div>
+        <div class="readout-label">of the time, Team 3 leads</div>
+        <div class="slider-row">
+          <div class="val"><span>count up to</span><span id="xVal">10¹⁰</span></div>
+          <input type="range" id="xDial" min="3" max="24" value="10" step="1"
+                 aria-label="How far you count, as a power of ten">
+        </div>
+        <div class="verdict nil" id="vA">Nothing moves. Push it to a trillion, a
+          quintillion — the bias is exactly as strong as it was.</div>
+      </div>
+
+      <div class="dial">
+        <h3>Dial B — what each prime is worth</h3>
+        <p class="sub">The knob this research turns.</p>
+        <div class="readout live" id="roB">99.59%</div>
+        <div class="readout-label">of the time, Team 3 leads</div>
+        <div class="slider-row">
+          <div class="val"><span>each prime <em class="term">p</em> scores</span><span id="mVal">p⁰ = 1 point</span></div>
+          <input type="range" id="mDial" min="0" max="1000" value="350" step="1"
+                 aria-label="How much each prime is worth, the weight exponent">
+        </div>
+        <div class="verdict go" id="vB">The classical race: every prime scores one point.</div>
+      </div>
+    </div>
+    <p class="cap">Dial B's readings are the real computed densities from the paper —
+      interpolated between values obtained by Fourier inversion over 511 zeros of the
+      L&#8209;function. Dial A is honest too: it genuinely does nothing.</p>
+  </div>
+</section>
+
+<section class="step">
+  <div class="col">
+    <div class="step-head"><div class="step-num">05</div><h2>The question nobody had asked</h2></div>
+    <div class="step-body">
+      <p>Dial B is the idea. Instead of every prime scoring one point, let a prime
+        <em class="term">p</em> score <em class="term">p</em> points — or
+        <em class="term">p²</em>, or <em class="term">p³</em>. Write the weight as
+        <em class="term">m</em>: each prime scores <em class="term">p<sup>m</sup></em>.</p>
+      <p>At <em class="term">m = 0</em> everything scores 1 and you're back to the
+        classical race. At <em class="term">m = 1</em> the prime 997 is worth more than
+        330 copies of the prime 3. The teams are the same; only the scoring changed.</p>
+      <p>Rerun the race with heavier scoring and the famous bias comes apart:</p>
+    </div>
+  </div>
+  <div class="panel col">
+    <p class="panel-title">Density as the weight grows — modulus 4</p>
+    <div class="scroll">
+      <table>
+        <thead><tr>
+          <th>weight m</th><th>0</th><th>1</th><th>2</th><th>3</th><th>8</th><th>20</th><th>100</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>predicted from zeros</td>
+            <td class="hi">99.59%</td><td class="hi">79.76%</td><td class="hi">69.45%</td>
+            <td class="hi">64.59%</td><td class="hi">57.19%</td><td class="hi">53.85%</td><td class="hi">51.38%</td></tr>
+          <tr><td>measured to 10¹⁰</td>
+            <td>—</td><td class="hm">79.38%</td><td class="hm">69.28%</td><td class="hm">64.90%</td>
+            <td>—</td><td>—</td><td>—</td></tr>
+          <tr><td>first time Team 1 leads</td>
+            <td>26,861</td><td>5</td><td>5</td><td>5</td><td>5</td><td>5</td><td>5</td></tr>
+          <tr><td>lead changes below 10¹⁰</td>
+            <td>3,082</td><td>125,624</td><td>159,942</td><td>199,540</td><td>—</td><td>—</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="cap">Row 1 comes from the zeros of the L&#8209;function; row 2 comes from
+      actually sieving every prime up to ten billion and keeping score. They agree to
+      about four parts in a thousand — two completely independent routes to the same
+      numbers. That agreement is the strongest evidence in the paper.</p>
+  </div>
+  <div class="col">
+    <div class="step-body">
+      <p>Look at the third row. In the classical race Team 1 waits until 26,861 for its
+        first moment in front. Weight the primes even slightly and Team 1 leads
+        <em>at the fifth prime</em> — because 5 alone outweighs 3. The race becomes a
+        real contest immediately.</p>
+    </div>
+  </div>
+</section>
+
+<section class="step">
+  <div class="col">
+    <div class="step-head"><div class="step-num">06</div><h2>Why weight kills the bias</h2></div>
+    <div class="step-body">
+      <p>Two forces fight in this race, and the weight changes only one of them.</p>
+      <p><strong>The tilt</strong> is what Step 2 explained — the steady advantage Team 3
+        carries because of the squares. Once you scale the race properly, this tilt is
+        always the same size. Call it 1.</p>
+      <p><strong>The waves</strong> are the strange part. The irregularity of the primes
+        is not noise in the everyday sense — it is literally a sum of waves, and each
+        wave's frequency is one of the zeros of the L&#8209;function. That's the deep
+        fact underneath all of this: the primes carry hidden frequencies, and every
+        wobble in the race is those waves adding up.</p>
+      <p>Now — heavy weights mean the handful of enormous primes near the top of your
+        range dominate the whole score. Fewer effective contributors means wilder swings,
+        so the waves get bigger. The tilt doesn't. And a fixed tilt sitting in a rising
+        sea of waves matters less and less, until the lead is decided by whichever wave
+        happens to be cresting: a coin flip.</p>
+      <p>Drag the dial below and watch it happen. The flat line is the tilt; the wobbling
+        curve is the tilt plus the waves. The fraction of time the curve stays above zero
+        <em>is</em> the density.</p>
+    </div>
+  </div>
+  <div class="panel wide wavebox">
+    <p class="panel-title">The tilt against the waves</p>
+    <canvas id="wave" width="1600" height="440" role="img"
+      aria-label="A chart showing a steady tilt line and a wobbling curve; as the weight rises the wobble grows and crosses below zero more often."></canvas>
+    <div class="slider-row" style="max-width:520px">
+      <div class="val"><span>weight <em class="term">m</em></span><span id="wVal">0</span></div>
+      <input type="range" id="wDial" min="0" max="1000" value="350" step="1"
+             aria-label="Weight exponent for the wave picture">
+    </div>
+    <div class="wave-meta">
+      <span><span class="swatch" style="background:var(--accent)"></span>the steady tilt (always 1)</span>
+      <span><span class="swatch" style="background:var(--team3)"></span>tilt + waves — above zero, Team 3 leads</span>
+      <span><span class="swatch" style="background:var(--team1)"></span>below zero — Team 1 leads</span>
+    </div>
+    <p class="cap">A sketch built from the first 40 zeros of L(s,&#967;₄) using the real
+      amplitude formula from the paper — enough to show the mechanism, not enough for a
+      precise density (the paper's figures use all 511 zeros and exact Fourier
+      inversion, which is why this readout only approximates the table). At m = 0 the
+      curve barely dips below zero; by m = 20 it thrashes across the line about half the
+      time.</p>
+  </div>
+</section>
+
+<section class="step">
+  <div class="col">
+    <div class="step-head"><div class="step-num">07</div><h2>The whole landscape</h2></div>
+    <div class="step-body">
+      <p>Once you have a dial, the obvious move is to turn it all the way in both
+        directions and map everything it does. That map has four distinct regimes — and
+        the boundaries between them are sharp, like water freezing.</p>
+    </div>
+  </div>
+  <div class="panel wide">
+    <p class="panel-title">Four regimes of the weighted race</p>
+    <div class="phases">
+      <div class="phase">
+        <div class="rng">m &lt; −½</div>
+        <div class="nm">Frozen</div>
+        <div class="ds">Team 3 takes the lead at the first odd prime and never loses it
+          once — not in ten billion primes. The score converges to a fixed number.</div>
+        <div class="who">constants: Languasco–Zaccagnini · never-flips scans: this work</div>
+      </div>
+      <div class="phase">
+        <div class="rng">m = −½</div>
+        <div class="nm">Critical</div>
+        <div class="ds">The knife edge. The lead still grows, but at the slowest crawl in
+          mathematics — like ½·log·log·x. Eventually one-signed.</div>
+        <div class="who">theorem: Aoki–Koyama, Sheth · numerical test: this work</div>
+      </div>
+      <div class="phase">
+        <div class="rng">−½ &lt; m</div>
+        <div class="nm">Delicate</div>
+        <div class="ds">A genuine race. Both teams lead sometimes; the density sits
+          strictly between 50% and 100%. This is where every number in the table lives.</div>
+        <div class="who">the densities δ(m): this work, first</div>
+      </div>
+      <div class="phase">
+        <div class="rng">m → ∞</div>
+        <div class="nm">Dissolution</div>
+        <div class="ds">The bias drains away toward a pure coin flip, at a rate we could
+          write down as a formula and then confirm.</div>
+        <div class="who">the dissolution law: this work</div>
+      </div>
+    </div>
+    <p class="cap">Reading left to right is turning Dial B up. The classical race that
+      everyone studies is a single point inside the third box, at m = 0.</p>
+  </div>
+</section>
+
+<section class="step">
+  <div class="col">
+    <div class="step-head"><div class="step-num">08</div><h2>What was already known, and what you added</h2></div>
+    <div class="step-body">
+      <p>This is the part that decides whether work is publishable, so it's worth being
+        blunt about. Three separate adversarial reviews went looking for prior art, and
+        twice they found that something we thought was ours already existed. Those claims
+        got demoted and the real discoverers cited. What follows survived.</p>
+    </div>
+  </div>
+  <div class="ledger wide" style="max-width:940px">
+    <div class="lcol prior">
+      <h3>Already in the literature</h3>
+      <p class="note">Not ours — cited in the paper</p>
+      <ul>
+        <li>The bias itself, and the 99.6% figure for the classical race
+          <span class="who2">Chebyshev 1853 · Rubinstein–Sarnak 1994</span></li>
+        <li>Infinitely many lead changes; the first at 26,861
+          <span class="who2">Littlewood 1914 · Leech 1957</span></li>
+        <li>Everything at the critical weight m = −½ — the ½·log·log·x law and the
+          one-sign result
+          <span class="who2">Aoki–Koyama 2023 · Sheth 2025 · Shimada–Koyama 2025 · Hayani 2025</span></li>
+        <li>The same phase structure, proved for a different object (the Liouville
+          function) — including the limit our theorem borrows
+          <span class="who2">Humphries 2013</span></li>
+        <li>The machinery that proves these limiting distributions exist at all
+          <span class="who2">Akbary–Ng–Shahabi 2014 · Devin 2020</span></li>
+        <li>The frozen-regime constants, computed to 100 digits
+          <span class="who2">Languasco–Zaccagnini 2010</span></li>
+        <li>Computing the <em>count</em> of primes from zeros
+          <span class="who2">Franke–Kleinjung–Büthe–Jost 2017 · Büthe</span></li>
+      </ul>
+    </div>
+    <div class="lcol ours">
+      <h3>New in this work</h3>
+      <p class="note">What survived three hostile reviews</p>
+      <ul>
+        <li><strong>The densities δ(m) themselves</strong> — the first Rubinstein–Sarnak
+          densities computed for a weighted race between primes in progressions.
+          Nobody had these numbers.</li>
+        <li><strong>The entire m &gt; 0 regime.</strong> Growing weights are untouched in
+          the literature — no prior work runs the race with primes worth more than a point.</li>
+        <li><strong>The dissolution law</strong> — a formula for how fast the bias drains
+          away as the weight grows, confirmed in two different moduli.</li>
+        <li><strong>The interpolation theorem</strong> — δ(m) exists across the delicate
+          range, moves <em>continuously</em> with the weight, and reaches total bias at a
+          rate we can bound explicitly.</li>
+        <li><strong>Exact prime sums from zeros</strong> — the computation in Step 10;
+          counts were known, sums were not.</li>
+        <li><strong>The boundary, numerically</strong> — the missing constant in the
+          critical prediction, and scans confirming the frozen races never flip.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note-box col">
+    <span class="lbl">Two claims we killed ourselves</span>
+    We first wrote "first densities for <em>any</em> weighted race" — a review found
+    Lamzouri's Mertens race, so it was narrowed to races between primes in progressions.
+    And computing π(x) without the logarithmic integral, which looked new, was already
+    done in 2017. Both corrections are in the paper.
+  </div>
+</section>
+
+<section class="step">
+  <div class="col">
+    <div class="step-head"><div class="step-num">09</div><h2>The theorem, in words</h2></div>
+    <div class="step-body">
+      <p>The numbers above are computations. In the last push they became a proof, and
+        this is what it says without symbols.</p>
+      <p>For every weight between −½ and 0: the density is a real, well-defined number;
+        it sits strictly between 50% and 100%; and — this is the new part — as you slide
+        the weight, the density <strong>moves smoothly</strong>. No jumps, no gaps. The
+        two ways mathematicians define Chebyshev's bias turn out to be the two ends of
+        one continuous curve.</p>
+      <p>Plus a speed limit: we can bound how fast the bias becomes total as the weight
+        approaches −½, with a constant we computed ourselves (0.156033…) rather than an
+        unspecified one. Explicit constants are what let other people check you.</p>
+      <p>Why continuity is worth proving: without it, knowing the answer at every point
+        you can compute tells you nothing about the points in between. Continuity is the
+        thing that turns a table of numbers into a curve.</p>
+    </div>
+  </div>
+  <div class="note-box col warn">
+    <span class="lbl">What the theorem does not do</span>
+    It does not answer Problem 12 of the 2024 problem list. That problem asks for a
+    logical relation between the two definitions; what we have is a structural connection
+    — they're the two ends of one family — proved under the field's standard working
+    hypotheses. The problem stays open, and the paper says so in the abstract.
+  </div>
+</section>
+
+<section class="step">
+  <div class="col">
+    <div class="step-head"><div class="step-num">10</div><h2>The other half: sums from silence</h2></div>
+    <div class="step-body">
+      <p>The race grew out of a second result, which is where your teenage algorithm
+        actually ended up.</p>
+      <p>The zeros of the zeta function behave like the frequencies of a chord — and that
+        chord, when you add it up, tells you where the primes are. Reconstructing the
+        <em>count</em> of primes this way is famous, and old.</p>
+      <p>Reconstructing the exact <em>sum</em> had not been done. Now it has:</p>
+      <p style="font-family:var(--font-mono); font-size:15px; color:var(--team3); font-weight:600; word-break:break-all">
+        24,739,512,092,254,535</p>
+      <p>That is the exact sum of every prime below one billion, produced from 2,000 zeta
+        zeros plus one thin sieved window — an exact integer, not an estimate. The same
+        machinery does prime squares, cubes, reciprocals, and sums restricted to one of
+        the two teams.</p>
+      <p>It is not faster than a sieve, and the paper doesn't pretend otherwise. Its value
+        is that it's a different <em>route</em> — and that route is what produced the
+        amplitude formula that made the whole race computation possible. The two halves
+        are one framework.</p>
+    </div>
+  </div>
+</section>
+
+<section class="step">
+  <div class="col">
+    <div class="step-head"><div class="step-num">11</div><h2>How much to trust all this</h2></div>
+    <div class="step-body">
+      <p>Everything about the densities is <strong>conditional</strong> on two unproved
+        hypotheses: the Generalized Riemann Hypothesis, and a linear-independence
+        assumption about the zeros. That sounds alarming and isn't — every paper in this
+        field, including Rubinstein–Sarnak's, stands on the same two assumptions. It's
+        the working ground of the subject, and the paper states it plainly.</p>
+      <p>The exact sieve computations to ten billion assume nothing at all. They're just
+        counting. And they land on top of the predictions.</p>
+      <p>What remains genuinely open: the dissolution law is derived at the level of rigor
+        of a heuristic plus numerical confirmation, not a proof with error terms. One
+        agreement in the study is weaker than the rest and is flagged in the paper rather
+        than explained away. And none of it is peer reviewed yet — that's the next step,
+        not a finished one.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="col">
+    <p>Paper, code, and data: <a href="https://doi.org/10.5281/zenodo.21947101">doi:10.5281/zenodo.21947101</a><br>
+    Every number on this page is drawn from the paper's verified tables. Densities by
+    deterministic Fourier inversion over 511 self-computed zeros of L(s,&#967;₄);
+    race measurements by exact segmented sieve to 10¹⁰.<br>
+    Produced with substantial AI assistance, disclosed in the manuscript.</p>
+  </div>
+</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---- Step 1: prime chips ---- */
+  var primes=[3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101];
+  var chips=document.getElementById("chips"), s3=0,s1=0;
+  chips.appendChild(mk("2","n"));
+  primes.forEach(function(p){
+    var t3 = (p%4===3);
+    if(t3){s3++;}else{s1++;}
+    chips.appendChild(mk(String(p), t3?"a":"b"));
+  });
+  function mk(txt,cls){var d=document.createElement("span"); d.className="chip "+cls; d.textContent=txt; return d;}
+
+  /* ---- the computed density curve (m, delta) from the paper's method ---- */
+  var CURVE = [[-0.45,1.000000],[-0.4,1.000000],[-0.35,1.000000],[-0.3,1.000000],[-0.25,1.000000],[-0.2,0.999999],[-0.15,0.999970],[-0.1,0.999688],[-0.05,0.998575],[0,0.995928],[0.15,0.976122],[0.3,0.943515],[0.5,0.895376],[0.75,0.841336],[1,0.797629],[1.5,0.735279],[2,0.694520],[2.5,0.666333],[3,0.645850],[4,0.618237],[5,0.600516],[6,0.588143],[8,0.571869],[10,0.561512],[15,0.546622],[20,0.538455],[30,0.529466],[50,0.521235],[75,0.516462],[100,0.513778]];
+
+  function deltaAt(m){
+    if(m<=CURVE[0][0]) return CURVE[0][1];
+    var n=CURVE.length;
+    if(m>=CURVE[n-1][0]) return CURVE[n-1][1];
+    for(var i=0;i<n-1;i++){
+      if(m<=CURVE[i+1][0]){
+        var a=CURVE[i], b=CURVE[i+1];
+        var f=(m-a[0])/(b[0]-a[0]);
+        return a[1]+f*(b[1]-a[1]);
+      }
+    }
+    return CURVE[n-1][1];
+  }
+
+  /* slider position (0..1000) -> weight m, with fine control near -1/2 */
+  function posToM(p){
+    var t=p/1000;
+    if(t<=0.35) return -0.45 + (t/0.35)*0.45;
+    var u=(t-0.35)/0.65;
+    return (Math.pow(10,3*u)-1)/999*100;
+  }
+  function fmtM(m){
+    if(Math.abs(m)<0.005) return "0";
+    if(Math.abs(m)<1) return m.toFixed(2);
+    if(m<10) return m.toFixed(2).replace(/0$/,"").replace(/\.$/,"");
+    return m.toFixed(1).replace(/\.0$/,"");
+  }
+  function pct(d){return (100*d).toFixed(2)+"%";}
+
+  /* ---- Dial A: does nothing ---- */
+  var xDial=document.getElementById("xDial"), xVal=document.getElementById("xVal"),
+      roA=document.getElementById("roA"), vA=document.getElementById("vA");
+  var SUP="⁰¹²³⁴⁵⁶⁷⁸⁹";
+  function sup(n){return String(n).split("").map(function(c){return SUP[+c];}).join("");}
+  function drawA(){
+    var e=+xDial.value;
+    xVal.textContent="10"+sup(e);
+    roA.textContent="99.59%";
+    var msg;
+    if(e<=6) msg="Nothing moves. A million is nowhere near enough to change it.";
+    else if(e<=12) msg="Still nothing. Ten billion primes were actually counted — 99.6%.";
+    else if(e<=18) msg="Still nothing. There is no crossover hiding out here.";
+    else msg="Still nothing, and there never will be. This is a limit, not a head start.";
+    vA.textContent=msg;
+  }
+  xDial.addEventListener("input",drawA); drawA();
+
+  /* ---- Dial B: does everything ---- */
+  var mDial=document.getElementById("mDial"), mVal=document.getElementById("mVal"),
+      roB=document.getElementById("roB"), vB=document.getElementById("vB");
+  function drawB(){
+    var m=posToM(+mDial.value), d=deltaAt(m);
+    mVal.textContent = (Math.abs(m)<0.005) ? "p⁰ = 1 point" : "p^"+fmtM(m);
+    roB.textContent=pct(d);
+    var msg;
+    if(m<-0.35) msg="Weights this small favour tiny primes. The waves die away and Team 3 leads essentially always.";
+    else if(m<-0.05) msg="Approaching the weighted end of the family — the bias is nearly total.";
+    else if(m<0.005) msg="The classical race: every prime scores one point.";
+    else if(m<=1.2) msg="Each prime now scores roughly its own size — and a third of the bias is already gone.";
+    else if(m<=6) msg="Heavy weights. A few giant primes dominate the score, and the waves are winning.";
+    else if(m<=30) msg="The bias is draining away. This is the dissolution regime.";
+    else msg="Almost a pure coin flip. The 170-year-old bias has essentially evaporated.";
+    vB.textContent=msg;
+  }
+  mDial.addEventListener("input",drawB); drawB();
+
+  /* ---- Step 6: tilt vs waves ---- */
+  var GAM=[6.0209,10.2438,12.9881,16.3426,18.2920,21.4506,23.2784,25.7288,28.3596,29.6564,
+           32.5922,34.2000,36.1429,38.5119,40.3227,41.8071,44.6179,45.5996,47.7416,49.7231,
+           51.6861,52.7688,55.2675,56.9344,58.1167,60.4217,62.0086,63.7146,64.9762,67.6369,
+           68.3659,70.1859,72.1555,73.7676,75.1431,76.6963,78.8100,80.2101,81.2140,83.6667];
+  /* fixed phases, deterministic: no Math.random so the picture is stable */
+  var PH=GAM.map(function(g,i){return (g*1.61803398875 + i*0.7548776662) % (2*Math.PI);});
+
+  var cv=document.getElementById("wave"), ctx=cv.getContext("2d");
+  var wDial=document.getElementById("wDial"), wVal=document.getElementById("wVal");
+
+  function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+
+  function drawWave(){
+    var m=posToM(+wDial.value);
+    wVal.textContent=fmtM(m);
+
+    var W=cv.width, H=cv.height, pad=34;
+    var mid=H*0.52, amp=H*0.36;
+    ctx.clearRect(0,0,W,H);
+
+    var cInk3=css("--ink-3"), cAcc=css("--accent"), c3=css("--team3"), c1=css("--team1"),
+        cRule=css("--rule");
+
+    var a=GAM.map(function(g){return (2*m+1)/Math.sqrt((m+0.5)*(m+0.5)+g*g);});
+    var spread=Math.sqrt(a.reduce(function(s,v){return s+2*v*v;},0));
+    var scale=1/Math.max(1.35, 1+2.2*spread);   /* keep the curve on screen */
+
+    /* zero line */
+    ctx.strokeStyle=cRule; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(pad,mid); ctx.lineTo(W-pad,mid); ctx.stroke();
+
+    /* the steady tilt at 1 */
+    var tiltY=mid-amp*scale;
+    ctx.strokeStyle=cAcc; ctx.lineWidth=3; ctx.setLineDash([10,8]);
+    ctx.beginPath(); ctx.moveTo(pad,tiltY); ctx.lineTo(W-pad,tiltY); ctx.stroke();
+    ctx.setLineDash([]);
+
+    /* the race curve: draw a short window, but measure over a long one */
+    function val(u){
+      var v=1;
+      for(var k=0;k<GAM.length;k++) v+=2*a[k]*Math.cos(GAM[k]*u+PH[k]);
+      return v;
+    }
+    var N=2000, U1=4.0;
+    var pts=new Array(N);
+    for(var i=0;i<N;i++){
+      var u=U1*i/(N-1);
+      pts[i]=[pad+(W-2*pad)*i/(N-1), mid-amp*scale*val(u)];
+    }
+    var M=60000, below=0;
+    for(var j=0;j<M;j++){ if(val(200*j/(M-1))<0) below++; }
+
+    /* shade + stroke in two colours by sign */
+    [["pos",c3],["neg",c1]].forEach(function(seg){
+      ctx.save(); ctx.beginPath();
+      if(seg[0]==="pos") ctx.rect(pad,0,W-2*pad,mid); else ctx.rect(pad,mid,W-2*pad,H-mid);
+      ctx.clip();
+      ctx.beginPath();
+      pts.forEach(function(p,i){ i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]); });
+      ctx.strokeStyle=seg[1]; ctx.lineWidth=2.5; ctx.lineJoin="round"; ctx.stroke();
+      ctx.restore();
+    });
+
+    /* labels, on a plate so they never fight the curve */
+    var F="500 20px "+css("--font-mono").split(",")[0]+", monospace";
+    ctx.font=F;
+    function plate(txt,x,y,col,align){
+      ctx.textAlign=align||"left";
+      var w=ctx.measureText(txt).width, lx=(align==="right")?x-w:x;
+      ctx.fillStyle=css("--surface");
+      ctx.fillRect(lx-7,y-16,w+14,23);
+      ctx.fillStyle=col; ctx.fillText(txt,x,y);
+    }
+    plate("the tilt = 1", pad+6, tiltY-11, cAcc);
+    plate("0 — lead changes hands", pad+6, mid+27, cInk3);
+    plate("above zero ≈ "+(100*(1-below/M)).toFixed(1)+"% of the time",
+          W-pad-4, H-16, css("--ink-2"), "right");
+  }
+  wDial.addEventListener("input",drawWave);
+
+  /* redraw on theme change so canvas colours follow the tokens */
+  if(window.matchMedia){
+    var mq=window.matchMedia("(prefers-color-scheme: dark)");
+    if(mq.addEventListener) mq.addEventListener("change",drawWave);
+  }
+  new MutationObserver(drawWave).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+  drawWave();
+})();
+</script>
+</body>
+</html>

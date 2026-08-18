@@ -1,0 +1,367 @@
+% ---------------------------------------------------------------------
+% v3 section: Certified enclosures for the densities.
+%
+% Every numeric in this section was computed for this draft by
+%   prototype/explore/race_density_certified.py
+% (absolute path in this repository:
+%   /home/user/hihi/algorithms/prime-sum/prototype/explore/race_density_certified.py;
+% python3 + mpmath 1.4.1 at 40 working digits with 100 guard digits inside
+% the Hurwitz-zeta representation of L, numpy/scipy for the quadrature;
+% total runtime ~14 s).  The script re-verifies at run time: the s=2
+% anchors L(2,chi_4)=Catalan and the direct series for L(2,chi_3); the
+% L'/L(1) anchors by generalized Stieltjes constants against the
+% closed form and against numerical differentiation; sigma^2(0) against
+% its closed form; sigma_m^2 against the 12-digit reference values of
+% v3/verify_variance_identity.py; the constant c_4 below and its sharp
+% value; the Bessel envelope constant; the monotonicity of a_gamma; the
+% positivity of every tail variance; and a Riemann--von Mangoldt count of
+% both ordinate lists.
+%
+% REPLACEMENT MAP (line numbers refer to the 2026-08-15 draft of
+% weighted-races.tex):
+%   * The subsection below is to be \input inside
+%     \section{Methods and verification}, REPLACING the two sentences
+%     "Densities: Monte Carlo ... against \cite{RS94}." (lines 796-800).
+%   * Block R1 at the end of this file REPLACES the clause at lines
+%     106-108 ("and every headline number was computed by two
+%     independent routes").
+%   * Block R2 REPLACES the sentence at lines 814-815 ("Every headline
+%     number in this note was re-computed independently of the code that
+%     first produced it.").
+%   * Table~\ref{tab:enclose} SUPERSEDES the numerical entries of
+%     Table~\ref{tab:delta} (which are kept there as the historical
+%     six-decimal values; see the "corrected values" paragraph for the
+%     ten entries whose sixth decimal moves).
+%   * The paragraph "Correction to Remark [rem:tails]" CORRECTS the
+%     closing claim of that remark in v3/variance-identity.tex.
+% Requires only amsmath/amssymb/amsthm/booktabs and the theorem
+% environments and bibliography keys (Dav00, RS94, FM13, ANS14) of the
+% main file.  Notation as in Section~\ref{sec:theorem} and
+% Section~\ref{sec:variance}: M=m+1/2, a_gamma(m)=2M/sqrt(M^2+gamma^2),
+% sigma_m^2 = sum 2 a_gamma^2 = 4M (log Lambda)'(m+1).
+% ---------------------------------------------------------------------
+
+\subsection*{Certified enclosures for the densities}
+\label{subsec:certified}
+
+The densities of Table~\ref{tab:delta} were produced with a tail model:
+the unseen zeros $\gamma>\Gamma$ ($\Gamma=\gamma_{511}=639.9157\ldots$
+for $\chi_4$, $\gamma_{537}=699.7747\ldots$ for $\chi_3$) were replaced
+by a Gaussian whose variance was \emph{estimated} from the
+zero-counting density. This subsection replaces the estimate by a
+certified computation and states precisely which error terms are proved
+and which remain estimated. Throughout, the standing hypotheses are
+GRH$(\chi)$ + LI$(\chi)$ (as for every density in this literature)
+together with the completeness of the computed ordinate list up to
+$\Gamma$ (validated by the Hardy $Z$-scans and Riemann--von Mangoldt
+counts described above; the enclosure script repeats a smoothed count
+check, which matches to $0.6$ resp.\ $1.3$ of a zero, within the
+$S(T)$ fluctuation).
+
+Under LI, $\delta_q(m)=\mathbb P(1+V>0)$ with
+$V=\sum_{\gamma>0}2a_\gamma(m)\cos\theta_\gamma$, whose characteristic
+function factors over the computed and unseen ordinates,
+\[
+\Phi(t)\;=\;\prod_{\gamma>0}J_0\bigl(2a_\gamma t\bigr)
+\;=\;P(t)\,\Psi(t),\qquad
+P=\prod_{\gamma\le\Gamma},\quad \Psi=\prod_{\gamma>\Gamma}.
+\]
+Since $|J_0(x)|\le\min\{1,\sqrt{2/(\pi x)}\}$ for $x>0$ (the classical
+envelope; the extremal value $\sup_{x>0}\sqrt x\,|J_0(x)|=\sqrt{2/\pi}
+=0.79788\ldots$ is re-verified numerically in the script, which uses
+the rounded-up constant $0.8$), $\Phi$ is integrable, $V$ has a
+continuous density, and the Gil--Pelaez inversion is an identity:
+\begin{equation}\label{eq:gilpelaez}
+\delta_q(m)\;=\;\frac12+\frac1\pi\int_0^\infty
+\Phi(t)\,\frac{\sin t}{t}\,dt .
+\end{equation}
+The enclosure controls the three gaps between \eqref{eq:gilpelaez} and
+what a finite computation can evaluate.
+
+\emph{(i) The tail variance is certified, not estimated.} By
+Proposition~\ref{prop:varid},
+\[
+V_T\;:=\;\sum_{\gamma>\Gamma}2a_\gamma(m)^2
+\;=\;4M\,\frac{\Lambda'}{\Lambda}(m+1)-\sum_{\gamma\le\Gamma}2a_\gamma(m)^2 ,
+\]
+with no reference to the zero-counting density. The subtracted finite
+sum inherits the $25$-digit accuracy of the ordinates (effect
+$<10^{-20}$); the closed form is evaluated by mpmath at $40$ digits
+through two independent routes that must agree to $25$ digits, anchored
+at $L(2,\chi_4)=G$ (Catalan), at a directly summed series for
+$L(2,\chi_3)$, at $(L'/L)(1,\chi_q)$ expressed through generalized
+Stieltjes constants, and at the closed form for $\sigma_0^2$. This is
+high-precision floating point, \emph{not} interval arithmetic; we
+budget a defensive slack of $10^{-15}$ for it, absorbed into the error
+radius below. The script aborts if any $V_T\le0$; in fact
+$V_T$ ranges from $0.0030943$ ($q=3$, $m=0$) to $139.71$
+($q=4$, $m=100$); see Table~\ref{tab:enclose}.
+
+\emph{(ii) The unseen product is a Gaussian with a proved quartic
+correction.} Since $a_\gamma=2M/\sqrt{M^2+\gamma^2}$ is strictly
+decreasing in $\gamma$, every unseen ordinate satisfies
+$2a_\gamma t\le 2a_\Gamma t\le1$ whenever
+$t\le t_{\max}:=1/(2a_\Gamma)$. On $|z|\le1$ we use
+\begin{equation}\label{eq:quartic}
+0\;\le\;-\log J_0(z)-\frac{z^2}{4}\;\le\;c_4\,z^4,
+\qquad
+c_4=-\log J_0(1)-\tfrac14=0.0176210647\ldots,
+\end{equation}
+with the \emph{sharp} constant: from the product
+$J_0(z)=\prod_n(1-z^2/j_{0,n}^2)$ over the Bessel zeros,
+$-\log J_0(z)=\sum_{k\ge1}(\sigma_k/k)z^{2k}$ with Rayleigh sums
+$\sigma_k=\sum_nj_{0,n}^{-2k}>0$, valid for $|z|<j_{0,1}=2.40\ldots$;
+$\sigma_1=\tfrac14$ (Rayleigh), and $z^{2k}\le z^4$ for $k\ge2$,
+$|z|\le1$, so the middle member of \eqref{eq:quartic} equals
+$\sum_{k\ge2}(\sigma_k/k)z^{2k}\in[0,c_4z^4]$ with
+$c_4=\sum_{k\ge2}\sigma_k/k$, attained at $z=1$. (The script uses the
+rounded-up $c_4'=0.018$ and re-verifies \eqref{eq:quartic} on a grid.)
+Summing over the unseen zeros: for $0\le t\le t_{\max}$,
+\[
+\Psi(t)=\exp\Bigl(-\tfrac12V_Tt^2+\eps(t)\Bigr),
+\qquad
+-c_4'\,S_4\,t^4\le\eps(t)\le0,
+\qquad
+S_4:=\!\!\sum_{\gamma>\Gamma}\!(2a_\gamma)^4
+\le(2a_\Gamma)^2\cdot 2V_T,
+\]
+the last bound because $(2a_\gamma)^2\le(2a_\Gamma)^2$ beyond $\Gamma$
+and $\sum_{\gamma>\Gamma}(2a_\gamma)^2=2V_T$. The sign information is
+exploited: the Gaussian model \emph{over}states $|\Psi|$, and with
+$w(t):=c_4'S_4t^4$ the factor $e^{\eps(t)}\in[e^{-w},1]$ is enclosed by
+its midpoint,
+\[
+\Bigl|e^{\eps(t)}-\tfrac{1+e^{-w(t)}}2\Bigr|\;\le\;\tfrac{1-e^{-w(t)}}2,
+\]
+which halves the tail-model radius relative to the symmetric bound
+$e^{w}-1$.
+
+\emph{(iii) Enclosure.} With $G(t):=e^{-V_Tt^2/2}$ and a truncation
+point $T_1\le t_{\max}$,
+\[
+\delta_q(m)\;=\;\frac12+\frac1\pi\Bigl(\,
+\underbrace{\int_0^{T_1}\!P\,G\,\frac{1+e^{-w}}2\,\frac{\sin t}{t}\,dt}_{I,\ \text{computed}}
+\;+\;R\Bigr),
+\qquad |R|\;\le\;E_1+E_2,
+\]
+\[
+E_1=\int_0^{T_1}\!|P|\,G\,\frac{1-e^{-w}}2\,dt
+\quad(\text{tail-model radius, from the midpoint enclosure of }e^{\eps}),
+\]
+\[
+E_2=\frac{(0.8)^K}{\sqrt{\prod_{i\le K}2a_{\gamma_i}}}\cdot
+\frac{T_1^{-K/2}}{K/2}
+\;\ge\;\Bigl|\int_{T_1}^\infty\!\Phi\,\frac{\sin t}{t}\,dt\Bigr|
+\quad(\text{truncation; envelope on the first }K\text{ ordinates,}
+\]
+all other factors bounded by $1$, $|\sin t/t|\le1/t$). The script
+chooses $K\in\{24,\dots,72\}$ and $T_1\le t_{\max}$ so that
+$E_2\le\pi\times10^{-15}$; this holds at every $(q,m)$ computed.
+What remains \emph{estimated} rather than certified, stated openly:
+the quadrature error of $I$ and of $E_1$ (composite Simpson on $2^{17}$
+subintervals in IEEE double precision; a step-doubling Richardson
+comparison is below $10^{-12}$ at every $(q,m)$, and is budgeted as
+$E_3=10^{-12}$; $E_1$, itself a bound of size $\lesssim5\times10^{-7}$,
+is inflated by $50\%$ against its own quadrature error), the
+double-precision rounding of the $511$-fold product ($\lesssim10^{-13}$
+relative), and the $10^{-15}$ variance slack of (i), together budgeted
+as $E_4=2\times10^{-11}$ plus the computed slack sensitivity. The
+radius of the quoted intervals is $(E_1+E_2+E_3+E_4)/\pi$, dominated
+everywhere by the proved bound $E_1$. These enclosures are rigorous
+\emph{modulo} exactly the items just listed (double-precision
+quadrature with Richardson control and the anchored $40$-digit
+evaluation of $\sigma_m^2$); no interval arithmetic was used, and we do
+not claim otherwise.
+
+\begin{table}[h]\centering
+\begin{tabular}{crrllcr}
+\toprule
+$q$ & $m$ & $V_T$\quad\ & $\delta_q(m)$ lower & $\delta_q(m)$ upper &
+width & Tab.~\ref{tab:delta} $-$ mid \\
+\midrule
+$4$ & $0$   & $0.0034836$ & $0.9959278380$ & $0.9959280127$ & $1.7\times10^{-7}$ & $+0.07$ \\
+$4$ & $1$   & $0.0313527$ & $0.7976303685$ & $0.7976304296$ & $6.1\times10^{-8}$ & $-2.40$ \\
+$4$ & $2$   & $0.0870906$ & $0.6945210810$ & $0.6945211213$ & $4.0\times10^{-8}$ & $-1.10$ \\
+$4$ & $3$   & $0.1706968$ & $0.6458510415$ & $0.6458510746$ & $3.3\times10^{-8}$ & $-1.06$ \\
+$4$ & $8$   & $1.0067182$ & $0.5718700860$ & $0.5718701185$ & $3.3\times10^{-8}$ & $-1.10$ \\
+$4$ & $20$  & $5.8541890$ & $0.5384552785$ & $0.5384553290$ & $5.1\times10^{-8}$ & $-0.30$ \\
+$4$ & $100$ & $139.71245$ & $0.5137782134$ & $0.5137783837$ & $1.7\times10^{-7}$ & $-0.30$ \\
+\midrule
+$3$ & $0$   & $0.0030943$ & $0.9990630500$ & $0.9990633364$ & $2.9\times10^{-7}$ & $-0.19$ \\
+$3$ & $1$   & $0.0278484$ & $0.8368804319$ & $0.8368805308$ & $9.9\times10^{-8}$ & $-3.48$ \\
+$3$ & $2$   & $0.0773564$ & $0.7234728791$ & $0.7234729425$ & $6.3\times10^{-8}$ & $-2.91$ \\
+$3$ & $3$   & $0.1516181$ & $0.6665542399$ & $0.6665542896$ & $5.0\times10^{-8}$ & $-2.26$ \\
+$3$ & $8$   & $0.8942043$ & $0.5785355754$ & $0.5785356134$ & $3.8\times10^{-8}$ & $-1.59$ \\
+$3$ & $20$  & $5.2001295$ & $0.5407681867$ & $0.5407682369$ & $5.0\times10^{-8}$ & $-1.21$ \\
+$3$ & $60$  & $45.202127$ & $0.5197174290$ & $0.5197175306$ & $1.0\times10^{-7}$ & $-1.48$ \\
+\bottomrule
+\end{tabular}
+\caption{Certified enclosures $[\delta_{\mathrm{lo}},
+\delta_{\mathrm{hi}}]$ for the logarithmic densities, under
+GRH + LI and completeness of the ordinate lists to height $\Gamma$
+($511$ ordinates for $\chi_4$, $537$ for $\chi_3$). $V_T$ is the
+certified variance of the unseen-zero tail. The last column is the
+deviation of the previously printed six-decimal value from the interval
+midpoint, in units of $10^{-6}$; entries exceeding $1$ in absolute
+value are discrepancies beyond the sixth decimal (ten of the fourteen).
+All widths are below $3\times10^{-7}$, against the design target
+$5\times10^{-6}$.}
+\label{tab:enclose}
+\end{table}
+
+\emph{Corrected values, and what was wrong.} The enclosures confirm
+Table~\ref{tab:delta} at $(q,m)=(4,0)$, $(4,20)$, $(4,100)$, $(3,0)$
+and move the sixth decimal in the other ten entries by $1$--$4$ units;
+the corrected six-decimal values are
+\[
+\delta_4:\ 0.995928,\ 0.797630,\ 0.694521,\ 0.645851,\ 0.571870,\
+0.538455,\ 0.513778;
+\]
+\[
+\delta_3:\ 0.999063,\ 0.836880\,(*),\ 0.723473,\ 0.666554,\ 0.578536,\
+0.540768,\ 0.519717\,(*),
+\]
+$(*)$: two sixth decimals are \emph{not resolved} by the enclosures.
+At $(3,1)$ the interval $[0.83688043,0.83688053]$ straddles the
+rounding boundary $0.8368805$ (the value is $0.836880$ or $0.836881$;
+the midpoint $0.83688048$ sits within $2.5\times10^{-9}$ of the
+boundary, so no computation at this zero height can be expected to
+settle it). At $(3,60)$ the interval $[0.51971743,0.51971753]$
+straddles $0.5197175$ (the value is $0.519717$ or $0.519718$). All
+twelve remaining sixth decimals, including $(4,100)$, are certified by
+the enclosures. The cause of the drift is
+quantitatively identified: re-running the certified pipeline with the
+old smoothed-tail variance in place of $V_T$ reproduces the deviations
+(e.g.\ $-3.2\times10^{-6}$ of the observed $-3.5\times10^{-6}$ at
+$(3,1)$, the small remainder being the old code's coarser quadrature).
+The classical anchors are unaffected: our intervals contain
+$0.9959279\ldots$ and $0.9990632\ldots$ at $m=0$, consistent with
+\cite{RS94,FM13} to all six printed decimals.
+
+\emph{Correction to Remark~\ref{rem:tails}.} That remark asserted that
+replacing the estimated tail by the exact one moves the densities of
+Table~\ref{tab:delta} by less than their quoted precision. The
+enclosures above show this is false at the sixth decimal for ten of
+fourteen entries (largest shift $3.5\times10^{-6}$, at $(q,m)=(3,1)$);
+the remark's claim should be read as ``below $5\times10^{-6}$'', and
+Table~\ref{tab:enclose} now supersedes the affected entries.
+
+\emph{The two computations, honestly described.} The deterministic
+Gil--Pelaez inversion and the Monte Carlo evaluation of
+Section~\ref{sec:methods} share their inputs: the identical
+$511$- resp.\ $537$-ordinate lists and (in their original form) the
+identical Gaussianized tail. Their mutual agreement to
+$\le10^{-4}$ therefore validated only the \emph{evaluation} step ---
+quadrature against sampling --- and could not have detected an error in
+the shared tail model. They are independent as implementations, not as
+models. The enclosures of this subsection close that gap from the model
+side: the tail variance is now the certified $V_T$ of (i), the
+non-Gaussianity of the tail is bounded by the proved $E_1$, and a
+Monte Carlo rerun with the certified $V_T$ in the tail agrees with the
+enclosure midpoints within half a standard error at each tested point
+($2\times10^6$ samples at $(q,m)=(4,0),(4,1),(3,1)$).
+
+\emph{General real primitive modulus.} For use beyond $q\in\{3,4\}$ we
+record the general form of Theorem~\ref{thm:interp} and of the variance
+identity. Let $\chi$ be a real primitive character mod $q$ with
+$\chi(-1)=(-1)^a$, $a\in\{0,1\}$, and assume GRH$(\chi)$, LI$(\chi)$,
+and the no-central-zero hypothesis
+\[
+\mathrm{NCZ}(\chi):\qquad L(\tfrac12,\chi)\neq0 .
+\]
+Define $R_m(x)=-\sum_{p\le x}\chi(p)p^m\log p$ (nonresidues minus
+residues), $E_m=(2m+1)x^{-(m+1/2)}R_m$, and
+$a_\gamma(m)=2M/\sqrt{M^2+\gamma^2}$ over the positive ordinates of
+$L(s,\chi)$. Then parts (i)--(iii) of Theorem~\ref{thm:interp} hold
+verbatim with $C(\chi)=\sum_{\gamma_\chi>0}2\gamma_\chi^{-2}$, and the
+variance identity becomes, with
+$\xi(s,\chi)=(q/\pi)^{(s+a)/2}\Gamma\bigl(\tfrac{s+a}2\bigr)L(s,\chi)$,
+\[
+\sigma_m^2(\chi)\;=\;4M\,\frac{\xi'}{\xi}(m+1,\chi),
+\qquad
+C(\chi)\;=\;(\log\xi)''(\tfrac12,\chi).
+\]
+What changes and what does not. \emph{Unchanged:} the prime-square bias
+term --- the $k=2$ prime powers contribute
+$\sum_{p\le\sqrt x,\,p\nmid q}p^{2m}\log p=x^{m+1/2}/(2m+1)+o(x^{m+1/2})$
+because $\chi(p)^2=1$ for every $p\nmid q$ and the finitely many $p\mid q$
+contribute $O_m(x^{m}\log x)$, so the normalized mean is $1$ for every
+real $\chi$; the Chernoff/Chebyshev bounds of (iii), which use only the
+arcsine moment generating function. \emph{Changed:} the gamma factor
+and conductor in $\xi$ (parity $a$ enters the variance asymptotic only
+through the constant term $2a-1$ of
+Proposition~\ref{prop:varasymp}); all implied constants of the
+explicit-formula lemmas, which now depend on $q$, and the
+first-ordinate constants ($|\rho+m|\ge\gamma_1(\chi)$ in
+Lemma~\ref{lem:trunc}; numerically $\gamma_1(\chi_4)=6.0209\ldots$,
+$\gamma_1(\chi_3)=8.0397\ldots$, and $\gamma_1(\chi)>0$ is exactly
+NCZ under GRH); for $a=0$ the pole of $1/s$ in the Perron contour meets
+the trivial zero of $L(s,\chi)$ at $s=0$, and the classical formula
+carries an extra $-\log x+b(\chi)$ term \cite[Ch.~19]{Dav00}, absorbed
+by the $O(\log x)$ floor of \eqref{eq:trunc}; and the functional
+equation input, $\xi(s,\chi)=\xi(1-s,\chi)$, i.e.\ root number $+1$,
+which holds for every real primitive $\chi$ by the evaluation of the
+sign of the quadratic Gauss sum ($\tau(\chi)=\sqrt q$ for $a=0$,
+$i\sqrt q$ for $a=1$; \cite[Ch.~2]{Dav00} for prime modulus, the
+general case reducing to it via the factorization of Gauss sums over
+coprime moduli --- for the moduli $3,4$ used here the two-term sums
+are evaluated directly in the verification script). On the
+no-central-zero hypothesis itself: for $\chi_4$ it is the alternating
+series $L(\tfrac12,\chi_4)=\sum_k(-1)^k(2k+1)^{-1/2}>0$; for $\chi_3$
+it is \emph{not} an alternating-series statement (the zero terms
+$\chi_3(3k)=0$ interleave), but it is still unconditional: the
+Dirichlet series $\sum\chi_3(n)n^{-1/2}$ converges by Dirichlet's test
+(bounded character sums) and equals $L(\tfrac12,\chi_3)$ by analytic
+continuation, and regrouping the convergent series in blocks of three
+gives
+\[
+L(\tfrac12,\chi_3)\;=\;\sum_{k\ge0}
+\Bigl[\frac1{\sqrt{3k+1}}-\frac1{\sqrt{3k+2}}\Bigr]
+\;\ge\;1-\frac1{\sqrt2}\;>\;0
+\]
+(every block positive; numerically $0.4808675\ldots$). For general
+$q$ we do not prove NCZ: under GRH one has $L(\tfrac12,\chi)\ge0$
+(a negative central value would force a real zero in $(\tfrac12,1)$),
+so NCZ is then exactly central nonvanishing, which is Chowla's
+conjecture for quadratic characters --- known in every numerically
+checked case but open in general; it must be assumed, or verified
+computationally for the modulus at hand, as part of the hypotheses.
+Nothing in this paper uses NCZ beyond $q\in\{3,4\}$, where it is proved
+above. For the record, the certified constants at the two moduli used
+here are
+\[
+C(\chi_4)=0.15602964988964488\ldots,\qquad
+C(\chi_3)=0.11340215685275857\ldots,
+\]
+\[
+\sigma_0^2(\chi_4)=0.15556797992358593\ldots,\qquad
+\sigma_0^2(\chi_3)=0.11322996985747234\ldots
+\]
+
+% ---------------------------------------------------------------------
+%% Block R1.  REPLACES the clause at lines 106-108 of weighted-races.tex
+%  ("..., and every headline number was computed by two independent
+%  routes.").
+% ---------------------------------------------------------------------
+%
+% ..., at the standard of numerical work in this area (GRH + LI where
+% densities are involved). Every headline number was computed twice: the
+% sieve counts by fully independent implementations, the densities by
+% deterministic inversion against Monte Carlo --- two evaluations that
+% share the same zero data and tail model and are independent only in
+% the evaluation step; the shared tail model is bounded rigorously by
+% the certified enclosures of Section~\ref{sec:methods}
+% (Table~\ref{tab:enclose}).
+%
+% ---------------------------------------------------------------------
+%% Block R2.  REPLACES the sentence at lines 814-815 of
+%  weighted-races.tex ("Every headline number in this note was
+%  re-computed independently of the code that first produced it.").
+% ---------------------------------------------------------------------
+%
+% Every headline number in this note was re-computed by a second
+% implementation. For the sieve computations the two implementations are
+% independent throughout; for the densities they shared the ordinate
+% lists and, prior to the enclosures above, the Gaussian tail model, so
+% their agreement tested evaluation error only --- the tail model itself
+% is certified by Table~\ref{tab:enclose}.

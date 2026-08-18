@@ -1,0 +1,1434 @@
+% ============================================================================
+% general-character.tex  (v3, 2026-08-16)
+%
+% Restructures Section 2 ("An interpolation theorem") of
+% paper/weighted-races.tex (the 2829-line draft of 2026-08-15/16) so that
+% Theorem~\ref{thm:interp} is stated and proved for a GENERAL real primitive
+% Dirichlet character chi mod q, with chi_4 and chi_3 as worked examples ---
+% the referee's point: Theorem~\ref{thm:dissolution} is already general,
+% and the generality of Theorem~\ref{thm:interp} is free.  Also fixes, in
+% the same edit set, the stale sentence in the Scope paragraph of the proof
+% of (iii) ("...Theorem~\ref{thm:dissolution} of the companion draft and is
+% \emph{not} proved in this paper" -- the dissolution law IS proved in this
+% paper, in Section~\ref{sec:dissolution}), and the follow-on stale scope
+% statements in Sections 4-5.
+%
+% FORMAT.  Numbered string-anchored replacement blocks against the CURRENT
+% weighted-races.tex.  Each block gives the EXACT current text (OLD, every
+% line prefixed "%OLD% "; blank lines as bare "%OLD%"; original line breaks
+% preserved) and the exact replacement (NEW, between "%---NEW--->" and
+% "%<---NEW---", uncommented).  Every OLD snippet was machine-verified to
+% occur exactly once in the current file; the full edit set was applied to
+% a scratch copy and compiled with pdflatex (all references resolved).
+%
+% MATHEMATICAL STRUCTURE OF THE GENERALIZATION.
+%  * Hypotheses: GRH(chi) + NCZ(chi): L(1/2,chi) != 0, with LI(chi) where
+%    densities are asserted.  NCZ is unconditional for q = 3, 4 by grouped
+%    alternating series (chi_4: alternating series test; chi_3: blocks of
+%    three, >= 1 - 1/sqrt(2) > 0).  gamma != 0 is DERIVED from GRH + NCZ
+%    (a zero with gamma = 0 would sit at s = 1/2), never built into LI --
+%    same structure as the current chi_4 text.  gamma_1(chi) > 0 replaces
+%    every use of the numeric gamma_1 > 6 (which held for chi_4); constants
+%    become chi-dependent, legitimate since the theorem is for fixed chi.
+%  * Explicit formula (the crux): for odd chi (a=1) the proof is as before
+%    (L(0,chi) != 0 by the functional equation and L(1,chi) != 0).  For
+%    even chi (a=0), s=0 is a simple TRIVIAL zero: L'/L(s) = 1/s + b(chi)
+%    + O(s), the Perron kernel's 1/s pole meets it, and the s=0 residue of
+%    (-L'/L)(s) x^s/s is -log x - b(chi) (Davenport Ch. 19's -(1-a) log x
+%    - b(chi)); the left contour edge moves to U = 2K+1-a so it passes
+%    between trivial zeros (at -(2j+a)) in either parity.  This changes
+%    ONLY the O(log x) floor of eq:classical, which the downstream proofs
+%    already absorb (verified: the floor enters lem:trunc as (1+x^m) log x
+%    and the ANS mean-square hypothesis through u^2 e^{-kappa_m u}).
+%  * Prime squares: sum_{p^2<=x} chi(p)^2 p^{2m} log p =
+%    sum_{p<=sqrt x, p coprime q} p^{2m} log p; the at most omega(q) primes
+%    p | q each contribute p^{2m} log p <= (1+q^{2m}) log q = O_{q,m}(1),
+%    absorbed (Block 15).  The Methods paragraph's earlier bound
+%    "O_m(x^m log x)" for these terms was WRONG for -1/2 < m < 0 (there
+%    x^m log x -> 0 while the terms are fixed positive constants); Block 34
+%    corrects it to O_{q,m}(1).
+%  * C(chi) := sum_{gamma>0} 2/gamma^2 = (log Lambda)''(1/2, chi), with
+%    Lambda(s,chi) = (q/pi)^{(s+a)/2} Gamma((s+a)/2) L(s,chi) and root
+%    number +1 for every real primitive chi (Gauss).
+%
+% NUMERICS (all recomputed for this edit set with mpmath at 50 digits;
+% zero data from prototype/explore/chi{3,4}_zeros.txt, 537/511 ordinates):
+%  * C(chi_4) = (1/4)psi'(3/4) + (log L)''(1/2,chi_4)
+%             = 0.15602964988964488...  (matches the paper; psi'(3/4)
+%             = pi^2 - 8G checked).  Zero-sum cross-check 0.152546 +
+%             0.003487 = 0.156033 reproduced exactly.
+%  * C(chi_3) = (1/4)psi'(3/4) + (log L)''(1/2,chi_3)
+%             = 0.11340215685275857... (matches the certified value
+%             recorded in Section 5); (log L)''(1/2,chi_3)
+%             = -0.52206775506514...  NEW zero-sum cross-check computed
+%             for Block 3: 537 ordinates give 0.110308, RvM tail
+%             (dN = (2 pi)^{-1} log(3t/(2 pi)) dt from gamma_537 =
+%             699.7747...) gives 0.003098, total 0.113406, i.e. closed
+%             form + 4.1e-6 -- same O(1e-5) fluctuation scale as chi_4.
+%  * Thresholds (truncated digits): chi_4: m_0 = 0.5750748... ("0.57507"),
+%    Chebyshev < 1/2 for m < 0.3950585... (the OLD text printed the
+%    ROUNDED "0.39506\ldots"; Blocks 4/23 print the truncation
+%    "0.395058\ldots"), Chebyshev >= 1 from 0.7658039... ("0.76580").
+%    chi_3: m_0 = 0.7610480... ("0.761048"), Chebyshev < 1/2 for
+%    m < 0.5498913... ("0.549891"), >= 1 from 0.9847705... ("0.984770");
+%    exp(-1/(2 C(chi_3))) = 0.0121662... ("0.01216"); 1 - delta_3(0) =
+%    1 - 0.999063 = 9.37e-4.
+%  * L(1/2,chi_4) = 0.667691457..., L(1/2,chi_3) = 0.4808675...,
+%    gamma_1(chi_4) = 6.0209..., gamma_1(chi_3) = 8.0397... (all match
+%    the paper); delta_3(0) = 0.999063 and the mod-3 first-flip facts
+%    (p=13 at m=1, p=7 at m=2,3; no classical flip below 1e10) quoted
+%    verbatim from the introduction.
+%
+% WHAT IS DELIBERATELY NOT CHANGED (honesty ledger):
+%  * Part (iv) of thm:interp stays a chi_4 statement: the endpoint results
+%    (AK23/Sheth24/Hay25) are quoted by this paper for the mod-4 race.
+%  * Corollary~\ref{cor:dissolution-race} stays q=4; the general race
+%    transfer is stated in the scope remarks (Blocks 23, 32, 35) as an
+%    immediate combination of thm:dissolution + thm:interp(ii) under
+%    GRH + LI + NCZ for the given chi.
+%  * Section 3 (variance in closed form) remains the q=4 computation, as
+%    flagged in Block 30; its general-q content is already
+%    Proposition~\ref{prop:varasymp} / eq:varidq.
+%  * For general q, NCZ remains an assumption (Chowla's conjecture); the
+%    paper proves it only for q = 3, 4.
+%
+% NEW LABEL: cor:mod3rate (Block 4).  No labels are removed.  The new
+% Corollary changes the printed numbering of later corollaries (the
+% corollary counter is independent in this preamble); all \ref's resolve.
+%
+% REFEREE ADDENDA (Blocks 36-39, added on verification).  Four stale
+% lines the original 35 blocks left behind, found by refereeing the
+% fully patched file:
+%  * Block 36: the lem:trunc proof opened "Since psi(t,chi)=0 for
+%    t<3" -- TRUE for chi_4 (chi_4(2)=0) but FALSE for any chi with
+%    2 coprime to q (e.g. chi_3: psi(2,chi_3) = -log 2 != 0).  The
+%    displayed partial-summation identity is still exact (the lower
+%    limit 2^- captures the jump at 2 and psi(2^-,chi)=0), so only the
+%    justification sentence needed repair: t<3 -> t<2.
+%  * Block 37: Step 2 of the lem:classical proof said "#G <= A_1
+%    log(T+2) for an absolute A_1"; A_1 comes from (F3), which is now
+%    <<_q, and Block 7 declares all constants q-dependent -- so
+%    "absolute" was an internal contradiction: now A_1 = A_1(q).
+%  * Blocks 38-39: the abstract's item (iii) and Results item 3 still
+%    said the LI transfer of the dissolution law applies "to the
+%    mod-4 race itself" -- true but stale understatements once
+%    thm:interp(ii) is general (the body's Blocks 23/31/32/35 already
+%    state the general transfer); both now say it holds for every
+%    real primitive chi under LI(chi), with cor:dissolution-race
+%    recording q=4.
+% ============================================================================
+
+% ============================================================================
+% Abstract: the interpolation-theorem sentence now reflects the general
+% statement (arbitrary real primitive chi; C(chi) closed form; chi_4 and
+% chi_3 values).  Lines 60-67.
+% ============================================================================
+%% BLOCK 1 REPLACES:
+%OLD% theorem, proved by the framework of Akbary--Ng--Shahabi and the method
+%OLD% of Humphries: under GRH and LI for $L(s,\chi_4)$, for every
+%OLD% $m\in(-\tfrac12,\infty)$ the logarithmic density $\delta(m)$ of the set
+%OLD% of $x$ where the class $3\ (\mathrm{mod}\ 4)$ leads exists and lies in
+%OLD% $(\tfrac12,1)$, the map $m\mapsto\delta(m)$ is continuous, and
+%OLD% $1-\delta(m)\le\exp\bigl(-1/(2C(2m+1)^2)\bigr)$ with
+%OLD% $C=\sum_{\gamma>0}2\gamma^{-2}=0.1560296\ldots$ (evaluated in closed
+%OLD% form), so $\delta(m)\to1$ as $m\to-\tfrac12^{\,+}$. This exhibits the classical density formulation
+%---NEW--->
+theorem, proved by the framework of Akbary--Ng--Shahabi and the method
+of Humphries and stated for an arbitrary real primitive character
+$\chi$ mod $q$: under GRH$(\chi)$, LI$(\chi)$ and
+$L(\tfrac12,\chi)\ne0$ (the nonvanishing is unconditional for
+$q=3,4$), for every
+$m\in(-\tfrac12,\infty)$ the logarithmic density $\delta_\chi(m)$ of
+the set of $x$ where the weighted nonresidue count leads (for
+$\chi=\chi_4$, where the class $3\ (\mathrm{mod}\ 4)$ leads) exists
+and lies in
+$(\tfrac12,1)$, the map $m\mapsto\delta_\chi(m)$ is continuous, and
+$1-\delta_\chi(m)\le\exp\bigl(-1/(2C(\chi)(2m+1)^2)\bigr)$ with
+$C(\chi)=\sum_{\gamma>0}2\gamma^{-2}$ evaluated in closed form
+($C(\chi_4)=0.1560296\ldots$, $C(\chi_3)=0.1134021\ldots$), so
+$\delta_\chi(m)\to1$ as $m\to-\tfrac12^{\,+}$. This exhibits the classical density formulation
+%<---NEW---
+
+% ============================================================================
+% Results item 5: state the theorem's actual (general) hypotheses and
+% constants.  Lines 284-298.
+% ============================================================================
+%% BLOCK 2 REPLACES:
+%OLD% \textbf{5. An interpolation theorem.} Section~\ref{sec:theorem}
+%OLD% (Theorem~\ref{thm:interp}) proves: under GRH and LI for $L(s,\chi_4)$,
+%OLD% for every $m\in(-\tfrac12,\infty)$ the
+%OLD% normalized race has a limiting logarithmic distribution, the density
+%OLD% $\delta(m)$ exists and lies in $(\tfrac12,1)$, the map
+%OLD% $m\mapsto\delta(m)$ is continuous, and
+%OLD% \[
+%OLD% 1-\delta(m)\;\le\;\min\Bigl\{C\,(2m+1)^2,\;
+%OLD% e^{-1/(2C(2m+1)^2)}\Bigr\},\qquad
+%OLD% C=\sum_{\gamma>0}\frac{2}{\gamma^2}=0.1560296\ldots,
+%OLD% \]
+%OLD% so $\delta(m)\to1$ as $m\to-\tfrac12^{\,+}$ --- a weight-aspect
+%OLD% instance of the highly biased phenomenon of Fiorilli~\cite{Fio14} ---
+%OLD% matching the single-sign
+%OLD% regime established at $m=-\tfrac12$ by \cite{AK23,Sheth24,Hay25}.
+%---NEW--->
+\textbf{5. An interpolation theorem.} Section~\ref{sec:theorem}
+(Theorem~\ref{thm:interp}) proves, for an arbitrary real primitive
+character $\chi$ mod $q$ under GRH$(\chi)$, LI$(\chi)$ and
+$L(\tfrac12,\chi)\ne0$ (the nonvanishing is unconditional for
+$q=3,4$): for every $m\in(-\tfrac12,\infty)$ the
+normalized race has a limiting logarithmic distribution, the density
+$\delta_\chi(m)$ exists and lies in $(\tfrac12,1)$, the map
+$m\mapsto\delta_\chi(m)$ is continuous, and
+\[
+1-\delta_\chi(m)\;\le\;\min\Bigl\{C(\chi)\,(2m+1)^2,\;
+e^{-1/(2C(\chi)(2m+1)^2)}\Bigr\},\qquad
+C(\chi)=\sum_{\gamma>0}\frac{2}{\gamma^2},
+\]
+with $C(\chi_4)=0.1560296\ldots$ and $C(\chi_3)=0.1134021\ldots$ (both
+evaluated in closed form),
+so $\delta_\chi(m)\to1$ as $m\to-\tfrac12^{\,+}$ --- a weight-aspect
+instance of the highly biased phenomenon of Fiorilli~\cite{Fio14} ---
+matching, at $q=4$, the single-sign
+regime established at $m=-\tfrac12$ by \cite{AK23,Sheth24,Hay25}.
+%<---NEW---
+
+% ============================================================================
+% Section 2 preamble: general real primitive chi, NCZ hypothesis and
+% gamma_1(chi)>0, general R_{m,chi}/E_{m,chi}/X_m, C(chi) closed form;
+% chi_4 and chi_3 as worked examples.  Lines 312-365.
+% ============================================================================
+%% BLOCK 3 REPLACES:
+%OLD% Throughout this section $\chi=\chi_4$ is the nontrivial character mod
+%OLD% $4$, $\rho=\tfrac12+i\gamma$ runs over the nontrivial zeros of
+%OLD% $L(s,\chi)$ (listed with multiplicity), GRH$(\chi)$ denotes the Riemann
+%OLD% hypothesis for $L(s,\chi)$, and LI$(\chi)$ the linear independence over
+%OLD% $\mathbb Q$ of the multiset of positive ordinates $\gamma$ (LI in
+%OLD% particular forces all $\gamma$ to be distinct, i.e.\ the zeros to be
+%OLD% simple; recall also that $L(\tfrac12,\chi_4)=\sum_{k\ge0}(-1)^k(2k+1)^{-1/2}>0$
+%OLD% by the alternating series test, so no ordinate vanishes). For
+%OLD% $m\in(-\tfrac12,\infty)$ define the ($\theta$-form) weighted race
+%OLD% \[
+%OLD% R_m(x)\;=\;\sum_{\substack{p\le x\\ p\equiv3\,(4)}}p^m\log p
+%OLD% \;-\;\sum_{\substack{p\le x\\ p\equiv1\,(4)}}p^m\log p
+%OLD% \;=\;-\sum_{p\le x}\chi(p)\,p^m\log p ,
+%OLD% \]
+%OLD% and its normalization
+%OLD% \[
+%OLD% E_m(x)\;=\;(2m+1)\,x^{-(m+1/2)}\,R_m(x).
+%OLD% \]
+%OLD% Write
+%OLD% \[
+%OLD% a_\gamma(m)\;=\;\frac{2m+1}{\sqrt{(m+\tfrac12)^2+\gamma^2}},
+%OLD% \qquad
+%OLD% X_m\;=\;1+\sum_{\gamma>0}2a_\gamma(m)\cos\theta_\gamma ,
+%OLD% \]
+%OLD% with $\theta_\gamma$ i.i.d.\ uniform on $[0,2\pi)$; the series converges
+%OLD% a.s.\ and in $L^2$ since $\sum_\gamma a_\gamma(m)^2<\infty$ (the ordinates
+%OLD% have density $\ll\log\gamma$). Set
+%OLD% \[
+%OLD% C\;:=\;\sum_{\gamma>0}\frac{2}{\gamma^2}\;=\;0.1560296498896\ldots
+%OLD% \]
+%OLD% Under GRH$(\chi_4)$ (in force throughout this section) this constant has
+%OLD% a closed evaluation: the completed function
+%OLD% $\Lambda(s)=(4/\pi)^{(s+1)/2}\Gamma\bigl(\tfrac{s+1}{2}\bigr)L(s,\chi_4)$
+%OLD% is entire and satisfies $\Lambda(s)=\Lambda(1-s)$ (the root number of
+%OLD% $\chi_4$ is $+1$), so $\Xi(z):=\Lambda(\tfrac12+z)$ is even; since
+%OLD% $\Xi(0)>0$ (as $L(\tfrac12,\chi_4)>0$), $\sum_\gamma\gamma^{-2}<\infty$,
+%OLD% and, under GRH, the zeros of $\Xi$ are exactly $\pm i\gamma$, the
+%OLD% Hadamard factorization takes the genus-zero form
+%OLD% $\Xi(z)/\Xi(0)=\prod_{\gamma>0}(1+z^2/\gamma^2)$, exactly as for the
+%OLD% Riemann $\xi$-function \cite[\S12]{Dav00}. Hence
+%OLD% \[
+%OLD% C\;=\;(\log\Lambda)''\bigl(\tfrac12\bigr)
+%OLD% \;=\;\tfrac14\,\psi'\bigl(\tfrac34\bigr)
+%OLD% +\frac{d^2}{ds^2}\log L(s,\chi_4)\Big|_{s=1/2}
+%OLD% \;=\;0.15602964988964488\ldots,
+%OLD% \]
+%OLD% with $\psi'(\tfrac34)=\pi^2-8G$ ($G$ Catalan's constant), evaluated at
+%OLD% $40$-digit working precision. Cross-check from the zero data: the first
+%OLD% $511$ ordinates give $0.152546$ and the Riemann--von Mangoldt tail
+%OLD% $\int_{\gamma_{511}}^\infty 2t^{-2}\,dN(t)$ with
+%OLD% $dN(t)=(2\pi)^{-1}\log(2t/\pi)\,dt$ gives $0.003487$, total $0.156033$,
+%OLD% agreeing with the exact value to $3.4\times10^{-6}$ --- within the
+%OLD% expected $O(10^{-5})$ fluctuation of the zero-counting remainder.
+%OLD% (Earlier drafts printed the cruder value $0.156033$.)
+%---NEW--->
+Throughout this section $\chi$ is a \emph{fixed} real primitive
+Dirichlet character mod $q\ge3$, of parity $\chi(-1)=(-1)^a$ with
+$a\in\{0,1\}$; the two moduli computed in this paper are $\chi_4$ (the
+nontrivial character mod $4$; $a=1$) and $\chi_3$ (the quadratic
+character mod $3$; $a=1$), and they serve as running examples.
+$\rho=\beta+i\gamma$ runs over the nontrivial zeros of
+$L(s,\chi)$ (listed with multiplicity), GRH$(\chi)$ denotes the Riemann
+hypothesis for $L(s,\chi)$, and LI$(\chi)$ the linear independence over
+$\mathbb Q$ of the multiset of positive ordinates $\gamma$ (LI in
+particular forces all $\gamma$ to be distinct, i.e.\ the zeros to be
+simple; we do \emph{not} build the nonvanishing of ordinates into the
+LI convention). Alongside GRH$(\chi)$ we assume throughout the
+no-central-zero hypothesis
+\[
+\mathrm{NCZ}(\chi):\qquad L(\tfrac12,\chi)\neq0 ,
+\]
+which under GRH forces every ordinate to be nonzero (a zero with
+$\gamma=0$ would sit at $s=\tfrac12$), so that the least positive
+ordinate $\gamma_1(\chi)$ is a strictly positive number --- possibly
+small for large $q$; the theorem is for fixed $\chi$, and all implied
+constants in this section may depend on $\chi$ (equivalently on $q$)
+without further mention. For $q=3,4$ the hypothesis NCZ is
+unconditional, by grouped alternating series: for $\chi_4$,
+$L(\tfrac12,\chi_4)=\sum_{k\ge0}(-1)^k(2k+1)^{-1/2}>0$ by the
+alternating series test, while for $\chi_3$ the Dirichlet series is
+not alternating (the vanishing terms $\chi_3(3k)=0$ interleave), but
+grouping it in blocks of three gives
+$L(\tfrac12,\chi_3)=\sum_{k\ge0}\bigl[(3k+1)^{-1/2}-(3k+2)^{-1/2}\bigr]
+\ge1-2^{-1/2}>0$ (justification and numerics in
+Section~\ref{sec:methods}: $L(\tfrac12,\chi_4)=0.667691457\ldots$,
+$L(\tfrac12,\chi_3)=0.4808675\ldots$). For general real primitive
+$\chi$, NCZ is central nonvanishing --- Chowla's conjecture, known in
+every numerically checked case but open in general; under GRH,
+$L(\tfrac12,\chi)\ge0$, so NCZ is then exactly $L(\tfrac12,\chi)>0$
+(see the discussion in Section~\ref{sec:methods}). For
+$m\in(-\tfrac12,\infty)$ define the ($\theta$-form) weighted race
+\[
+R_{m,\chi}(x)\;=\;-\sum_{p\le x}\chi(p)\,p^m\log p
+\;=\;\sum_{\substack{p\le x\\ \chi(p)=-1}}p^m\log p
+\;-\;\sum_{\substack{p\le x\\ \chi(p)=+1}}p^m\log p
+\]
+(nonresidues minus residues; for $\chi=\chi_4$ this is the race of
+$p\equiv3$ against $p\equiv1$ mod $4$, for $\chi_3$ of $p\equiv2$
+against $p\equiv1$ mod $3$), and its normalization
+\[
+E_{m,\chi}(x)\;=\;(2m+1)\,x^{-(m+1/2)}\,R_{m,\chi}(x).
+\]
+Since $\chi$ is fixed we abbreviate $R_m=R_{m,\chi}$ and
+$E_m=E_{m,\chi}$. Write
+\[
+a_\gamma(m)\;=\;\frac{2m+1}{\sqrt{(m+\tfrac12)^2+\gamma^2}},
+\qquad
+X_m\;=\;1+\sum_{\gamma>0}2a_\gamma(m)\cos\theta_\gamma ,
+\]
+with $\theta_\gamma$ i.i.d.\ uniform on $[0,2\pi)$; the series converges
+a.s.\ and in $L^2$ since $\sum_\gamma a_\gamma(m)^2<\infty$ (the
+ordinates have density $\ll_q\log\gamma$). ($X_m$ is the $X_{m,\chi}$
+of Section~\ref{sec:dissolution}.) Set
+\[
+C(\chi)\;:=\;\sum_{\gamma>0}\frac{2}{\gamma^2}\;<\;\infty .
+\]
+Under GRH$(\chi)$ and NCZ$(\chi)$ (in force throughout this section)
+this constant has a closed evaluation: the completed function
+$\Lambda(s,\chi)=(q/\pi)^{(s+a)/2}\Gamma\bigl(\tfrac{s+a}{2}\bigr)
+L(s,\chi)$
+is entire and satisfies $\Lambda(s,\chi)=\Lambda(1-s,\chi)$ --- every
+real primitive character has root number $+1$, by Gauss's evaluation
+of the sign of the quadratic Gauss sum, $\tau(\chi)=\sqrt q$ for
+$a=0$ and $i\sqrt q$ for $a=1$ (\cite[Chs.~2, 9]{Dav00}; see the proof
+of Proposition~\ref{prop:varasymp}) --- so
+$\Xi(z):=\Lambda(\tfrac12+z,\chi)$ is even; since $\Xi(0)\ne0$ (by
+NCZ; under GRH in fact $\Xi(0)>0$),
+$\sum_\gamma\gamma^{-2}<\infty$,
+and, under GRH, the zeros of $\Xi$ are exactly $\pm i\gamma$, the
+Hadamard factorization takes the genus-zero form
+$\Xi(z)/\Xi(0)=\prod_{\gamma>0}(1+z^2/\gamma^2)$, exactly as for the
+Riemann $\xi$-function \cite[\S12]{Dav00} (the argument is written
+out, at $q=4$, in Proposition~\ref{prop:varid}, and applies verbatim).
+Hence
+\[
+C(\chi)\;=\;(\log\Lambda)''\bigl(\tfrac12,\chi\bigr)
+\;=\;\tfrac14\,\psi'\Bigl(\frac{2a+1}{4}\Bigr)
++\frac{d^2}{ds^2}\log L(s,\chi)\Big|_{s=1/2}.
+\]
+
+\medskip\noindent\emph{Example ($q=4$).} For $\chi=\chi_4$ ($a=1$;
+$\gamma_1(\chi_4)=6.0209\ldots$),
+\[
+C(\chi_4)\;=\;\tfrac14\,\psi'\bigl(\tfrac34\bigr)
++\frac{d^2}{ds^2}\log L(s,\chi_4)\Big|_{s=1/2}
+\;=\;0.15602964988964488\ldots,
+\]
+with $\psi'(\tfrac34)=\pi^2-8G$ ($G$ Catalan's constant), evaluated at
+$40$-digit working precision (Corollary~\ref{cor:Cexact}). Cross-check
+from the zero data: the first
+$511$ ordinates give $0.152546$ and the Riemann--von Mangoldt tail
+$\int_{\gamma_{511}}^\infty 2t^{-2}\,dN(t)$ with
+$dN(t)=(2\pi)^{-1}\log(2t/\pi)\,dt$ gives $0.003487$, total $0.156033$,
+agreeing with the exact value to $3.4\times10^{-6}$ --- within the
+expected $O(10^{-5})$ fluctuation of the zero-counting remainder.
+(Earlier drafts printed the cruder value $0.156033$.)
+
+\medskip\noindent\emph{Example ($q=3$).} For $\chi=\chi_3$ ($a=1$;
+$\gamma_1(\chi_3)=8.0397\ldots$, from the $537$ ordinates computed to
+$25$ digits in Section~\ref{sec:methods}),
+\[
+C(\chi_3)\;=\;\tfrac14\,\psi'\bigl(\tfrac34\bigr)
++\frac{d^2}{ds^2}\log L(s,\chi_3)\Big|_{s=1/2}
+\;=\;0.11340215685275857\ldots,
+\]
+the second derivative being
+$(\log L)''(\tfrac12,\chi_3)=-0.522067755\ldots$; the value is
+computed by the same closed-form route as $C(\chi_4)$ and is recorded
+among the certified constants of Section~\ref{sec:methods}.
+Cross-check from the zero data: the $537$ ordinates give $0.110308$
+and the tail $\int_{\gamma_{537}}^\infty 2t^{-2}\,dN(t)$ with
+$dN(t)=(2\pi)^{-1}\log\bigl(3t/(2\pi)\bigr)\,dt$ gives $0.003098$,
+total $0.113406$, agreeing with the closed form to
+$4.1\times10^{-6}$.
+%<---NEW---
+
+% ============================================================================
+% Theorem thm:interp restated for a general real primitive chi
+% (hypotheses GRH(chi) + NCZ(chi), parts (i)-(iii) under LI(chi));
+% part (iv) is the chi_4 anchor to the endpoint literature, whose
+% citations (AK23, Sheth24, Hay25) this paper quotes for the mod-4 race
+% only.  Numeric thresholds move to the examples; new mod-3 rate
+% corollary (task (d)).  Lines 367-415.
+% ============================================================================
+%% BLOCK 4 REPLACES:
+%OLD% \begin{theorem}\label{thm:interp}
+%OLD% Assume GRH$(\chi_4)$.
+%OLD% \begin{enumerate}
+%OLD% \item[(i)] For each $m\in(-\tfrac12,\infty)$ the function
+%OLD% $u\mapsto E_m(e^u)$ possesses a limiting distribution
+%OLD% $\nu_m$: for every bounded continuous $f:\mathbb R\to\mathbb R$,
+%OLD% $\lim_{Y\to\infty}\frac1Y\int_0^Y f(E_m(e^u))\,du
+%OLD% =\int_{\mathbb R}f\,d\nu_m$. Under LI$(\chi_4)$, $\nu_m$ is the law of
+%OLD% $X_m$.
+%OLD% \item[(ii)] Under LI$(\chi_4)$, $\nu_m$ is absolutely continuous with
+%OLD% support $\mathbb R$; the logarithmic density
+%OLD% $\delta(m)$ of the set $\{x\ge2: R_m(x)>0\}$ exists, equals
+%OLD% $\nu_m\bigl((0,\infty)\bigr)$, satisfies
+%OLD% $\tfrac12<\delta(m)<1$ for every $m\in(-\tfrac12,\infty)$, and
+%OLD% $m\mapsto\delta(m)$ is continuous on $(-\tfrac12,\infty)$.
+%OLD% \item[(iii)] Under LI$(\chi_4)$, for all $m\in(-\tfrac12,\infty)$,
+%OLD% \[
+%OLD% 1-\delta(m)\;\le\;C\,(2m+1)^2
+%OLD% \qquad\text{and}\qquad
+%OLD% 1-\delta(m)\;\le\;\exp\!\Bigl(-\frac{1}{2C\,(2m+1)^2}\Bigr),
+%OLD% \]
+%OLD% with no restriction on $m$; the second bound is in fact the stronger of
+%OLD% the two for every $m$. In particular $\delta(m)\to1$ as
+%OLD% $m\to-\tfrac12^{\,+}$. Both bounds are informative only near the left
+%OLD% endpoint: the (stronger) exponential bound drops below the trivial
+%OLD% estimate $1-\delta(m)<\tfrac12$ of part (ii) precisely for
+%OLD% $m<m_0:=\tfrac12\bigl((2C\log2)^{-1/2}-1\bigr)=0.57507\ldots$, and the
+%OLD% first bound is $\ge1$ for $m\ge\tfrac12(C^{-1/2}-1)=0.76580\ldots$;
+%OLD% for $m\ge m_0$ part (iii) asserts nothing beyond part (ii), and this
+%OLD% theorem makes no claim about the rate at which $\delta(m)$ approaches
+%OLD% $\tfrac12$ as $m\to\infty$.
+%OLD% \item[(iv)] Consequently the classical density formulation of
+%OLD% Chebyshev's bias at $m=0$ (logarithmic density
+%OLD% $\delta(0)=0.995928\ldots$; $0.9959$ in \cite{RS94}, six decimals as in
+%OLD% \cite{FM13} and re-derived here) is joined by the continuous family
+%OLD% $\{\delta(m)\}_{m\in(-1/2,\infty)}$, with $\delta(m)\to1$ as
+%OLD% $m\to-\tfrac12^{\,+}$, to the
+%OLD% total-bias regime at the weighted threshold $m=-\tfrac12$, where the
+%OLD% unlogged race $D_{-1/2}(x)=\sum_{p\le x}(-\chi_4(p))p^{-1/2}$ equals
+%OLD% $\tfrac12\log\log x+O(1)$ and is eventually of one sign (under DRH
+%OLD% \cite{AK23}; under GRH off a set of finite logarithmic measure
+%OLD% \cite{Sheth24}; single-signed on a set of logarithmic density one under
+%OLD% GRH alone \cite{Hay25}). None of these three endpoint results assumes
+%OLD% LI. In the opposite direction the family now covers every positive
+%OLD% weight; there the computed densities of Table~\ref{tab:delta} decrease
+%OLD% toward $\tfrac12$, in the manner of the dissolution law of the Results
+%OLD% section, which this theorem does not prove.
+%OLD% \end{enumerate}
+%OLD% \end{theorem}
+%---NEW--->
+\begin{theorem}\label{thm:interp}
+Let $\chi$ be a real primitive character mod $q$. Assume GRH$(\chi)$
+and NCZ$(\chi)$: $L(\tfrac12,\chi)\ne0$ (the latter unconditional for
+$q=3,4$, as noted above).
+\begin{enumerate}
+\item[(i)] For each $m\in(-\tfrac12,\infty)$ the function
+$u\mapsto E_m(e^u)$ possesses a limiting distribution
+$\nu_m$: for every bounded continuous $f:\mathbb R\to\mathbb R$,
+$\lim_{Y\to\infty}\frac1Y\int_0^Y f(E_m(e^u))\,du
+=\int_{\mathbb R}f\,d\nu_m$. Under LI$(\chi)$, $\nu_m$ is the law of
+$X_m$.
+\item[(ii)] Under LI$(\chi)$, $\nu_m$ is absolutely continuous with
+support $\mathbb R$; the logarithmic density
+$\delta_\chi(m)$ of the set $\{x\ge2: R_m(x)>0\}$ exists, equals
+$\nu_m\bigl((0,\infty)\bigr)$, satisfies
+$\tfrac12<\delta_\chi(m)<1$ for every $m\in(-\tfrac12,\infty)$, and
+$m\mapsto\delta_\chi(m)$ is continuous on $(-\tfrac12,\infty)$. (We
+write $\delta(m)$ for $\delta_\chi(m)$ when $\chi$ is understood; for
+$\chi=\chi_4,\chi_3$ these are the densities printed as
+$\delta_4,\delta_3$ in Table~\ref{tab:delta}, and under LI$(\chi)$
+they coincide with the quantities
+$\delta_q(m)=\mathbb P(X_{m,\chi}>0)$ of
+Section~\ref{sec:dissolution}.)
+\item[(iii)] Under LI$(\chi)$, for all $m\in(-\tfrac12,\infty)$,
+\[
+1-\delta_\chi(m)\;\le\;C(\chi)\,(2m+1)^2
+\qquad\text{and}\qquad
+1-\delta_\chi(m)\;\le\;\exp\!\Bigl(-\frac{1}{2C(\chi)\,(2m+1)^2}\Bigr),
+\]
+with no restriction on $m$; the second bound is in fact the stronger of
+the two for every $m$. In particular $\delta_\chi(m)\to1$ as
+$m\to-\tfrac12^{\,+}$. Both bounds are informative only near the left
+endpoint: the (stronger) exponential bound drops below the trivial
+estimate $1-\delta_\chi(m)<\tfrac12$ of part (ii) precisely for
+$m<m_0(\chi):=\tfrac12\bigl((2C(\chi)\log2)^{-1/2}-1\bigr)$, and the
+first bound is $\ge1$ for $m\ge\tfrac12\bigl(C(\chi)^{-1/2}-1\bigr)$;
+for $m\ge m_0(\chi)$ part (iii) asserts nothing beyond part (ii), and
+this theorem makes no claim about the rate at which $\delta_\chi(m)$
+approaches $\tfrac12$ as $m\to\infty$ (for that rate, see
+Section~\ref{sec:dissolution}).
+\item[(iv)] ($\chi=\chi_4$.) Consequently the classical density
+formulation of
+Chebyshev's bias at $m=0$ (logarithmic density
+$\delta(0)=0.995928\ldots$; $0.9959$ in \cite{RS94}, six decimals as in
+\cite{FM13} and re-derived here) is joined by the continuous family
+$\{\delta(m)\}_{m\in(-1/2,\infty)}$, with $\delta(m)\to1$ as
+$m\to-\tfrac12^{\,+}$, to the
+total-bias regime at the weighted threshold $m=-\tfrac12$, where the
+unlogged race $D_{-1/2}(x)=\sum_{p\le x}(-\chi_4(p))p^{-1/2}$ equals
+$\tfrac12\log\log x+O(1)$ and is eventually of one sign (under DRH
+\cite{AK23}; under GRH off a set of finite logarithmic measure
+\cite{Sheth24}; single-signed on a set of logarithmic density one under
+GRH alone \cite{Hay25}). None of these three endpoint results assumes
+LI. In the opposite direction the family now covers every positive
+weight; there the computed densities of Table~\ref{tab:delta} decrease
+toward $\tfrac12$, in the manner of the dissolution law of the Results
+section, which this theorem does not prove (it is proved, with a rate,
+in Section~\ref{sec:dissolution}).
+\end{enumerate}
+\end{theorem}
+
+\medskip\noindent\emph{Example ($q=4$).} $\chi_4$ is odd,
+NCZ$(\chi_4)$ is the alternating-series positivity
+$L(\tfrac12,\chi_4)>0$, and $C(\chi_4)=0.15602964988964488\ldots$ (in
+closed form above). The thresholds of (iii) are
+$m_0(\chi_4)=0.57507\ldots$ and
+$\tfrac12\bigl(C(\chi_4)^{-1/2}-1\bigr)=0.76580\ldots$, the Chebyshev
+bound falling below $\tfrac12$ only for $m<0.395058\ldots$; parts (ii)
+and (iv) recover the classical anchor $\delta(0)=0.995928\ldots$ of
+\cite{RS94,FM13} at $m=0$ (Table~\ref{tab:delta}).
+
+\medskip\noindent\emph{Example ($q=3$).} The race $R_{m,\chi_3}$ pits
+$p\equiv2$ against $p\equiv1\ (\mathrm{mod}\ 3)$; $\chi_3$ is odd,
+NCZ$(\chi_3)$ is the grouped-series positivity
+$L(\tfrac12,\chi_3)>0$, and
+$C(\chi_3)=0.11340215685275857\ldots$ (Example above). Under
+GRH$(\chi_3)$ and LI$(\chi_3)$, parts (i)--(iii) give existence,
+continuity and the strict bounds for $\delta_3(m)$ on all of
+$(-\tfrac12,\infty)$; the computed anchors are $\delta_3(0)=0.999063$
+(the classical mod-$3$ bias, re-derived to six decimals in
+Table~\ref{tab:delta}) and, from the sieves of the introduction, the
+weighted first flips at $p=13$ ($m=1$) and $p=7$ ($m=2,3$), the
+classical race $m=0$ not flipping below $10^{10}$.
+
+\begin{corollary}[mod-$3$ rate]\label{cor:mod3rate}
+Assume GRH$(\chi_3)$ and LI$(\chi_3)$ (NCZ$(\chi_3)$ holds
+unconditionally). Then the logarithmic density
+$\delta_3(m)=\delta_{\chi_3}(m)$ of the set
+$\{x\ge2:R_{m,\chi_3}(x)>0\}$ satisfies, for every
+$m\in(-\tfrac12,\infty)$,
+\[
+1-\delta_3(m)\;\le\;
+\exp\!\Bigl(-\frac{1}{2\,C(\chi_3)\,(2m+1)^2}\Bigr),
+\qquad
+C(\chi_3)=0.11340215685275857\ldots,
+\]
+and likewise $1-\delta_3(m)\le C(\chi_3)(2m+1)^2$; in particular
+$\delta_3(m)\to1$ as $m\to-\tfrac12^{\,+}$. The exponential bound is
+informative (below $\tfrac12$) precisely for
+$m<m_0(\chi_3)=0.761048\ldots$, the Chebyshev form for
+$m<0.549891\ldots$; at $m=0$ the exponential bound gives
+$1-\delta_3(0)\le e^{-1/(2C(\chi_3))}=0.01216\ldots$, against the
+computed value $9.37\times10^{-4}$ (Table~\ref{tab:delta}).
+\end{corollary}
+
+\begin{proof}
+Theorem~\ref{thm:interp}(iii) with $\chi=\chi_3$; the numerical
+thresholds are evaluated from $C(\chi_3)$ as in the Example above.
+\end{proof}
+%<---NEW---
+
+% ============================================================================
+% Remark after the theorem (Humphries analogy): C -> C(chi).
+% Lines 424-425.
+% ============================================================================
+%% BLOCK 5 REPLACES:
+%OLD% normalized mean is fixed at $1$ while the variance collapses like
+%OLD% $C(2m+1)^2$; in both cases the bias-to-spread ratio diverges, and
+%---NEW--->
+normalized mean is fixed at $1$ while the variance collapses like
+$C(\chi)(2m+1)^2$; in both cases the bias-to-spread ratio diverges, and
+%<---NEW---
+
+% ============================================================================
+% Lemma lem:classical restated for a real primitive chi of either
+% parity; for even chi the s=0 trivial zero contributes -log x + O_q(1),
+% absorbed by the existing floor.  Lines 435-445.
+% ============================================================================
+%% BLOCK 6 REPLACES:
+%OLD% \begin{lemma}[truncated explicit formula, all truncations]\label{lem:classical}
+%OLD% Let $\chi=\chi_4$ and let $\rho=\beta+i\gamma$ run over the nontrivial
+%OLD% zeros of $L(s,\chi)$, listed with multiplicity. Unconditionally, for all
+%OLD% $x\ge2$ and all $T\ge2$,
+%OLD% \begin{equation}\label{eq:classical}
+%OLD% \psi(x,\chi)\;=\;-\sum_{|\gamma|\le T}\frac{x^{\rho}}{\rho}
+%OLD% +O\!\Bigl(\frac{x\log^2(xT)}{T}+\log x\Bigr).
+%OLD% \end{equation}
+%OLD% No inequality between $T$ and $x$ is assumed; in particular $T>x$ is
+%OLD% allowed.
+%OLD% \end{lemma}
+%---NEW--->
+\begin{lemma}[truncated explicit formula, all truncations]\label{lem:classical}
+Let $\chi$ be a real primitive character mod $q$, of parity
+$\chi(-1)=(-1)^a$, and let $\rho=\beta+i\gamma$ run over the nontrivial
+zeros of $L(s,\chi)$, listed with multiplicity. Unconditionally, for all
+$x\ge2$ and all $T\ge2$,
+\begin{equation}\label{eq:classical}
+\psi(x,\chi)\;=\;-\sum_{|\gamma|\le T}\frac{x^{\rho}}{\rho}
++O_q\!\Bigl(\frac{x\log^2(xT)}{T}+\log x\Bigr).
+\end{equation}
+No inequality between $T$ and $x$ is assumed; in particular $T>x$ is
+allowed. For even $\chi$ ($a=0$) the trivial zero of $L(s,\chi)$ at
+$s=0$ contributes a genuine $-\log x+O_q(1)$ term, absorbed by the
+$O_q(\log x)$ floor (cf.\ \cite[Ch.~19]{Dav00}); this is the only
+point at which the parity alters the shape of the formula.
+\end{lemma}
+%<---NEW---
+
+% ============================================================================
+% Proof of lem:classical, opening: constants now depend on q.  Line 448.
+% ============================================================================
+%% BLOCK 7 REPLACES:
+%OLD% All implied constants are absolute ($q=4$ is fixed). We use five
+%---NEW--->
+All implied constants depend at most on $q$ ($\chi$ is fixed). We use
+five
+%<---NEW---
+
+% ============================================================================
+% (F3) for general chi.  Lines 482-485.
+% ============================================================================
+%% BLOCK 8 REPLACES:
+%OLD% \emph{(F3)} $N(t+1,\chi)-N(t,\chi)\ll\log(t+2)$ for $t\ge0$, where
+%OLD% $N(t,\chi)$ counts zeros with $0<\gamma\le t$; unconditional
+%OLD% Riemann--von Mangoldt for $L(s,\chi_4)$ \cite[\S16]{Dav00}. Zeros are
+%OLD% symmetric under $\gamma\mapsto-\gamma$ ($\chi_4$ is real).
+%---NEW--->
+\emph{(F3)} $N(t+1,\chi)-N(t,\chi)\ll_q\log(t+2)$ for $t\ge0$, where
+$N(t,\chi)$ counts zeros with $0<\gamma\le t$; unconditional
+Riemann--von Mangoldt for $L(s,\chi)$ \cite[\S16]{Dav00}. Zeros are
+symmetric under $\gamma\mapsto-\gamma$ ($\chi$ is real).
+%<---NEW---
+
+% ============================================================================
+% (F5) and the s=0 analysis for both parities: functional equation with
+% the parity-dependent Gamma factor; odd chi has L(0,chi)!=0, even chi
+% has a simple trivial zero at s=0 with L'/L(s)=1/s+b(chi)+O(s).
+% Lines 492-521.
+% ============================================================================
+%% BLOCK 9 REPLACES:
+%OLD% \emph{(F5)} $\Lambda(s)=(4/\pi)^{(s+1)/2}\Gamma(\tfrac{s+1}2)L(s,\chi)$
+%OLD% satisfies $\Lambda(s)=\Lambda(1-s)$ (\cite[\S9]{Dav00}; the root number
+%OLD% of $\chi_4$ is $\tau(\chi_4)/(i\sqrt4)=2i/2i=+1$). Taking logarithmic
+%OLD% derivatives,
+%OLD% \[
+%OLD% \frac{L'}{L}(s,\chi)
+%OLD% =-\log\frac4\pi-\tfrac12\psi\Bigl(\frac{s+1}2\Bigr)
+%OLD% -\tfrac12\psi\Bigl(\frac{2-s}2\Bigr)-\frac{L'}{L}(1-s,\chi).
+%OLD% \]
+%OLD% If $\sigma\le-1$ and either $|t|\ge2$ or $\sigma$ is a negative even
+%OLD% integer, then: $\mathrm{Re}(1-s)\ge2$, so $|L'/L(1-s,\chi)|=O(1)$ by
+%OLD% (F4); $\mathrm{Re}\bigl(\frac{2-s}2\bigr)\ge\tfrac32$, so
+%OLD% $|\psi(\frac{2-s}2)|\ll\log(2+|s|)$ by Stirling; and for
+%OLD% $w=\frac{s+1}2$ the reflection $\psi(w)=\psi(1-w)-\pi\cot(\pi w)$
+%OLD% applies with $\mathrm{Re}(1-w)\ge1$ and with $|\cot(\pi w)|\le
+%OLD% \coth(\pi)$ when $|\mathrm{Im}\,w|=|t|/2\ge1$, respectively
+%OLD% $|\cot(\pi w)|=|\tanh(\pi t/2)|\le1$ when $\mathrm{Re}\,w$ is a
+%OLD% half-odd-integer (which is the case when $\sigma$ is a negative even
+%OLD% integer). Hence on those sets
+%OLD% $|L'/L(s,\chi)|\ll\log(2+|s|)$.
+%OLD%
+%OLD% Also $L(0,\chi_4)=\tfrac12\ne0$: evaluating $\Lambda(0)=\Lambda(1)$
+%OLD% from (F5),
+%OLD% $(4/\pi)^{1/2}\Gamma(\tfrac12)L(0,\chi_4)=(4/\pi)\Gamma(1)L(1,\chi_4)$,
+%OLD% and $L(1,\chi_4)=\pi/4$ (Leibniz), so
+%OLD% $L(0,\chi_4)=(4/\pi)^{1/2}(\pi/4)/\sqrt{\pi}=\tfrac12$.
+%OLD% Consequently $L'/L$ is regular at $s=0$. Moreover every nontrivial zero
+%OLD% has $0<\beta<1$: there are no zeros with $\beta=1$ (de la Vall\'ee
+%OLD% Poussin, unconditional), hence none with $\beta=0$ by (F5); so the pole
+%OLD% of $1/s$ at $s=0$ collides with no zero.
+%---NEW--->
+\emph{(F5)} $\Lambda(s,\chi)=(q/\pi)^{(s+a)/2}
+\Gamma\bigl(\tfrac{s+a}2\bigr)L(s,\chi)$
+satisfies $\Lambda(s,\chi)=\Lambda(1-s,\chi)$: the root number of a
+real primitive character is $+1$ (\cite[Chs.~2, 9]{Dav00}; Gauss's
+evaluation $\tau(\chi)=\sqrt q$ for $a=0$, $i\sqrt q$ for $a=1$ ---
+for $q=4$ the two-term sum gives $\tau(\chi_4)/(i\sqrt4)=2i/2i=+1$).
+Taking logarithmic derivatives,
+\[
+\frac{L'}{L}(s,\chi)
+=-\log\frac q\pi-\tfrac12\psi\Bigl(\frac{s+a}2\Bigr)
+-\tfrac12\psi\Bigl(\frac{1-s+a}2\Bigr)-\frac{L'}{L}(1-s,\chi).
+\]
+If $\sigma\le-1$ and either $|t|\ge2$ or $\sigma+a$ is an odd
+(negative) integer, then: $\mathrm{Re}(1-s)\ge2$, so
+$|L'/L(1-s,\chi)|=O(1)$ by
+(F4); $\mathrm{Re}\bigl(\frac{1-s+a}2\bigr)\ge1$, so
+$|\psi(\frac{1-s+a}2)|\ll\log(2+|s|)$ by Stirling; and for
+$w=\frac{s+a}2$ the reflection $\psi(w)=\psi(1-w)-\pi\cot(\pi w)$
+applies with $\mathrm{Re}(1-w)\ge1$ and with $|\cot(\pi w)|\le
+\coth(\pi)$ when $|\mathrm{Im}\,w|=|t|/2\ge1$, respectively
+$|\cot(\pi w)|=|\tanh(\pi t/2)|\le1$ when $\mathrm{Re}\,w$ is a
+half-odd-integer (which is the case when $\sigma+a$ is an odd
+integer). Hence on those sets
+$|L'/L(s,\chi)|\ll_q\log(2+|s|)$.
+
+The behaviour at $s=0$ depends on the parity. For odd $\chi$ ($a=1$),
+$L(0,\chi)\ne0$: evaluating $\Lambda(0,\chi)=\Lambda(1,\chi)$
+from (F5),
+$(q/\pi)^{1/2}\Gamma(\tfrac12)L(0,\chi)=(q/\pi)\Gamma(1)L(1,\chi)$
+with $L(1,\chi)\ne0$ (Dirichlet); for $\chi_4$, $L(1,\chi_4)=\pi/4$
+(Leibniz) gives the explicit value
+$L(0,\chi_4)=(4/\pi)^{1/2}(\pi/4)/\sqrt{\pi}=\tfrac12$.
+Consequently, for odd $\chi$, $L'/L$ is regular at $s=0$. For even
+$\chi$ ($a=0$), $s=0$ is a \emph{simple} trivial zero of $L(s,\chi)$:
+$\Gamma(s/2)$ has a simple pole there while
+$\Lambda(0,\chi)=\Lambda(1,\chi)\ne0$ is finite, so
+\[
+\frac{L'}{L}(s,\chi)\;=\;\frac1s+b(\chi)+O(|s|)\qquad(s\to0)
+\]
+for a finite constant $b(\chi)=O_\chi(1)$ (cf.\ \cite[Ch.~19]{Dav00}).
+Moreover every nontrivial zero
+has $0<\beta<1$: there are no zeros with $\beta=1$ (Dirichlet, de la
+Vall\'ee Poussin, unconditional), hence, by (F5), none with $\beta=0$
+apart from the trivial zero at $s=0$ in the even case, which is
+accounted for separately below.
+%<---NEW---
+
+% ============================================================================
+% Step 3 of the contour argument, both parities: U=2K+1-a so the left
+% edge passes between trivial zeros; for even chi the double pole at
+% s=0 has residue -log x - b(chi).  Lines 564-577.
+% ============================================================================
+%% BLOCK 10 REPLACES:
+%OLD% \emph{Step 3 (contour).} For $K\in\mathbb N$ set $U=2K$ and integrate
+%OLD% $(-L'/L)(s,\chi)\,x^s/s$ counterclockwise around the rectangle with
+%OLD% vertices $c\pm iT'$, $-U\pm iT'$. The poles inside are: the nontrivial
+%OLD% zeros with $|\gamma|\le T'$ (residue $-x^\rho/\rho$ each, with
+%OLD% multiplicity; $\rho\ne0$ since $0<\beta<1$); the simple pole of $1/s$
+%OLD% at $s=0$ (residue $-L'/L(0,\chi)=O(1)$, using $L(0,\chi)=\tfrac12$);
+%OLD% and the trivial zeros $s=-(2j+1)$, $0\le j\le K-1$, of $L(s,\chi_4)$
+%OLD% (simple, from the poles of $\Gamma(\tfrac{s+1}2)$; residue
+%OLD% $+x^{-(2j+1)}/(2j+1)$ each). Hence
+%OLD% \[
+%OLD% \frac{1}{2\pi i}\oint
+%OLD% =-\sum_{|\gamma|\le T'}\frac{x^\rho}{\rho}-\frac{L'}{L}(0,\chi)
+%OLD% +\sum_{j=0}^{K-1}\frac{x^{-(2j+1)}}{2j+1}.
+%OLD% \]
+%---NEW--->
+\emph{Step 3 (contour).} For $K\in\mathbb N$ set $U=2K+1-a$ (so the
+line $\sigma=-U$ passes midway between consecutive trivial zeros in
+either parity) and integrate
+$(-L'/L)(s,\chi)\,x^s/s$ counterclockwise around the rectangle with
+vertices $c\pm iT'$, $-U\pm iT'$. The poles inside are: the nontrivial
+zeros with $|\gamma|\le T'$ (residue $-x^\rho/\rho$ each, with
+multiplicity; $\rho\ne0$ since $0<\beta<1$); the point $s=0$; and the
+trivial zeros $s=-(2j+a)$ of $L(s,\chi)$ with $j\ge1-a$ and
+$2j+a\le U$ (simple, from the poles of $\Gamma(\tfrac{s+a}2)$; residue
+$+x^{-(2j+a)}/(2j+a)$ each). At $s=0$: for odd $\chi$ the integrand
+has only the simple pole of $1/s$, with residue
+$-L'/L(0,\chi)=O_q(1)$ (using $L(0,\chi)\ne0$); for even $\chi$ the
+pole of $1/s$ meets the simple trivial zero of $L$, and the Laurent
+expansion of (F5) gives a double pole with residue
+\[
+\mathrm{Res}_{s=0}\,\Bigl(-\frac{L'}{L}(s,\chi)\Bigr)\frac{x^s}{s}
+\;=\;-\log x-b(\chi)\;=\;O_q(\log x).
+\]
+Writing $r_0(x,\chi)$ for the residue at $s=0$ just computed (in
+either parity $r_0(x,\chi)=O_q(\log x)$),
+\[
+\frac{1}{2\pi i}\oint
+=-\sum_{|\gamma|\le T'}\frac{x^\rho}{\rho}+r_0(x,\chi)
++\sum_{\substack{j\ge1-a\\ 2j+a\le U}}\frac{x^{-(2j+a)}}{2j+a}.
+\]
+%<---NEW---
+
+% ============================================================================
+% Step 6, both parities: the limiting trivial-zero sums are O(1) in
+% either parity, and the O_q(log x) floor carries the even-chi
+% -log x - b(chi) term.  Lines 603-610.
+% ============================================================================
+%% BLOCK 11 REPLACES:
+%OLD% \emph{Step 6 (assemble; $U\to\infty$).} Letting $K\to\infty$, the
+%OLD% trivial-zero sum increases to
+%OLD% $\sum_{j\ge0}x^{-(2j+1)}/(2j+1)=\operatorname{artanh}(1/x)
+%OLD% \le\operatorname{artanh}(\tfrac12)<0.55$. Combining Steps 1--5,
+%OLD% \[
+%OLD% \psi(x,\chi)=-\sum_{|\gamma|\le T'}\frac{x^\rho}{\rho}
+%OLD% +O\Bigl(\frac{x\log^2(xT)}{T}+\log x\Bigr).
+%OLD% \]
+%---NEW--->
+\emph{Step 6 (assemble; $U\to\infty$).} Letting $K\to\infty$, the
+trivial-zero sum increases to
+$\sum_{j\ge0}x^{-(2j+1)}/(2j+1)=\operatorname{artanh}(1/x)
+\le\operatorname{artanh}(\tfrac12)<0.55$ for odd $\chi$, and to
+$\sum_{j\ge1}x^{-2j}/(2j)=-\tfrac12\log(1-x^{-2})
+\le\tfrac12\log\tfrac43<0.15$ for even $\chi$ (both for $x\ge2$);
+and $r_0(x,\chi)=O_q(\log x)$ in either parity --- for even $\chi$
+the floor $O_q(\log x)$ is genuinely attained, by the $-\log x$ of
+Step 3. Combining Steps 1--5,
+\[
+\psi(x,\chi)=-\sum_{|\gamma|\le T'}\frac{x^\rho}{\rho}
++O_q\Bigl(\frac{x\log^2(xT)}{T}+\log x\Bigr).
+\]
+%<---NEW---
+
+% ============================================================================
+% Lemma lem:trunc restated under GRH(chi)+NCZ(chi).  Lines 620-631.
+% ============================================================================
+%% BLOCK 12 REPLACES:
+%OLD% \begin{lemma}[shifted truncated explicit formula]\label{lem:trunc}
+%OLD% Assume GRH$(\chi_4)$ and let $m\in(-\tfrac12,\infty)$ be fixed. For
+%OLD% $\psi_m(x):=\sum_{n\le x}\Lambda(n)\chi(n)n^m$ and all $x\ge2$,
+%OLD% $T\ge2$ (no inequality between $T$ and $x$ is assumed;
+%OLD% Lemma~\ref{lem:classical}),
+%OLD% \begin{equation}\label{eq:trunc}
+%OLD% \psi_m(x)\;=\;-\sum_{|\gamma|\le T}\frac{x^{\rho+m}}{\rho+m}
+%OLD% \;+\;O_m\!\Bigl(\frac{x^{m+1}\log^2(xT)}{T}+(1+x^m)\log x\Bigr).
+%OLD% \end{equation}
+%OLD% For $m\le0$ the floor $(1+x^m)\log x\le2\log x$ recovers the earlier
+%OLD% form of this lemma.
+%OLD% \end{lemma}
+%---NEW--->
+\begin{lemma}[shifted truncated explicit formula]\label{lem:trunc}
+Assume GRH$(\chi)$ and NCZ$(\chi)$, and let $m\in(-\tfrac12,\infty)$
+be fixed. For
+$\psi_m(x):=\sum_{n\le x}\Lambda(n)\chi(n)n^m$ and all $x\ge2$,
+$T\ge2$ (no inequality between $T$ and $x$ is assumed;
+Lemma~\ref{lem:classical}),
+\begin{equation}\label{eq:trunc}
+\psi_m(x)\;=\;-\sum_{|\gamma|\le T}\frac{x^{\rho+m}}{\rho+m}
+\;+\;O_{m,\chi}\!\Bigl(\frac{x^{m+1}\log^2(xT)}{T}+(1+x^m)\log x\Bigr).
+\end{equation}
+For $m\le0$ the floor $(1+x^m)\log x\le2\log x$ recovers the earlier
+form of this lemma.
+\end{lemma}
+%<---NEW---
+
+% ============================================================================
+% Proof of lem:trunc: the numeric bound gamma_1 > 6 (true for chi_4)
+% is replaced by gamma_1(chi) > 0, which is exactly GRH + NCZ; the
+% constants now depend on chi.  Lines 648-657.
+% ============================================================================
+%% BLOCK 13 REPLACES:
+%OLD% an identity (integrate $t^{\rho+m-1}$; note
+%OLD% $\mathrm{Re}(\rho+m)=m+\tfrac12>0$ for every $m>-\tfrac12$, and
+%OLD% $|\rho+m|\ge\gamma\ge\gamma_1>6$, so no denominator degenerates at any
+%OLD% $m$ in the range). The endpoint terms are \emph{summable}: since
+%OLD% $|\rho|\ge\gamma$ and $|\rho+m|\ge\gamma$,
+%OLD% \[
+%OLD% \sum_{|\gamma|\le T}\Bigl|\frac{m\,2^{\rho+m}}{\rho(\rho+m)}\Bigr|
+%OLD% \;\le\;|m|\,2^{m+1/2}\sum_{|\gamma|\le T}\frac{1}{\gamma^{2}}
+%OLD% \;\ll_m\;1,
+%OLD% \]
+%---NEW--->
+an identity (integrate $t^{\rho+m-1}$; note
+$\mathrm{Re}(\rho+m)=m+\tfrac12>0$ for every $m>-\tfrac12$, and
+$|\rho+m|\ge|\gamma|\ge\gamma_1(\chi)>0$ --- every ordinate is nonzero
+because under GRH a zero with $\gamma=0$ would sit at $s=\tfrac12$,
+excluded by NCZ$(\chi)$ --- so no denominator degenerates at any
+$m$ in the range; the constants below depend on $\chi$ through
+$\gamma_1(\chi)$ and $\sum_\gamma\gamma^{-2}$). The endpoint terms are
+\emph{summable}: since
+$|\rho|\ge|\gamma|$ and $|\rho+m|\ge|\gamma|$,
+\[
+\sum_{|\gamma|\le T}\Bigl|\frac{m\,2^{\rho+m}}{\rho(\rho+m)}\Bigr|
+\;\le\;|m|\,2^{m+1/2}\sum_{|\gamma|\le T}\frac{1}{\gamma^{2}}
+\;\ll_{m,\chi}\;1,
+\]
+%<---NEW---
+
+% ============================================================================
+% Lemma lem:squares statement: O_{q,m} error (the p | q prime-square
+% terms are O_{q,m}(1) constants, absorbed).  Lines 702-707.
+% ============================================================================
+%% BLOCK 14 REPLACES:
+%OLD% \begin{lemma}[prime-power separation]\label{lem:squares}
+%OLD% Fix $m\in(-\tfrac12,\infty)$. For $x\ge4$,
+%OLD% \[
+%OLD% -R_m(x)\;=\;\psi_m(x)\;-\;\sum_{p\le\sqrt x}p^{2m}\log p
+%OLD% \;+\;O_m\!\bigl(x^{m+1/3}\log x+\log^2x\bigr),
+%OLD% \]
+%---NEW--->
+\begin{lemma}[prime-power separation]\label{lem:squares}
+Fix $m\in(-\tfrac12,\infty)$. For $x\ge4$,
+\[
+-R_m(x)\;=\;\psi_m(x)\;-\;\sum_{p\le\sqrt x}p^{2m}\log p
+\;+\;O_{q,m}\!\bigl(x^{m+1/3}\log x+\log^2x\bigr),
+\]
+%<---NEW---
+
+% ============================================================================
+% Proof of lem:squares, k=2 part: sum over p coprime to q; the at most
+% omega(q) primes p | q each contribute p^{2m} log p <= (1+q^{2m}) log q
+% = O_{q,m}(1) -- constants, NOT growing in x.  Lines 722-726.
+% ============================================================================
+%% BLOCK 15 REPLACES:
+%OLD% $\psi_m$ splits over prime powers $p^k\le x$. The $k=1$ part is
+%OLD% $\sum_{p\le x}\chi(p)p^m\log p=-R_m(x)$. The $k=2$ part is
+%OLD% $\sum_{p^2\le x}\chi(p)^2p^{2m}\log p=\sum_{3\le p\le\sqrt x}p^{2m}\log p
+%OLD% =\sum_{p\le\sqrt x}p^{2m}\log p+O_m(1)$, since $\chi(p)^2=1$ for odd
+%OLD% $p$ and $\chi(2)=0$.
+%---NEW--->
+$\psi_m$ splits over prime powers $p^k\le x$. The $k=1$ part is
+$\sum_{p\le x}\chi(p)p^m\log p=-R_m(x)$. The $k=2$ part is
+\[
+\sum_{p^2\le x}\chi(p)^2p^{2m}\log p
+\;=\;\sum_{\substack{p\le\sqrt x\\ p\nmid q}}p^{2m}\log p
+\;=\;\sum_{p\le\sqrt x}p^{2m}\log p+O_{q,m}(1),
+\]
+since $\chi(p)^2=1$ for $p\nmid q$ and $\chi(p)=0$ for $p\mid q$: the
+subtracted terms are the at most $\omega(q)$ primes dividing $q$, each
+contributing $p^{2m}\log p\le(1+q^{2m})\log q$, a constant depending
+only on $q$ and $m$ (for $q=4$ this is the single term $p=2$, which is
+absent from both sides).
+%<---NEW---
+
+% ============================================================================
+% Proof of (i): conjugation symmetry for a general real chi.
+% Lines 824-827.
+% ============================================================================
+%% BLOCK 16 REPLACES:
+%OLD% Pairing $\rho$ and $\bar\rho$ in Lemma~\ref{lem:trunc} (the zeros of
+%OLD% $L(s,\chi_4)$ are symmetric under conjugation since $\chi_4$ is real)
+%OLD% and combining with Lemma~\ref{lem:squares}, for $u\ge2$ and any
+%OLD% $T\ge2$,
+%---NEW--->
+Pairing $\rho$ and $\bar\rho$ in Lemma~\ref{lem:trunc} (the zeros of
+$L(s,\chi)$ are symmetric under conjugation since $\chi$ is real)
+and combining with Lemma~\ref{lem:squares}, for $u\ge2$ and any
+$T\ge2$,
+%<---NEW---
+
+% ============================================================================
+% Proof of (i): Riemann-von Mangoldt with the conductor q.
+% Lines 863-868.
+% ============================================================================
+%% BLOCK 17 REPLACES:
+%OLD% The coefficient conditions: $|r_\gamma(m)|\le2(2m+1)/\gamma$, so
+%OLD% $\beta=1>\tfrac12$; and $\sum_{T<\gamma\le T+1}1\ll\log T$ is the
+%OLD% Riemann--von Mangoldt formula for $L(s,\chi_4)$,
+%OLD% $N(T,\chi_4)=\frac{T}{2\pi}\log\frac{2T}{\pi e}+O(\log T)$
+%OLD% (\cite[\S16]{Dav00}), which holds unconditionally. Hence
+%OLD% \cite[Cor.~1.3(a)]{ANS14} applies verbatim and $\nu_m$ exists. (The
+%---NEW--->
+The coefficient conditions: $|r_\gamma(m)|\le2(2m+1)/\gamma$, so
+$\beta=1>\tfrac12$; and $\sum_{T<\gamma\le T+1}1\ll_q\log T$ is the
+Riemann--von Mangoldt formula for $L(s,\chi)$,
+$N(T,\chi)=\frac{T}{2\pi}\log\frac{qT}{2\pi e}+O_q(\log T)$
+(\cite[\S16]{Dav00}), which holds unconditionally. Hence
+\cite[Cor.~1.3(a)]{ANS14} applies verbatim and $\nu_m$ exists. (The
+%<---NEW---
+
+% ============================================================================
+% Proof of (i): LI(chi_4) -> LI(chi).  Lines 876-878.
+% ============================================================================
+%% BLOCK 18 REPLACES:
+%OLD% Under LI$(\chi_4)$ the multiset $\{\gamma\}$ is linearly independent
+%OLD% over $\mathbb Q$, and \cite[Thm.~1.9]{ANS14} (proved in their \S5)
+%OLD% gives
+%---NEW--->
+Under LI$(\chi)$ the multiset $\{\gamma\}$ is linearly independent
+over $\mathbb Q$, and \cite[Thm.~1.9]{ANS14} (proved in their \S5)
+gives
+%<---NEW---
+
+% ============================================================================
+% Proof of (ii), fact (beta): zero-counting with the conductor q.
+% Lines 919-924.
+% ============================================================================
+%% BLOCK 19 REPLACES:
+%OLD% ($\beta$) $\sum_nc_n=\infty$: for every $\gamma\ge m+\tfrac12$ --- all
+%OLD% but finitely many ordinates --- one has
+%OLD% $(m+\tfrac12)^2\le\gamma^2$, hence
+%OLD% $a_\gamma(m)\ge(2m+1)/(\gamma\sqrt2)$, and
+%OLD% $\sum_{\gamma\le T}\gamma^{-1}\gg(\log T)^2$ by partial summation
+%OLD% against $N(T,\chi_4)\sim\frac{T}{2\pi}\log\frac{2T}{\pi e}$;
+%---NEW--->
+($\beta$) $\sum_nc_n=\infty$: for every $\gamma\ge m+\tfrac12$ --- all
+but finitely many ordinates --- one has
+$(m+\tfrac12)^2\le\gamma^2$, hence
+$a_\gamma(m)\ge(2m+1)/(\gamma\sqrt2)$, and
+$\sum_{\gamma\le T}\gamma^{-1}\gg_q(\log T)^2$ by partial summation
+against $N(T,\chi)\sim\frac{T}{2\pi}\log\frac{qT}{2\pi e}$;
+%<---NEW---
+
+% ============================================================================
+% Proof of (iii): C -> C(chi) in the variance and Chebyshev bounds.
+% Lines 1013-1022.
+% ============================================================================
+%% BLOCK 20 REPLACES:
+%OLD% \[
+%OLD% \sigma_m^2:=\mathrm{Var}(V_m)=\sum_{\gamma>0}2a_\gamma(m)^2
+%OLD% \;\le\;(2m+1)^2\sum_{\gamma>0}\frac{2}{\gamma^2}\;=\;C(2m+1)^2 ,
+%OLD% \]
+%OLD% since $a_\gamma(m)^2\le(2m+1)^2/\gamma^2$. Chebyshev's inequality
+%OLD% gives
+%OLD% \[
+%OLD% 1-\delta(m)=\mathbb P(V_m\le-1)\le\mathbb P(|V_m|\ge1)\le\sigma_m^2
+%OLD% \le C(2m+1)^2 .
+%OLD% \]
+%---NEW--->
+\[
+\sigma_m^2:=\mathrm{Var}(V_m)=\sum_{\gamma>0}2a_\gamma(m)^2
+\;\le\;(2m+1)^2\sum_{\gamma>0}\frac{2}{\gamma^2}\;=\;C(\chi)(2m+1)^2 ,
+\]
+since $a_\gamma(m)^2\le(2m+1)^2/\gamma^2$. Chebyshev's inequality
+gives
+\[
+1-\delta(m)=\mathbb P(V_m\le-1)\le\mathbb P(|V_m|\ge1)\le\sigma_m^2
+\le C(\chi)(2m+1)^2 .
+\]
+%<---NEW---
+
+% ============================================================================
+% Proof of (iii): C -> C(chi) in the definition of A.  Lines 1026-1027.
+% ============================================================================
+%% BLOCK 21 REPLACES:
+%OLD% For the exponential bound, set $A:=\sum_{\gamma>0}a_\gamma(m)^2
+%OLD% =\sigma_m^2/2\le\tfrac{C}{2}(2m+1)^2$ and let
+%---NEW--->
+For the exponential bound, set $A:=\sum_{\gamma>0}a_\gamma(m)^2
+=\sigma_m^2/2\le\tfrac{C(\chi)}{2}(2m+1)^2$ and let
+%<---NEW---
+
+% ============================================================================
+% Proof of (iii): C -> C(chi) in the Chernoff conclusion.
+% Lines 1049-1052.
+% ============================================================================
+%% BLOCK 22 REPLACES:
+%OLD% \[
+%OLD% 1-\delta(m)=\mathbb P(V_m\le-1)\;\le\;\exp\Bigl(-\frac1{4A}\Bigr)
+%OLD% \;\le\;\exp\Bigl(-\frac{1}{2C(2m+1)^2}\Bigr).
+%OLD% \]
+%---NEW--->
+\[
+1-\delta(m)=\mathbb P(V_m\le-1)\;\le\;\exp\Bigl(-\frac1{4A}\Bigr)
+\;\le\;\exp\Bigl(-\frac{1}{2C(\chi)(2m+1)^2}\Bigr).
+\]
+%<---NEW---
+
+% ============================================================================
+% Scope paragraph of the proof of (iii): thresholds as functions of
+% C(chi) with the chi_4 and chi_3 numerics; and the STALE SENTENCE FIX
+% (task (e)): the dissolution law IS proved in this paper
+% (Section sec:dissolution / Theorem thm:dissolution).  Lines 1059-1078.
+% ============================================================================
+%% BLOCK 23 REPLACES:
+%OLD% \emph{Scope.} Although valid on the whole range, the bounds carry
+%OLD% information only near the left endpoint, and we state this openly.
+%OLD% With $C=0.1560296\ldots$: the Chebyshev bound $C(2m+1)^2$ is below the
+%OLD% trivial estimate $\tfrac12$ of part (ii) only for
+%OLD% $m<\tfrac12\bigl((2C)^{-1/2}-1\bigr)=0.39506\ldots$ and is $\ge1$ for
+%OLD% $m\ge\tfrac12\bigl(C^{-1/2}-1\bigr)=0.76580\ldots$; the exponential
+%OLD% bound is below $\tfrac12$ only for
+%OLD% $m<m_0=\tfrac12\bigl((2C\log2)^{-1/2}-1\bigr)=0.57507\ldots$. For
+%OLD% $m\ge m_0$, part (iii) asserts nothing beyond part (ii). This
+%OLD% limitation is consistent with the expected truth: the computed
+%OLD% densities approach $\tfrac12$ from above (Table~\ref{tab:delta}), so an
+%OLD% upper bound on $1-\delta(m)$ tending to $0$ for large $m$ would
+%OLD% contradict the numerics, and none should be sought. The conjectured
+%OLD% large-$m$ statement,
+%OLD% $\delta(m)-\tfrac12\sim(2\pi\,\mathrm{Var}_4(m))^{-1/2}$ with
+%OLD% $\mathrm{Var}_4(m)$ as in Results item 3 (asymptotically equal to
+%OLD% $\sigma_m^2=\mathrm{Var}(V_m)$ above), is the
+%OLD% dissolution law of the Results section; its proof is the subject of
+%OLD% Theorem~\ref{thm:dissolution} of the companion draft and is \emph{not}
+%OLD% proved in this paper.
+%---NEW--->
+\emph{Scope.} Although valid on the whole range, the bounds carry
+information only near the left endpoint, and we state this openly.
+The Chebyshev bound $C(\chi)(2m+1)^2$ is below the
+trivial estimate $\tfrac12$ of part (ii) only for
+$m<\tfrac12\bigl((2C(\chi))^{-1/2}-1\bigr)$ and is $\ge1$ for
+$m\ge\tfrac12\bigl(C(\chi)^{-1/2}-1\bigr)$; the exponential
+bound is below $\tfrac12$ only for
+$m<m_0(\chi)=\tfrac12\bigl((2C(\chi)\log2)^{-1/2}-1\bigr)$. At the two
+computed moduli: for $\chi_4$ ($C=0.1560296\ldots$) these thresholds
+are $0.395058\ldots$, $0.76580\ldots$ and $m_0(\chi_4)=0.57507\ldots$;
+for $\chi_3$ ($C=0.1134021\ldots$) they are $0.549891\ldots$,
+$0.984770\ldots$ and $m_0(\chi_3)=0.761048\ldots$ For
+$m\ge m_0(\chi)$, part (iii) asserts nothing beyond part (ii). This
+limitation is consistent with the expected truth: the computed
+densities approach $\tfrac12$ from above (Table~\ref{tab:delta}), so an
+upper bound on $1-\delta(m)$ tending to $0$ for large $m$ would
+contradict the numerics, and none should be sought. The large-$m$
+statement,
+$\delta_q(m)-\tfrac12\sim(2\pi\,\mathrm{Var}_q(m))^{-1/2}$ with
+$\mathrm{Var}_q(m)$ as in Results item 3 (asymptotically equal to
+$\sigma_m^2=\mathrm{Var}(V_m)$ above), is the
+dissolution law of the Results section; it is not proved by this
+theorem, but it \emph{is} proved in this paper:
+Theorem~\ref{thm:dissolution} of Section~\ref{sec:dissolution}
+establishes it, with rate and a second-order term, for the limiting
+variable of every real primitive $\chi$ under GRH$(\chi)$ and
+NCZ$(\chi)$, and, under LI$(\chi)$, part (ii) of the present theorem
+transfers it to the logarithmic density of the race itself
+(Corollary~\ref{cor:dissolution-race} records the case $q=4$).
+%<---NEW---
+
+% ============================================================================
+% Remark on constants: C -> C(chi).  Lines 1080-1084.
+% ============================================================================
+%% BLOCK 24 REPLACES:
+%OLD% \emph{Remark on constants.} Plain Hoeffding (range form:
+%OLD% $\mathbb P(S\le-t)\le\exp(-2t^2/\sum_i(\text{range}_i)^2)$ with
+%OLD% $\mathrm{range}_\gamma=4a_\gamma$) gives
+%OLD% $\exp(-1/(8A))\le\exp\bigl(-1/(4C(2m+1)^2)\bigr)$, valid for all $m$ as
+%OLD% well; the arcsine moment-generating function is exactly $I_0$, and
+%---NEW--->
+\emph{Remark on constants.} Plain Hoeffding (range form:
+$\mathbb P(S\le-t)\le\exp(-2t^2/\sum_i(\text{range}_i)^2)$ with
+$\mathrm{range}_\gamma=4a_\gamma$) gives
+$\exp(-1/(8A))\le\exp\bigl(-1/(4C(\chi)(2m+1)^2)\bigr)$, valid for all
+$m$ as
+well; the arcsine moment-generating function is exactly $I_0$, and
+%<---NEW---
+
+% ============================================================================
+% Numerical-consistency paragraph: scope it to chi = chi_4 (its numbers
+% are the mod-4 ones).  Lines 1089-1092.
+% ============================================================================
+%% BLOCK 25 REPLACES:
+%OLD% \emph{Numerical consistency} (deterministic Gil--Pelaez inversion, 511
+%OLD% ordinates plus Gaussianized tail; computational, not part of the
+%OLD% proof): at $m=0$, $1-\delta=4.073\times10^{-3}$ against the bounds
+%OLD% $\min(0.156,\,e^{-1/(2C)}=0.0406)$; at $m=-0.1$,
+%---NEW--->
+\emph{Numerical consistency} ($\chi=\chi_4$; deterministic
+Gil--Pelaez inversion, $511$
+ordinates plus Gaussianized tail; computational, not part of the
+proof): at $m=0$, $1-\delta=4.073\times10^{-3}$ against the bounds
+$\min(0.156,\,e^{-1/(2C(\chi_4))}=0.0406)$; at $m=-0.1$,
+%<---NEW---
+
+% ============================================================================
+% Proposition prop:unlogged restated for general chi.  Lines 1127-1138.
+% ============================================================================
+%% BLOCK 26 REPLACES:
+%OLD% \begin{proposition}[transfer to the unlogged races]\label{prop:unlogged}
+%OLD% Assume GRH$(\chi_4)$ and fix $m\in(-\tfrac12,\infty)$. Let
+%OLD% $D_m(x)=\sum_{p\le x,\,p\equiv3(4)}p^m-\sum_{p\le x,\,p\equiv1(4)}p^m$
+%OLD% and
+%OLD% \[
+%OLD% E_m'(x)\;=\;(2m+1)\,x^{-(m+1/2)}(\log x)\,D_m(x).
+%OLD% \]
+%OLD% Then $u\mapsto E_m'(e^u)$ has the \emph{same} limiting distribution
+%OLD% $\nu_m$ as $E_m(e^u)$; consequently, under LI$(\chi_4)$, all of
+%OLD% (ii)--(iii) hold verbatim for the unlogged race, with the same
+%OLD% $\delta(m)$.
+%OLD% \end{proposition}
+%---NEW--->
+\begin{proposition}[transfer to the unlogged races]\label{prop:unlogged}
+Assume GRH$(\chi)$ and NCZ$(\chi)$, and fix $m\in(-\tfrac12,\infty)$.
+Let
+$D_m(x)=-\sum_{p\le x}\chi(p)p^m$ (for $\chi=\chi_4$ this is
+$\sum_{p\le x,\,p\equiv3(4)}p^m-\sum_{p\le x,\,p\equiv1(4)}p^m$)
+and
+\[
+E_m'(x)\;=\;(2m+1)\,x^{-(m+1/2)}(\log x)\,D_m(x).
+\]
+Then $u\mapsto E_m'(e^u)$ has the \emph{same} limiting distribution
+$\nu_m$ as $E_m(e^u)$; consequently, under LI$(\chi)$, all of
+(ii)--(iii) hold verbatim for the unlogged race, with the same
+$\delta_\chi(m)$.
+\end{proposition}
+%<---NEW---
+
+% ============================================================================
+% Proof of prop:unlogged: |s| ~ |gamma| uses gamma_1(chi) > 0 (from
+% NCZ), with chi-dependent constants.  Lines 1158-1159.
+% ============================================================================
+%% BLOCK 27 REPLACES:
+%OLD% Write $s=\rho+m=m+\tfrac12+i\gamma$, so $|s|\asymp\gamma$ and
+%OLD% $\mathrm{Re}\,s=m+\tfrac12>0$.
+%---NEW--->
+Write $s=\rho+m=m+\tfrac12+i\gamma$, so
+$|s|\asymp_{m,\chi}|\gamma|$ (here the lower bound
+$|\gamma|\ge\gamma_1(\chi)>0$ supplied by NCZ enters) and
+$\mathrm{Re}\,s=m+\tfrac12>0$.
+%<---NEW---
+
+% ============================================================================
+% Closing remark of the section: C -> C(chi); the m=0 numerical
+% comparison is the chi_4 one.  Lines 1246-1256.
+% ============================================================================
+%% BLOCK 28 REPLACES:
+%OLD% $\lim_Y\frac1Y\int_0^YE_m(e^u)^2\,du=1+\tfrac12\sum_\gamma|r_\gamma|^2
+%OLD% =1+\sum_\gamma2a_\gamma(m)^2\le 1+C(2m+1)^2$, so the spread about the
+%OLD% unit bias collapses quadratically in $(2m+1)$ under GRH alone. We do
+%OLD% not pursue LI-free density statements (for which see \cite{Hay25},
+%OLD% and \cite{Dev20} for the possible-atom phenomenology), because
+%OLD% without LI $\nu_m$ could in principle carry an atom at $0$ and the
+%OLD% density interpretation requires care. (2) The bounds of (iii) hold with
+%OLD% $\sigma_m^2=\sum_\gamma 2a_\gamma(m)^2$ in place of $C(2m+1)^2$
+%OLD% throughout, which is numerically slightly sharper (at $m=0$:
+%OLD% $0.15557$ vs $0.15603$); we state the $C(2m+1)^2$ form because the
+%OLD% $m$-dependence is transparent.
+%---NEW--->
+$\lim_Y\frac1Y\int_0^YE_m(e^u)^2\,du=1+\tfrac12\sum_\gamma|r_\gamma|^2
+=1+\sum_\gamma2a_\gamma(m)^2\le 1+C(\chi)(2m+1)^2$, so the spread
+about the
+unit bias collapses quadratically in $(2m+1)$ under GRH alone. We do
+not pursue LI-free density statements (for which see \cite{Hay25},
+and \cite{Dev20} for the possible-atom phenomenology), because
+without LI $\nu_m$ could in principle carry an atom at $0$ and the
+density interpretation requires care. (2) The bounds of (iii) hold with
+$\sigma_m^2=\sum_\gamma 2a_\gamma(m)^2$ in place of $C(\chi)(2m+1)^2$
+throughout, which is numerically slightly sharper (for $\chi_4$ at
+$m=0$:
+$0.15557$ vs $0.15603$); we state the $C(\chi)(2m+1)^2$ form because
+the
+$m$-dependence is transparent.
+%<---NEW---
+
+% ============================================================================
+% Monotonicity subsection: the Chernoff bound is no longer 'stated for
+% chi_4' -- the theorem is general; point to the mod-3 corollary.
+% Lines 1293-1296.
+% ============================================================================
+%% BLOCK 29 REPLACES:
+%OLD% control we have is the Chernoff bound of Theorem~\ref{thm:interp}(iii)
+%OLD% (stated for $\chi_4$; the same argument applies verbatim mod $3$), a
+%OLD% monotone upper envelope for $1-\delta$ which is consistent with ---
+%OLD% but does not imply --- monotonicity of $\delta$ itself.
+%---NEW--->
+control we have is the Chernoff bound of Theorem~\ref{thm:interp}(iii)
+(applied with $\chi=\chi_4$, resp.\ $\chi_3$; cf.\
+Corollary~\ref{cor:mod3rate}), a
+monotone upper envelope for $1-\delta$ which is consistent with ---
+but does not imply --- monotonicity of $\delta$ itself.
+%<---NEW---
+
+% ============================================================================
+% Section 3 opening: the constant of thm:interp is now C(chi); this
+% section evaluates the q=4 instance.  Lines 1337-1338.
+% ============================================================================
+%% BLOCK 30 REPLACES:
+%OLD% consequences: the constant $C$ of Theorem~\ref{thm:interp} acquires a
+%OLD% closed form (Corollary~\ref{cor:Cexact});
+%---NEW--->
+consequences: the constant $C=C(\chi_4)$ of Theorem~\ref{thm:interp}
+(this section computes at the modulus $4$; the general identity is
+\eqref{eq:varidq}) acquires a
+closed form (Corollary~\ref{cor:Cexact});
+%<---NEW---
+
+% ============================================================================
+% Section 4 preamble: thm:interp(ii) now identifies delta_q(m) with the
+% race density for every real primitive chi, not only q=4.
+% Lines 1731-1738.
+% ============================================================================
+%% BLOCK 31 REPLACES:
+%OLD% For $q=4$, Theorem~\ref{thm:interp}(ii) identifies $\delta_4(m)$, under
+%OLD% LI$(\chi_4)$, with the logarithmic density $\delta(m)$ of the set where
+%OLD% the weighted race $R_m$ is positive; for other moduli $\delta_q(m)$ is,
+%OLD% in this paper, a statement about the limiting random variable only (see
+%OLD% the Scope remark at the end of the section). Note that the theorem
+%OLD% below does \emph{not} assume LI: independence of the phases is built
+%OLD% into the definition of $X_{m,\chi}$, and LI is what transfers the
+%OLD% conclusion to the race.
+%---NEW--->
+For every real primitive $\chi$ under the standing hypotheses,
+Theorem~\ref{thm:interp}(ii) identifies $\delta_q(m)$, under
+LI$(\chi)$, with the logarithmic density $\delta_\chi(m)$ of the set
+where
+the weighted race $R_{m,\chi}$ is positive ($q=4$ and $q=3$ are the
+computed cases). Note that the theorem
+below does \emph{not} assume LI: independence of the phases is built
+into the definition of $X_{m,\chi}$, and LI is what transfers the
+conclusion to the race.
+%<---NEW---
+
+% ============================================================================
+% Scope remark item (1) of the dissolution section: the race
+% interpretation now follows for every real primitive chi from the
+% generalized thm:interp(ii).  Lines 2359-2368.
+% ============================================================================
+%% BLOCK 32 REPLACES:
+%OLD% (1) \emph{Race interpretation.} For $q=4$,
+%OLD% Corollary~\ref{cor:dissolution-race} makes the dissolution law a
+%OLD% statement about the weighted prime race itself. For $q=3$ the proof
+%OLD% of Theorem~\ref{thm:interp} goes through verbatim (nothing in
+%OLD% Lemmas~\ref{lem:trunc}--\ref{lem:squares} or the
+%OLD% \cite{ANS14} verification is specific to the modulus $4$ beyond
+%OLD% $\chi$ being real, primitive and nonprincipal), but we have not
+%OLD% restated it, so for $q=3$ --- and for every other real primitive
+%OLD% character --- Theorem~\ref{thm:dissolution} is, in this paper, a
+%OLD% theorem about the limiting random variable $X_{m,\chi}$ only. (2)
+%---NEW--->
+(1) \emph{Race interpretation.} Theorem~\ref{thm:interp} is stated
+and proved for every real primitive $\chi$ (under GRH$(\chi)$ and
+$L(\tfrac12,\chi)\ne0$), so under the additional hypothesis LI$(\chi)$
+its part (ii) transfers Theorem~\ref{thm:dissolution} to the weighted
+prime race itself for \emph{any} such $\chi$;
+Corollary~\ref{cor:dissolution-race} records the case $q=4$, and the
+mod-$3$ densities of Table~\ref{tab:delta} instantiate $q=3$. Without
+LI$(\chi)$, Theorem~\ref{thm:dissolution} is, as before, a
+theorem about the limiting random variable $X_{m,\chi}$ only. (2)
+%<---NEW---
+
+% ============================================================================
+% Methods, 'General real primitive modulus': no longer a record of an
+% unproved general form -- the theorem is now stated and proved
+% generally in Section 2; keep the what-changes summary.
+% Lines 2615-2629.
+% ============================================================================
+%% BLOCK 33 REPLACES:
+%OLD% \emph{General real primitive modulus.} For use beyond $q\in\{3,4\}$ we
+%OLD% record the general form of Theorem~\ref{thm:interp} and of the variance
+%OLD% identity. Let $\chi$ be a real primitive character mod $q$ with
+%OLD% $\chi(-1)=(-1)^a$, $a\in\{0,1\}$, and assume GRH$(\chi)$, LI$(\chi)$,
+%OLD% and the no-central-zero hypothesis
+%OLD% \[
+%OLD% \mathrm{NCZ}(\chi):\qquad L(\tfrac12,\chi)\neq0 .
+%OLD% \]
+%OLD% Define $R_m(x)=-\sum_{p\le x}\chi(p)p^m\log p$ (nonresidues minus
+%OLD% residues), $E_m=(2m+1)x^{-(m+1/2)}R_m$, and
+%OLD% $a_\gamma(m)=2M/\sqrt{M^2+\gamma^2}$ over the positive ordinates of
+%OLD% $L(s,\chi)$. Then parts (i)--(iii) of Theorem~\ref{thm:interp} hold
+%OLD% verbatim with $C(\chi)=\sum_{\gamma_\chi>0}2\gamma_\chi^{-2}$, and the
+%OLD% variance identity becomes, with
+%OLD% $\xi(s,\chi)=(q/\pi)^{(s+a)/2}\Gamma\bigl(\tfrac{s+a}2\bigr)L(s,\chi)$,
+%---NEW--->
+\emph{General real primitive modulus.} Theorem~\ref{thm:interp} is
+stated and proved in Section~\ref{sec:theorem} for an arbitrary real
+primitive character $\chi$ mod $q$ with
+$\chi(-1)=(-1)^a$, $a\in\{0,1\}$, under GRH$(\chi)$, LI$(\chi)$,
+and the no-central-zero hypothesis
+\[
+\mathrm{NCZ}(\chi):\qquad L(\tfrac12,\chi)\neq0
+\]
+(there $R_m(x)=-\sum_{p\le x}\chi(p)p^m\log p$, nonresidues minus
+residues; $E_m=(2m+1)x^{-(m+1/2)}R_m$;
+$a_\gamma(m)=2M/\sqrt{M^2+\gamma^2}$ over the positive ordinates of
+$L(s,\chi)$; and parts (i)--(iii) hold with
+$C(\chi)=\sum_{\gamma_\chi>0}2\gamma_\chi^{-2}$). Here we record what
+the generalization changes relative to the mod-$4$ case, and the
+general form of the variance identity: with
+$\xi(s,\chi)=(q/\pi)^{(s+a)/2}\Gamma\bigl(\tfrac{s+a}2\bigr)L(s,\chi)$,
+%<---NEW---
+
+% ============================================================================
+% Methods, same paragraph: the p | q prime-square terms are O_{q,m}(1)
+% constants, not O_m(x^m log x) (the latter is false for m < 0, where
+% x^m log x -> 0 while the terms are fixed positive constants).
+% Lines 2635-2641.
+% ============================================================================
+%% BLOCK 34 REPLACES:
+%OLD% What changes and what does not. \emph{Unchanged:} the prime-square bias
+%OLD% term --- the $k=2$ prime powers contribute
+%OLD% $\sum_{p\le\sqrt x,\,p\nmid q}p^{2m}\log p=x^{m+1/2}/(2m+1)+o(x^{m+1/2})$
+%OLD% because $\chi(p)^2=1$ for every $p\nmid q$ and the finitely many $p\mid q$
+%OLD% contribute $O_m(x^{m}\log x)$, so the normalized mean is $1$ for every
+%OLD% real $\chi$; the Chernoff/Chebyshev bounds of (iii), which use only the
+%OLD% arcsine moment generating function. \emph{Changed:} the gamma factor
+%---NEW--->
+What changes and what does not. \emph{Unchanged:} the prime-square bias
+term --- the $k=2$ prime powers contribute
+$\sum_{p\le\sqrt x,\,p\nmid q}p^{2m}\log p=x^{m+1/2}/(2m+1)+o(x^{m+1/2})$
+because $\chi(p)^2=1$ for every $p\nmid q$, and the at most $\omega(q)$
+primes $p\mid q$
+contribute $O_{q,m}(1)$ in total (each term is
+$p^{2m}\log p\le(1+q^{2m})\log q$, a constant; see the proof of
+Lemma~\ref{lem:squares}), so the normalized mean is $1$ for every
+real $\chi$; the Chernoff/Chebyshev bounds of (iii), which use only the
+arcsine moment generating function. \emph{Changed:} the gamma factor
+%<---NEW---
+
+% ============================================================================
+% Assumptions and limitations: the race transfer of the dissolution law
+% holds for every real primitive chi via thm:interp(ii).
+% Lines 2730-2735.
+% ============================================================================
+%% BLOCK 35 REPLACES:
+%OLD% $2\max K+1$ in the continuity argument). The dissolution law,
+%OLD% stated in the introduction as a Gaussian-comparison prediction, is
+%OLD% proved with an error term in
+%OLD% Theorem~\ref{thm:dissolution} (for the density of the limiting
+%OLD% variable; the transfer to the race itself uses LI and is stated for
+%OLD% $q=4$). The finite-$x$ log-measure for $(q,m)=(3,2)$ shows the
+%---NEW--->
+$2\max K+1$ in the continuity argument). The dissolution law,
+stated in the introduction as a Gaussian-comparison prediction, is
+proved with an error term in
+Theorem~\ref{thm:dissolution} (for the density of the limiting
+variable; the transfer to the race itself uses LI$(\chi)$ and holds
+for every real primitive $\chi$ via Theorem~\ref{thm:interp}(ii),
+Corollary~\ref{cor:dissolution-race} recording the case $q=4$). The
+finite-$x$ log-measure for $(q,m)=(3,2)$ shows the
+%<---NEW---
+
+% ============================================================================
+% REFEREE ADDENDUM.  Proof of lem:trunc, opening sentence: the claim
+% "psi(t,chi)=0 for t<3" is chi_4-specific (chi_4(2)=0) and FALSE for
+% any chi with 2 nmid q -- e.g. psi(2,chi_3) = chi_3(2) log 2 =
+% -log 2 != 0, and chi_3 is now a headline case of the theorem.  The
+% displayed identity itself remains exact for every chi (psi(t,chi)=0
+% for t<2, and the Stieltjes lower limit 2^- captures the jump at
+% t=2), so only the justification is corrected.  Line 635.
+% ============================================================================
+%% BLOCK 36 REPLACES:
+%OLD% Since $\psi(t,\chi)=0$ for $t<3$, Riemann--Stieltjes partial summation
+%OLD% gives exactly
+%---NEW--->
+Since $\psi(t,\chi)=0$ for $t<2$ (when $2\nmid q$ the term $n=2$ is
+present, and the Stieltjes lower limit $2^-$ captures its jump),
+Riemann--Stieltjes partial summation
+gives exactly
+%<---NEW---
+
+% ============================================================================
+% REFEREE ADDENDUM.  Step 2 of the proof of lem:classical: "absolute
+% $A_1$" contradicts Block 7 ("all implied constants depend at most on
+% $q$") -- $A_1$ comes from (F3), which is now $\ll_q$.
+% Lines 556-557.
+% ============================================================================
+%% BLOCK 37 REPLACES:
+%OLD% $G=\{\gamma:\,T-1<\gamma<T+2\}$; by (F3), $\#G\le A_1\log(T+2)$ for an
+%OLD% absolute $A_1$. With $r=1/(4A_1\log(T+2))$ the union of the intervals
+%---NEW--->
+$G=\{\gamma:\,T-1<\gamma<T+2\}$; by (F3), $\#G\le A_1\log(T+2)$ for
+some $A_1=A_1(q)$. With $r=1/(4A_1\log(T+2))$ the union of the
+intervals
+%<---NEW---
+
+% ============================================================================
+% REFEREE ADDENDUM.  Abstract, item (iii): the LI transfer of the
+% dissolution law is no longer confined to the mod-4 race -- under
+% LI(chi), Theorem thm:interp(ii) (now general) transfers it for every
+% real primitive chi (as the body's Blocks 23/32/35 state).  Lines
+% 56-58.
+% ============================================================================
+%% BLOCK 38 REPLACES:
+%OLD% character under GRH and $L(\tfrac12,\chi)\neq0$ --- under LI it applies
+%OLD% to the logarithmic density of the mod-$4$ race itself --- and verified
+%---NEW--->
+character under GRH and $L(\tfrac12,\chi)\neq0$ --- under LI$(\chi)$
+it applies
+to the logarithmic density of the race itself for every such $\chi$
+--- and verified
+%<---NEW---
+
+% ============================================================================
+% REFEREE ADDENDUM.  Results item 3: same stale mod-4-only transfer
+% statement; the general transfer is Theorem thm:interp(ii), with
+% cor:dissolution-race recording q=4.  Lines 244-247.
+% ============================================================================
+%% BLOCK 39 REPLACES:
+%OLD% limiting variable of any real primitive character under GRH and
+%OLD% $L(\tfrac12,\chi)\ne0$, and under LI$(\chi_4)$ for the logarithmic
+%OLD% density of the mod-$4$ race itself
+%OLD% (Corollary~\ref{cor:dissolution-race}).
+%---NEW--->
+limiting variable of any real primitive character under GRH and
+$L(\tfrac12,\chi)\ne0$, and under LI$(\chi)$ for the logarithmic
+density of the race itself, by Theorem~\ref{thm:interp}(ii)
+(Corollary~\ref{cor:dissolution-race} records the case $q=4$).
+%<---NEW---
+

@@ -35,3 +35,14 @@ npm-debug.*
 yarn-debug.*
 yarn-error.*
 *.log
+__pycache__/
+algorithms/prime-sum/fenwick
+algorithms/prime-sum/lucy
+algorithms/prime-sum/sieve
+algorithms/prime-sum/original
+algorithms/prime-sum/prototype/explore/race_scan
+algorithms/prime-sum/fenwick
+algorithms/prime-sum/lucy
+algorithms/prime-sum/sieve
+algorithms/prime-sum/original
+algorithms/prime-sum/prototype/explore/race_critical_scan
