@@ -251,16 +251,42 @@ footer p{font-family:var(--mono); font-size:12.5px; color:var(--ink-3); line-hei
         <p>Real ball arithmetic (FLINT/Arb): the key constant proved to 30
           decimal places, all 14 variances proved, both central values proved
           positive, all 1,048 zero locations certified, and the zero lists proved
-          <em>complete</em> up to explicit heights by contour counting.</p></div>
+          <em>complete</em> — every one of the 511 and 537 zeros, by
+          winding-number contour counts. The final integration step is now
+          certified too, so the density intervals are proved enclosures rather
+          than estimates.</p></div>
     </div>
     <p class="why"><b>Why it matters:</b> this is the difference between "our
       program printed this" and "this is true, and here is the interval it lives
-      in." Only the final integration step remains ordinary floating point, and
-      the paper states that plainly.</p>
+      in." The one soft spot an earlier reviewer identified — that our quadrature
+      error was estimated rather than proved — is now closed. What remains
+      conditional is stated once and only once: the two standard hypotheses, and
+      the machine certificates themselves.</p>
   </div>
 </section>
 
 <section>
+  <div class="find">
+    <div class="find-top"><h3>What five hostile audits found</h3><span class="chip proved">Verified</span></div>
+    <div class="ba">
+      <div><span class="lab">The process</span>
+        <p>A second AI system was set loose on the paper independently. Five
+          separate audits then went after its output — and ours — with authority
+          to reject anything. Each re-derived the mathematics from scratch rather
+          than trusting a claim.</p></div>
+      <div><span class="lab new">The result</span>
+        <p>Fourteen improvements adopted, nine changes refused. Three genuine
+          gaps in our own proofs were repaired. Our numerics were beaten and
+          replaced by tighter certified ones.</p></div>
+    </div>
+    <p class="why"><b>The uncomfortable part, which is the point:</b> two of the
+      findings were errors in <em>our</em> work. A test in our own code had been
+      silently skipping and its stated tolerance was wrong — the true figure is
+      4.23×10⁻⁶, not the 3.3×10⁻⁶ we printed. And one published value sat
+      <em>outside</em> our own certified interval. Both are fixed. A verification
+      process that only ever confirms you is not a verification process.</p>
+  </div>
+
   <div class="col">
     <div class="hd"><div class="hn">03</div><h2>The theorems</h2></div>
     <div class="bd">
@@ -426,6 +452,12 @@ footer p{font-family:var(--mono); font-size:12.5px; color:var(--ink-3); line-hei
           much weaker hypotheses. How much of ours survives is a real question.</p>
       </div>
     </div>
+    <p class="why"><b>One loose thread worth knowing about:</b> the audits also
+      turned up what looks like a factor-of-two slip in a well-known 2013 paper
+      by other authors — checked two independent ways, including against that
+      paper's own published table. That belongs in a courteous email to its
+      authors, not in a footnote of ours, and it is deliberately not in the
+      manuscript.</p>
     <p class="why"><b>And one direction that could be its own paper:</b> if the
       weight grows <em>as</em> you extend the range, the heavy weighting
       concentrates the race into a shrinking window near the top. A weighted race
