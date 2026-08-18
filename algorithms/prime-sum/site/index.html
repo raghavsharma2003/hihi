@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weighted Prime Races</title>
+<meta name="description" content="A 170-year-old bias in the prime numbers dissolves when bigger primes count for more. Papers, proofs, code, and interactive explainers.">
+<meta property="og:title" content="Weighted Prime Races">
+<meta property="og:description" content="A 170-year-old bias in the prime numbers dissolves when bigger primes count for more.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Roboto+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --paper:#f5f5f7; --card:#ffffff; --rule:#e0e0e6; --rule-2:#c9c9d3;
+  --ink:#16161c; --ink-2:#4e4e5a; --ink-3:#7c7c8a;
+  --done:#1668c4; --open:#b5600f; --accent:#a3327d;
+  --accent-w:rgba(163,50,125,.09);
+  --lift:0 1px 2px rgba(22,22,28,.05), 0 12px 28px -18px rgba(22,22,28,.28);
+  --disp:Archivo,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --text:Newsreader,Georgia,"Times New Roman",serif;
+  --mono:"Roboto Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#131318; --card:#1b1b22; --rule:#2b2b35; --rule-2:#3d3d4a;
+    --ink:#eeeef4; --ink-2:#a8a8b6; --ink-3:#7a7a88;
+    --done:#4d93e2; --open:#b8782a; --accent:#c964aa;
+    --accent-w:rgba(201,100,170,.13);
+    --lift:0 1px 2px rgba(0,0,0,.5), 0 12px 28px -18px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#131318; --card:#1b1b22; --rule:#2b2b35; --rule-2:#3d3d4a;
+  --ink:#eeeef4; --ink-2:#a8a8b6; --ink-3:#7a7a88;
+  --done:#4d93e2; --open:#b8782a; --accent:#c964aa;
+  --accent-w:rgba(201,100,170,.13);
+  --lift:0 1px 2px rgba(0,0,0,.5), 0 12px 28px -18px rgba(0,0,0,.8);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--text);font-size:18px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1140px;margin:0 auto;padding:0 22px}
+.col{max-width:650px;margin:0 auto}
+
+.sitenav{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:baseline;justify-content:space-between;
+  max-width:1140px;margin:0 auto;padding:16px 22px;border-bottom:1px solid var(--rule);
+  font-family:var(--mono);font-size:12.5px}
+.sitenav .brand{font-weight:600;color:var(--ink);text-decoration:none;letter-spacing:-.01em}
+.sitenav .links{display:flex;flex-wrap:wrap;gap:8px 18px}
+.sitenav a{color:var(--ink-3);text-decoration:none}
+.sitenav a:hover{color:var(--ink)}
+.sitenav a[aria-current]{color:var(--ink);font-weight:600}
+
+header.hero{padding:76px 0 46px}
+.kick{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+h1{font-family:var(--disp);font-weight:700;font-size:clamp(40px,7.4vw,72px);line-height:.98;
+  letter-spacing:-.03em;margin:16px 0 0;text-wrap:balance}
+.deck{font-size:21px;line-height:1.5;color:var(--ink-2);margin:20px 0 0;text-wrap:pretty}
+.figures{display:flex;flex-wrap:wrap;gap:12px 34px;margin-top:30px;
+  font-family:var(--mono);font-variant-numeric:tabular-nums}
+.fig .v{font-size:26px;font-weight:500;letter-spacing:-.01em;line-height:1}
+.fig .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-top:6px}
+.fig:nth-child(1) .v{color:var(--done)} .fig:nth-child(2) .v{color:var(--accent)}
+.fig:nth-child(3) .v{color:var(--open)}
+
+section{padding:52px 0 0}
+h2{font-family:var(--disp);font-weight:600;font-size:clamp(24px,3.4vw,30px);line-height:1.14;
+  letter-spacing:-.018em;margin:0;text-wrap:balance}
+.sub{color:var(--ink-2);margin:12px 0 0}
+p{margin:14px 0 0;text-wrap:pretty}
+
+.path{display:grid;gap:14px;margin-top:26px}
+.step{display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:center;
+  background:var(--card);border:1px solid var(--rule);border-radius:3px;box-shadow:var(--lift);
+  padding:20px 22px;text-decoration:none;color:inherit}
+@media(max-width:640px){.step{grid-template-columns:auto 1fr;gap:14px}.step .go{display:none}}
+.step:hover{border-color:var(--accent)}
+.step .no{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:500}
+.step h3{font-family:var(--disp);font-size:19.5px;font-weight:600;margin:0 0 4px;letter-spacing:-.01em}
+.step p{margin:0;font-size:16px;line-height:1.45;color:var(--ink-2)}
+.step .go{font-family:var(--mono);font-size:18px;color:var(--ink-3)}
+.step .mins{font-family:var(--mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink-3);display:block;margin-top:7px}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin-top:24px}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:3px;padding:19px 20px;box-shadow:var(--lift)}
+.card h4{font-family:var(--disp);font-size:16.5px;font-weight:600;margin:0 0 7px;letter-spacing:-.008em}
+.card p{margin:0;font-size:15.5px;line-height:1.5;color:var(--ink-2)}
+.card a{color:var(--done);font-family:var(--mono);font-size:13px;text-decoration:none;display:inline-block;margin-top:11px}
+.card a:hover{text-decoration:underline}
+
+figure{margin:26px 0 0;background:var(--card);border:1px solid var(--rule);border-radius:3px;
+  padding:14px;box-shadow:var(--lift)}
+figure img{display:block;width:100%;height:auto;border-radius:2px}
+figcaption{font-family:var(--mono);font-size:12px;color:var(--ink-3);margin-top:12px;line-height:1.55}
+
+.note{max-width:650px;margin:26px auto 0;padding:17px 20px;background:var(--card);
+  border:1px solid var(--rule);border-left:3px solid var(--accent);font-size:16.5px;line-height:1.55}
+.note .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent);display:block;margin-bottom:7px}
+a{color:var(--done)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+footer{margin-top:62px;border-top:1px solid var(--rule);padding:28px 0 76px}
+footer p{font-family:var(--mono);font-size:12.5px;color:var(--ink-3);line-height:1.75;margin:0}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<nav class="sitenav">
+  <a class="brand" href="/">Weighted Prime Races</a>
+  <div class="links">
+    <a href="/by-hand">By hand</a>
+    <a href="/dial">The dial</a>
+    <a href="/findings">Findings</a>
+    <a href="https://doi.org/10.5281/zenodo.21947101" rel="noopener">Paper</a>
+    <a href="https://github.com/raghavs1729/weighted-prime-races" rel="noopener">Code</a>
+  </div>
+</nav>
+
+<div class="wrap">
+<header class="hero">
+  <div class="col">
+    <div class="kick">Prime number research · open access</div>
+    <h1>The bias that dissolves</h1>
+    <p class="deck">Primes of the form 4n+3 outrun primes of the form 4n+1 about
+      99.6% of the time — a curiosity noticed in 1853 and unexplained for a
+      century. Change how much each prime is worth, and that famous bias comes
+      apart in a way you can watch.</p>
+    <div class="figures">
+      <div class="fig"><div class="v">99.6%</div><div class="k">counting primes</div></div>
+      <div class="fig"><div class="v">79.8%</div><div class="k">weighting by size</div></div>
+      <div class="fig"><div class="v">51.4%</div><div class="k">weight 100 — near a coin flip</div></div>
+    </div>
+  </div>
+
+  <div class="col">
+    <figure>
+      <img src="/race-chart.png" alt="Chart showing the density falling from 99.6 percent at weight zero toward 50 percent as the weight grows, with predictions from L-function zeros matching measurements from every prime up to ten billion.">
+      <figcaption>Predicted from the zeros of an L-function (line) against every
+        prime counted up to ten billion (diamonds). Two independent routes, same
+        answer.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<section>
+  <div class="col">
+    <h2>Start here</h2>
+    <p class="sub">Three explainers, in order. No mathematical background needed
+      for the first two.</p>
+  </div>
+  <div class="col path">
+    <a class="step" href="/by-hand">
+      <span class="no">01</span>
+      <span>
+        <h3>Prime Races by Hand</h3>
+        <p>Watch the bias flip using nine primes and one subtraction. Every number
+          is small enough to check with a pencil.</p>
+        <span class="mins">8 min · no maths required</span>
+      </span>
+      <span class="go">→</span>
+    </a>
+    <a class="step" href="/dial">
+      <span class="no">02</span>
+      <span>
+        <h3>The Weight Dial</h3>
+        <p>Two knobs, one of which does nothing. Drag them and see why counting
+          further never weakens the bias but re-weighting destroys it.</p>
+        <span class="mins">10 min · interactive</span>
+      </span>
+      <span class="go">→</span>
+    </a>
+    <a class="step" href="/findings">
+      <span class="no">03</span>
+      <span>
+        <h3>What We Actually Found</h3>
+        <p>Every result, what existed before it, and an honest read on how much
+          it moves — plus a live race calculator.</p>
+        <span class="mins">12 min · the full inventory</span>
+      </span>
+      <span class="go">→</span>
+    </a>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <h2>What the research contains</h2>
+    <p class="sub">Four theorems and five computational firsts, all conditional on
+      the standard hypotheses of the field.</p>
+  </div>
+  <div class="col cards">
+    <div class="card">
+      <h4>The curve is smooth</h4>
+      <p>At every weight the percentage exists, sits strictly between 50% and
+        100%, and slides without jumps.</p>
+    </div>
+    <div class="card">
+      <h4>The dissolution law</h4>
+      <p>Exactly how fast the bias fades toward a coin flip, proved with an error
+        term and a second-order correction.</p>
+    </div>
+    <div class="card">
+      <h4>Two fades are one</h4>
+      <p>Changing the number system and changing the weight turn out to be the
+        same theorem, unified in one uniform law.</p>
+    </div>
+    <div class="card">
+      <h4>It never comes back</h4>
+      <p>Past a certain weight the bias only ever decreases — proved above
+        weight 17, conjectured below.</p>
+    </div>
+    <div class="card">
+      <h4>Sums from the zeros</h4>
+      <p>The exact sum of every prime below a billion, reconstructed from 2,000
+        zeta zeros rather than from the primes.</p>
+    </div>
+    <div class="card">
+      <h4>Machine-certified</h4>
+      <p>Constants proved to 30 decimal places and 1,048 zero locations certified
+        in ball arithmetic, not just computed.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <h2>The paper</h2>
+    <p>A 59-page preprint, openly licensed, with all code and data. It states
+      what is proved, what is computed, and what remains open — including four
+      gaps we could not close.</p>
+    <p>Results involving percentages assume the Generalized Riemann Hypothesis
+      and a standard independence property of the zeros, as does every paper in
+      this area. The computations up to ten billion assume nothing.</p>
+  </div>
+  <div class="col cards">
+    <div class="card">
+      <h4>Preprint &amp; data</h4>
+      <p>Permanent archive with a DOI, CC-BY licensed, including the full code
+        and computed zero lists.</p>
+      <a href="https://doi.org/10.5281/zenodo.21947101" rel="noopener">Read on Zenodo →</a>
+    </div>
+    <div class="card">
+      <h4>Source code</h4>
+      <p>Sieves, density computations, certification scripts and both
+        manuscripts. Everything reproducible.</p>
+      <a href="https://github.com/raghavs1729/weighted-prime-races" rel="noopener">Browse on GitHub →</a>
+    </div>
+  </div>
+
+  <div class="note">
+    <span class="lab">On how this was made</span>
+    The derivations, code and literature review were produced with substantial AI
+    assistance, then verified independently — every headline number by two
+    separate routes, and every claim through adversarial review that twice proved
+    our "discoveries" already existed. Those were demoted and the real
+    discoverers cited. The disclosure is on page one of the paper.
+  </div>
+</section>
+
+<footer>
+  <div class="col">
+    <p>Raghav Sharma · <a href="mailto:raghavsharma1729@gmail.com">raghavsharma1729@gmail.com</a><br>
+      Preprint and data: <a href="https://doi.org/10.5281/zenodo.21947101">doi:10.5281/zenodo.21947101</a> ·
+      Not yet peer reviewed · Corrections welcome.</p>
+  </div>
+</footer>
+</div>
+</body>
+</html>

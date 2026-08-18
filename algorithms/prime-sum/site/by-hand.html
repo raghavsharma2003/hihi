@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prime Races by Hand · Weighted Prime Races</title>
+<meta name="description" content="Weighted prime number races: how Chebyshev's 170-year-old bias dissolves when bigger primes count for more.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#f3f5f2; --sheet:#fbfcfa; --rule:#dfe4dc; --rule-2:#c9d1c6;
+  --ink:#1b211c; --ink-2:#535c52; --ink-3:#7d867b;
+  --t3:#1f6fd0; --t1:#e2632c; --mark:#6f4ac4;
+  --t3-wash:rgba(31,111,208,.09); --t1-wash:rgba(226,99,44,.09);
+  --mark-wash:rgba(111,74,196,.10);
+  --shade:0 1px 2px rgba(27,33,28,.05), 0 10px 26px -14px rgba(27,33,28,.22);
+  --serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;
+  --cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#12160f; --sheet:#191e17; --rule:#2b332a; --rule-2:#3b453a;
+    --ink:#eef2ea; --ink-2:#a9b3a6; --ink-3:#7c867a;
+    --t3:#4d94e8; --t1:#df6d3c; --mark:#8f80f2;
+    --t3-wash:rgba(77,148,232,.14); --t1-wash:rgba(223,109,60,.14);
+    --mark-wash:rgba(143,128,242,.15);
+    --shade:0 1px 2px rgba(0,0,0,.45), 0 10px 26px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#12160f; --sheet:#191e17; --rule:#2b332a; --rule-2:#3b453a;
+  --ink:#eef2ea; --ink-2:#a9b3a6; --ink-3:#7c867a;
+  --t3:#4d94e8; --t1:#df6d3c; --mark:#8f80f2;
+  --t3-wash:rgba(77,148,232,.14); --t1-wash:rgba(223,109,60,.14);
+  --mark-wash:rgba(143,128,242,.15);
+  --shade:0 1px 2px rgba(0,0,0,.45), 0 10px 26px -14px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--serif); font-size:17.5px; line-height:1.66;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px; margin:0 auto; padding:0 22px}
+.col{max-width:640px; margin:0 auto}
+
+header.top{padding:64px 0 34px}
+.kicker{font-family:var(--mono); font-size:11.5px; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-3)}
+h1{
+  font-family:var(--cond); font-weight:700; font-size:clamp(40px,7vw,66px);
+  line-height:.98; letter-spacing:-.02em; margin:14px 0 0; text-wrap:balance;
+}
+.deck{font-size:20px; line-height:1.5; color:var(--ink-2); margin:18px 0 0; text-wrap:pretty}
+.rule-hr{height:1px; background:var(--rule); margin:34px 0 0}
+
+section{padding:52px 0 0}
+.head{display:flex; gap:16px; align-items:baseline}
+.num{font-family:var(--mono); font-size:12px; font-weight:600; color:var(--mark); width:26px; flex:none; padding-top:5px}
+h2{font-family:var(--cond); font-weight:600; font-size:clamp(26px,3.6vw,33px); line-height:1.12; letter-spacing:-.012em; margin:0; text-wrap:balance}
+.body{margin-left:42px}
+@media(max-width:620px){.body{margin-left:0}}
+p{margin:15px 0 0; text-wrap:pretty}
+strong{font-weight:600}
+em{font-style:italic}
+.t3{color:var(--t3); font-weight:600}
+.t1{color:var(--t1); font-weight:600}
+.mk{color:var(--mark); font-weight:600}
+code,.n{font-family:var(--mono); font-size:.9em; font-variant-numeric:tabular-nums}
+a{color:var(--t3)}
+a:focus-visible{outline:2px solid var(--mark); outline-offset:3px}
+
+/* ---- ledger sheets ---- */
+.sheet{
+  background:var(--sheet); border:1px solid var(--rule); border-radius:2px;
+  box-shadow:var(--shade); margin:30px auto 0; padding:22px 22px 20px;
+}
+.sheet.wide{max-width:900px}
+.sheet-h{
+  font-family:var(--mono); font-size:11px; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--ink-3); margin:0 0 15px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+}
+.cap{font-family:var(--mono); font-size:12.5px; line-height:1.55; color:var(--ink-3); margin:15px 0 0}
+
+.scroll{overflow-x:auto}
+table{border-collapse:collapse; width:100%; font-family:var(--mono);
+  font-size:14px; font-variant-numeric:tabular-nums; white-space:nowrap}
+th,td{padding:7px 10px; text-align:right; border-bottom:1px solid var(--rule)}
+th:first-child,td:first-child{text-align:left}
+thead th{font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:600; border-bottom:1px solid var(--rule-2)}
+tbody tr:last-child td{border-bottom:none}
+tr.flip td{background:var(--mark-wash)}
+tr.flip td:first-child{box-shadow:inset 3px 0 0 var(--mark)}
+td.a{color:var(--t3)} td.b{color:var(--t1)}
+.win3{color:var(--t3); font-weight:600} .win1{color:var(--t1); font-weight:600}
+
+/* team chips */
+.chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:4px}
+.chip{font-family:var(--mono); font-size:13.5px; font-weight:500; padding:5px 9px; border-radius:2px; border:1px solid}
+.chip.a{background:var(--t3-wash); color:var(--t3); border-color:var(--t3)}
+.chip.b{background:var(--t1-wash); color:var(--t1); border-color:var(--t1)}
+.teamrow{display:grid; grid-template-columns:1fr 1fr; gap:20px}
+@media(max-width:620px){.teamrow{grid-template-columns:1fr}}
+.teamlab{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:8px}
+.teamlab.a{color:var(--t3)} .teamlab.b{color:var(--t1)}
+
+/* the verdict block */
+.verdicts{display:grid; gap:10px; margin-top:18px}
+.verdict{
+  display:grid; grid-template-columns:auto 1fr auto; gap:8px 20px; align-items:baseline;
+  padding:13px 15px; border:1px solid var(--rule); border-radius:2px; background:var(--ground);
+  font-family:var(--mono); font-size:14px; font-variant-numeric:tabular-nums;
+}
+@media(max-width:760px){
+  .verdict{grid-template-columns:1fr}
+  .verdict .out{justify-self:start}
+}
+.verdict.hit{border-color:var(--mark); background:var(--mark-wash)}
+.verdict .lab{color:var(--ink-3); font-size:12px; letter-spacing:.06em; text-transform:uppercase}
+.verdict .sum{color:var(--ink-2); overflow-x:auto}
+.verdict .out{font-weight:600; white-space:nowrap}
+
+.callout{
+  margin:26px auto 0; padding:17px 19px; border-left:3px solid var(--mark);
+  background:var(--sheet); border-top:1px solid var(--rule); border-right:1px solid var(--rule);
+  border-bottom:1px solid var(--rule); font-size:16.5px; line-height:1.58;
+}
+.callout .lab{font-family:var(--mono); font-size:10.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--mark); display:block; margin-bottom:7px}
+.callout.warn{border-left-color:var(--t1)}
+.callout.warn .lab{color:var(--t1)}
+
+.big{font-family:var(--mono); font-size:clamp(26px,4.4vw,34px); font-weight:600; letter-spacing:-.01em; line-height:1.15}
+.bigrow{display:flex; flex-wrap:wrap; gap:8px 26px; align-items:baseline; margin-top:6px}
+.unit{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3)}
+
+footer{margin-top:62px; border-top:1px solid var(--rule); padding:28px 0 70px}
+footer p{font-family:var(--mono); font-size:12.5px; color:var(--ink-3); line-height:1.7; margin:0}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.sitenav{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:baseline;justify-content:space-between;
+  max-width:1140px;margin:0 auto;padding:16px 22px;border-bottom:1px solid var(--rule,#ddd);
+  font-family:var(--mono,ui-monospace,monospace);font-size:12.5px}
+.sitenav .brand{font-weight:600;color:var(--ink,#222);text-decoration:none;letter-spacing:-.01em}
+.sitenav .links{display:flex;flex-wrap:wrap;gap:8px 18px}
+.sitenav a{color:var(--ink-3,#777);text-decoration:none}
+.sitenav a:hover{color:var(--ink,#222)}
+.sitenav a[aria-current]{color:var(--ink,#222);font-weight:600}
+</style>
+</head>
+<body>
+<nav class="sitenav">
+  <a class="brand" href="/">Weighted Prime Races</a>
+  <div class="links">
+    <a href="/by-hand" aria-current="page">By hand</a>
+    <a href="/dial">The dial</a>
+    <a href="/findings">Findings</a>
+    <a href="https://doi.org/10.5281/zenodo.21947101" rel="noopener">Paper</a>
+    <a href="https://github.com/raghavs1729/weighted-prime-races" rel="noopener">Code</a>
+  </div>
+</nav>
+
+<div class="wrap">
+<header class="top">
+  <div class="col">
+    <div class="kicker">Your research, worked out with a pencil</div>
+    <h1>Prime Races by Hand</h1>
+    <p class="deck">Every number on this page is small enough to check yourself.
+      By the end you will have watched the famous bias flip — using nine primes
+      and one subtraction.</p>
+  </div>
+  <div class="col rule-hr"></div>
+</header>
+
+<section>
+  <div class="col">
+    <div class="head"><div class="num">01</div><h2>Sorting primes into two teams</h2></div>
+    <div class="body">
+      <p>Take any odd prime and divide it by 4. There's always a remainder, and
+        it's always either 1 or 3 — never 0 or 2, because those would make the
+        number even.</p>
+      <p>So every odd prime belongs to exactly one of two teams. Check a few:</p>
+    </div>
+  </div>
+
+  <div class="sheet col">
+    <div class="sheet-h"><span>Dividing by 4</span><span>remainder decides the team</span></div>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>prime</th><th>divided by 4</th><th>remainder</th><th>team</th></tr></thead>
+        <tbody>
+          <tr><td>3</td><td>0 × 4 + 3</td><td>3</td><td class="a">Team 3</td></tr>
+          <tr><td>5</td><td>1 × 4 + 1</td><td>1</td><td class="b">Team 1</td></tr>
+          <tr><td>7</td><td>1 × 4 + 3</td><td>3</td><td class="a">Team 3</td></tr>
+          <tr><td>11</td><td>2 × 4 + 3</td><td>3</td><td class="a">Team 3</td></tr>
+          <tr><td>13</td><td>3 × 4 + 1</td><td>1</td><td class="b">Team 1</td></tr>
+          <tr><td>17</td><td>4 × 4 + 1</td><td>1</td><td class="b">Team 1</td></tr>
+          <tr><td>19</td><td>4 × 4 + 3</td><td>3</td><td class="a">Team 3</td></tr>
+          <tr><td>23</td><td>5 × 4 + 3</td><td>3</td><td class="a">Team 3</td></tr>
+          <tr><td>29</td><td>7 × 4 + 1</td><td>1</td><td class="b">Team 1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="cap">That's the whole setup. Two teams, no third option, and the
+      prime 2 sits out (it's even).</p>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="head"><div class="num">02</div><h2>The flip, in nine primes</h2></div>
+    <div class="body">
+      <p>Here is the entire idea of the research, and you can verify it on paper
+        in about a minute.</p>
+      <p>Stop at 29. Team 3 has <span class="n">3, 7, 11, 19, 23</span> — that's
+        five primes. Team 1 has <span class="n">5, 13, 17, 29</span> — four
+        primes. So if you're <strong>counting</strong>, Team 3 is winning, 5 to 4.</p>
+      <p>Now add them up instead of counting them.</p>
+    </div>
+  </div>
+
+  <div class="sheet wide">
+    <div class="sheet-h"><span>Every odd prime up to 29</span><span>same primes, three different scoreboards</span></div>
+
+    <div class="teamrow">
+      <div>
+        <div class="teamlab a">Team 3 — five primes</div>
+        <div class="chips">
+          <span class="chip a">3</span><span class="chip a">7</span><span class="chip a">11</span>
+          <span class="chip a">19</span><span class="chip a">23</span>
+        </div>
+      </div>
+      <div>
+        <div class="teamlab b">Team 1 — four primes</div>
+        <div class="chips">
+          <span class="chip b">5</span><span class="chip b">13</span><span class="chip b">17</span>
+          <span class="chip b">29</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="verdicts">
+      <div class="verdict">
+        <span class="lab">Count them</span>
+        <span class="sum">5 primes &nbsp;vs&nbsp; 4 primes &nbsp;→&nbsp; 5 − 4 = +1</span>
+        <span class="out win3">Team 3 ahead</span>
+      </div>
+      <div class="verdict hit">
+        <span class="lab">Add them</span>
+        <span class="sum">3+7+11+19+23 = 63 &nbsp;vs&nbsp; 5+13+17+29 = 64 &nbsp;→&nbsp; 63 − 64 = −1</span>
+        <span class="out win1">Team 1 ahead</span>
+      </div>
+      <div class="verdict">
+        <span class="lab">Add the squares</span>
+        <span class="sum">9+49+121+361+529 = 1069 &nbsp;vs&nbsp; 25+169+289+841 = 1324 &nbsp;→&nbsp; −255</span>
+        <span class="out win1">Team 1, further ahead</span>
+      </div>
+    </div>
+
+    <p class="cap">Nothing changed except the scoring rule. Same nine primes, same
+      moment on the number line — and the answer to "who is winning?" reverses.
+      That reversal is what the whole paper is about.</p>
+  </div>
+
+  <div class="col">
+    <div class="body">
+      <p>Why did it flip? Look at who's on each team. Team 1's primes here are
+        the <em>bigger</em> ones — it owns 29, the largest in the range. Team 3
+        has more primes, but they're smaller. Counting rewards <em>how many</em>;
+        adding rewards <em>how big</em>. The two rules can genuinely disagree.</p>
+    </div>
+  </div>
+
+  <div class="sheet wide">
+    <div class="sheet-h"><span>Running scoreboard</span><span>every odd prime up to 47 · the highlighted rows are where the two rules disagree</span></div>
+    <div class="scroll">
+      <table>
+        <thead><tr>
+          <th>after prime</th><th>count: T3</th><th>count: T1</th><th>count says</th>
+          <th>sum: T3</th><th>sum: T1</th><th>sum says</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>3</td><td>1</td><td>0</td><td class="win3">+1</td><td>3</td><td>0</td><td class="win3">+3</td></tr>
+          <tr class="flip"><td>5</td><td>1</td><td>1</td><td>0 tie</td><td>3</td><td>5</td><td class="win1">−2</td></tr>
+          <tr><td>7</td><td>2</td><td>1</td><td class="win3">+1</td><td>10</td><td>5</td><td class="win3">+5</td></tr>
+          <tr><td>11</td><td>3</td><td>1</td><td class="win3">+2</td><td>21</td><td>5</td><td class="win3">+16</td></tr>
+          <tr><td>13</td><td>3</td><td>2</td><td class="win3">+1</td><td>21</td><td>18</td><td class="win3">+3</td></tr>
+          <tr class="flip"><td>17</td><td>3</td><td>3</td><td>0 tie</td><td>21</td><td>35</td><td class="win1">−14</td></tr>
+          <tr><td>19</td><td>4</td><td>3</td><td class="win3">+1</td><td>40</td><td>35</td><td class="win3">+5</td></tr>
+          <tr><td>23</td><td>5</td><td>3</td><td class="win3">+2</td><td>63</td><td>35</td><td class="win3">+28</td></tr>
+          <tr class="flip"><td>29</td><td>5</td><td>4</td><td class="win3">+1</td><td>63</td><td>64</td><td class="win1">−1</td></tr>
+          <tr><td>31</td><td>6</td><td>4</td><td class="win3">+2</td><td>94</td><td>64</td><td class="win3">+30</td></tr>
+          <tr class="flip"><td>37</td><td>6</td><td>5</td><td class="win3">+1</td><td>94</td><td>101</td><td class="win1">−7</td></tr>
+          <tr class="flip"><td>41</td><td>6</td><td>6</td><td>0 tie</td><td>94</td><td>142</td><td class="win1">−48</td></tr>
+          <tr class="flip"><td>43</td><td>7</td><td>6</td><td class="win3">+1</td><td>137</td><td>142</td><td class="win1">−5</td></tr>
+          <tr><td>47</td><td>8</td><td>6</td><td class="win3">+2</td><td>184</td><td>142</td><td class="win3">+42</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="cap">Six disagreements in the first fourteen primes. The counting
+      column is almost always positive — that's Chebyshev's bias. The sum column
+      swings around much more freely. Hold that thought; it's the mechanism.</p>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="head"><div class="num">03</div><h2>What the weight actually is</h2></div>
+    <div class="body">
+      <p>"Counting", "adding", and "adding squares" aren't three separate ideas.
+        They're one idea with a knob on it.</p>
+      <p>Give each prime <span class="n">p</span> a score of
+        <span class="n">p<sup>m</sup></span>, where <span class="n">m</span> is
+        the number you choose. That's the <strong>weight</strong>:</p>
+    </div>
+  </div>
+
+  <div class="sheet col">
+    <div class="sheet-h"><span>The same knob, four settings</span><span>what the prime 7 scores</span></div>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>weight m</th><th>each prime scores</th><th>prime 7 scores</th><th>this is called</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>p⁰ = 1</td><td>1</td><td>counting them</td></tr>
+          <tr><td>1</td><td>p¹ = p</td><td>7</td><td>adding them</td></tr>
+          <tr><td>2</td><td>p²</td><td>49</td><td>adding the squares</td></tr>
+          <tr><td>3</td><td>p³</td><td>343</td><td>adding the cubes</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="cap">Anything to the power zero is 1 — that's why m = 0 turns the
+      weighted race back into plain counting. The classical 170-year-old problem
+      is just one setting of this knob.</p>
+  </div>
+
+  <div class="col">
+    <div class="body">
+      <p>And the knob doesn't have to stop at whole numbers, or at zero. Negative
+        weights make <em>small</em> primes worth more: at
+        <span class="n">m = −1</span> the prime 3 scores
+        <span class="n">1/3</span> while 29 scores only
+        <span class="n">1/29</span>. That whole negative side is the part
+        mathematicians had already been studying — from the other end, without
+        anyone connecting it to the counting problem.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="head"><div class="num">04</div><h2>Where the bias comes from</h2></div>
+    <div class="body">
+      <p>Before explaining why weight destroys the bias, here's why the bias
+        exists at all. It's a genuinely lovely piece of arithmetic.</p>
+      <p>Square any odd prime and divide by 4:</p>
+    </div>
+  </div>
+
+  <div class="sheet col">
+    <div class="sheet-h"><span>Squares of primes</span><span>the remainder is always 1</span></div>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>prime</th><th>squared</th><th>divided by 4</th><th>remainder</th></tr></thead>
+        <tbody>
+          <tr><td>3</td><td>9</td><td>2 × 4 + 1</td><td class="b">1</td></tr>
+          <tr><td>5</td><td>25</td><td>6 × 4 + 1</td><td class="b">1</td></tr>
+          <tr><td>7</td><td>49</td><td>12 × 4 + 1</td><td class="b">1</td></tr>
+          <tr><td>11</td><td>121</td><td>30 × 4 + 1</td><td class="b">1</td></tr>
+          <tr><td>13</td><td>169</td><td>42 × 4 + 1</td><td class="b">1</td></tr>
+          <tr><td>19</td><td>361</td><td>90 × 4 + 1</td><td class="b">1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="cap">Always 1. Never 3. Try any odd prime you like — it can't fail,
+      because an odd number is 2k+1, and (2k+1)² = 4(k²+k) + 1.</p>
+  </div>
+
+  <div class="col">
+    <div class="body">
+      <p>So squares of primes <em>always</em> land on Team 1's side.</p>
+      <p>Mathematicians don't just count primes — for technical reasons they count
+        primes <em>and</em> their powers together, and that fuller count comes out
+        almost perfectly balanced. But the squares are all handing free points to
+        Team 1. For the books to balance, the plain primes must lean the other
+        way, toward Team 3.</p>
+      <p><strong>That lean is Chebyshev's bias.</strong> It's not mystical: it's
+        the primes compensating for a systematic bonus the squares give Team 1.
+        And crucially, it's a <em>steady</em> lean — the same relative size no
+        matter how far out you go.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="head"><div class="num">05</div><h2>Why the weight destroys it</h2></div>
+    <div class="body">
+      <p>Now the mechanism. Two forces fight in this race:</p>
+      <p><strong>The lean</strong> — steady, always the same relative size, from
+        the squares.</p>
+      <p><strong>The wobble</strong> — the race jitters around because primes
+        arrive irregularly.</p>
+      <p>Weighting doesn't touch the lean. It makes the wobble enormous. Here's
+        the reason, in one table: as the weight rises, a handful of the biggest
+        primes swallow the entire score.</p>
+    </div>
+  </div>
+
+  <div class="sheet col">
+    <div class="sheet-h"><span>All 167 odd primes below 1,000</span><span>how much of the total score the top 10 own</span></div>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>weight m</th><th>largest prime (997)</th><th>top 10 primes</th><th>other 157 primes</th></tr></thead>
+        <tbody>
+          <tr><td>0 — counting</td><td>0.60%</td><td>5.99%</td><td>94.01%</td></tr>
+          <tr><td>1 — adding</td><td>1.31%</td><td>12.69%</td><td>87.31%</td></tr>
+          <tr><td>3 — cubes</td><td>2.72%</td><td>24.76%</td><td>75.24%</td></tr>
+          <tr class="flip"><td>8</td><td>6.14%</td><td>48.42%</td><td>51.58%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="cap">At m = 8, ten primes out of 167 decide half the race. Whether
+      those ten happen to be Team 3 or Team 1 is essentially a coin toss — and a
+      coin toss easily drowns out a small steady lean.</p>
+  </div>
+
+  <div class="col">
+    <div class="body">
+      <p>That's the whole explanation. When you count, thousands of primes each
+        contribute a tiny amount, all the small random fluctuations average out,
+        and the steady lean shows through cleanly: Team 3 leads
+        <strong>99.6%</strong> of the time.</p>
+      <p>When you weight heavily, a few giants dominate. The lean is still there,
+        exactly as strong as before — but it's now a whisper in a storm. The
+        race becomes a coin flip.</p>
+    </div>
+  </div>
+
+  <div class="sheet col">
+    <div class="sheet-h"><span>The result</span><span>how often Team 3 leads, computed from the paper</span></div>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>weight m</th><th>0</th><th>1</th><th>2</th><th>3</th><th>8</th><th>20</th><th>100</th></tr></thead>
+        <tbody>
+          <tr><td>Team 3 leads</td><td>99.6%</td><td>79.8%</td><td>69.5%</td><td>64.6%</td><td>57.2%</td><td>53.8%</td><td>51.4%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="cap">Sliding toward 50% — a fair coin — but never quite reaching it.
+      The lean never fully dies; it just gets buried deeper and deeper.</p>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="head"><div class="num">06</div><h2>The thing people get wrong</h2></div>
+    <div class="body">
+      <p>It's tempting to think the bias fades as numbers get bigger. It doesn't.
+        This is worth being very clear about, because it's the single most
+        misunderstood point.</p>
+      <p>"Team 3 leads 99.6% of the time" is a statement about
+        <strong>forever</strong> — the fraction of the whole infinite number
+        line. Go to a trillion, a quintillion, further: still 99.6%. There is no
+        crossover point where Team 1 catches up.</p>
+      <p>What <em>does</em> change the answer is the weight. Two different knobs
+        entirely — one does nothing to the bias, the other dissolves it.</p>
+    </div>
+  </div>
+  <div class="callout warn col">
+    <span class="lab">One honest complication</span>
+    99.6% doesn't mean Team 3 <em>always</em> leads. Team 1 does take the lead
+    sometimes — the first time is at 26,861, and it happens infinitely often.
+    You saw exactly this in the scoreboard above: the sum column flipped to Team 1
+    six times before 47. Rare, but real, and never stopping.
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="head"><div class="num">07</div><h2>How we actually computed it</h2></div>
+    <div class="body">
+      <p>You can check a race up to 47 by hand. Up to ten billion, a computer can
+        sieve it directly — we did, and that's where the measured numbers come
+        from. But "99.6% of the time, forever" is about infinity, and no computer
+        reaches infinity.</p>
+      <p>So there's a second route, and it's the strange and beautiful part.</p>
+      <p>The irregularity of the primes — the wobble — isn't random noise. It's
+        literally a sum of waves. Each wave has a frequency, and those frequencies
+        are the famous <strong>zeros of the Riemann zeta function</strong> (and
+        its relatives). This is Riemann's discovery from 1859, and it's why the
+        Riemann Hypothesis matters so much: those frequencies control how
+        irregular the primes can be.</p>
+      <p>Once you know the frequencies, you can compute how often the wobble
+        beats the lean — without ever counting a single prime. That's what
+        produces the 99.6%, the 79.8%, all of it. We computed 511 of those
+        frequencies ourselves, to 25 decimal places.</p>
+      <p><strong>And the two routes agree.</strong> The wave calculation predicts
+        79.76% for weight 1; sieving every prime to ten billion measured 79.38%.
+        Two completely different methods, same answer. That agreement is the
+        strongest evidence in the paper.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="head"><div class="num">08</div><h2>What we proved</h2></div>
+    <div class="body">
+      <p>Computing numbers is one thing; proving statements about <em>all</em>
+        weights at once is another. The paper has four theorems. In plain words:</p>
+    </div>
+  </div>
+
+  <div class="sheet wide">
+    <div class="sheet-h"><span>The four theorems</span><span>each proved for every real weight, not just the ones we computed</span></div>
+    <div class="verdicts">
+      <div class="verdict">
+        <span class="lab">One</span>
+        <span class="sum">The percentage is a real, well-defined number at every weight, and it
+          slides <strong>smoothly</strong> as you turn the knob — no jumps, no gaps.</span>
+        <span class="out mk">smooth</span>
+      </div>
+      <div class="verdict">
+        <span class="lab">Two</span>
+        <span class="sum">It dissolves toward 50% at a speed we can write down and prove —
+          not just observe.</span>
+        <span class="out mk">speed</span>
+      </div>
+      <div class="verdict">
+        <span class="lab">Three</span>
+        <span class="sum">Mathematicians already knew the bias fades if you change the
+          number system instead of the weight. Those are the same theorem.</span>
+        <span class="out mk">unified</span>
+      </div>
+      <div class="verdict">
+        <span class="lab">Four</span>
+        <span class="sum">Past a certain weight the bias only ever <strong>decreases</strong> —
+          it can never wobble back up.</span>
+        <span class="out mk">one-way</span>
+      </div>
+    </div>
+    <p class="cap">Theorem four is proved for weights above about 17; below that
+      it's a conjecture backed by 30 computed points. The paper says so.</p>
+  </div>
+
+  <div class="col">
+    <div class="body">
+      <p>There's also the other half of the project: computing the exact
+        <em>sum</em> of every prime below a billion —
+        <span class="n">24,739,512,092,254,535</span> — from those wave
+        frequencies rather than from the primes. People had reconstructed the
+        <em>count</em> of primes that way before. The sum hadn't been done.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="head"><div class="num">09</div><h2>What's assumed, and what's still open</h2></div>
+    <div class="body">
+      <p>Everything about the percentages rests on two unproved assumptions: the
+        Riemann Hypothesis (for these related functions), and a technical
+        independence property of those wave frequencies. That sounds alarming and
+        isn't — every paper in this field, going back to the 1994 work that
+        established the 99.6%, stands on the same two. The paper states it plainly
+        on page one.</p>
+      <p>The sieve computations to ten billion assume nothing at all. They're
+        just counting, and they land on top of the predictions.</p>
+      <p>Genuinely open, and listed in the paper: monotonicity below weight 17;
+        one corner where two limits interact; and the final numerical integration
+        step, which is high-precision floating point rather than fully certified
+        arithmetic. Everything else in the numerics — the constants, the
+        frequencies, their completeness — is now machine-proved.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="col">
+    <p>Every figure here is drawn from the paper's verified tables and can be
+      re-derived from the code. Paper, code, data:
+      <a href="https://doi.org/10.5281/zenodo.21947101">doi:10.5281/zenodo.21947101</a><br>
+      The arithmetic in sections 1–5 is exact and was checked twice; the
+      percentages are conditional on the assumptions in section 9.</p>
+  </div>
+</footer>
+</div>
+</body>
+</html>
