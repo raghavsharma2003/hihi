@@ -144,3 +144,14 @@ REPRODUCTION: exact match, all 14 intervals, all 24 digits, ~7 min, deterministi
 INDEPENDENT CROSS-CHECK (mpmath 50 dps, DIFFERENT L route [Hurwitz + direct series], DIFFERENT derivative route [term-by-term vs mp.diff], DIFFERENT quadrature [tanh-sinh]): (4,1) three model values 0.79763041020/0.79763039909/0.79763038797 ALL CONTAINED in Codex [0.797630378395,0.797630419780]; centers agree to 3e-13. (3,60) all three contained, margin only ~4e-10 each side (NEARLY SHARP). STRESS TEST: re-ran with only the first 200 chi4 ordinates (V_T nearly doubled) -> wider interval STRICTLY CONTAINS the full-list one; "a sign/scale error in the tail model would almost certainly have broken containment here".
 FIXES (documentation only, NO code/numeric change): F1 Landau -> Watson sect 13.74 (docstring L27-32, results L18). F2 state as a numbered lemma the four inequalities behind Mbound (|J0(w)|<=e^{|Im w|}, |sin w/w|<=e^{|Im w|}, |e^{-Vz^2/2}|<=e^{Vr^2/2}, |z|<=T+r) and the derivative-form Gauss remainder. F3 make L54 an explicit cross-ref to the Hadamard/Rayleigh lemma. F4 PIN the certificate dependency as `certify_arb.py --K 0` (NOT default --K 50) with its output. F5 DELETE "A post-repair audit by a second internal AI agent..." from the results file. F6 note |sum chi(n)|<=1 is chi3/chi4-specific and b_gamma decreasing follows from the verified ordering.
 DRAFT METHODS PROSE supplied (LaTeX-ready) — replaces the Richardson-extrapolated quadrature error with a proved bound; widths 2.2e-8..1.9e-7 dominated >99.9% by the certified quartic tail term.
+
+################################################################################
+# THIS REPOSITORY IS SUPERSEDED (2026-08-18)
+################################################################################
+All work moved to github.com/raghavsharma2003/weighted-prime-races (private), by a git subtree split
+of algorithms/prime-sum with FULL HISTORY PRESERVED. Branch `main` there is authoritative; branch
+`codex-archive` holds the Codex tree unmerged. The complete current-state record — repo map, the final
+67-page paper's verified state, the merge ledger, the errors found in our own work, deliverable links,
+outstanding actions and standing constraints — is in that repository's SESSION-LOG.md under
+"CURRENT STATE — READ THIS FIRST".
+Do not continue work on this branch. Nothing here is newer than what is there.
